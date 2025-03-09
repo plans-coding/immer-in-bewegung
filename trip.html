@@ -216,7 +216,7 @@
       {% endunless %}
     {% endif %}
 
-    {% if settings.plugins.diary.enabled == true %}
+    {% if settings.plugins.diary.enabled == true | default: false %}
       {% assign year = day.Date | date: "%Y" %}
       <!-- unclear if ISO standard -->
       {% assign week = day.Date | date: "W%W" %}
@@ -244,7 +244,7 @@
 
       {% endfor %}
     {% endif %}
-    {% if settings.plugins.passport.enabled == true %}
+    {% if settings.plugins.passport.enabled == true | default: false %}
       {% assign date = day.Date | date: "%Y%m%d" %}
       {% assign filteredPassportFiles = passportFilesArray | where_exp: "item", "item contains date" %}
       {% for file in filteredPassportFiles %}
