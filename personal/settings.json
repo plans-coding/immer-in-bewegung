@@ -1,7 +1,7 @@
 {
   "baseSettings": {
-    "translationFile": "/iib/personal/english.json",
-    "sqliteFile": "/iib/personal/bewegung.db",
+    "translationFile": "/personal/english.json",
+    "sqliteFile": "/personal/bewegung.db",
     "homeCountry": "CHANGE_TO_YOUR_COUNTRY"
   },
   "immich-settings": {
