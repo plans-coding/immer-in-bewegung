@@ -877,7 +877,7 @@ function versionCheck() {
         const latestVersion = latestVersionElement.innerHTML;
 
         if (currentVersion && latestVersion) {
-            if (currentVersion <= latestVersion) {
+            if (currentVersion < latestVersion) {
                 document.getElementById('updateText').innerHTML="New version available "+latestVersion;
                 console.log("New version available");
             }
