@@ -1,0 +1,106 @@
+<div class="container text-center">
+
+
+  <nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+      <button class="nav-link iib-nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ translation.statistics.summary | default: 'Summary' }}</button>
+      <button class="nav-link iib-nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">{{ translation.statistics.visits | default: 'Visits' }}</button>
+      <button class="nav-link iib-nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">{{ translation.statistics.overnights | default: 'Overnights' }}</button>
+    </div>
+  </nav>
+  <div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+
+
+      <div class="border p-2 bg-white">
+
+
+        <div class="row mt-3">
+          <div class="col m-1">
+              <h2>{{jsonData[4] | size }}</h2>
+                <p>{{ translation.statistics.uniqueCountries | default: 'Count of unique countries' }}</p>
+          </div>
+
+          <div class="col m-1">
+              <h2>{{ jsonData[1][0].Count }}</h2>
+                <p class="card-text">{{ translation.statistics.totalTrips | default: 'Number of trips in total' }}</p>
+          </div>
+        </div>
+
+
+        <div id="stat-trip-overview-chart-data" data-json='{{ jsonData[0] | json }}' data-json-color='{{ jsonData[3] | json }}'></div>
+
+        <div class="m-3">
+        <canvas id="stat-trip-overview"></canvas>
+        {{ translation.statistics.tripDomainYear | default: "Trips per domain and year" }}
+        </div>
+
+
+      </div>
+    </div>
+
+    <div class="tab-pane fade bg-white" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0" style="max-width:100%;overflow-x:auto;">
+
+
+        <table class="table">
+          <tr>
+            <td class="iib-silver-grey">{{ translation.statistics.visitCountryCount | default: 'Count over visits per country' }}</td>
+          </tr>
+        </table>
+
+ <table class="table table-hover">
+
+ <thead style="position:sticky;top:0;background-color:'.$bodyBackgroundColor.">
+ <tr style="font-weight:normal;"><td></td><td colspan="3"><i>{{ translation.statistics.oneQualified | default: 'One qualified visit per trip' }}</i></td><td><i>{{ translation.statistics.manyQualified | default: 'More than one qualified visit per trip' }}</i></td><td><i>{{ translation.statistics.borderCrossings | default: 'Border crossings (in and out)' }}</i></td></tr>
+ <tr><td><b>{{ translation.statistics.country | default: 'Country' }}</b></td><td><b>{{ translation.statistics.ordinaryLength | default: 'Ordinary length' }}</b></td><td><b>{{ translation.statistics.shorterStop | default: 'Shorter stop incl.' }}</b></td><td><b>{{ translation.statistics.shortVeryShort | default: 'Shorter and very short stop incl.' }}</b></td><td><b>{{ translation.statistics.ordinaryLength | default: 'Ordinary length' }}</b></td><td><b>{{ translation.statistics.minimalNumber | default: 'Minimal number' }}</b></td></tr>
+ </thead>
+
+      {% for country in jsonData[4] %}
+            <tr><td>{{ country.Country }}</td><td>{{ country.OL }}</td><td>{{ country.OL | plus: country.SS }}</td><td>{{ country.OL | plus: country.SS | plus: country.VSS }}</td><td>{{ country.OLMQ }}</td><td>{{ country.OLMQ | plus: country.SSMQ | plus: country.VSSMQ | times: 2 }}</td></tr>
+      {% endfor %}
+</table>
+<div id="statComment" class="roundBorder" style="padding:10pt;font-family: 'Francois+One', sans-serif;margin-top:10pt;">
+{{ translation.statistics.note | default: 'All columns display visits of significant importance. The actual number of border crossings may therefore
+be greater than reported. Stops that are crucial for the travel experience are considered significant.
+A qualified visit is defined as a visit that does not resume a previous visit after a break caused by a
+short or very short visit to another country.' }}
+</div>
+
+
+
+
+
+    </div>
+    <div class="tab-pane fade bg-white border" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">
+
+        <table class="table">
+          <tr>
+            <td class="iib-silver-grey">{{ translation.statistics.overnightStaysCountry | default: 'Number of overnight stays per country' }}</td>
+          </tr>
+        </table>
+
+          <b>{{ translation.statistics.topTenCountries | default: 'Top ten countries' }}</b>
+
+        <div class="m-3">
+        <div id="stat-trip-overnights-chart-data" data-json='{{ jsonData[2] | slice: 0, 10 | json }}'>
+        <canvas id="stat-trip-overnights"></canvas>
+        </div>
+
+          <table class="table table-hover">
+        <thead style="position:sticky;top:0;background-color:;"><tr style=""><td><b>{{ translation.statistics.country | default: 'Country' }}</b></td><td><b>{{ translation.statistics.overnightStays | default: 'Overnights' }}</b></td></tr></thead>
+
+        {% for row in jsonData[2] %}
+            <tr><td>{{ row.AccommodationCountry }}</b></td><td style="text-align:center;">{{ row.Overnights }}</td></tr>
+        {% endfor %}
+
+        </table>
+
+
+          </div>
+        </div>
+
+</div>
+
+
+
+{% include 'components/footer.html' %}

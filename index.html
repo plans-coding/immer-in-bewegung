@@ -1,0 +1,913 @@
+<!doctype html>
+<html lang="en">
+<!--  data-bs-theme="dark" -->
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Immer in Bewegung</title>
+    <meta name="mobile-web-app-capable" content="yes">
+    <!--<link rel="manifest" href="manifest.json">-->
+    <meta name="theme-color" content="#6f757e" id="themeColorMeta">
+    <meta name="msapplication-navbutton-color" content="#6f757e">
+    <link rel="shortcut icon" href="favicon.webp" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo&family=Francois+One&family=Righteous&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+<!--     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"> -->
+
+    <script>
+
+    (() => {
+        const storedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = storedTheme ? storedTheme : (prefersDark ? 'dark' : 'light');
+
+        if (theme === 'dark') {
+            document.documentElement.setAttribute('data-bs-theme', 'dark');
+            document.getElementById('themeColorMeta').setAttribute('content', '#002D2D');
+        }
+    })();
+
+    </script>
+
+    <!-- LEAFLET -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet-src.min.js" integrity="sha512-3/WyQrhTdqSVmSifQS62akgtNBhZha2lS44TnoN9Jk3J01FvsKK4suVmz6t5FtccGb5iJw58GoFhBjPE5EPc8Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha512-h9FcoyWjHcOcmEVkxOfTLnmZFWIH0iZhZT1H2TbOq55xssQGEJHEaIm+PgoUaZbRvQTNTluNOEfb1ZRy6D3BOw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen@latest/Control.FullScreen.css" />
+    <script src="https://unpkg.com/leaflet.fullscreen@latest/Control.FullScreen.js"></script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-polylinedecorator@1.6.0/dist/leaflet.polylineDecorator.min.js"></script>
+
+    <style>
+      .immer-in-font-uc {font-family: 'Cairo', sans-serif;text-transform: uppercase;}
+      .bewegung-font-uc {font-family: 'Righteous', sans-serif;text-transform: uppercase;}
+
+      :root[data-bs-theme="light"] .iib-nav-link.active {background-color:#6f757e !important;color:#fff !important;}
+      :root[data-bs-theme="light"] body, :root[data-bs-theme="light"] #offcanvasNavbar {background-color:#f8fafd;}
+      h1 {font-family: 'Cairo', sans-serif;font-weight:bold;margin-top:0.5em;}
+      .iib-silver-grey{background-color:#6f757e!important;color:#fff!important;font-weight:normal!important;}
+      .iib-nav-link {color:#1d655e!important;}
+
+        :root[data-bs-theme="dark"] .form-check-input:checked {background-color:#1d655e !important;}
+        :root[data-bs-theme="dark"] body, :root[data-bs-theme="dark"] #offcanvasNavbar {background-color:#000D0D!important;}
+        :root[data-bs-theme="dark"] .iib-silver-grey{background-color:#002D2D!important;color:#fff!important;font-weight:normal!important;}
+        :root[data-bs-theme="dark"] .iib-nav-link.active {background-color:#002D2D !important;color:#fff !important;}
+
+        /* Leaflet */
+        :root[data-bs-theme="dark"] .leaflet-touch .leaflet-control-layers,  :root[data-bs-theme="dark"] .leaflet-touch .leaflet-control-zoom-in,  :root[data-bs-theme="dark"] .leaflet-touch .leaflet-control-zoom-out{color:#fff;background-color:#002D2D !important;}
+        :root[data-bs-theme="dark"]  a.leaflet-control-zoom-fullscreen.leaflet-fullscreen-icon {background-color: #FFD2D2;filter: invert(1);}
+        :root[data-bs-theme="dark"] .leaflet-container .leaflet-control-attribution{background-color:#002D2DCC !important;color:#fff;}
+        :root[data-bs-theme="dark"] .leaflet-container  .leaflet-control-attribution a{color:#fff !important;}
+        :root[data-bs-theme="dark"] .leaflet-popup-content-wrapper,  :root[data-bs-theme="dark"] .leaflet-popup-tip {background-color:#002D2D !important;color:#fff !important;}
+        :root[data-bs-theme="dark"] img.leaflet-tile {filter: brightness(0.7) contrast(3) sepia(0.6) saturate(1) hue-rotate(300deg) invert(1);}
+        :root[data-bs-theme="dark"] .bg-white {background-color:#002D2D !important;}
+        :root[data-bs-theme="dark"] th, :root[data-bs-theme="dark"] td {background-color:transparent !important;}
+
+
+    @media (max-width: 799px) {
+            .prevnext {display:none;}
+    }
+
+    </style>
+
+    <script src="/iib/bundle/sqljs/sql-wasm.js"></script>
+
+    <script type="text/template">
+
+    <div class="container-fluid vh-100 d-flex flex-column p-0">
+    <div class="wrapper d-flex flex-column flex-grow-1">
+
+        <nav class="navbar navbar-expand-lg">
+          {% include 'components/menu.html' %}
+        </nav>
+
+        <main style="height:100%;">
+
+            {% if not queryParams.p or queryParams.p == '' or queryParams.p == 'overview' %}
+              {% include 'overview.html' %}
+            {% elsif queryParams.p == 'trip' %}
+              {% include 'trip.html' %}
+            {% elsif queryParams.p == 'map' %}
+              {% include 'map.html' %}
+            {% elsif queryParams.p == 'statistics' %}
+              {% include 'statistics.html' %}
+            {% elsif queryParams.p == 'dataset' %}
+              {% include 'dataset.html' %}
+            {% elsif queryParams.p == 'about' %}
+              {% include 'about.html' %}
+            {% elsif queryParams.p == 'images' %}
+              {% include 'images.html' %}
+            {% elsif queryParams.p == 'search' %}
+              {% include 'search.html' %}
+            {% endif %}
+
+        </main>
+
+      </div>
+      </div>
+    </script>
+
+
+  </head>
+  <body>
+
+        <div class="container-fluid p-0" id="result">
+
+            <div class="loader"></div>
+
+            <style>
+            .loader {
+              width: 50px;
+              height: 50px;
+              border: 5px solid #f3f3f3;
+              border-top: 5px solid #1d655e; /*#3498db;*/
+              border-radius: 50%;
+              animation: spin 1s linear infinite;
+              margin:auto;
+              margin-top:30pt;
+            }
+
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+            </style>
+
+            <div style="padding:10pt;font-family:arial;"><!--Loading WASM module... this can take some seconds first time.--></div>
+
+    </div>
+
+    <script>
+(() => {
+  'use strict';
+
+  const getStoredTheme = () => localStorage.getItem('theme');
+  const setStoredTheme = theme => localStorage.setItem('theme', theme);
+
+  const getPreferredTheme = () => {
+    const storedTheme = getStoredTheme();
+    return storedTheme ? storedTheme : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  };
+
+  const setTheme = theme => {
+    document.documentElement.setAttribute('data-bs-theme', theme);
+
+    // Update theme-color meta tag
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute('content', theme === 'dark' ? '#002D2D' : '#6f757e'); // Adjust colors as needed
+    }
+  };
+
+  const themeToggler = () => {
+    const toggleSwitches = document.querySelectorAll('#themeToggle, #themeToggle1');
+
+    if (toggleSwitches.length > 0) {
+      // Apply initial theme
+      const preferredTheme = getPreferredTheme();
+      setTheme(preferredTheme);
+
+      toggleSwitches.forEach(toggleSwitch => {
+        toggleSwitch.checked = preferredTheme === 'dark';
+
+        // Event listener for toggle switches
+        toggleSwitch.addEventListener('change', () => {
+          const newTheme = toggleSwitch.checked ? 'dark' : 'light';
+          setStoredTheme(newTheme);
+          setTheme(newTheme);
+
+          // Sync all toggles
+          toggleSwitches.forEach(switchElement => {
+            switchElement.checked = newTheme === 'dark';
+          });
+        });
+      });
+
+    } else {
+      setTimeout(themeToggler, 100); // Retry until the elements are found
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', themeToggler);
+})();
+
+
+(async function () {
+
+            const settingsFile = await fetch('personal/settings.json');
+            const settings = await settingsFile.json();
+            console.log(settings.baseSettings.sqliteFile);
+
+            let translation = { "menu": { "overview": "Overview", "statistics": "Statistics", "map": "Map", "dataset": "Dataset", "about": "About" } };
+            console.log(translation);
+            //Langugage file
+            try {
+                const translationFile = await fetch(settings.baseSettings.translationFile);
+                translation = await translationFile.json();
+                console.log(translation);
+            } catch (error) {
+                console.log(`Langugage file error: ${error.message}`);
+            }
+
+            // 1. Get all query parameters from the URL
+            function getQueryParams() {
+                const params = new URLSearchParams(window.location.search);
+                let queryObject = {};
+                for (const [key, value] of params.entries()) {
+                    queryObject[key] = value;
+                }
+                return queryObject;
+            }
+
+            const queryParams = getQueryParams();
+            console.log("Query Parameters:", queryParams);
+
+            let sqlResult = [];
+            let sqlQuery = '';
+            let jsonData = [];
+            let diaryFilesArray = [];
+            let passportFilesArray = [];
+
+            if(!queryParams.p) {queryParams.p = "overview";}
+
+            if ( ["dataset", "about"].includes(queryParams.p) ) {
+                document.title = translation.menu[queryParams.p] + " - Immer in Bewegung";
+            }
+
+            if (!queryParams.p || ['', 'overview', 'trip', 'map', 'statistics', 'search', 'images'].includes(queryParams.p)) {
+
+                if (!queryParams.p ) {
+                    document.title = translation.overview.title + " - Immer in Bewegung";
+                } else if (queryParams.s) {
+                    document.title = queryParams.s + " - Immer in Bewegung";
+                } else if (queryParams.p != "trip" && queryParams.p != "images") {
+                    document.title = translation.menu[queryParams.p] + " - Immer in Bewegung";
+                } else {
+                   document.title = queryParams.id + " - Immer in Bewegung";
+                }
+
+              if (!queryParams.p || queryParams.p  == '' || queryParams.p == 'overview') {
+                sqlQuery = `SELECT *, SUBSTR(InnerId, 1, 1) AS TripDomain, CAST(strftime('%Y', DepartureDate) AS INTEGER) AS TripYear, (CAST(strftime('%Y', DepartureDate) AS INTEGER) / 10) * 10 AS TripDecade FROM bewa_Overview WHERE InnerId IS NOT NULL ORDER BY DepartureDate DESC;SELECT CAST(strftime('%Y', MIN(DepartureDate)) AS INTEGER) AS MinYear, CAST(strftime('%Y', MAX(DepartureDate)) AS INTEGER) AS MaxYear FROM bewa_Overview;SELECT * FROM bewx_TripDomains;SELECT
+    bewx_ContinentCountries.Continent,
+    bewx_ContinentCountries.Country,
+    IIBc_BorderCrossings.OuterId,
+    IIBc_BorderCrossings.InnerId,
+    bewa_Overview.OverallDestination
+FROM bewx_ContinentCountries
+JOIN IIBc_BorderCrossings
+    ON IIBc_BorderCrossings.AllBorderCrossings LIKE '%' || bewx_ContinentCountries.Country || '%'
+JOIN bewa_Overview
+    ON IIBc_BorderCrossings.InnerId = bewa_Overview.InnerId
+ORDER BY
+    CASE
+        WHEN bewx_ContinentCountries.Continent = 'Europa' THEN 0
+        ELSE 1
+    END,
+    bewx_ContinentCountries.Continent ASC,
+    bewx_ContinentCountries.Country ASC;
+`;
+                //console.log("SQL Query:", sqlQuery);
+              }
+
+              if (queryParams.p == 'trip') {
+
+
+                // Diary
+                if (settings['plugins']['diary']) {
+                    const diaryFiles = await fetch(settings['plugins']['diary']['filelist']);
+                    const textContent = await diaryFiles.text(); // Await the text content
+
+                    // Split by lines, trim each line, and filter out empty lines
+                    diaryFilesArray = textContent
+                        .split('\n') // Split by newlines
+                        .map(line => line.trim()) // Trim whitespace
+                        .filter(line => line.length > 0); // Filter out empty lines
+
+                    //console.log(diaryFilesArray); // Log the array of non-empty, trimmed rows
+                }
+
+                // Passport
+                if (settings['plugins']['passport']) {
+                    const passportFiles = await fetch(settings['plugins']['passport']['filelist']);
+                    const textContent = await passportFiles.text(); // Await the text content
+
+                    // Split by lines, trim each line, and filter out empty lines
+                    passportFilesArray = textContent
+                        .split('\n') // Split by newlines
+                        .map(line => line.trim()) // Trim whitespace
+                        .filter(line => line.length > 0); // Filter out empty lines
+
+                    //console.log(passportFilesArray); // Log the array of non-empty, trimmed rows
+                }
+
+                sqlQuery = `SELECT *, SUBSTR(InnerId, 1, 1) AS DomainAbbreviation FROM bewa_Overview WHERE OuterId = "`+queryParams.id+`";SELECT * FROM IIBb_Events WHERE OuterId = "`+queryParams.id+`" ORDER BY Date;SELECT SUBSTR(InnerId, 1, 1) AS DomainAbbreviation, OuterId, OverallDestination FROM bewa_Overview WHERE OuterId IS NOT NULL ORDER BY DepartureDate ASC;SELECT * FROM bewx_TripDomains;SELECT * FROM IIBc_BorderCrossings WHERE OuterId = "`+queryParams.id+`";WITH RECURSIVE SplitPins AS (
+    -- Start by selecting the first portion of the string
+    SELECT
+        OuterId,
+        SUBSTR(MapPins, INSTR(MapPins, '{') + 2, INSTR(MapPins, '}') - INSTR(MapPins, '{') - 2) AS PinEntry,
+        SUBSTR(MapPins, INSTR(MapPins, '}') + 2) AS Remaining
+    FROM bewa_Overview
+    WHERE OuterId = "`+queryParams.id+`"
+
+    UNION ALL
+
+    -- Recursively extract subsequent portions
+    SELECT
+        OuterId,
+        SUBSTR(Remaining, INSTR(Remaining, '{') + 2, INSTR(Remaining, '}') - INSTR(Remaining, '{') - 2) AS PinEntry,
+        SUBSTR(Remaining, INSTR(Remaining, '}') + 2)
+    FROM SplitPins
+    WHERE Remaining LIKE '%{%'
+)
+
+-- Extract name and coordinates from each pin entry
+SELECT
+    "`+queryParams.id+`" AS OuterId,
+    TRIM(SUBSTR(PinEntry, 1, INSTR(PinEntry, '|') - 1)) AS MapPin,
+    TRIM(SUBSTR(PinEntry, INSTR(PinEntry, '|') + 2, INSTR(PinEntry, ',') - INSTR(PinEntry, '|') - 2)) AS Latitude,
+    TRIM(SUBSTR(PinEntry, INSTR(PinEntry, ',') + 2)) AS Longitude
+FROM SplitPins;
+`;
+                //console.log("SQL Query:", sqlQuery);
+              }
+
+
+              if (queryParams.p == 'map') {
+                sqlQuery = `SELECT DISTINCT AccommodationCountry FROM IIBb_Events WHERE AccommodationCountry NOT LIKE '(%' AND AccommodationCountry NOT LIKE '-%' ORDER BY AccommodationCountry;`
+
+                if (!queryParams.country || queryParams.country == '') {
+                    sqlQuery = sqlQuery + `SELECT
+    InnerId,
+    GROUP_CONCAT(AccommodationCoordinates, '|') AS MergedAccommodationCoordinates
+FROM
+    bewb_Events
+WHERE
+    AccommodationCoordinates IS NOT NULL
+GROUP BY
+    InnerId;
+`;
+                }
+                else {
+                sqlQuery = sqlQuery + 'SELECT * FROM IIBb_Events WHERE AccommodationCountry = "'+queryParams.country+'";SELECT * FROM bewx_TripDomains;';
+}
+                //console.log("SQL Query:", sqlQuery);
+              }
+
+              if (queryParams.p == 'statistics') {
+                sqlQuery = `SELECT
+                                SUBSTR(InnerId, 1, 1) AS DomainAbbreviation,
+                                SUBSTR(DepartureDate, 1, 4) AS Year,
+                                COUNT(*) AS AbbreviationCount
+                            FROM
+                                bewa_Overview
+                            WHERE
+                                InnerId IS NOT NULL
+                                AND DepartureDate IS NOT NULL
+                            GROUP BY
+                                DomainAbbreviation, Year
+                            ORDER BY
+                                Year ASC, AbbreviationCount DESC;SELECT COUNT(InnerId) As Count FROM bewa_Overview;SELECT AccommodationCountry, COUNT(*) AS Overnights FROM bewb_Events GROUP BY AccommodationCountry ORDER BY Overnights DESC;SELECT * FROM bewx_TripDomains;WITH SplitCountries AS (
+    SELECT
+        OuterId,
+        InnerId,
+        TRIM(value) AS RawCountry
+    FROM IIBc_BorderCrossings, json_each('["' || REPLACE(AllBorderCrossings, ', ', '","') || '"]')
+),
+Normalized AS (
+    SELECT DISTINCT
+        OuterId,
+        InnerId,
+        REPLACE(REPLACE(REPLACE(RawCountry, '*', ''), '**', ''), '+', '') AS Country,
+        RawCountry
+    FROM SplitCountries
+),
+CountRaw AS (
+    SELECT
+        REPLACE(REPLACE(REPLACE(TRIM(value), '*', ''), '**', ''), '+', '') AS Country,
+        COUNT(*) AS OLMQ
+    FROM IIBc_BorderCrossings, json_each('["' || REPLACE(AllBorderCrossings, ', ', '","') || '"]')
+    WHERE TRIM(value) NOT LIKE '*%'
+      AND TRIM(value) NOT LIKE '**%'
+      AND TRIM(value) NOT LIKE '+%'
+    GROUP BY Country
+),
+CountPrefixed AS (
+    SELECT
+        REPLACE(REPLACE(REPLACE(TRIM(value), '*', ''), '**', ''), '+', '') AS Country,
+        SUM(CASE WHEN TRIM(value) LIKE '*%' THEN 1 ELSE 0 END) AS SSMQ,
+        SUM(CASE WHEN TRIM(value) LIKE '**%' THEN 1 ELSE 0 END) AS VSSMQ,
+        SUM(CASE WHEN TRIM(value) LIKE '+%' THEN 1 ELSE 0 END) AS PSMQ
+    FROM IIBc_BorderCrossings, json_each('["' || REPLACE(AllBorderCrossings, ', ', '","') || '"]')
+    GROUP BY Country
+),
+Aggregated AS (
+    SELECT
+        n.Country,
+        COUNT(*) AS OL,
+        cr.OLMQ AS OLMQ,
+        SUM(CASE WHEN n.RawCountry LIKE '*%' THEN 1 ELSE 0 END) AS SS,
+        SUM(CASE WHEN n.RawCountry LIKE '**%' THEN 1 ELSE 0 END) AS VSS,
+        SUM(CASE WHEN n.RawCountry LIKE '+%' THEN 1 ELSE 0 END) AS PS,
+        cp.SSMQ,
+        cp.VSSMQ,
+        cp.PSMQ
+    FROM Normalized n
+    LEFT JOIN CountRaw cr ON n.Country = cr.Country
+    LEFT JOIN CountPrefixed cp ON n.Country = cp.Country
+    GROUP BY n.Country
+)
+SELECT
+    Country,
+    OL,
+    SS,
+    VSS,
+    PS,
+    OLMQ,
+	SSMQ,
+    VSSMQ,
+    PSMQ
+FROM Aggregated
+ORDER BY OL DESC;
+`;
+                //console.log("SQL Query:", sqlQuery);
+              }
+
+              if (queryParams.p == 'search') {
+                sqlQuery = "SELECT * FROM bewx_TripDomains;SELECT 'TripQuery' AS Query, * FROM bewa_Overview RIGHT JOIN IIBc_BorderCrossings USING (InnerId,OuterId) WHERE (COALESCE(ParticipantGroup, '') || ' ' ||  COALESCE(OverallDestination, '') || ' ' || COALESCE(DepartureDate, '') || ' ' || COALESCE(ReturnDate, '') || ' ' || COALESCE(MapPins, '') || ' ' || COALESCE(TripDescription, '') || ' ' ||  COALESCE(AllBorderCrossings, '')) LIKE '%" + queryParams.s + "%';SELECT 'EventQuery' AS Query, * FROM IIBb_Events WHERE (COALESCE(OuterId, '') || ' ' || COALESCE(OverallDestination, '') || ' ' || COALESCE(Date, '') || ' ' || COALESCE(Events, '') || ' ' || COALESCE(Accommodation, '') || ' ' || COALESCE(AccommodationCountry, '') || ' ' ||        COALESCE(ParticipantGroup, '') || ' ' || COALESCE(TravelParticipants, '') || ' ' || COALESCE(AdditionalNotes, '') || ' ' || COALESCE(CountriesDuringDay, '')) LIKE '%" + queryParams.s + "%';";
+
+                console.log("SQL Query:", sqlQuery);
+              }
+
+              if (queryParams.p == 'images') {
+                sqlQuery = "SELECT SUBSTR(InnerId, 1, 1) AS DomainAbbreviation, Date FROM IIBb_Events WHERE OuterId = '" + queryParams.id + "' ORDER BY Date ASC;SELECT * FROM bewx_TripDomains;";
+                //console.log("SQL Query:", sqlQuery);
+              }
+
+
+              // 2. Load SQL.js and execute a query using the local database
+              const sqlPromise = await initSqlJs({
+                  locateFile: file => `https://sql.js.org/dist/${file}`
+              });
+              //const sqlPromise = await initSqlJs();
+
+              // Fetch the database file (assuming it is served from your server)
+              const dbFileUrl = settings.baseSettings.sqliteFile;
+              const response = await fetch(dbFileUrl);
+              const arrayBuffer = await response.arrayBuffer();
+
+              const db = new sqlPromise.Database(new Uint8Array(arrayBuffer));
+
+              // Execute the SQL query
+              sqlResult = db.exec(sqlQuery);
+              console.log("SQL Result:", sqlResult);
+
+
+/*              const stmt = db.prepare(sqlQuery);
+const sqlResult = [];
+
+while (stmt.step()) {
+    sqlResult.push(stmt.getAsObject());
+}
+
+stmt.free();
+console.log("SQL Result:", sqlResult);*/
+              // Loop through each result (columns and values for each query)
+              jsonData = sqlResult.map(result => {
+                const columnNames = result.columns;
+                return result.values.map(row => {
+                  let obj = {};
+                  columnNames.forEach((col, index) => {
+                    obj[col] = row[index];
+                  });
+                  return obj;
+                });
+              });
+              console.log("JSON Data:", jsonData);
+
+            }
+
+            // LiquidJS render the result
+            const { Liquid } = await import("https://cdn.jsdelivr.net/npm/liquidjs/dist/liquid.browser.min.mjs");
+            const engine = new Liquid();
+            const template = document.querySelector('script[type="text/template"]').innerHTML;
+
+
+            // Render with LiquidJS (await ensures it waits before inserting into the page)
+            const htmlOutput = await engine.parseAndRender(template, { queryParams, translation, settings, jsonData, diaryFilesArray, passportFilesArray });
+
+            // Insert rendered result into the element with id="result"
+            const resultElement = document.getElementById('result');
+            resultElement.innerHTML = htmlOutput;
+
+
+
+        })();
+
+        </script>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="components/statisticsChart.js"></script>
+
+
+
+    <script>
+
+    //const response = fetch("https://immich-tls.karlaplan.duckdns.org/api/map/markers");
+    //console.log(response);
+/*
+    const rawData = mapPinDataContainer.getAttribute('data-map-assets');
+    const jsonDataAssets = JSON.parse(rawData);
+
+    async function fetchMarkers(jsonDataAssets['immich-server-api-address'], jsonDataAssets['immich-server-api-key'], fileCreatedAfter, fileCreatedBefore) {
+    const url = `${immichApiServer}map/markers?fileCreatedAfter=${fileCreatedAfter}&fileCreatedBefore=${fileCreatedBefore}`;
+
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'x-api-key': immichApiKey
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json(); // Assuming the response is JSON
+            return data;
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                return null;
+            }
+    }
+
+    // Example usage
+    fetchMarkers('https://immich.example.com/', 'your-api-key', '2024-01-01', '2024-02-01')
+        .then(data => console.log(data))
+        .catch(error => console.error(error));*/
+
+
+
+function initializeMapTrip() {
+    const mapContainer = document.getElementById('map');
+    const mapPinDataContainer = document.getElementById('map-pin-data');
+
+    if (mapContainer && mapPinDataContainer) {
+
+    var overviewData = JSON.parse(mapPinDataContainer.getAttribute("data-map-overall-route"));
+    var accommodationData = JSON.parse(mapPinDataContainer.getAttribute("data-map-accommodation"));
+    var assetsSettings = JSON.parse(mapPinDataContainer.getAttribute("data-settings-assets"));
+    var mapColor = mapPinDataContainer.getAttribute("data-map-color");
+
+    //console.log(overviewData);
+    //console.log(accommodationData);
+    //console.log(assetsSettings);
+    //console.log(mapColor);
+
+    // Fetch assets data
+    /*
+    fetch(assetsSettings['immich-server-api-address']+'map/markers', {
+                method: 'GET',
+                headers: {
+                    'x-api-key': assetsSettings['immich-server-api-key']
+                }
+            })
+        .then(response => response.json())
+        .then(assetsData => {
+            //drawMap(overviewData, accommodationData, assetsData);
+            console.log(assetsData);
+        })
+        .catch(error => console.error('Failed to fetch assets data:', error));
+    */
+
+
+
+    const map = L.map('map', {fullscreenControl: true}).setView([39.569176, 2.650108], 10);
+
+    // Base Layer (OpenStreetMap)
+    const baseLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    });
+    baseLayer.addTo(map);
+
+    //map.addControl(new L.Control.Fullscreen());
+
+    const bounds = L.latLngBounds(); // Create bounds object
+
+    // Define Layer Groups
+    const overviewLayer = L.layerGroup();
+    const accommodationLayer = L.layerGroup();
+
+    // Store coordinates for polylines
+    const overviewCoords = [];
+    const accommodationCoords = [];
+
+    // Add Overview Markers & Collect Coordinates
+    overviewData.forEach(location => {
+        const lat = parseFloat(location.Latitude);
+        const lng = parseFloat(location.Longitude);
+
+                    const svgIconCar = L.divIcon({
+  className: 'custom-icon',
+  html: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" class="bi bi-car-front-fill" viewBox="0 0 16 16">  <path fill="`+mapColor+`" d="M2.52 3.515A2.5 2.5 0 0 1 4.82 2h6.362c1 0 1.904.596 2.298 1.515l.792 1.848c.075.175.21.319.38.404.5.25.855.715.965 1.262l.335 1.679q.05.242.049.49v.413c0 .814-.39 1.543-1 1.997V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.338c-1.292.048-2.745.088-4 .088s-2.708-.04-4-.088V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.892c-.61-.454-1-1.183-1-1.997v-.413a2.5 2.5 0 0 1 .049-.49l.335-1.68c.11-.546.465-1.012.964-1.261a.8.8 0 0 0 .381-.404l.792-1.848ZM3 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2m10 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2M6 8a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2zM2.906 5.189a.51.51 0 0 0 .497.731c.91-.073 3.35-.17 4.597-.17s3.688.097 4.597.17a.51.51 0 0 0 .497-.731l-.956-1.913A.5.5 0 0 0 11.691 3H4.309a.5.5 0 0 0-.447.276L2.906 5.19Z"/></svg>`,
+});
+ /*'img/car.svg', iconSize: [25, 25] }) })*/
+
+        if (!isNaN(lat) && !isNaN(lng)) {
+            L.marker([lat, lng], { icon: svgIconCar })
+                .bindPopup(`<b>${location.MapPin}</b>`)
+                .addTo(overviewLayer);
+            bounds.extend([lat, lng]);
+            overviewCoords.push([lat, lng]);
+        }
+    });
+
+    // Add Accommodation Markers & Collect Coordinates
+    accommodationData.forEach(accommodation => {
+        if (accommodation.AccommodationCoordinates) {
+            const coords = accommodation.AccommodationCoordinates.split(',').map(parseFloat);
+
+            const svgIcon = L.divIcon({
+  className: 'custom-icon',
+  html: `<svg class="iib-trip-tab" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"	 width="32px" height="32px" viewBox="0 0 460.298 460.297" style="enable-background:new 0 0 460.298 460.297;"	 xml:space="preserve"><g>	<g>		<path fill="#6f757e" d="M230.149,120.939L65.986,256.274c0,0.191-0.048,0.472-0.144,0.855c-0.094,0.38-0.144,0.656-0.144,0.852v137.041			c0,4.948,1.809,9.236,5.426,12.847c3.616,3.613,7.898,5.431,12.847,5.431h109.63V303.664h73.097v109.64h109.629			c4.948,0,9.236-1.814,12.847-5.435c3.617-3.607,5.432-7.898,5.432-12.847V257.981c0-0.76-0.104-1.334-0.288-1.707L230.149,120.939			z"/>		<path fill="#6f757e" d="M457.122,225.438L394.6,173.476V56.989c0-2.663-0.856-4.853-2.574-6.567c-1.704-1.712-3.894-2.568-6.563-2.568h-54.816			c-2.666,0-4.855,0.856-6.57,2.568c-1.711,1.714-2.566,3.905-2.566,6.567v55.673l-69.662-58.245			c-6.084-4.949-13.318-7.423-21.694-7.423c-8.375,0-15.608,2.474-21.698,7.423L3.172,225.438c-1.903,1.52-2.946,3.566-3.14,6.136			c-0.193,2.568,0.472,4.811,1.997,6.713l17.701,21.128c1.525,1.712,3.521,2.759,5.996,3.142c2.285,0.192,4.57-0.476,6.855-1.998			L230.149,95.817l197.57,164.741c1.526,1.328,3.521,1.991,5.996,1.991h0.858c2.471-0.376,4.463-1.43,5.996-3.138l17.703-21.125			c1.522-1.906,2.189-4.145,1.991-6.716C460.068,229.007,459.021,226.961,457.122,225.438z"/>	</g></g></svg>`,
+});
+
+            if (coords.length === 2 && !isNaN(coords[0]) && !isNaN(coords[1])) {
+                L.marker(coords, { icon: svgIcon }) /*L.icon({ iconUrl: 'img/house.svg', iconSize: [25, 25] })*/
+                    .bindPopup(`<b>${accommodation.Accommodation}</b><br>${accommodation.Date}<br>${accommodation.AccommodationCoordinates} ${accommodation.AccommodationCoordinatesAccuracy ? `Accuracy: ${accommodation.AccommodationCoordinatesAccuracy}` : ''}`)
+                    .addTo(accommodationLayer);
+                bounds.extend(coords);
+                accommodationCoords.push(coords);
+            }
+        }
+    });
+
+    // Function to add polylines with arrows
+    function addPolylineDecorators(layer, coords, color) {
+        if (coords.length > 1) {
+            const polyline = L.polyline(coords, { color: color, weight: 5 }).addTo(layer);
+
+            const decorator = L.polylineDecorator(polyline, {
+                patterns: [
+                    {
+                        offset: '50%',
+                        symbol: L.Symbol.arrowHead({
+                            pixelSize: 15,
+                            headAngle: 30,
+                            polygon: false,
+                            pathOptions: { stroke: true, color: color }
+                        })
+                    }
+                ]
+            }).addTo(layer);
+        }
+    }
+
+    // Add polylines with arrows
+    addPolylineDecorators(overviewLayer, overviewCoords, mapColor);
+    addPolylineDecorators(accommodationLayer, accommodationCoords, '#6f757e');
+
+    // Add Layer Control
+    L.control.layers(null, {
+        "Overview": overviewLayer,
+        "Accommodation": accommodationLayer
+    }, {collapsed: false}).addTo(map);
+
+    // Add layers to the map
+    overviewLayer.addTo(map);
+    accommodationLayer.addTo(map);
+
+    // Fit map to bounds if there are valid markers
+
+    map.fitBounds(bounds);
+
+
+
+
+    //}
+
+
+
+
+
+
+    } else {
+        setTimeout(initializeMapTrip, 100);
+    }
+}
+
+function initializeMapContours() {
+    const mapContainer = document.getElementById('map');
+    const mapPinDataContainer = document.getElementById('map-pin-data');
+
+    if (mapContainer && mapPinDataContainer) {
+        const map = L.map('map', {fullscreenControl: true}).setView([51.505, -0.09], 6);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        try {
+            const rawData = mapPinDataContainer.getAttribute('data-map');
+            const jsonData = JSON.parse(rawData);
+
+            /* --- BIND INDIVIDUAL TRIP POINTS
+            const bounds = L.latLngBounds(); // Create bounds object
+
+            jsonData.forEach(pin => {
+                const { MergedAccommodationCoordinates } = pin;
+
+                // Split the string into individual coordinate pairs
+                const coordinates = MergedAccommodationCoordinates.split('|').map(coord => {
+                    const [lat, lon] = coord.split(',').map(parseFloat); // Parse latitude and longitude
+
+                    // Validate if both lat and lon are valid numbers
+                    if (isNaN(lat) || isNaN(lon)) {
+                        console.warn(`Invalid coordinates: ${coord}`);
+                        return null; // Skip invalid coordinates
+                    }
+
+                    return [lat, lon]; // Return as an array of [lat, lon]
+                }).filter(coord => coord !== null); // Remove invalid coordinates
+
+                // Create a polyline from the valid array of coordinates
+                if (coordinates.length > 0) {
+                    const polyline = L.polyline(coordinates, {
+                        color: '#1d655e', // Set the polyline color
+                        weight: 3,             // Set the line thickness (optional)
+                        opacity: 0.7          // Set the opacity (optional)
+                        })
+                        .addTo(map)
+                        .bindPopup(`<b>${pin.InnerId}</b>`)
+                        .on('click', function () {
+                            this.openPopup();
+                        });
+
+                    bounds.extend(polyline.getBounds()); // Extend bounds to fit the polyline
+
+
+
+                        } else {
+                            console.warn(`Skipping polyline for ${pin.InnerId} due to invalid coordinates.`);
+                        }
+                    });
+
+                    if (jsonData.length > 0) {
+                        map.fitBounds(bounds, { padding: [50, 50] }); // Auto-zoom to fit all the polylines
+                    }
+
+                    console.log("Map initialized with auto-zoom");
+                    --- BIND INDIVIDUAL TRIP POINTS */
+
+              // BIND ALL TRIP ACCOMMODATION POINTS TOGEHTER
+              const allCoordinates = [];
+
+              jsonData.forEach(pin => {
+                  const { MergedAccommodationCoordinates } = pin;
+
+                  // Split the string into individual coordinate pairs
+                  const coordinates = MergedAccommodationCoordinates.split('|').map(coord => {
+                      const [lat, lon] = coord.split(',').map(parseFloat); // Parse latitude and longitude
+
+                      // Validate if both lat and lon are valid numbers
+                      if (isNaN(lat) || isNaN(lon)) {
+                          console.warn(`Invalid coordinates: ${coord}`);
+                          return null; // Skip invalid coordinates
+                      }
+
+                      return [lat, lon]; // Return as an array of [lat, lon]
+                  }).filter(coord => coord !== null); // Remove invalid coordinates
+
+                  // Append valid coordinates to the global array
+                  allCoordinates.push(...coordinates);
+              });
+
+              // Create a single polyline from all coordinates
+              if (allCoordinates.length > 0) {
+                  const polyline = L.polyline(allCoordinates, {
+                      color: '#1d655e', // Set the polyline color
+                      weight: 3,        // Set the line thickness (optional)
+                      opacity: 0.7      // Set the opacity (optional)
+                  }).addTo(map);
+
+                  map.fitBounds(polyline.getBounds()); // Adjust map to fit the polyline
+              }
+              // BIND ALL TRIP ACCOMMODATION POINTS TOGEHTER
+
+
+        } catch (error) {
+            console.error("JSON Parse Error:", error);
+        }
+    } else {
+        setTimeout(initializeMapContours, 100);
+    }
+}
+
+function initializeMapCountry() {
+    const mapContainer = document.getElementById('map');
+    const mapPinDataContainer = document.getElementById('map-pin-data');
+
+    if (mapContainer && mapPinDataContainer) {
+        const map = L.map('map', {fullscreenControl: true}).setView([51.505, -0.09], 6);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        try {
+            const rawData = mapPinDataContainer.getAttribute('data-map');
+            const jsonData = JSON.parse(rawData);
+            const bounds = L.latLngBounds(); // Create bounds object
+
+            jsonData.forEach(pin => {
+                const { InnerId, OuterId, OverallDestination, AccommodationCoordinates, AccommodationCoordinatesAccuracy, Accommodation, ParticipantGroup, TravelParticipants, Date, CountriesDuringDay } = pin;
+
+                // Split coordinates from the 'AccommodationCoordinates' field
+                const [lat, lon] = AccommodationCoordinates.split(',').map(coord => parseFloat(coord.trim()));
+
+                // Popup content with conditional rendering for accuracy
+                let popupContent = `
+                    <b>${Accommodation}</b> <br>
+                    ${ParticipantGroup} ${TravelParticipants} <br>
+                    ${Date} <br>
+                    <a href="?p=trip&id=${OuterId}"><div class="iib-map-ref" data-iib-tripDomain="${InnerId.charAt(0)}">${OuterId} ${OverallDestination}</div></a> <br>
+                `;
+
+                // Add accuracy only if it's not null
+                if (AccommodationCoordinatesAccuracy) {
+                    popupContent += `<b>Coordinate Accuracy:</b> ${AccommodationCoordinatesAccuracy} <br>`;
+                }
+
+                const marker = L.marker([lat, lon], { icon: L.icon({ iconUrl: 'img/house.svg', iconSize: [25, 25] }) })
+                    .addTo(map)
+                    .bindPopup(popupContent)
+                    .on('click', function () {
+                        this.openPopup();
+                    });
+
+                bounds.extend([lat, lon]); // Extend bounds for each marker
+            });
+
+            if (jsonData.length > 0) {
+                map.fitBounds(bounds, { padding: [50, 50] }); // Auto-zoom to markers
+            }
+
+            console.log("Map initialized with auto-zoom");
+
+
+        } catch (error) {
+            console.error("JSON Parse Error:", error);
+        }
+    } else {
+        setTimeout(initializeMapCountry, 100);
+    }
+}
+
+function versionCheck() {
+    const currentVersionElement = document.getElementById('currentVersion');
+    const latestVersionElement = document.getElementById('latestVersion');
+
+    // Check if the elements are found
+    if (currentVersionElement && latestVersionElement) {
+        const currentVersion = currentVersionElement.innerHTML;
+        const latestVersion = latestVersionElement.innerHTML;
+
+        if (currentVersion && latestVersion) {
+            if (currentVersion <= latestVersion) {
+                document.getElementById('updateText').innerHTML="New version available "+latestVersion;
+                console.log("New version available");
+            }
+        }
+    } else {
+        setTimeout(versionCheck, 100);
+    }
+}
+
+// Wait for the DOM content to be fully loaded before checking for canvas
+document.addEventListener('DOMContentLoaded', function() {
+    if (new URLSearchParams(window.location.search).get('p') == "statistics") {
+        initializeChart();
+        initializeChartOvernights();
+    } else if (new URLSearchParams(window.location.search).get('p') == "trip") {
+         initializeMapTrip();
+    } else if (new URLSearchParams(window.location.search).get('p') == "about") {
+         versionCheck();
+    } else if (new URLSearchParams(window.location.search).get('p') == "map" && ! new URLSearchParams(window.location.search).get('country') ) {
+         initializeMapContours();
+    } else if (new URLSearchParams(window.location.search).get('p') == "map" && new URLSearchParams(window.location.search).get('country') ) {
+         initializeMapCountry();
+    }
+
+});
+
+</script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+  </body>
+</html>

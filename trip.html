@@ -1,0 +1,282 @@
+<style>
+{% for tripDomain in jsonData[3] %}
+.iib-trip-tab.active[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'], .btn-iib-ctt[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {
+  background-color: {{ tripDomain.Color }}!important;
+  color:#fff;
+}
+.iib-trip-tab[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}']:not(.active){
+  color: {{ tripDomain.Color }}!important;
+}
+{% endfor %}
+</style>
+
+<!-- All trips -->
+<div class="p-1" style="display:flex;">
+
+    <div style="display: flex; align-items: center; flex: 1;">
+        <button type="button" onclick="document.querySelector('#alltrip').selectedIndex = (document.querySelector('#alltrip').selectedIndex - 1 + document.querySelector('#alltrip').options.length) % document.querySelector('#alltrip').options.length;document.querySelector('#alltrip').dispatchEvent(new Event('change'));" class="btn iib-silver-grey">
+
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+        </svg> <span class="prevnext">{{translation.menu.previous|default:"Previous"}}</span>
+
+        </button>
+    </div>
+
+
+    <div style="flex:1;text-align:center;">
+        <select id="alltrip"  class="iib-silver-grey form-control text-center" onchange="document.location='?p=trip&id='+this.value;">
+                {% for trip in jsonData[2] %}
+                    <option value="{{ trip.OuterId }}" {% if queryParams.id == trip.OuterId %}selected{% endif %}>{{ trip.OuterId }}&nbsp; {{trip.OverallDestination}}</option>
+                {% endfor %}
+        </select>
+    </div>
+
+
+    <div style="flex:1;text-align:right;">
+
+    <button type="button" onclick="document.querySelector('#alltrip').selectedIndex = (document.querySelector('#alltrip').selectedIndex + 1) % document.querySelector('#alltrip').options.length;document.querySelector('#alltrip').dispatchEvent(new Event('change'));" class="btn iib-silver-grey">
+        <span class="prevnext">{{translation.menu.next|default:"Next"}}</span> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+        </svg>
+    </button>
+
+    </div>
+
+
+</div>
+
+
+<!-- Current triptype -->
+
+<div class="p-1" style="display:flex;" class="currentTripType" data-iib-tripDomain="{{jsonData[0][0].DomainAbbreviation}}">
+
+    <div style="display: flex; align-items: center; flex: 1;">
+        <button type="button" onclick="document.querySelector('#curtriptype').selectedIndex = (document.querySelector('#curtriptype').selectedIndex - 1 + document.querySelector('#curtriptype').options.length) % document.querySelector('#curtriptype').options.length;document.querySelector('#curtriptype').dispatchEvent(new Event('change'));" class="btn btn-iib-ctt" data-iib-tripDomain="{{jsonData[0][0].DomainAbbreviation}}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+        </svg> <span class="prevnext">{{translation.menu.previous|default:"Previous"}}</span>
+        </button>
+    </div>
+
+
+    <div style="flex:1;text-align:center;">
+        <select id="curtriptype"  class="form-control text-center btn-iib-ctt" onchange="document.location='?p=trip&id='+this.value;" data-iib-tripDomain="{{jsonData[0][0].DomainAbbreviation}}">
+                {% for trip in jsonData[2] %}
+                    <option value="{{ trip.OuterId }}" {% if queryParams.id == trip.OuterId %}selected{% endif %}>{{ trip.OuterId }}&nbsp; {{trip.OverallDestination}}</option>
+                {% endfor %}
+        </select>
+    </div>
+
+
+    <div style="flex:1;text-align:right;">
+
+    <button type="button" onclick="document.querySelector('#curtriptype').selectedIndex = (document.querySelector('#curtriptype').selectedIndex + 1) % document.querySelector('#curtriptype').options.length;document.querySelector('#curtriptype').dispatchEvent(new Event('change'));" class="btn btn-iib-ctt" data-iib-tripDomain="{{jsonData[0][0].DomainAbbreviation}}">
+        <span class="prevnext">{{translation.menu.next|default:"Next"}}</span> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+        </svg>
+    </button>
+
+    </div>
+
+
+</div>
+
+
+
+
+<div class="container text-center">
+
+  <h1>{{ jsonData[0][0].OuterId }} {{translation.trip.to | default: "to" }} {{ jsonData[0][0].OverallDestination }}</h1>
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link iib-trip-tab active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true" data-iib-tripDomain="{{jsonData[0][0].DomainAbbreviation}}">{{ translation.trip.summary | default: 'Summary' }}</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link iib-trip-tab" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false" data-iib-tripDomain="{{jsonData[0][0].DomainAbbreviation}}">{{ translation.trip.dayPerDay | default: 'Day per day' }}</button>
+  </li>
+</ul>
+
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active bg-white" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+
+   <div class="row m-0">
+
+        <table class="table border">
+          <tr>
+            <td class="btn-iib-ctt" data-iib-tripDomain="{{jsonData[0][0].DomainAbbreviation}}">{{ jsonData[0][0].TripDescription }}</td>
+          </tr>
+        </table>
+  </div>
+
+
+          <div class="row m-2">
+            <div class="col-md">
+
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <th>{{ translation.trip.departureDate | default: 'Departure Date' }}</th>
+                    <td>{{ jsonData[0][0].DepartureDate }}</td>
+                  </tr>
+                  <tr>
+                    <th>{{ translation.trip.returnDate | default: 'Return Date' }}</th>
+                    <td>{{ jsonData[0][0].ReturnDate }}</td>
+                  </tr>
+                  <tr>
+                    <th>{{ translation.trip.numberOfDays | default: 'Number of Days' }}</th>
+                    <td>{{ jsonData[0][0].NumberOfDays }}
+                      {% assign start_date = jsonData[0][0].DepartureDate | date: "%s" %}
+                      {% assign end_date = jsonData[0][0].ReturnDate | date: "%s" %}
+                      {% assign difference_in_seconds = end_date | minus: start_date %}
+                      {% assign difference_in_days = difference_in_seconds | divided_by: 86400 %}
+                      {{difference_in_days}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>{{ translation.trip.participantGroup | default: 'Participant Group' }}</th>
+                    <td>{{ jsonData[0][0].ParticipantGroup }}</td>
+                  </tr>
+                  <tr>
+                    <th>{{ translation.trip.outerId | default: 'ID' }}</th>
+                    <td>{{ jsonData[0][0].OuterId }}</td>
+                  </tr>
+                  <tr>
+                    <th>{{ translation.trip.numberOfCountries | default: 'Number of Countries' }}</th>
+                    <td class="align-middle">
+
+                    <!-- count countries WITHOUT prefix ** (but WITH * and +) and only count unique instances -->
+                    {% assign countryCount = jsonData[4][0].AllBorderCrossings | split: ", " | where_exp:  "item", "item[0] != '*' and item[1] != '*'" | where_exp:  "item", "item != settings.baseSettings.homeCountry" | join: ", " | remove: "*" | remove: "+" | split: ", " | uniq %}
+                    {{ countryCount | size }}
+
+                    </td>
+                  </tr>
+                  <tr><th colspan="2">{{ translation.trip.uniqueCountries | default: 'Unique Countries' }}</th></tr>
+                  <tr><td colspan="2">
+
+                  {{ countryCount  | join: ", " }}
+
+                  </td></tr>
+                  <tr><th colspan="2">{{ translation.trip.overallRoute | default: 'Overall Route' }}</th></tr>
+                  <tr><td colspan="2">
+
+                  {% assign locations = jsonData[0][0].MapPins | split: " }" %}
+
+                  {% for location in locations %}
+                    {% if location contains "@" %}
+                      {% continue %}
+                    {% endif %}
+                    {% assign parts = location | remove: "{" | split: " | " %}
+                    {% if parts.size > 1 %}
+                      {% assign mapPinName = parts[0] %}
+                      {% assign mapPinCoord = parts[1] %}
+                      {{mapPinName}}<!--({{mapPinCoord}})--> {% unless forloop.last %}&nbsp;> {% endunless %}
+                    {% endif %}
+                  {% endfor %}
+
+                  </td></tr>
+
+                  <tr><th colspan="2">{{ translation.trip.countryTripMovements | default: 'Country Trip Movements' }}</th></tr>
+                  <tr><td colspan="2">
+
+                  {{ jsonData[4][0].AllBorderCrossings | replace: ",", "&nbsp;>" }}
+
+                  </td></tr>
+                </tbody>
+              </table>
+
+
+            </div>
+            <div class="col-md">
+            {% assign tripColor = jsonData[3] | where: "DomainAbbreviation", jsonData[0][0].DomainAbbreviation | first | dig: "Color" %}
+
+              <!--<style>.leaflet-marker-icon svg path {color:{{ tripColor.Color }};}</style>-->
+              <div id="map-pin-data" data-map-overall-route='{{ jsonData[5] | json }}'
+              data-map-accommodation='{{ jsonData[1] | json | replace: "'", "%27" }}' data-settings-assets='{{ settings.immich-settings | json }}' data-map-color='{{ tripColor.Color }}'></div>
+              <div id="map" style="min-height:400pt;height:100%;width:100%;"></div>
+            </div>
+          </div>
+
+
+
+<br />
+  </div>
+
+  <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+
+  <table class="table border border-top-0">
+  {% for day in jsonData[1] %}
+    <tr><td><b>{{ day.Date }}</b><br />{{ day.Date | date: "%A" }}<br />
+
+    {% if settings.immich-settings.enabled %}
+      {% unless settings.baseSettings.tripPhotoException contains day.OuterId %}
+        <a href="?p=images&id={{ day.OuterId }}&date={{ day.Date }}">
+        <button type="button" class="btn mt-2 btn-iib-ctt" data-iib-tripDomain="{{jsonData[0][0].DomainAbbreviation}}">{{ translation.trip.photos | default: "Photos" }}</button></a>
+      {% endunless %}
+    {% endif %}
+
+    {% if settings.plugins.diary.enabled == true %}
+      {% assign year = day.Date | date: "%Y" %}
+      <!-- unclear if ISO standard -->
+      {% assign week = day.Date | date: "W%W" %}
+      {% assign filteredDiaryFiles = diaryFilesArray | where_exp: "item", "item contains year and item contains week" %}
+      {% for file in filteredDiaryFiles %}
+        <button type="button" class="btn mt-2 btn-iib-ctt" data-iib-tripDomain="{{jsonData[0][0].DomainAbbreviation}}" data-bs-toggle="modal" data-bs-target="#fullScreenModal{{file}}">{{ settings.plugins.diary.translation | default: "Diary" }}</button>
+
+        <!-- Full-Screen Modal -->
+        <div class="modal fade" id="fullScreenModal{{file}}" tabindex="-1" aria-labelledby="fullScreenModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="fullScreenModalLabel">{{ settings.plugins.diary.translation | default: "Diary" }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p><img style="max-height:100%;max-width:100%;" src="{{settings.plugins.diary.path}}{{file}}"></p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ translation.menu.close | default: "Close" }}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      {% endfor %}
+    {% endif %}
+    {% if settings.plugins.passport.enabled == true %}
+      {% assign date = day.Date | date: "%Y%m%d" %}
+      {% assign filteredPassportFiles = passportFilesArray | where_exp: "item", "item contains date" %}
+      {% for file in filteredPassportFiles %}
+      <button type="button" class="btn mt-2 btn-iib-ctt" data-iib-tripDomain="{{jsonData[0][0].DomainAbbreviation}}" data-bs-toggle="modal" data-bs-target="#fullScreenModal{{file}}">{{ settings.plugins.passport.translation | default: "Passport" }}</button>
+
+        <!-- Full-Screen Modal -->
+        <div class="modal fade" id="fullScreenModal{{file}}" tabindex="-1" aria-labelledby="fullScreenModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="fullScreenModalLabel">{{ settings.plugins.passport.translation | default: "Passport" }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p><img style="max-height:100%;max-width:100%;" src="{{settings.plugins.passport.path}}{{file}}"></p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ translation.menu.close | default: "Close" }}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      {% endfor %}
+    {% endif %}
+    </td><td class="text-start">{{ day.Events }}<br /><div class="mt-2"><a style="text-decoration:none;" target="_blank" href="https://www.google.com/maps/?q={{ day.AccommodationCoordinates }}" class="iib-trip-tab" data-iib-tripDomain="{{jsonData[0][0].DomainAbbreviation}}"><img style="height:0.9em;" src="img/house.svg?color=6f757e" /> {{ day.Accommodation }} - {{ day.AccommodationCountry }} {{ day.AccommodationCoordinates }} {{ day.AccommodationCoordinateAccuracy }}</a></div></td></tr>
+  {% endfor %}
+    </table>
+
+  </div>
+</div>
+
+</div>
+
+{% include 'components/footer.html' %}

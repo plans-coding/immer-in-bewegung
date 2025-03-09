@@ -1,0 +1,214 @@
+<style>
+{% for tripDomain in jsonData[2] %}
+.iib-plain[data-iib-tripDomain={{ tripDomain.DomainAbbreviation }}] {
+  background-color: {{ tripDomain.Color }};
+  padding: 3pt 5pt 3pt 5pt;
+  color:#fff;
+}
+.iib-decade[data-iib-tripDomain={{ tripDomain.DomainAbbreviation }}] {
+  background-color: {{ tripDomain.Color }};
+  padding: 3pt 5pt 3pt 5pt;
+  margin:2pt 0 2pt 0;
+  color:#fff;
+}
+.participantGroup {
+  background-color: #000;
+  padding: 3pt 5pt 3pt 5pt;
+  color:#fff;
+}
+
+{% endfor %}
+</style>
+<div class="container text-center">
+
+
+  <!--
+    <div class="input-group">
+      <div class="input-group-text" id="btnGroupAddon2">Filter</div>
+      <input type="text" class="form-control" placeholder="SQL Syntax" aria-label="Input group example" aria-describedby="btnGroupAddon2">
+    </div>-->
+
+
+  <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link iib-nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">{{ translation.overview.year | default: 'Year' }}</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link iib-nav-link" id="country-tab" data-bs-toggle="tab" data-bs-target="#country-tab-pane" type="button" role="tab" aria-controls="country-tab-pane" aria-selected="false">{{ translation.overview.country | default: 'Country' }}</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link iib-nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">{{ translation.overview.plain | default: 'Plain' }}</button>
+    </li>
+  </ul>
+  <div class="tab-content" id="myTabContent">
+
+    <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+
+<!-- LOGIC
+{% assign last_decade = "" %}
+{% assign last_year = "" %}
+{% for trip in jsonData[0] %}
+  {% if trip.TripDecade != last_decade %}
+    {{ trip.TripDecade }}
+    {% assign last_decade = trip.TripDecade %}
+  {% endif %}
+  {% if trip.TripYear != last_year %}
+    {{ trip.TripYear }}
+    {% assign last_year = trip.TripYear %}
+  {% endif %}
+  {{ trip.OuterId }}
+{% endfor %}
+-->
+
+
+<table class="table border border-top-0">
+  {% assign last_decade = "" %}
+  {% assign last_year = "" %}
+
+  {% for trip in jsonData[0] %}
+    {% if trip.TripDecade != last_decade %}
+      <tr>
+        <td colspan="2" class="iib-silver-grey" style="font-weight: bold;">{{ trip.TripDecade }}{{ translation.overview.century | default: "'s" }}</td>
+      </tr>
+      {% assign last_decade = trip.TripDecade %}
+    {% endif %}
+
+    {% if trip.TripYear != last_year %}
+      {% if last_year != "" %}
+        </td></tr> <!-- Close previous year's trips row -->
+      {% endif %}
+      <tr>
+        <td class="align-middle pl-3 pr-3 iib-silver-grey" style="font-weight: bold;">{{ trip.TripYear }}</td>
+        <td class="text-start"><a href="?p=trip&id={{ trip.OuterId }}"><div style="display:inline-block;" class="iib-decade" data-iib-participantGroup="{{ trip.ParticipantGroup }}" data-iib-tripDomain="{{ trip.TripDomain }}">{{ trip.OuterId }} {{ trip.OverallDestination }}</div></a>
+      {% assign last_year = trip.TripYear %}
+    {% else %}
+      <!-- Add subsequent trips for the same year in the same cell -->
+      <a href="?p=trip&id={{ trip.OuterId }}"><div style="display:inline-block;" class="iib-decade" data-iib-participantGroup="{{ trip.ParticipantGroup }}" data-iib-tripDomain="{{ trip.TripDomain }}">{{ trip.OuterId }} {{ trip.OverallDestination }}</div></a>
+    {% endif %}
+  {% endfor %}
+  </td></tr> <!-- Close the last year row -->
+</table>
+
+
+  </div>
+
+  <div class="tab-pane fade" id="country-tab-pane" role="tabpanel" aria-labelledby="country-tab" tabindex="0">
+
+  <table class="table border border-top-0">
+
+
+  {% assign last_continent = "" %}
+  {% assign last_country = "" %}
+
+  {% for row in jsonData[3] %}
+
+  {% if row.Continent != last_continent %}
+        <tr>
+          <td colspan="2" class="iib-silver-grey" style="font-weight: bold;">{{ row.Continent }}</td>
+        </tr>
+    {% assign last_continent = row.Continent %}
+  {% endif %}
+
+
+
+      {% if row.Country != last_country %}
+      {% if last_country != "" %}
+        </td></tr> <!-- Close previous year's rows row -->
+      {% endif %}
+      <tr>
+        <td class="align-middle pl-3 pr-3 iib-silver-grey" style="font-weight: bold;">{{ row.Country }}</td>
+        <td class="text-start"><a href="?p=trip&id={{ row.OuterId }}"><div style="display:inline-block;" class="iib-decade" data-iib-participantGroup="{{ row.ParticipantGroup }}" data-iib-tripDomain="{{ row.InnerId | slice: 0, 1 }}">{{ row.OuterId }} {{ row.OverallDestination }}</div></a>
+      {% assign last_country = row.Country %}
+      {% else %}
+      <!-- Add subsequent rows for the same year in the same cell -->
+      <a href="?p=trip&id={{ row.OuterId }}"><div style="display:inline-block;" class="iib-decade" data-iib-participantGroup="{{ row.ParticipantGroup }}" data-iib-tripDomain="{{ row.InnerId | slice: 0, 1 }}">{{ row.OuterId }} {{ row.OverallDestination }}</div></a>
+      {% endif %}
+
+
+  {%comment%}
+  {% if row.Country != last_country %}
+    <tr>
+      <td class="align-middle pl-3 pr-3 iib-silver-grey" style="font-weight: bold;">{{ row.Country }}</td><td class="text-start">
+    {% assign last_country = row.Country %}
+  {% endif %}
+
+
+          <a href="?p=trip&id={{ item }}"><div  class="text-start" style="display:inline-block;" data-iib-participantGroup="{{ item.ParticipantGroup }}" data-iib-tripDomain="{{ item.TripDomain }}">{{ row.OuterId }}</div></a>
+
+    </td></tr>
+
+  {%endcomment%}
+
+
+
+  {% endfor %}
+
+
+  {%comment%}
+  {% assign last_continent = "" %}
+  {% assign last_country = "" %}
+  {% for country in translation.countries %}
+
+  {% if country.continent != last_continent %}
+          <tr>
+          <td colspan="2" class="iib-silver-grey" style="font-weight: bold;">{{ country.continent }}</td>
+        </tr>
+    {% assign last_continent = country.continent %}
+  {% endif %}
+
+
+  {% if country.continentCountries != last_country %}
+    {% for row in country.continentCountries %}
+    <tr><td class="align-middle pl-3 pr-3 iib-silver-grey" style="font-weight: bold;">{{ row }}</td><td class="text-start">
+
+      {% assign countryItemArray = jsonData[3] | where: "Country", row %}
+
+{{countryItemArray|json}}
+          <a href="?p=trip&id={{ item }}"><div  class="text-start" style="display:inline-block;" data-iib-participantGroup="{{ item.ParticipantGroup }}" data-iib-tripDomain="{{ item.TripDomain }}">{{ curCountryTrip.OuterId }}</div></a>
+
+
+    </td></tr>
+    {% endfor %}
+  {% assign last_country = country.continentCountries %}
+  {% endif %}
+
+  {% endfor %}
+  {%endcomment%}
+
+  </table>
+
+
+
+  </div>
+  <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0" style="max-width:100%;overflow-x:auto;">
+    <table class="table border border-top-0 table-hover">
+
+<thead>
+      <tr>
+      <th class="iib-silver-grey" style="white-space: nowrap;">{{ translation.trip.id | default: 'ID' }}</th><th class="iib-silver-grey">{{ translation.trip.overallDestination | default: 'Overall Destination' }}</th><th class="iib-silver-grey">{{ translation.trip.departureDate | default: 'Departure' }}</th><th class="iib-silver-grey">{{ translation.trip.returnDate | default: 'Return' }}</th><th class="iib-silver-grey">{{ translation.trip.numberOfDays | default: 'NoD' }}</th><th class="iib-silver-grey">{{ translation.trip.participantGroup | default: 'Group' }}</td>
+    </tr>
+</thead>
+  <tbody>
+    {% for trip in jsonData[0] %}
+
+    <tr>
+      <td><a href="?p=trip&id={{ trip.OuterId }}" style="text-decoration:none;"><div class="text-nowrap iib-decade" data-iib-participantGroup="{{ trip.ParticipantGroup }}" data-iib-tripDomain="{{ trip.TripDomain }}">{{trip.OuterId}}</div></a></td><td class="align-middle">{{trip.OverallDestination}}</td><td class="align-middle"><div class="text-nowrap">{{trip.DepartureDate}}</div></td><td class="align-middle"><div class="text-nowrap">{{trip.ReturnDate}}</div></td><td class="align-middle">
+      {% assign startDate = trip.DepartureDate | date: "%s" %}
+      {% assign endDate = trip.ReturnDate | date: "%s" %}
+      {% assign diffInSeconds = endDate | minus: startDate %}
+      {% assign diffInDays = diffInSeconds | divided_by: 86400 %}
+      {{ diffInDays }}</td>
+      <td><div class="participantGroup text-nowrap align-middle">{{trip.ParticipantGroup}}</div></td>
+    </tr>
+
+  {% endfor %}
+  </tbody>
+
+</table>
+  </div>
+</div>
+
+
+</div>
+
+{% include 'components/footer.html' %}

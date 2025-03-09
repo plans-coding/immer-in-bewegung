@@ -1,0 +1,20 @@
+<div class="container text-center">
+
+<div><img src="img/frog_g_150.webp" style="margin-top:40pt;margin-bottom:10pt;" /></div>
+
+<h1>{{ translation.about.title | default: 'About' }}</h1>
+<div id="latestVersion" style="display:none;">{% include 'https://raw.githubusercontent.com/plans-coding/immer-in-bewegung/refs/heads/main/version' %}</div>
+<span id="currentVersion" class="m-2 badge text-bg-secondary">{% include 'version' %}</span>
+<div class="badge text-bg-warning" id="updateText"></div>
+
+<p class="lead">
+  <span class="immer-in-font-uc">Immer in</span>&nbsp;<span class="bewegung-font-uc">Bewegung</span> <span>{{ translation.about.description | default: 'is your open source, lightweight, and future proof travel documentation app.' }}</span>
+</p>
+
+
+
+
+
+<p><span id="lang-about-update">{{ translation.about.update | default: 'Check for updates at' }} </span> <b><a target="_blank" href="https://plans-coding.github.io/immer-in-bewegung/">plans-coding.github.io/immer-in-bewegung/</a></b>.</p>
+
+</div>

@@ -1,0 +1,84 @@
+<style>
+{% for tripDomain in jsonData[0] %}
+.iib-search-domain[data-iib-tripDomain={{ tripDomain.DomainAbbreviation }}] {
+  background-color: {{ tripDomain.Color }};
+  padding: 3pt 5pt 3pt 5pt;
+  margin:2pt 0 2pt 0;
+  color:#fff;
+}
+.participantGroup {
+  background-color: #000;
+  padding: 3pt 5pt 3pt 5pt;
+  color:#fff;
+}
+.iib-search-accommodation[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}']{
+  color: {{ tripDomain.Color }}!important;
+}
+.iib-search-photos[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}']{
+  background-color: {{ tripDomain.Color }}!important;
+  color:#fff;
+}
+{% endfor %}
+</style>
+
+
+{% if jsonData[1][0].Query == "TripQuery" %}
+  {% assign resultArray = jsonData[1] %}
+{% else %}
+  {% assign resultArray = [] %}
+{% endif %}
+
+{% if jsonData[1][0].Query == "EventQuery" %}
+  {% assign resultArrayDay = jsonData[1] %}
+{% elsif jsonData[2][0].Query == "EventQuery" %}
+  {% assign resultArrayDay =  jsonData[2] %}
+{% endif %}
+
+<div class="container text-center">
+
+
+  <ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link iib-nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">{{ translation.search.trips | default: "Trips" }} ({{ resultArray | size }})</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link iib-nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">{{ translation.search.dayNotes | default: "Day Notes" }} ({{ resultArrayDay | size }})</button>
+  </li>
+</ul>
+
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+
+  <table class="table">
+
+{% for trip in resultArray %}
+    <tr><td class="text-start"><a href="?p=trip&id={{ trip.OuterId }}"><div style="display:inline-block;" class="iib-search-domain" data-iib-tripDomain="{{ trip.InnerId | slice: 0, 1 }}">{{ trip.OuterId }} {{ trip.OverallDestination }}</div></a></td><td class="text-start align-middle">{{ trip.TripDescription }} {{ trip.DepartureDate }} {{ trip.ReturnDate }}</td><td><div class="participantGroup">{{ trip.ParticipantGroup }}</div></td></tr>
+{% endfor %}
+</table>
+
+  </div>
+  <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+
+
+
+  <table class="table border border-top-0">
+
+  {% for day in resultArrayDay %}
+    <tr><td><a href="?p=trip&id={{ day.OuterId }}" style="text-decoration:none;"><div class="text-nowrap iib-search-domain" data-iib-tripDomain="{{ day.InnerId | slice: 0, 1 }}">{{ day.OuterId }}</div></a></td><td style="white-space: nowrap;"><b>{{ day.Date }}</b><br />{{ day.Date | date: "%A" }}<br /><a href="?p=images&id={{ day.OuterId }}&date={{ day.Date }}"><button type="button" class="btn mt-2 iib-search-photos" data-iib-tripDomain="{{ day.InnerId | slice: 0, 1 }}">{{ translation.search.photos | default: "Photos" }}</button></a>
+</td><td class="text-start">{{ day.Events }}<br /><div class="mt-2"><a style="text-decoration:none;" target="_blank" href="https://www.google.com/maps/?q={{ day.AccommodationCoordinates }}" class="iib-search-accommodation" data-iib-tripDomain="{{ day.InnerId | slice: 0, 1 }}"><img style="height:0.9em;" src="img/house.svg?color=6f757e" /> {{ day.Accommodation }} - {{ day.AccommodationCountry }} {{ day.AccommodationCoordinates }} {{ day.AccommodationCoordinateAccuracy }}</a></div></td></tr>
+  {% endfor %}
+    </table>
+
+
+
+  </div>
+
+</div>
+
+
+
+
+
+</div>
+
+{% include 'components/footer.html' %}

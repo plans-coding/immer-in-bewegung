@@ -1,0 +1,116 @@
+{
+  "menu": {
+    "overview": "Översikt",
+    "map": "Karta",
+    "statistics": "Statistik",
+    "dataset": "Dataunderlag",
+    "more": "Mer",
+    "coordinateTool": "Koordinatverktyg",
+    "search": "Sök",
+    "searchTrip": "Sök resa",
+    "about": "Om",
+    "previous": "Föregående",
+    "next": "Nästa",
+    "close": "Stäng",
+    "darkMode": "Natt"
+  },
+  "search": {
+    "trips": "Resor",
+    "dayNotes": "Dagsnoteringar",
+    "photos": "Bilder",
+    "noMatch": "Inget sökresultat"
+  },
+  "overview": {
+    "title": "Översikt",
+    "heading": "Reseöverblick",
+    "divisionYear": "Indelning: År",
+    "divisionCountry": "Indelning: Land",
+    "century": "-talet",
+    "year": "År",
+    "country": "Land",
+    "plain": "Tabell"
+  },
+  "trip": {
+    "allTrips": "Alla resor",
+    "to": "till",
+    "summary": "Summering",
+    "overview": "Överblick",
+    "accommodations": "Boenden",
+    "assets": "Material",
+    "departureDate": "Utresa",
+    "returnDate": "Inresa",
+    "numberOfDays": "Antal dagar",
+    "participantGroup": "Deltagargrupp",
+    "id": "ID",
+    "numberOfCountries": "Antal länder",
+    "uniqueCountries": "Unika länder",
+    "countryTripMovements": "Land- och reserörelser",
+    "veryShort": "Väldigt kort besök av väsentlig karaktär",
+    "shorter": "Kortare besök av väsentlig karaktär",
+    "restore": "Återställare, räknas bara om * och ** räknas",
+    "overallDestination": "Övergripande resmål",
+    "overallRoute": "Övergripande resväg",
+    "dayPerDay": "Dag för dag",
+    "photos": "Bilder",
+    "monday": "Måndag",
+    "tuesday": "Tisdag",
+    "wednesday": "Onsdag",
+    "thursday": "Torsdag",
+    "friday": "Fredag",
+    "saturday": "Lördag",
+    "sunday": "Söndag"
+  },
+  "images": {
+    "title": "Resebilder",
+    "back": "Tillbaka till",
+    "open-in": "Öppna i",
+    "previous-day": "Föregående dag",
+    "next-day": "Nästa dag"
+  },
+  "map": {
+    "title": "Karta",
+    "overallRoute": "Alla övergripande rörelser",
+    "allAccommodations": "Alla boenden i alla länder (MKT LÅNGSAM)",
+    "accommodations": "Boenden"
+  },
+  "mapPin": {
+    "accommodationNight": "Boende, natt",
+    "accommodation": "Boende",
+    "date": "Datum",
+    "trip": "Resa",
+    "coordinates": "Koordinater"
+  },
+  "statistics": {
+    "title": "Statistik",
+    "summary": "Summering",
+    "visits": "Besök",
+    "overnights": "Övernattningar",
+    "tripDomainYear": "Resor per domän och år",
+    "uniqueCountries": "Antal unika länder",
+    "totalTrips": "Antal resor totalt",
+    "visitCountryCount": "Antal besök per land",
+    "oneQualified": "Ett kvalificerat besök per resa",
+    "manyQualified": "Flera kvalificerade besök per resa",
+    "borderCrossings": "Gränspassager (in- och utresa)",
+    "country": "Land",
+    "ordinaryLength": "Ordinarie längd",
+    "shorterStop": "Inkl. kortare stopp",
+    "shortVeryShort": "Inkl. kortare och väldigt kort stopp",
+    "minimalNumber": "Minsta antal",
+    "note": "Alla kolumner visar besök av väsentlig betydelse. Det faktiska antalet gränspassager kan därför vara större än redovisat. Av väsentlig betydelse räknas uppehåll som är viktiga för resans upplevelse. Ett kvalificerat besök är ett besök som inte återupptar ett tidigare besök efter ett avbrott av ett kort eller mycket kort besök i annat land.",
+    "overnightStaysCountry": "Antal övernattningar per land",
+    "topTenCountries": "Topp tio",
+    "overnightStays": "Övernattningar"
+  },
+  "dataset": {
+    "title": "Dataunderlag"
+  },
+  "about": {
+    "title": "Om",
+    "description": "är din resedokumentationsapp med öppen källkod. Framtidssäker och resurssnål.",
+    "update": "Kontrollera uppdateringar på"
+  },
+  "update": {
+    "message": "En ny version finns tillgänglig"
+  }
+}

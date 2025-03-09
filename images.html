@@ -1,0 +1,49 @@
+<style>
+{% for tripDomain in jsonData[1] %}
+.btn-iib-ctt[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {
+  background-color: {{ tripDomain.Color }}!important;
+  color:#fff;
+}
+{% endfor %}
+</style>
+
+<div style="display:flex;flex-direction:column;height:100%;">
+<div class="iib-decade p-2" style="display:flex;">
+
+    <div style="display: flex; align-items: center; flex: 1;">
+        <button type="button" onclick="document.querySelector('#date_dd').selectedIndex = (document.querySelector('#date_dd').selectedIndex - 1 + document.querySelector('#date_dd').options.length) % document.querySelector('#date_dd').options.length;document.querySelector('#date_dd').dispatchEvent(new Event('change'));" class="btn btn-dark">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+        </svg> <span class="prevnext">{{translation.menu.previous|default:"Previous"}}</span>
+        </button>
+    </div>
+
+    <div style="flex:1;text-align:center;">
+        <a href="?p=trip&id={{ queryParams.id }}"><button type="button" class="btn btn-iib-ctt" data-iib-tripDomain="{{jsonData[0][0].DomainAbbreviation}}"><span class="prevnext">{{translation.images.back|default:"Back to trip"}}&nbsp;</span>{{ queryParams.id }}</button></a>
+    </div>
+
+    <div style="flex:1;text-align:center;">
+        <select name="date_dd" id="date_dd"  class="iib-decade form-control text-center" onchange="document.location='?p=images&id={{ queryParams.id }}&date='+this.value;">
+                {% for dateString in jsonData[0] %}
+                    <option value="{{ dateString.Date }}" {% if queryParams.date == dateString.Date %}selected{% endif %}>{{ dateString.Date }}</option>
+                {% endfor %}
+        </select>
+    </div>
+
+    <div style="flex:1;text-align:center;">
+        <a href="{{settings.immich-settings.immich-server-address}}search?query=%7B%22takenAfter%22%3A%22{{ queryParams.date }}T00%3A00%3A00.000Z%22%2C%22takenBefore%22%3A%22{{ queryParams.date }}T23%3A59%3A59.999Z%22%7D" target="_blank"><button type="button" class="btn btn-dark"><span class="prevnext">{{translation.images.open-in|default:"Open in"}}&nbsp; </span><img id="openinLogoSmall" src="img/immich-logo-inline-dark-small.png" style="height:14pt;"></button></a>
+    </div>
+
+    <div style="flex:1;text-align:right;">
+
+    <button type="button" onclick="document.querySelector('#date_dd').selectedIndex = (document.querySelector('#date_dd').selectedIndex + 1) % document.querySelector('#date_dd').options.length;document.querySelector('#date_dd').dispatchEvent(new Event('change'));" class="btn btn-dark">
+        <span class="prevnext">{{translation.menu.next|default:"Next"}}</span> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+    </button>
+
+    </div>
+
+
+</div>
+<div style="flex-grow:1;height:100%;"><iframe style="width:100%;height:100%;display:block;border:0;" src="{{settings.immich-settings.immich-server-address}}search?query=%7B%22takenAfter%22%3A%22{{ queryParams.date }}T00%3A00%3A00.000Z%22%2C%22takenBefore%22%3A%22{{ queryParams.date }}T23%3A59%3A59.999Z%22%7D&ref=iib"></iframe></div>
+</div>
