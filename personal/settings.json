@@ -7,5 +7,13 @@
   "immich-settings": {
     "enabled": true,
     "immich-server-address": "https://immich.example.com/"
-  }
+  },
+  "plugins": {
+    "diary": {
+      "enabled": false
+    },
+    "passport": {
+      "enabled": false
+      }
+    }
 }
