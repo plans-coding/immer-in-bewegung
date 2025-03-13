@@ -75,7 +75,7 @@
 
     </style>
 
-    <script src="/bundle/sqljs/sql-wasm.js"></script>
+    <script src="bundle/sqljs/sql-wasm.js"></script>
 
   </head>
 
@@ -239,7 +239,7 @@
 
                 let response;
 
-                if ( !localStorage.getItem('dbSource') && localStorage.getItem('dbSource') !== "settings.json" ) {
+                if (localStorage.getItem('dbSource') !== null && localStorage.getItem('dbSource') !== "settings.json") {
                     const dbContent = localStorage.getItem('dbContent');
 
                     if (dbContent) {
