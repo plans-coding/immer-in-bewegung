@@ -90,9 +90,17 @@
 
                     reader.onload = function(event) {
                         const fileContent = event.target.result; // This is an ArrayBuffer
-                        const base64Data = btoa(String.fromCharCode(...new Uint8Array(fileContent))); // Convert ArrayBuffer to Base64
-                        localStorage.setItem('dbContent', base64Data); // Save the Base64 encoded content in localStorage
+                        const uint8Array = new Uint8Array(fileContent); // Convert to Uint8Array
 
+                        // Create a binary string by using String.fromCharCode in chunks to avoid large array
+                        let binaryString = '';
+                        for (let i = 0; i < uint8Array.length; i++) {
+                            binaryString += String.fromCharCode(uint8Array[i]);
+                        }
+
+                        // Convert the binary string to Base64
+                        const base64Data = btoa(binaryString);
+                        localStorage.setItem('dbContent', base64Data); // Save the Base64 encoded content in localStorage
                     };
                     reader.readAsArrayBuffer(file); // Read the file as an ArrayBuffer
 
