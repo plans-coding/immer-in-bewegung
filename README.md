@@ -15,6 +15,7 @@ You can check out a demo app running at https://demo.bewegung.app/.
 * Immer in Bewegung runs client side in your browser using WASM for reading the SQLite file
 * If you self-host Immer in Bewegung the application can read the SQLite file from same server
 * If you want to run directly via the online version https://demo.bewegung.app/, you can bind your own data in https://demo.bewegung.app/setup.html
+* Features an optional integration to Immich
 
 ## Licenses
 * Immer in Bewegung: MIT license
