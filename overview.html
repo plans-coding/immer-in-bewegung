@@ -1,5 +1,5 @@
 <style>
-{% for tripDomain in jsonData[2] %}
+{% for tripDomain in tripDomains[0] %}
 .iib-plain[data-iib-tripDomain={{ tripDomain.DomainAbbreviation }}] {
   background-color: {{ tripDomain.Color }};
   padding: 3pt 5pt 3pt 5pt;
@@ -65,7 +65,7 @@
   {% assign last_decade = "" %}
   {% assign last_year = "" %}
 
-  {% for trip in jsonData[0] %}
+  {% for trip in overviewYear[0] %}
     {% if trip.TripDecade != last_decade %}
       <tr>
         <td colspan="2" class="iib-silver-grey" style="font-weight: bold;">{{ trip.TripDecade }}{{ translation.overview.century | default: "'s" }}</td>
@@ -100,7 +100,7 @@
   {% assign last_continent = "" %}
   {% assign last_country = "" %}
 
-  {% for row in jsonData[3] %}
+  {% for row in overviewCountry[0] %}
 
   {% if row.Continent != last_continent %}
         <tr>
@@ -189,7 +189,7 @@
     </tr>
 </thead>
   <tbody>
-    {% for trip in jsonData[0] %}
+    {% for trip in overviewYear[0] %}
 
     <tr>
       <td><a href="?p=trip&id={{ trip.OuterId }}" style="text-decoration:none;"><div class="text-nowrap iib-decade" data-iib-participantGroup="{{ trip.ParticipantGroup }}" data-iib-tripDomain="{{ trip.TripDomain }}">{{trip.OuterId}}</div></a></td><td class="align-middle">{{trip.OverallDestination}}</td><td class="align-middle"><div class="text-nowrap">{{trip.DepartureDate}}</div></td><td class="align-middle"><div class="text-nowrap">{{trip.ReturnDate}}</div></td><td class="align-middle">

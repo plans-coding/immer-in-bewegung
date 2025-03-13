@@ -1,5 +1,5 @@
 <style>
-{% for tripDomain in jsonData[1] %}
+{% for tripDomain in tripDomains[0] %}
 .btn-iib-ctt[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {
   background-color: {{ tripDomain.Color }}!important;
   color:#fff;
@@ -19,12 +19,12 @@
     </div>
 
     <div style="flex:1;text-align:center;">
-        <a href="?p=trip&id={{ queryParams.id }}"><button type="button" class="btn btn-iib-ctt" data-iib-tripDomain="{{jsonData[0][0].DomainAbbreviation}}"><span class="prevnext">{{translation.images.back|default:"Back to trip"}}&nbsp;</span>{{ queryParams.id }}</button></a>
+        <a href="?p=trip&id={{ queryParams.id }}"><button type="button" class="btn btn-iib-ctt" data-iib-tripDomain="{{dateList[0][0].DomainAbbreviation}}"><span class="prevnext">{{translation.images.back|default:"Back to trip"}}&nbsp;</span>{{ queryParams.id }}</button></a>
     </div>
 
     <div style="flex:1;text-align:center;">
-        <select name="date_dd" id="date_dd"  class="iib-decade form-control text-center" onchange="document.location='?p=images&id={{ queryParams.id }}&date='+this.value;">
-                {% for dateString in jsonData[0] %}
+        <select name="date_dd" id="date_dd"  class="iib-decade form-control text-center" data-image-trip-id="{{ queryParams.id }}">
+                {% for dateString in dateList[0] %}
                     <option value="{{ dateString.Date }}" {% if queryParams.date == dateString.Date %}selected{% endif %}>{{ dateString.Date }}</option>
                 {% endfor %}
         </select>

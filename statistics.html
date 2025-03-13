@@ -17,18 +17,18 @@
 
         <div class="row mt-3">
           <div class="col m-1">
-              <h2>{{jsonData[4] | size }}</h2>
+              <h2>{{ OLSSVSS[0] | size }}</h2>
                 <p>{{ translation.statistics.uniqueCountries | default: 'Count of unique countries' }}</p>
           </div>
 
           <div class="col m-1">
-              <h2>{{ jsonData[1][0].Count }}</h2>
+              <h2>{{ tripCount[0][0].Count }}</h2>
                 <p class="card-text">{{ translation.statistics.totalTrips | default: 'Number of trips in total' }}</p>
           </div>
         </div>
 
 
-        <div id="stat-trip-overview-chart-data" data-json='{{ jsonData[0] | json }}' data-json-color='{{ jsonData[3] | json }}'></div>
+        <div id="stat-trip-overview-chart-data" data-json='{{ perDomainYear[0] | json }}' data-json-color='{{ tripDomains[0] | json }}'></div>
 
         <div class="m-3">
         <canvas id="stat-trip-overview"></canvas>
@@ -55,7 +55,7 @@
  <tr><td><b>{{ translation.statistics.country | default: 'Country' }}</b></td><td><b>{{ translation.statistics.ordinaryLength | default: 'Ordinary length' }}</b></td><td><b>{{ translation.statistics.shorterStop | default: 'Shorter stop incl.' }}</b></td><td><b>{{ translation.statistics.shortVeryShort | default: 'Shorter and very short stop incl.' }}</b></td><td><b>{{ translation.statistics.ordinaryLength | default: 'Ordinary length' }}</b></td><td><b>{{ translation.statistics.minimalNumber | default: 'Minimal number' }}</b></td></tr>
  </thead>
 
-      {% for country in jsonData[4] %}
+      {% for country in OLSSVSS[0] %}
             <tr><td>{{ country.Country }}</td><td>{{ country.OL }}</td><td>{{ country.OL | plus: country.SS }}</td><td>{{ country.OL | plus: country.SS | plus: country.VSS }}</td><td>{{ country.OLMQ }}</td><td>{{ country.OLMQ | plus: country.SSMQ | plus: country.VSSMQ | times: 2 }}</td></tr>
       {% endfor %}
 </table>
@@ -82,14 +82,14 @@ short or very short visit to another country.' }}
           <b>{{ translation.statistics.topTenCountries | default: 'Top ten countries' }}</b>
 
         <div class="m-3">
-        <div id="stat-trip-overnights-chart-data" data-json='{{ jsonData[2] | slice: 0, 10 | json }}'>
+        <div id="stat-trip-overnights-chart-data" data-json='{{ overnights[0] | slice: 0, 10 | json }}'>
         <canvas id="stat-trip-overnights"></canvas>
         </div>
 
           <table class="table table-hover">
         <thead style="position:sticky;top:0;background-color:;"><tr style=""><td><b>{{ translation.statistics.country | default: 'Country' }}</b></td><td><b>{{ translation.statistics.overnightStays | default: 'Overnights' }}</b></td></tr></thead>
 
-        {% for row in jsonData[2] %}
+        {% for row in overnights[0] %}
             <tr><td>{{ row.AccommodationCountry }}</b></td><td style="text-align:center;">{{ row.Overnights }}</td></tr>
         {% endfor %}
 

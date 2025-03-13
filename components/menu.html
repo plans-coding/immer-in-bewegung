@@ -1,7 +1,7 @@
-  <div class="container-fluid">
+<div class="container-fluid">
     <a href="?p=overview" style="text-decoration:none;"><div class="navbar-brand">
           <img src="img/frog_g_72.webp" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
-<span class="immer-in-font-uc">Immer in</span>&nbsp;<span class="bewegung-font-uc">Bewegung</span>
+          <span class="immer-in-font-uc">Immer in</span>&nbsp;<span class="bewegung-font-uc">Bewegung</span>
   </div></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -25,7 +25,8 @@
             {{ translation.menu.more | default: 'More' }}
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="https://bewegung.app/coordinate-tool.html" target="_blank">{{ translation.menu.coordinateTool | default: 'Coordinate Tool' }}</a></li>
+            <li><a class="dropdown-item" href="coordinate-tool.html" target="_blank">{{ translation.menu.coordinateTool | default: 'Coordinate Tool' }}</a></li>
+            <li><a class="dropdown-item" href="setup.html" target="_blank">{{ translation.menu.configureSource | default: 'Configure Source' }}</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="?p=about">{{ translation.about.title | default: 'About' }}</a></li>
           </ul>
@@ -75,17 +76,11 @@
                         <a class="nav-link p-2 rounded" href="https://bewegung.app/coordinate-tool.html" target="_blank">{{ translation.menu.coordinateTool | default: 'Coordinate Tool' }}</a>
                     </li>
                     <li class="nav-item">
+                        <a class="dropdown-item p-2 rounded" href="setup.html" target="_blank">{{ translation.menu.configureSource | default: 'Configure Source' }}</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link p-2 rounded {% if queryParams.p == 'about' %}active{% endif %}" href="?p=about">{{ translation.about.title | default: 'About' }}</a>
                     </li>
-                    <!--<li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">More</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Coordinate Tool</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="?p=about">About</a></li>
-                        </ul>
-                    </li>-->
-
                     <li class="nav-item p-2">
                           <div class="form-check form-switch">
                           <input class="form-check-input" type="checkbox" id="themeToggle">

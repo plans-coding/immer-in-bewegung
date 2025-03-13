@@ -1,5 +1,5 @@
 <style>
-{% for tripDomain in jsonData[2] %}
+{% for tripDomain in tripDomains[0] %}
 :root[data-bs-theme="light"] .iib-map-ref[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {
   background-color: {{ tripDomain.Color }}!important;
   color:#fff;
@@ -10,12 +10,12 @@
 <div style="z-index:1001;position:absolute;width:100%;text-align:center;" class="p-2">
         <select id="alltrip"  class="form-control text-center" style="max-width:200pt;margin:auto;" onchange="document.location='?p=map&country='+this.value;">
         <option value="">{{ translation.map.overallRoute | default: "Overall route for all trips" }}</option>
-                {% for trip in jsonData[0] %}
+                {% for trip in countryList[0] %}
                     <option value="{{ trip.AccommodationCountry }}" {% if queryParams.country == trip.AccommodationCountry %}selected{% endif %}>{{ trip.AccommodationCountry }}</option>
                 {% endfor %}
         </select>
 </div>
 
-<div id="map-pin-data" data-map='{{ jsonData[1] | json }}'></div>
+<div id="map-pin-data" data-map='{{ mapData[0] | json }}'></div>
 
 <div id="map" style="height:100%;width:100%;"></div>
