@@ -239,7 +239,7 @@
 
                 let response;
 
-                if (localStorage.getItem('dbSource') !== "settings.json") {
+                if (localStorage?.getItem('dbSource') !== "settings.json") {
                     const dbContent = localStorage.getItem('dbContent');
 
                     if (dbContent) {
