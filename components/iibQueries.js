@@ -304,5 +304,16 @@ function getSqlQuery(section, parameter = null) {
                     Date ASC;`;
         break;
 
+        case "images_photoTime":
+            return `SELECT
+                    PhotoStarttime,
+                    PhotoEndtime
+                FROM
+                    bewa_Overview
+                WHERE
+                    OuterId = "${parameter}"
+                LIMIT 1`;
+        break;
+
                     }
     }

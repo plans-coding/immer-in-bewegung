@@ -3,17 +3,17 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="theme-color" content="#6f757e" id="themeColorMeta">
+    <meta name="theme-color" content="#6f757e" id="themeColorMeta">
     <meta name="msapplication-navbutton-color" content="#6f757e">
     <link rel="shortcut icon" href="favicon.webp" />
-    <title>Configure Source for Immer in Bewegung</title>
+    <title>Configuration of Immer in Bewegung</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cairo&family=Francois+One&family=Righteous&display=swap" rel="stylesheet">
 
     <script src="bundle/sqljs/sql-wasm.js"></script>
 
     <style>
-    body {background-color:#1d655e; /*#f8fafd;*/}
+      body {background-color:#1d655e;}
       .immer-in-font-uc {font-family: 'Cairo', sans-serif;text-transform: uppercase;}
       .bewegung-font-uc {font-family: 'Righteous', sans-serif;text-transform: uppercase;}
       h3 {font-family: 'Cairo', sans-serif;font-weight:bold;margin-top:0.5em;}
@@ -29,10 +29,8 @@
         </div>
 
         <div class="container mt-4">
+          <h3 class="mb-4">Configure Source</h3>
 
-        <h3 class="mb-4">Configure Source</h3>
-
-          <!-- Option 1: Use SQLite from settings.json -->
           <div class="form-check">
             <input class="form-check-input" type="radio" name="options" id="option1" onclick="toggleFilePicker(false)">
             <label class="form-check-label" for="option1">
@@ -40,7 +38,6 @@
             </label>
           </div>
 
-          <!-- Option 2: Bind file from disk -->
           <div class="form-check">
             <input class="form-check-input" type="radio" name="options" id="option2" onclick="toggleFilePicker(true)">
             <label class="form-check-label" for="option2">
@@ -48,99 +45,139 @@
             </label>
           </div>
 
-          <!-- File Picker (Hidden by Default) -->
           <div id="filePickerContainer" class="mt-2" style="display: none;">
             <input type="file" class="form-control" id="filePicker">
             <div class="p-1">File will be saved in browser's local storage but not<br />uploaded. Read more about <a style="text-decoration:none;color:#1d655e;" href="https://w3c.github.io/FileAPI/">File API</a>.</div>
           </div>
-
-          <!-- Submit Button -->
-          <button class="btn mt-3" style="background-color:#1d655e;color:#fff;" onclick="saveFilePath()">Save</button>
-          <button class="btn btn-dark mt-3" onclick="window.close()">Close</button>
-
-          <!-- Confirmation Message -->
           <div id="confirmationMessage" class="mt-3 border rounded p-2 bg-white" style="color:#1d655e;display: none;"></div>
+
+          <h3 class="mb-4">Other Settings</h3>
+          <div class="input-group mb-3">
+            <span class="input-group-text">Language</span>
+            <select class="form-select" id="option3" aria-label="Default select example">
+              <option value="settings.json">As specified in settings.json</option>
+            </select>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">Home Country</span>
+            <input type="text" class="form-control" placeholder="As specified in settings.json" aria-label="Username" aria-describedby="basic-addon1" id="homeCountryInput">
+          </div>
+
+          <button class="btn mt-3" style="background-color:#1d655e;color:#fff;" onclick="saveFilePath()">Save</button>
+          <a href="index.html"><button class="btn btn-dark mt-3">Return to the app</button></a>
+
+
         </div>
       </div>
     </div>
 
     <script>
-
-            function toggleFilePicker(show) {
-                document.getElementById('filePickerContainer').style.display = show ? 'block' : 'none';
-            }
-
-              function saveFilePath() {
-                let message = "";
-                const confirmationDiv = document.getElementById("confirmationMessage");
-
-                if (document.getElementById('option1').checked) {
-                    localStorage.setItem('dbSource', 'settings.json');
-                    message = "Using SQLite database from <b>settings.json</b>.";
-                    confirmationDiv.innerHTML = message;
-                    confirmationDiv.style.display = "block";
-                } else if (document.getElementById('option2').checked) {
-                    const fileInput = document.getElementById('filePicker');
-                    if (fileInput.files.length > 0) {
-                    const file = fileInput.files[0];
-                    localStorage.setItem('dbSource', file.name); // Save only filename
-
-                    // Read file contents
-                    const reader = new FileReader();
-
-                    reader.onload = function(event) {
-                        const fileContent = event.target.result; // This is an ArrayBuffer
-                        const uint8Array = new Uint8Array(fileContent); // Convert to Uint8Array
-
-                        // Create a binary string by using String.fromCharCode in chunks to avoid large array
-                        let binaryString = '';
-                        for (let i = 0; i < uint8Array.length; i++) {
-                            binaryString += String.fromCharCode(uint8Array[i]);
-                        }
-
-                        // Convert the binary string to Base64
-                        const base64Data = btoa(binaryString);
-                        localStorage.setItem('dbContent', base64Data); // Save the Base64 encoded content in localStorage
-                    };
-                    reader.readAsArrayBuffer(file); // Read the file as an ArrayBuffer
-
-                    message = "Using SQLite database from <b>"+file.name+"</b>.";
-                    confirmationDiv.innerHTML = message;
-                    confirmationDiv.style.display = "block";
-
-                    } else {
-                        message = "Please select a file.";
-                        confirmationDiv.innerHTML = message;
-                        confirmationDiv.style.display = "block";
-                    }
-                }
-            }
-
-
-
-      function initializeSettings() {
-        const savedSource = localStorage.getItem('dbSource');
-
-        if (savedSource === 'settings.json' || !savedSource) {
-          document.getElementById('option1').checked = true;
-          toggleFilePicker(false);
-
-          // Display previously selected file name
-          const confirmationDiv = document.getElementById("confirmationMessage");
-          confirmationDiv.innerHTML = `Using <b>${savedSource}</b>`;
-          confirmationDiv.style.display = "block";
-        } else {
-          document.getElementById('option2').checked = true;
-          toggleFilePicker(true);
-
-          // Display previously selected file name
-          const confirmationDiv = document.getElementById("confirmationMessage");
-          confirmationDiv.innerHTML = `Using <b>${savedSource}</b>`;
-          confirmationDiv.style.display = "block";
-        }
+      function toggleFilePicker(show) {
+        document.getElementById('filePickerContainer').style.display = show ? 'block' : 'none';
       }
 
-      // Initialize settings on page load
+      function saveFilePath() {
+        let message = "";
+        const confirmationDiv = document.getElementById("confirmationMessage");
+
+        // Save language
+        const selectedLanguage = document.getElementById("option3").value;
+        localStorage.setItem('language', selectedLanguage);
+
+        // Save home country
+        const homeCountry = document.getElementById("homeCountryInput").value;
+        localStorage.setItem('homeCountry', homeCountry);
+
+        // Save source selection
+        if (document.getElementById('option1').checked) {
+          localStorage.setItem('dbSource', 'settings.json');
+          message = "Using SQLite database from <b>settings.json</b>.";
+        } else if (document.getElementById('option2').checked) {
+          const fileInput = document.getElementById('filePicker');
+          if (fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            localStorage.setItem('dbSource', file.name);
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+              const fileContent = event.target.result;
+              const uint8Array = new Uint8Array(fileContent);
+              let binaryString = '';
+              for (let i = 0; i < uint8Array.length; i++) {
+                binaryString += String.fromCharCode(uint8Array[i]);
+              }
+              const base64Data = btoa(binaryString);
+              localStorage.setItem('dbContent', base64Data);
+            };
+            reader.readAsArrayBuffer(file);
+            message = "Using SQLite database from <b>" + file.name + "</b>.";
+          } else {
+            message = "Please select a file.";
+          }
+        }
+
+        confirmationDiv.innerHTML = message;
+        confirmationDiv.style.display = "block";
+      }
+
+    function initializeSettings() {
+    const savedSource = localStorage.getItem('dbSource');
+    const savedLanguage = localStorage.getItem('language');
+    const savedHomeCountry = localStorage.getItem('homeCountry');
+
+    // Set language if saved after options are populated
+    const languageSelect = document.getElementById("option3");
+
+    if (languageSelect) {
+        fetch("personal/languages.txt")
+        .then(response => response.text())
+        .then(data => {
+            // Populate language select options
+            data.split("\n")
+            .map(line => line.trim())
+            .filter(line => line !== "")
+            .forEach(value => {
+                const option = document.createElement("option");
+                option.value = value;
+                option.textContent = value.replace(/^./, value[0].toUpperCase());
+                languageSelect.appendChild(option);
+            });
+
+            // Set the selected language if saved
+            if (savedLanguage && Array.from(languageSelect.options).some(option => option.value === savedLanguage)) {
+            languageSelect.value = savedLanguage;
+            } else {
+            languageSelect.value = 'settings.json'; // Default if no saved value
+            }
+        })
+        .catch(error => console.error("Error:", error));
+    }
+
+    // Set home country if saved
+    if (savedHomeCountry) {
+        document.getElementById("homeCountryInput").value = savedHomeCountry;
+    }
+
+    // Set source option
+    if (savedSource === 'settings.json' || !savedSource) {
+        document.getElementById('option1').checked = true;
+        toggleFilePicker(false);
+
+        const confirmationDiv = document.getElementById("confirmationMessage");
+        confirmationDiv.innerHTML = `Using <b>${savedSource}</b>`;
+        confirmationDiv.style.display = "block";
+    } else {
+        document.getElementById('option2').checked = true;
+        toggleFilePicker(true);
+
+        const confirmationDiv = document.getElementById("confirmationMessage");
+        confirmationDiv.innerHTML = `Using <b>${savedSource}</b>`;
+        confirmationDiv.style.display = "block";
+    }
+    }
+
+
       document.addEventListener("DOMContentLoaded", initializeSettings);
     </script>
 

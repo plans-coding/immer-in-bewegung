@@ -26,7 +26,7 @@
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="coordinate-tool.html" target="_blank">{{ translation.menu.coordinateTool | default: 'Coordinate Tool' }}</a></li>
-            <li><a class="dropdown-item" href="setup.html" target="_blank">{{ translation.menu.configureSource | default: 'Configure Source' }}</a></li>
+            <li><a class="dropdown-item" href="setup.html">{{ translation.menu.configureSource | default: 'Configure Source' }}</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="?p=about">{{ translation.about.title | default: 'About' }}</a></li>
           </ul>
@@ -76,7 +76,7 @@
                         <a class="nav-link p-2 rounded" href="https://bewegung.app/coordinate-tool.html" target="_blank">{{ translation.menu.coordinateTool | default: 'Coordinate Tool' }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="dropdown-item p-2 rounded" href="setup.html" target="_blank">{{ translation.menu.configureSource | default: 'Configure Source' }}</a>
+                        <a class="dropdown-item p-2 rounded" href="setup.html">{{ translation.menu.configureSource | default: 'Configure Source' }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link p-2 rounded {% if queryParams.p == 'about' %}active{% endif %}" href="?p=about">{{ translation.about.title | default: 'About' }}</a>
