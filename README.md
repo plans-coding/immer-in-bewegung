@@ -4,6 +4,9 @@ Open source travel documentation app for self-hosting or using directly online
 Available in
 * 🇬🇧 English
 * 🇸🇪 Swedish
+* 🇩🇰 Danish
+* 🇩🇪 German
+* 🇳🇱 Dutch
 
 or define your own language.
 
@@ -16,6 +19,14 @@ You can check out a demo app running at https://demo.bewegung.app/.
 * If you self-host Immer in Bewegung the application can read the SQLite file from same server
 * If you want to run directly via the online version https://demo.bewegung.app/, you can bind your own data in https://demo.bewegung.app/setup.html
 * Features an optional integration to Immich
+
+## Read more
+See quick start instructions at https://bewegung.app/docs/quick-start
+
+## Sreenshots
+![img](https://raw.githubusercontent.com/plans-coding/iib-docs/refs/heads/main/img/screenshots/iib-overview.png)
+
+![img](https://raw.githubusercontent.com/plans-coding/iib-docs/refs/heads/main/img/screenshots/iib-events.png)
 
 ## Licenses
 * Immer in Bewegung: MIT license
