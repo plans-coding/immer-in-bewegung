@@ -24,8 +24,6 @@ You can check out a demo app running at https://demo.bewegung.app/.
 See quick start instructions at https://bewegung.app/docs/quick-start
 
 ## Sreenshots
-![img](https://raw.githubusercontent.com/plans-coding/iib-docs/refs/heads/main/img/screenshots/iib-overview.png)
-
 ![img](https://raw.githubusercontent.com/plans-coding/iib-docs/refs/heads/main/img/screenshots/iib-events.png)
 
 ## Licenses
