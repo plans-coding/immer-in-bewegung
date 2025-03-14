@@ -1,0 +1,117 @@
+{
+  "menu": {
+    "overview": "Oversigt",
+    "map": "Kort",
+    "statistics": "Statistik",
+    "dataset": "Dataunderlag",
+    "more": "Mere",
+    "coordinateTool": "Koordinatværktøj",
+    "configureSource": "Kildedatabase",
+    "search": "Søg",
+    "searchTrip": "Søg rejse",
+    "about": "Om",
+    "previous": "Forrige",
+    "next": "Næste",
+    "close": "Luk",
+    "darkMode": "Nat"
+  },
+  "search": {
+    "trips": "Rejser",
+    "dayNotes": "Dagsnotater",
+    "photos": "Billeder",
+    "noMatch": "Ingen søgeresultater"
+  },
+  "overview": {
+    "title": "Oversigt",
+    "heading": "Rejseoversigt",
+    "divisionYear": "Opdeling: År",
+    "divisionCountry": "Opdeling: Land",
+    "century": "'erne",
+    "year": "År",
+    "country": "Land",
+    "plain": "Tabel"
+  },
+  "trip": {
+    "allTrips": "Alle rejser",
+    "to": "til",
+    "summary": "Sammendrag",
+    "overview": "Oversigt",
+    "accommodations": "Indkvarteringer",
+    "assets": "Materiale",
+    "departureDate": "Afgang",
+    "returnDate": "Hjemkomst",
+    "numberOfDays": "Antal dage",
+    "participantGroup": "Deltagergruppe",
+    "id": "ID",
+    "numberOfCountries": "Antal lande",
+    "uniqueCountries": "Unikke lande",
+    "countryTripMovements": "Land- og rejsebevægelser",
+    "veryShort": "Meget kort besøg af væsentlig karakter",
+    "shorter": "Kortere besøg af væsentlig karakter",
+    "restore": "Gendan, tælles kun hvis * og ** tælles",
+    "overallDestination": "Overordnet rejsemål",
+    "overallRoute": "Overordnet rejsevej",
+    "dayPerDay": "Dag for dag",
+    "photos": "Billeder",
+    "monday": "Mandag",
+    "tuesday": "Tirsdag",
+    "wednesday": "Onsdag",
+    "thursday": "Torsdag",
+    "friday": "Fredag",
+    "saturday": "Lørdag",
+    "sunday": "Søndag"
+  },
+  "images": {
+    "title": "Rejsebilleder",
+    "back": "Tilbage til",
+    "open-in": "Åbn i",
+    "previous-day": "Forrige dag",
+    "next-day": "Næste dag"
+  },
+  "map": {
+    "title": "Kort",
+    "overallRoute": "Overordnede bevægelser for alle rejser",
+    "allAccommodations": "Alle indkvarteringer i alle lande (MEGET LANGSOM)",
+    "accommodations": "Indkvarteringer"
+  },
+  "mapPin": {
+    "accommodationNight": "Indkvartering, nat",
+    "accommodation": "Indkvartering",
+    "date": "Dato",
+    "trip": "Rejse",
+    "coordinates": "Koordinater"
+  },
+  "statistics": {
+    "title": "Statistik",
+    "summary": "Sammendrag",
+    "visits": "Besøg",
+    "overnights": "Overnatninger",
+    "tripDomainYear": "Rejser per domæne og år",
+    "uniqueCountries": "Antal unikke lande",
+    "totalTrips": "Antal rejser totalt",
+    "visitCountryCount": "Antal besøg pr. land",
+    "oneQualified": "Et kvalificeret besøg pr. rejse",
+    "manyQualified": "Flere kvalificerede besøg pr. rejse",
+    "borderCrossings": "Grænseovergange (ind- og udrejse)",
+    "country": "Land",
+    "ordinaryLength": "Almindelig længde",
+    "shorterStop": "Inkl. kortere stop",
+    "shortVeryShort": "Inkl. kortere og meget korte stop",
+    "minimalNumber": "Mindste antal",
+    "note": "Alle kolonner viser besøg af væsentlig betydning. Det faktiske antal grænseovergange kan derfor være større end vist. Besøg af væsentlig betydning er ophold, der er vigtige for rejsens oplevelse. Et kvalificeret besøg er et besøg, der ikke genoptager et tidligere besøg efter en afbrydelse af et kort eller meget kort besøg i et andet land.",
+    "overnightStaysCountry": "Antal overnatninger pr. land",
+    "topTenCountries": "Top ti",
+    "overnightStays": "Overnatninger"
+  },
+  "dataset": {
+    "title": "Dataunderlag"
+  },
+  "about": {
+    "title": "Om",
+    "description": "er din rejsedokumentationsapp med åben kildekode. Fremtidssikret og ressourcelet.",
+    "update": "Tjek opdateringer på"
+  },
+  "update": {
+    "message": "En ny version er tilgængelig"
+  }
+}

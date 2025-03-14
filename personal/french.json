@@ -1,0 +1,117 @@
+{
+  "menu": {
+    "overview": "Vue d'ensemble",
+    "map": "Carte",
+    "statistics": "Statistiques",
+    "dataset": "Base de données",
+    "more": "Plus",
+    "coordinateTool": "Outil de coordonnées",
+    "configureSource": "Base de données source",
+    "search": "Rechercher",
+    "searchTrip": "Rechercher un voyage",
+    "about": "À propos",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "close": "Fermer",
+    "darkMode": "Mode sombre"
+  },
+  "search": {
+    "trips": "Voyages",
+    "dayNotes": "Notes quotidiennes",
+    "photos": "Photos",
+    "noMatch": "Aucun résultat trouvé"
+  },
+  "overview": {
+    "title": "Vue d'ensemble",
+    "heading": "Aperçu du voyage",
+    "divisionYear": "Division : Année",
+    "divisionCountry": "Division : Pays",
+    "century": "'s",
+    "year": "Année",
+    "country": "Pays",
+    "plain": "Tableau"
+  },
+  "trip": {
+    "allTrips": "Tous les voyages",
+    "to": "à",
+    "summary": "Résumé",
+    "overview": "Aperçu",
+    "accommodations": "Hébergements",
+    "assets": "Ressources",
+    "departureDate": "Date de départ",
+    "returnDate": "Date de retour",
+    "numberOfDays": "Nombre de jours",
+    "participantGroup": "Groupe de participants",
+    "id": "ID",
+    "numberOfCountries": "Nombre de pays",
+    "uniqueCountries": "Pays uniques",
+    "countryTripMovements": "Mouvements de voyage et de pays",
+    "veryShort": "Très courte visite de caractère essentiel",
+    "shorter": "Visite plus courte de caractère essentiel",
+    "restore": "Restaurer, compte uniquement si * et ** comptent",
+    "overallDestination": "Destination générale",
+    "overallRoute": "Itinéraire général",
+    "dayPerDay": "Jour par jour",
+    "photos": "Photos",
+    "monday": "Lundi",
+    "tuesday": "Mardi",
+    "wednesday": "Mercredi",
+    "thursday": "Jeudi",
+    "friday": "Vendredi",
+    "saturday": "Samedi",
+    "sunday": "Dimanche"
+  },
+  "images": {
+    "title": "Photos de voyage",
+    "back": "Retour à",
+    "open-in": "Ouvrir dans",
+    "previous-day": "Jour précédent",
+    "next-day": "Jour suivant"
+  },
+  "map": {
+    "title": "Carte",
+    "overallRoute": "Mouvements généraux pour tous les voyages",
+    "allAccommodations": "Tous les hébergements dans tous les pays (TRÈS LENT)",
+    "accommodations": "Hébergements"
+  },
+  "mapPin": {
+    "accommodationNight": "Hébergement, nuit",
+    "accommodation": "Hébergement",
+    "date": "Date",
+    "trip": "Voyage",
+    "coordinates": "Coordonnées"
+  },
+  "statistics": {
+    "title": "Statistiques",
+    "summary": "Résumé",
+    "visits": "Visites",
+    "overnights": "Nuitées",
+    "tripDomainYear": "Voyages par domaine et année",
+    "uniqueCountries": "Nombre de pays uniques",
+    "totalTrips": "Nombre total de voyages",
+    "visitCountryCount": "Nombre de visites par pays",
+    "oneQualified": "Une visite qualifiée par voyage",
+    "manyQualified": "Plusieurs visites qualifiées par voyage",
+    "borderCrossings": "Passages de frontières (entrée et sortie)",
+    "country": "Pays",
+    "ordinaryLength": "Durée ordinaire",
+    "shorterStop": "Incl. arrêts plus courts",
+    "shortVeryShort": "Incl. arrêts plus courts et très courts",
+    "minimalNumber": "Nombre minimal",
+    "note": "Toutes les colonnes montrent des visites de caractère essentiel. Le nombre réel de passages de frontières peut donc être plus élevé que rapporté. Un séjour de caractère essentiel est un arrêt important pour l'expérience du voyage. Une visite qualifiée est une visite qui ne reprend pas une visite précédente après une interruption due à un court ou très court séjour dans un autre pays.",
+    "overnightStaysCountry": "Nombre de nuitées par pays",
+    "topTenCountries": "Top dix",
+    "overnightStays": "Nombre de nuitées"
+  },
+  "dataset": {
+    "title": "Base de données"
+  },
+  "about": {
+    "title": "À propos",
+    "description": "est votre application de documentation de voyage open source. Pérenne et peu gourmande en ressources.",
+    "update": "Vérifiez les mises à jour sur"
+  },
+  "update": {
+    "message": "Une nouvelle version est disponible"
+  }
+}

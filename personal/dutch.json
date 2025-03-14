@@ -1,0 +1,118 @@
+{
+  "menu": {
+    "overview": "Overzicht",
+    "map": "Kaart",
+    "statistics": "Statistieken",
+    "dataset": "Gegevensbasis",
+    "more": "Meer",
+    "coordinateTool": "Coördinatentool",
+    "configureSource": "Gegevensbron",
+    "search": "Zoeken",
+    "searchTrip": "Reis zoeken",
+    "about": "Over",
+    "previous": "Vorige",
+    "next": "Volgende",
+    "close": "Sluiten",
+    "darkMode": "Nachtmodus"
+  },
+  "search": {
+    "trips": "Reizen",
+    "dayNotes": "Dagnotities",
+    "photos": "Foto's",
+    "noMatch": "Geen zoekresultaten"
+  },
+  "overview": {
+    "title": "Overzicht",
+    "heading": "Reisoverzicht",
+    "divisionYear": "Verdeling: Jaar",
+    "divisionCountry": "Verdeling: Land",
+    "century": "'s",
+    "year": "Jaar",
+    "country": "Land",
+    "plain": "Tabel"
+  },
+  "trip": {
+    "allTrips": "Alle reizen",
+    "to": "naar",
+    "summary": "Samenvatting",
+    "overview": "Overzicht",
+    "accommodations": "Accommodaties",
+    "assets": "Materialen",
+    "departureDate": "Vertrekdatum",
+    "returnDate": "Retourdatum",
+    "numberOfDays": "Aantal dagen",
+    "participantGroup": "Deelnemersgroep",
+    "id": "ID",
+    "numberOfCountries": "Aantal landen",
+    "uniqueCountries": "Unieke landen",
+    "countryTripMovements": "Land- en reismoties",
+    "veryShort": "Zeer kort bezoek van wezenlijk belang",
+    "shorter": "Korter bezoek van wezenlijk belang",
+    "restore": "Herstellen, telt alleen als * en ** meetellen",
+    "overallDestination": "Algemene bestemming",
+    "overallRoute": "Algemene route",
+    "dayPerDay": "Dag per dag",
+    "photos": "Foto's",
+    "monday": "Maandag",
+    "tuesday": "Dinsdag",
+    "wednesday": "Woensdag",
+    "thursday": "Donderdag",
+    "friday": "Vrijdag",
+    "saturday": "Zaterdag",
+    "sunday": "Zondag"
+  },
+  "images": {
+    "title": "Reisfoto's",
+    "back": "Terug naar",
+    "open-in": "Openen in",
+    "previous-day": "Vorige dag",
+    "next-day": "Volgende dag"
+  },
+  "map": {
+    "title": "Kaart",
+    "overallRoute": "Algemene bewegingen van alle reizen",
+    "allAccommodations": "Alle accommodaties in alle landen (ZEER TRAAG)",
+    "accommodations": "Accommodaties"
+  },
+  "mapPin": {
+    "accommodationNight": "Accommodatie, nacht",
+    "accommodation": "Accommodatie",
+    "date": "Datum",
+    "trip": "Reis",
+    "coordinates": "Coördinaten"
+  },
+  "statistics": {
+    "title": "Statistieken",
+    "summary": "Samenvatting",
+    "visits": "Bezoeken",
+    "overnights": "Overnachtingen",
+    "tripDomainYear": "Reizen per domein en jaar",
+    "uniqueCountries": "Aantal unieke landen",
+    "totalTrips": "Totaal aantal reizen",
+    "visitCountryCount": "Aantal bezoeken per land",
+    "oneQualified": "Eén gekwalificeerd bezoek per reis",
+    "manyQualified": "Meerdere gekwalificeerde bezoeken per reis",
+    "borderCrossings": "Grensovergangen (in- en uitreizen)",
+    "country": "Land",
+    "ordinaryLength": "Gewone duur",
+    "shorterStop": "Incl. kortere stops",
+    "shortVeryShort": "Incl. korte en zeer korte stops",
+    "minimalNumber": "Minimumaantal",
+    "note": "Alle kolommen tonen bezoeken van wezenlijk belang. Het werkelijke aantal grensovergangen kan dus groter zijn dan vermeld. Een wezenlijk bezoek is een stop die belangrijk is voor de reiservaring. Een gekwalificeerd bezoek is een bezoek dat niet een eerder bezoek hervat na een onderbreking door een korte of zeer korte stop in een ander land.",
+    "overnightStaysCountry": "Aantal overnachtingen per land",
+    "topTenCountries": "Top tien",
+    "overnightStays": "Overnachtingen"
+  },
+  "dataset": {
+    "title": "Gegevensbasis"
+  },
+  "about": {
+    "title": "Over",
+    "description": "is jouw open-source reisdocumentatie-app. Toekomstbestendig en efficiënt.",
+    "update": "Controleer updates op"
+  },
+  "update": {
+    "message": "Een nieuwe versie is beschikbaar"
+  }
+}
+

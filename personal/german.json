@@ -1,0 +1,117 @@
+{
+  "menu": {
+    "overview": "Übersicht",
+    "map": "Karte",
+    "statistics": "Statistik",
+    "dataset": "Datengrundlage",
+    "more": "Mehr",
+    "coordinateTool": "Koordinatenwerkzeug",
+    "configureSource": "Quelldatenbank",
+    "search": "Suchen",
+    "searchTrip": "Reise suchen",
+    "about": "Über",
+    "previous": "Vorherige",
+    "next": "Nächste",
+    "close": "Schließen",
+    "darkMode": "Nachtmodus"
+  },
+  "search": {
+    "trips": "Reisen",
+    "dayNotes": "Tagesnotizen",
+    "photos": "Bilder",
+    "noMatch": "Keine Suchergebnisse"
+  },
+  "overview": {
+    "title": "Übersicht",
+    "heading": "Reiseübersicht",
+    "divisionYear": "Aufteilung: Jahr",
+    "divisionCountry": "Aufteilung: Land",
+    "century": "er-Jahre",
+    "year": "Jahr",
+    "country": "Land",
+    "plain": "Tabelle"
+  },
+  "trip": {
+    "allTrips": "Alle Reisen",
+    "to": "bis",
+    "summary": "Zusammenfassung",
+    "overview": "Überblick",
+    "accommodations": "Unterkünfte",
+    "assets": "Materialien",
+    "departureDate": "Abreisedatum",
+    "returnDate": "Rückreisedatum",
+    "numberOfDays": "Anzahl der Tage",
+    "participantGroup": "Teilnehmergruppe",
+    "id": "ID",
+    "numberOfCountries": "Anzahl der Länder",
+    "uniqueCountries": "Einzigartige Länder",
+    "countryTripMovements": "Länder- und Reisebewegungen",
+    "veryShort": "Sehr kurzer Besuch von wesentlicher Bedeutung",
+    "shorter": "Kürzerer Besuch von wesentlicher Bedeutung",
+    "restore": "Wiederherstellen, zählt nur, wenn * und ** zählen",
+    "overallDestination": "Gesamtziel",
+    "overallRoute": "Gesamtroute",
+    "dayPerDay": "Tag für Tag",
+    "photos": "Bilder",
+    "monday": "Montag",
+    "tuesday": "Dienstag",
+    "wednesday": "Mittwoch",
+    "thursday": "Donnerstag",
+    "friday": "Freitag",
+    "saturday": "Samstag",
+    "sunday": "Sonntag"
+  },
+  "images": {
+    "title": "Reisefotos",
+    "back": "Zurück zu",
+    "open-in": "Öffnen in",
+    "previous-day": "Vorheriger Tag",
+    "next-day": "Nächster Tag"
+  },
+  "map": {
+    "title": "Karte",
+    "overallRoute": "Gesamte Bewegungen aller Reisen",
+    "allAccommodations": "Alle Unterkünfte in allen Ländern (SEHR LANGSAM)",
+    "accommodations": "Unterkünfte"
+  },
+  "mapPin": {
+    "accommodationNight": "Unterkunft, Nacht",
+    "accommodation": "Unterkunft",
+    "date": "Datum",
+    "trip": "Reise",
+    "coordinates": "Koordinaten"
+  },
+  "statistics": {
+    "title": "Statistik",
+    "summary": "Zusammenfassung",
+    "visits": "Besuche",
+    "overnights": "Übernachtungen",
+    "tripDomainYear": "Reisen pro Domäne und Jahr",
+    "uniqueCountries": "Anzahl der einzigartigen Länder",
+    "totalTrips": "Gesamtanzahl der Reisen",
+    "visitCountryCount": "Anzahl der Besuche pro Land",
+    "oneQualified": "Ein qualifizierter Besuch pro Reise",
+    "manyQualified": "Mehrere qualifizierte Besuche pro Reise",
+    "borderCrossings": "Grenzübertritte (Ein- und Ausreise)",
+    "country": "Land",
+    "ordinaryLength": "Normale Länge",
+    "shorterStop": "Einschließlich kürzerer Stopps",
+    "shortVeryShort": "Einschließlich kürzerer und sehr kurzer Stopps",
+    "minimalNumber": "Minimale Anzahl",
+    "note": "Alle Spalten zeigen Besuche von wesentlicher Bedeutung. Die tatsächliche Anzahl der Grenzübertritte kann daher größer sein als angegeben. Besuche von wesentlicher Bedeutung sind Aufenthalte, die wichtig für das Reiseerlebnis sind. Ein qualifizierter Besuch ist ein Besuch, der nicht einen vorherigen Besuch wieder aufnimmt, nachdem er durch einen kurzen oder sehr kurzen Aufenthalt in einem anderen Land unterbrochen wurde.",
+    "overnightStaysCountry": "Anzahl der Übernachtungen pro Land",
+    "topTenCountries": "Top zehn",
+    "overnightStays": "Übernachtungen"
+  },
+  "dataset": {
+    "title": "Datengrundlage"
+  },
+  "about": {
+    "title": "Über",
+    "description": "ist deine Open-Source-Reisedokumentations-App. Zukunftssicher und ressourcenschonend.",
+    "update": "Updates prüfen unter"
+  },
+  "update": {
+    "message": "Eine neue Version ist verfügbar"
+  }
+}
