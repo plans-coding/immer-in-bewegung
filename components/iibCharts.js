@@ -14,7 +14,6 @@ function initializeChart() {
         if (Array.isArray(jsonData) && jsonData.length > 0 && Array.isArray(colorData)) {
             // Aggregate the data
             const aggregatedData = aggregateData(jsonData, colorData);
-
             // Get the canvas context
             const ctx = canvas.getContext('2d');
 
@@ -54,25 +53,25 @@ function aggregateData(jsonData, colorData) {
     // Initialize the dataMap with years and domain abbreviations
     jsonData.forEach(item => {
         const year = item.Year;
-        const domainAbbr = item.DomainAbbreviation;
+        const domainDesc = item.DomainDescription;
         const count = item.AbbreviationCount;
 
         if (!dataMap[year]) {
             dataMap[year] = {};
         }
-        if (!dataMap[year][domainAbbr]) {
-            dataMap[year][domainAbbr] = 0;
+        if (!dataMap[year][domainDesc]) {
+            dataMap[year][domainDesc] = 0;
         }
-        dataMap[year][domainAbbr] += count;
+        dataMap[year][domainDesc] += count;
     });
 
     // Prepare labels and datasets for chart
     const years = Object.keys(dataMap);
-    const domainAbbrs = new Set(jsonData.map(item => item.DomainAbbreviation));
+    const domainAbbrs = new Set(jsonData.map(item => item.DomainDescription));
 
     // Map the colors to their domain abbreviations
-    const domainColors = colorData.reduce((acc, { DomainAbbreviation, Color }) => {
-        acc[DomainAbbreviation] = Color;
+    const domainColors = colorData.reduce((acc, { DomainDescription, Color }) => {
+        acc[DomainDescription] = Color;
         return acc;
     }, {});
 

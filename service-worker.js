@@ -1,32 +1,69 @@
-const CACHE_NAME = 'my-cache-v1';
-const appPath = '/iib/';
+const CACHE_NAME = 'immer-in-bewegung-cache-1';
 const urlsToCache = [
-    appPath,
-    appPath + 'index.html',
-    appPath + 'about.html',
-    appPath + 'dataset.html',
-    appPath + 'images.html',
-    appPath + 'overview.html',
-    appPath + 'search.html',
-    appPath + 'statistics.html',
-    appPath + 'favicon.webp',
-    appPath + 'map.html',
-    appPath + 'setup.html',
-    appPath + 'trip.html',
-    appPath + 'components/menu.html',
-    appPath + 'components/footer.html',
-    appPath + 'components/iibCharts.js',
-    appPath + 'components/iibMaps.js',
-    appPath + 'components/iibQueris.js',
+    'favicon.webp',
+    'index.html',
+
+    'about.html',
+    'dataset.html',
+    'images.html',
+    'overview.html',
+    'search.html',
+    'statistics.html',
+    'map.html',
+    'setup.html',
+    'trip.html',
+
+    'components/menu.html',
+    'components/footer.html',
+    'components/iibCharts.js',
+    'components/iibMaps.js',
+    'components/iibQueries.js',
+
+    'bundle/sqljs/sql-wasm.js',
+    'bundle/sqljs/sql-wasm.wasm',
+    'bundle/bootstrap/bootstrap.bundle.5.3.3.min.js',
+    'bundle/chartjs/chart.js',
+
+    'bundle/liquidjs/liquid.browser.min.js',
+
+    'bundle/leaflet/leaflet.1.9.4.min.css',
+    'bundle/leaflet/Control.FullScreen.4.0.0.css',
+    'bundle/leaflet/leaflet-src.1.9.4.min.js',
+    'bundle/leaflet/Control.FullScreen.4.0.0.js',
+    'bundle/leaflet/leaflet.polylineDecorator.1.6.0.min.js',
+    'bundle/leaflet/icon-fullscreen.svg',
+
+    'img/car.svg',
+    'img/coordinate.svg',
+    'img/frog_g_72.webp',
+    'img/frog_g_150.webp',
+    'img/house.svg',
+    'img/immich-logo-inline-dark-small.png',
+
+    'personal/settings.json',
+    'personal/languages.txt',
+    'personal/swedish.json',
+    'personal/danish.json',
+    'personal/german.json',
+    'personal/dutch.json'
 ];
 
-// Install event - Cache files
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => {
                 console.log('Opened cache');
-                return cache.addAll(urlsToCache);
+                return cache.addAll(urlsToCache)
+                    .catch(err => {
+                        console.error('Caching failed:', err);
+                        urlsToCache.forEach(async url => {
+                            try {
+                                await cache.add(url);
+                            } catch (error) {
+                                console.error(`Failed to cache ${url}:`, error);
+                            }
+                        });
+                    });
             })
     );
 });

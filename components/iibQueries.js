@@ -168,19 +168,24 @@ function getSqlQuery(section, parameter = null) {
         // STATISTICS
         case "statistics_perDomainYear":
             return `SELECT
-                    SUBSTR(InnerId, 1, 1) AS DomainAbbreviation,
-                    SUBSTR(DepartureDate, 1, 4) AS Year,
-                    COUNT(*) AS AbbreviationCount
-                FROM
-                    bewa_Overview
-                WHERE
-                    InnerId IS NOT NULL
-                    AND DepartureDate IS NOT NULL
-                GROUP BY
-                    DomainAbbreviation, Year
-                ORDER BY
-                    Year ASC, AbbreviationCount DESC;`;
-        break;
+                        SUBSTR(o.InnerId, 1, 1) AS DomainAbbreviation,
+                        SUBSTR(o.DepartureDate, 1, 4) AS Year,
+                        COUNT(*) AS AbbreviationCount,
+                        d.DomainDescription
+                    FROM
+                        bewa_Overview o
+                    LEFT JOIN
+                        bewx_TripDomains d
+                    ON
+                        SUBSTR(o.InnerId, 1, 1) = d.DomainAbbreviation
+                    WHERE
+                        o.InnerId IS NOT NULL
+                        AND o.DepartureDate IS NOT NULL
+                    GROUP BY
+                        DomainAbbreviation, Year
+                    ORDER BY
+                        Year ASC, AbbreviationCount DESC;`
+            break;
 
         case "statistics_tripCount":
             return `SELECT
