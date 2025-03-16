@@ -4,7 +4,7 @@ manifestLink.rel = "manifest";
 document.head.appendChild(manifestLink);
 
 // Get the base path dynamically
-const basePath = (window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/')).replace(/\/+$/, '/') ); // Remove trailing slash
+const basePath = (window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/')).replace(/\/+$/, '/');
 
 // Define the manifest object dynamically
 const manifest = {
