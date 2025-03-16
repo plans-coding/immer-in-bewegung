@@ -24,10 +24,14 @@
         }
 
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register( window.location.pathname.replace(/\/[^/]+$/, '/') + 'service-worker.js') // Use absolute path
+            const basePath = (window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/'))
+                .replace(/\/+$/, '/');
+
+            navigator.serviceWorker.register(basePath + 'service-worker.js')
                 .then(reg => console.log('Service Worker registered', reg))
                 .catch(err => console.error('SW registration failed:', err));
         }
+
 
     })();
 
@@ -244,7 +248,8 @@
 
         // INIT LIQUID
         // ===========
-        const { Liquid } = await import( window.location.pathname.replace(/\/[^/]+$/, '/') + "bundle/liquidjs/liquid.browser.min.js");
+        const { Liquid } = await import( (window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/'))
+                .replace(/\/+$/, '/') + "bundle/liquidjs/liquid.browser.min.js");
         const engine = new Liquid();
 
         // Store database in memory
