@@ -24,7 +24,7 @@
         }
 
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/iib/service-worker.js') // Use absolute path
+            navigator.serviceWorker.register( window.location.pathname.replace(/\/[^/]+$/, '/') + 'service-worker.js') // Use absolute path
                 .then(reg => console.log('Service Worker registered', reg))
                 .catch(err => console.error('SW registration failed:', err));
         }
