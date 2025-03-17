@@ -23,6 +23,13 @@ You can check out a demo app running at https://online.bewegung.app/.
 ## Read more
 See quick start instructions at https://bewegung.app/docs/quick-start
 
+## Edit database via web browser (live demo)
+Bind same SQLite file as you used for viewing to https://libsqlstudio.com/local
+
+## Edit database via web browser (self-host)
+1. Expose your SQLite file by HTTP via https://github.com/tursodatabase/libsql
+2. Open via Turso in https://libsqlstudio.com/local
+
 ## Sreenshots
 ![img](https://raw.githubusercontent.com/plans-coding/iib-docs/refs/heads/main/img/screenshots/iib-events.png)
 
