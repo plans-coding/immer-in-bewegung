@@ -17,7 +17,7 @@ You can check out a demo app running at https://online.bewegung.app/.
 * Based on SQLite (use your favourite tool to edit the data, e.g. using os native app [DB Browser for SQLite](https://sqlitebrowser.org/) or browser based app [SQLite Online](https://sqliteonline.com/))
 * Immer in Bewegung runs client side in your browser using WASM for reading the SQLite file
 * If you self-host Immer in Bewegung the application can read the SQLite file from same server
-* If you want to run directly via the online version https://online.bewegung.app/, you can bind your own data in https://online.bewegung.app/setup.html
+* If you want to run directly via the online version https://online.bewegung.app/, you can bind your own data in https://online.bewegung.app/?p=source
 * Features an optional integration to Immich
 
 ## Read more
