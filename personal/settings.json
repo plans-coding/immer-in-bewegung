@@ -1,11 +1,12 @@
 {
-  "baseSettings": {
-    "translationFile": "/personal/english.json",
-    "sqliteFile": "/personal/bewegung.db",
-    "homeCountry": "CHANGE_TO_YOUR_COUNTRY"
+  "Base": {
+    "HomeCountry": "CHANGE_TO_YOUR_COUNTRY",
+    "LanguageFile": "/personal/english.json",
+    "SqliteFile": "/personal/bewegung.db",
+    "DatasetEditorUrl": "https://libsqlstudio.com/client",
+    "Immich": "Disabled"
   },
-  "immich-settings": {
-    "enabled": true,
-    "immich-server-address": "https://immich.example.com/"
+  "Feature": {
+    "ImmichUrl": "https://immich.example.com/"
   }
 }
