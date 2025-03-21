@@ -6,7 +6,7 @@
     "dataset": "Base de données",
     "more": "Plus",
     "coordinateTool": "Outil de coordonnées",
-    "configureSource": "Base de données source",
+    "source": "Base de données source",
     "search": "Rechercher",
     "searchTrip": "Rechercher un voyage",
     "about": "À propos",
@@ -14,6 +14,15 @@
     "next": "Suivant",
     "close": "Fermer",
     "darkMode": "Mode sombre"
+  },
+  "source": {
+    "title": "Configurer votre source de données",
+    "currentSource": "Source de données actuelle",
+    "asSpecifiedIn": "Utiliser la base de données et les paramètres spécifiés dans",
+    "bindDB": "Lier la base de données au navigateur et appliquer les paramètres du fichier",
+    "info": "Le fichier sera enregistré dans le stockage local du navigateur mais ne sera pas téléversé. En savoir plus sur",
+    "applySettings": "Appliquer les paramètres",
+    "reload": "Recharger l’application et aller à la page d’accueil"
   },
   "search": {
     "trips": "Voyages",

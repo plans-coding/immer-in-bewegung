@@ -6,7 +6,7 @@
     "dataset": "Gegevensbasis",
     "more": "Meer",
     "coordinateTool": "Coördinatentool",
-    "configureSource": "Gegevensbron",
+    "source": "Gegevensbron",
     "search": "Zoeken",
     "searchTrip": "Reis zoeken",
     "about": "Over",
@@ -14,6 +14,15 @@
     "next": "Volgende",
     "close": "Sluiten",
     "darkMode": "Nachtmodus"
+  },
+  "source": {
+    "title": "Stel je gegevensbron in",
+    "currentSource": "Huidige gegevensbron",
+    "asSpecifiedIn": "Gebruik de database en instellingen zoals gespecificeerd in",
+    "bindDB": "Koppel de database aan de browser en pas de instellingen uit het bestand toe",
+    "info": "Het bestand wordt opgeslagen in de lokale opslag van de browser, maar niet geüpload. Lees meer over",
+    "applySettings": "Instellingen toepassen",
+    "reload": "Herlaad de app en ga naar de startpagina"
   },
   "search": {
     "trips": "Reizen",

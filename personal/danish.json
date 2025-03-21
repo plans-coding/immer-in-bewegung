@@ -6,7 +6,7 @@
     "dataset": "Dataunderlag",
     "more": "Mere",
     "coordinateTool": "Koordinatværktøj",
-    "configureSource": "Kildedatabase",
+    "source": "Kildedatabase",
     "search": "Søg",
     "searchTrip": "Søg rejse",
     "about": "Om",
@@ -14,6 +14,15 @@
     "next": "Næste",
     "close": "Luk",
     "darkMode": "Nat"
+  },
+  "source": {
+    "title": "Vælg datakilde",
+    "currentSource": "Nuværende datakilde",
+    "asSpecifiedIn": "Brug databasen og indstillingerne som angivet i",
+    "bindDB": "Bind databasen til browseren og anvend indstillingerne fra selve filen",
+    "info": "Filen vil blive gemt i browserens lokale lager, men ikke uploadet. Læs mere om",
+    "applySettings": "Anvend indstillinger",
+    "reload": "Genindlæs appen og gå til startsiden"
   },
   "search": {
     "trips": "Rejser",

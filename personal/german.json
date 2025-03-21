@@ -6,7 +6,7 @@
     "dataset": "Datengrundlage",
     "more": "Mehr",
     "coordinateTool": "Koordinatenwerkzeug",
-    "configureSource": "Quelldatenbank",
+    "source": "Quelldatenbank",
     "search": "Suchen",
     "searchTrip": "Reise suchen",
     "about": "Über",
@@ -14,6 +14,15 @@
     "next": "Nächste",
     "close": "Schließen",
     "darkMode": "Nachtmodus"
+  },
+  "source": {
+    "title": "Stelle deine Datenquelle ein",
+    "currentSource": "Aktuelle Datenquelle",
+    "asSpecifiedIn": "Verwende die Datenbank und Einstellungen wie angegeben in",
+    "bindDB": "Binde die Datenbank an den Browser und wende die Einstellungen aus der Datei an",
+    "info": "Die Datei wird im lokalen Speicher des Browsers gespeichert, aber nicht hochgeladen. Mehr erfahren über",
+    "applySettings": "Einstellungen anwenden",
+    "reload": "App neu laden und zur Startseite gehen"
   },
   "search": {
     "trips": "Reisen",

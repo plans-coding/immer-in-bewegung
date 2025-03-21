@@ -6,7 +6,7 @@
     "dataset": "Dataunderlag",
     "more": "Mer",
     "coordinateTool": "Koordinatverktyg",
-    "configureSource": "Källdatabas",
+    "source": "Källdatabas",
     "search": "Sök",
     "searchTrip": "Sök resa",
     "about": "Om",
@@ -14,6 +14,15 @@
     "next": "Nästa",
     "close": "Stäng",
     "darkMode": "Natt"
+  },
+  "source": {
+    "title": "Välj datakälla",
+    "currentSource": "Nuvarande datakälla",
+    "asSpecifiedIn": "Använd databasen och inställningarna som anges i",
+    "bindDB": "Bind databasen till webbläsaren och tillämpa inställningarna från själva filen",
+    "info": "Filen kommer att sparas i webbläsarens lokala lagringsminne men inte laddas upp. Läs mer om",
+    "applySettings": "Tillämpa inställningar",
+    "reload": "Ladda om appen och gå till startsidan"
   },
   "search": {
     "trips": "Resor",
