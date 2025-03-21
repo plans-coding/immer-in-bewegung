@@ -96,84 +96,36 @@
 
   <table class="table border border-top-0">
 
-
   {% assign last_continent = "" %}
   {% assign last_country = "" %}
 
   {% for row in overviewCountry[0] %}
+    {% if row.Continent != last_continent %}
+      <tr>
+        <td colspan="2" class="iib-silver-grey" style="font-weight: bold;">{{ row.Continent }}</td>
+      </tr>
+      {% assign last_continent = row.Continent %}
+    {% endif %}
 
-  {% if row.Continent != last_continent %}
-        <tr>
-          <td colspan="2" class="iib-silver-grey" style="font-weight: bold;">{{ row.Continent }}</td>
-        </tr>
-    {% assign last_continent = row.Continent %}
-  {% endif %}
-
-
-
-      {% if row.Country != last_country %}
+    {% if row.Country != last_country %}
       {% if last_country != "" %}
-        </td></tr> <!-- Close previous year's rows row -->
+        </td></tr> <!-- Close previous year's trips row -->
       {% endif %}
       <tr>
         <td class="align-middle pl-3 pr-3 iib-silver-grey" style="font-weight: bold;">{{ row.Country }}</td>
-        <td class="text-start"><a href="?p=trip&id={{ row.OuterId }}"><div style="display:inline-block;" class="iib-decade" data-iib-participantGroup="{{ row.ParticipantGroup }}" data-iib-tripDomain="{{ row.InnerId | slice: 0, 1 }}">{{ row.OuterId }} {{ row.OverallDestination }}</div></a>
+        <td class="text-start">
+        {% assign countryOuterId = row.OuterIDs | split: ", " %}
+        {% assign countryInnerId = row.InnerIDs | split: ", " %}
+        {% assign countryOverallDestination = row.OverallDestination | split: " | " %}
+        {% for trip in countryOuterId %}
+          {% assign i = forloop.index0 %}
+          <a href="?p=trip&id={{ countryOuterId[i] }}"><div style="display:inline-block;" class="iib-decade" data-iib-participantGroup="" data-iib-tripDomain="{{ countryInnerId[i] | slice: 0, 1 }}">{{ countryOuterId[i] }} {{ countryOverallDestination[i] }}</div></a>
+        {% endfor %}
+
       {% assign last_country = row.Country %}
-      {% else %}
-      <!-- Add subsequent rows for the same year in the same cell -->
-      <a href="?p=trip&id={{ row.OuterId }}"><div style="display:inline-block;" class="iib-decade" data-iib-participantGroup="{{ row.ParticipantGroup }}" data-iib-tripDomain="{{ row.InnerId | slice: 0, 1 }}">{{ row.OuterId }} {{ row.OverallDestination }}</div></a>
-      {% endif %}
-
-
-  {%comment%}
-  {% if row.Country != last_country %}
-    <tr>
-      <td class="align-middle pl-3 pr-3 iib-silver-grey" style="font-weight: bold;">{{ row.Country }}</td><td class="text-start">
-    {% assign last_country = row.Country %}
-  {% endif %}
-
-
-          <a href="?p=trip&id={{ item }}"><div  class="text-start" style="display:inline-block;" data-iib-participantGroup="{{ item.ParticipantGroup }}" data-iib-tripDomain="{{ item.TripDomain }}">{{ row.OuterId }}</div></a>
-
-    </td></tr>
-
-  {%endcomment%}
-
-
-
+    {% endif %}
   {% endfor %}
-
-
-  {%comment%}
-  {% assign last_continent = "" %}
-  {% assign last_country = "" %}
-  {% for country in translation.countries %}
-
-  {% if country.continent != last_continent %}
-          <tr>
-          <td colspan="2" class="iib-silver-grey" style="font-weight: bold;">{{ country.continent }}</td>
-        </tr>
-    {% assign last_continent = country.continent %}
-  {% endif %}
-
-
-  {% if country.continentCountries != last_country %}
-    {% for row in country.continentCountries %}
-    <tr><td class="align-middle pl-3 pr-3 iib-silver-grey" style="font-weight: bold;">{{ row }}</td><td class="text-start">
-
-      {% assign countryItemArray = jsonData[3] | where: "Country", row %}
-
-{{countryItemArray|json}}
-          <a href="?p=trip&id={{ item }}"><div  class="text-start" style="display:inline-block;" data-iib-participantGroup="{{ item.ParticipantGroup }}" data-iib-tripDomain="{{ item.TripDomain }}">{{ curCountryTrip.OuterId }}</div></a>
-
-
-    </td></tr>
-    {% endfor %}
-  {% assign last_country = country.continentCountries %}
-  {% endif %}
-
-  {% endfor %}
-  {%endcomment%}
+  </td></tr> <!-- Close the last year row -->
 
   </table>
 

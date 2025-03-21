@@ -9,26 +9,29 @@
     <div class="navbar-collapse collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link {% if not queryParams.p or queryParams.p == 'overview' %}active{% endif %}" aria-current="page" href="?p=overview">{{ translation.overview.title | default: 'Overview' }}</a>
+          <a class="nav-link menuItemSelectable menuItemActively {% if not queryParams.p or queryParams.p == 'overview' %}active{% endif %}" aria-current="page" href="?p=overview">{{ translation.overview.title | default: 'Overview' }}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link {% if queryParams.p == 'map' %}active{% endif %}" href="?p=map">{{ translation.map.title | default: 'Map' }}</a>
+          <a class="nav-link menuItemSelectable menuItemActively {% if queryParams.p == 'map' %}active{% endif %}" href="?p=map">{{ translation.map.title | default: 'Map' }}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link {% if queryParams.p == 'statistics' %}active{% endif %}" href="?p=statistics">{{ translation.statistics.title | default: 'Statistics' }}</a>
+          <a class="nav-link menuItemSelectable menuItemActively {% if queryParams.p == 'statistics' %}active{% endif %}" href="?p=statistics">{{ translation.statistics.title | default: 'Statistics' }}</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {% if queryParams.p == 'dataset' %}active{% endif %}" href="?p=dataset">{{ translation.dataset.title | default: 'Dataset' }}</a>
+            <a class="nav-link menuItemSelectable menuItemActively {% if queryParams.p == 'dataset' %}active{% endif %}" href="?p=dataset">{{ translation.dataset.title | default: 'Dataset' }}</a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             {{ translation.menu.more | default: 'More' }}
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="coordinate-tool.html" target="_blank">{{ translation.menu.coordinateTool | default: 'Coordinate Tool' }}</a></li>
-            <li><a class="dropdown-item" href="setup.html">{{ translation.menu.configureSource | default: 'Configure Source' }}</a></li>
+            <li><a class="dropdown-item" href="coordinate-tool.html" target="_blank">{{ translation.menu.coordinateTool | default: 'Coordinate Tool' }} <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
+  <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
+</svg></a></li>
+            <li><a class="dropdown-item menuItemSelectable" href="?p=source">{{ translation.menu.source | default: 'Configure Source' }}</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="?p=about">{{ translation.about.title | default: 'About' }}</a></li>
+            <li><a class="dropdown-item menuItemSelectable" href="?p=about">{{ translation.about.title | default: 'About' }}</a></li>
           </ul>
         </li>
         <li class="nav-item p-2">
@@ -61,25 +64,28 @@
             <div class="offcanvas-body">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link p-2 rounded {% if not queryParams.p or queryParams.p == 'overview' %}active{% endif %}" href="?p=overview">{{ translation.overview.title | default: 'Overview' }}</a>
+                        <a class="nav-link menuItemSelectable menuItemActively p-2 rounded {% if not queryParams.p or queryParams.p == 'overview' %}active{% endif %}" href="?p=overview">{{ translation.overview.title | default: 'Overview' }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link p-2 rounded {% if queryParams.p == 'map' %}active{% endif %}" href="?p=map">{{ translation.map.title | default: 'Map' }}</a>
+                        <a class="nav-link menuItemSelectable menuItemActively p-2 rounded {% if queryParams.p == 'map' %}active{% endif %}" href="?p=map">{{ translation.map.title | default: 'Map' }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link p-2 rounded {% if queryParams.p == 'statistics' %}active{% endif %}" href="?p=statistics">{{ translation.statistics.title | default: 'Statistics' }}</a>
+                        <a class="nav-link menuItemSelectable menuItemActively p-2 rounded {% if queryParams.p == 'statistics' %}active{% endif %}" href="?p=statistics">{{ translation.statistics.title | default: 'Statistics' }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link p-2 rounded {% if queryParams.p == 'dataset' %}active{% endif %}" href="?p=dataset">{{ translation.dataset.title | default: 'Dataset' }}</a>
+                        <a class="nav-link menuItemSelectable menuItemActively p-2 rounded {% if queryParams.p == 'dataset' %}active{% endif %}" href="?p=dataset">{{ translation.dataset.title | default: 'Dataset' }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link p-2 rounded" href="https://bewegung.app/coordinate-tool.html" target="_blank">{{ translation.menu.coordinateTool | default: 'Coordinate Tool' }}</a>
+                        <a class="nav-link p-2 rounded" href="https://bewegung.app/coordinate-tool.html" target="_blank">{{ translation.menu.coordinateTool | default: 'Coordinate Tool' }} <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
+  <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
+</svg></a>
                     </li>
                     <li class="nav-item">
-                        <a class="dropdown-item p-2 rounded" href="setup.html">{{ translation.menu.configureSource | default: 'Configure Source' }}</a>
+                        <a class="nav-link menuItemSelectable menuItemActively p-2 rounded" href="?p=source">{{ translation.menu.source | default: 'Configure Source' }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link p-2 rounded {% if queryParams.p == 'about' %}active{% endif %}" href="?p=about">{{ translation.about.title | default: 'About' }}</a>
+                        <a class="nav-link menuItemSelectable menuItemActively p-2 rounded {% if queryParams.p == 'about' %}active{% endif %}" href="?p=about">{{ translation.about.title | default: 'About' }}</a>
                     </li>
                     <li class="nav-item p-2">
                           <div class="form-check form-switch">

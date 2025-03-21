@@ -54,6 +54,8 @@
 
     <style>
 
+        .dropdown-item.active, .dropdown-item:active, .form-check-input:checked {background-color:#1d655e;}
+        .menuItemSelectable.active {font-weight:bold;}
         .immer-in-font-uc {font-family: 'Cairo', sans-serif;text-transform: uppercase;}
         .bewegung-font-uc {font-family: 'Righteous', sans-serif;text-transform: uppercase;}
         .iib-silver-grey{background-color:#6f757e!important;color:#fff!important;font-weight:normal!important;}
@@ -128,6 +130,8 @@
                 {% include 'statistics.html' %}
             {% elsif queryParams.p == 'dataset' %}
                 {% include 'dataset.html' %}
+            {% elsif queryParams.p == 'source' %}
+                {% include 'source.html' %}
             {% elsif queryParams.p == 'about' %}
                 {% include 'about.html' %}
             {% elsif queryParams.p == 'images' %}
@@ -218,106 +222,6 @@
 
 (async function () {
 
-        // READ SETTINGS FILE
-        // ==================
-        const settingsFile = await fetch('personal/settings.json');
-        let settings = await settingsFile.json();
-        console.log("Using database: " + settings.baseSettings.sqliteFile);
-        if (localStorage.getItem('homeCountry') !== null && localStorage.getItem('homeCountry') !== "") {
-            settings.baseSettings.homeCountry = localStorage.getItem('homeCountry');
-        }
-        //console.log(settings);
-
-        // READ TRANSLATION FILE IF EXISTS
-        // ===============================
-        let translation = { "menu": { "overview": "Overview", "statistics": "Statistics", "map": "Map", "dataset": "Dataset", "about": "About" } };
-        try {
-
-            if (localStorage.getItem('language') !== null && localStorage.getItem('language') !== "settings.json") {
-                const translationFile = await fetch("personal/" + localStorage.getItem('language') + ".json");
-                translation = await translationFile.json();
-                console.log(translation);
-            } else {
-                const translationFile = await fetch("personal/" + settings.baseSettings.languageFile);
-                translation = await translationFile.json();
-                console.log(translation);
-            }
-        } catch (error) {
-            console.log(`Langugage file error: ${error.message}`);
-        }
-
-        // INIT LIQUID
-        // ===========
-        const { Liquid } = await import( (window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/'))
-                .replace(/\/+$/, '/') + "bundle/liquidjs/liquid.browser.min.js");
-        const engine = new Liquid();
-
-        // Store database in memory
-        let dbInstance = null;
-
-        async function loadDatabase() {
-            if (!dbInstance) {
-                const sqlPromise = await initSqlJs({ locateFile: file => `bundle/sqljs/${file}` });
-
-                let response;
-
-                if (localStorage.getItem('dbSource') !== null && localStorage.getItem('dbSource') !== "settings.json") {
-                    const dbContent = localStorage.getItem('dbContent');
-
-                    if (dbContent) {
-                        // Decode base64 to binary data
-                        const binaryData = new Uint8Array(atob(dbContent).split('').map(char => char.charCodeAt(0)));
-
-                        // Use the binary data as an ArrayBuffer
-                        response = { arrayBuffer: async () => binaryData.buffer };
-                    } else {
-                        console.error("No database content found in localStorage.");
-                        return;
-                    }
-                } else {
-                    const dbFileUrl = settings.baseSettings.sqliteFile;
-                    response = await fetch(dbFileUrl);
-                }
-
-                const arrayBuffer = await response.arrayBuffer();
-                dbInstance = new sqlPromise.Database(new Uint8Array(arrayBuffer));
-                console.log("Database loaded.");
-            }
-            return dbInstance;
-        }
-
-        function convertSqlToJson(db, sqlQuery, sqlQueryName) {
-            const sqlResult = db.exec(sqlQuery);
-            //console.log("SQL Result:", sqlResult);
-
-            // Loop through each result (columns and values for each query)
-            const jsonData = sqlResult.map(result => {
-                const columnNames = result.columns;
-                return result.values.map(row => {
-                    let obj = {};
-                    columnNames.forEach((col, index) => {
-                        obj[col] = row[index];
-                    });
-                    return obj;
-                });
-            });
-
-            console.log("JSON Data for "+sqlQueryName, jsonData);
-            return jsonData;
-        }
-
-        const db = await loadDatabase(); // Use cached database
-
-            async function fetchFileList(plugin) {
-                if (!settings.plugins?.[plugin]) return [];
-                const response = await fetch(settings.plugins[plugin].filelist);
-                return (await response.text())
-                    .split('\n')
-                    .map(line => line.trim())
-                    .filter(line => line.length > 0);
-            }
-
-
         // GET QUERY PARAMETERS FROM URL
         // =============================
         function getQueryParams() {
@@ -329,6 +233,70 @@
             return queryObject;
         }
 
+
+        async function loadDatabase() {
+            if (dbInstance) return dbInstance;
+
+            const sqlPromise = await initSqlJs({ locateFile: file => `bundle/sqljs/${file}` });
+
+            let response;
+            let dbContent = localStorage.getItem('dbContent');
+
+            if (localStorage.getItem('dbSource') && localStorage.getItem('dbSource') !== "settings.json" && dbContent) {
+                const binaryData = new Uint8Array(atob(dbContent).split('').map(char => char.charCodeAt(0)));
+                response = { arrayBuffer: async () => binaryData.buffer };
+            } else if (settings?.Base?.SqliteFile) {
+                response = await fetch(settings.Base.SqliteFile);
+            } else {
+                console.log("No settings.json file or database source.");
+                return null;
+            }
+
+            const arrayBuffer = await response.arrayBuffer();
+            dbInstance = new sqlPromise.Database(new Uint8Array(arrayBuffer));
+            console.log("Database loaded.");
+
+            return dbInstance;
+        }
+
+
+        function convertSqlToJson(db, sqlQuery, sqlQueryName) {
+            if (db) {
+
+                const sqlResult = db.exec(sqlQuery);
+                //console.log("SQL Result:", sqlResult);
+                // Loop through each result (columns and values for each query)
+                const jsonData = sqlResult.map(result => {
+                    const columnNames = result.columns;
+                    return result.values.map(row => {
+                        let obj = {};
+                        columnNames.forEach((col, index) => {
+                            obj[col] = row[index];
+                        });
+                        return obj;
+                    });
+                });
+                console.log("JSON Data for "+sqlQueryName, jsonData);
+                return jsonData;
+
+            } else {
+                return;
+            }
+        }
+
+
+
+        async function fetchFileList(plugin) {
+            if (!settings.Plugins?.[plugin]) return [];
+            const response = await fetch(settings.Plugins[plugin].filelist);
+            return (await response.text())
+                .split('\n')
+                .map(line => line.trim())
+                .filter(line => line.length > 0);
+        }
+
+
+
         function versionCheck() {
             const currentVersionElement = document.getElementById('currentVersion');
             const latestVersionElement = document.getElementById('latestVersion');
@@ -339,6 +307,119 @@
                 console.log("New version available");
             }
         }
+
+
+      // SOURCE FUNCTIONS
+      // ================
+      function toggleFilePicker(show) {
+        document.getElementById('filePickerContainer').style.display = show ? 'block' : 'none';
+      }
+
+      function saveFilePath() {
+        let message = "";
+        const confirmationDiv = document.getElementById("confirmationMessage");
+
+        // Save source selection
+        if (document.getElementById('option1').checked) {
+          localStorage.setItem('dbSource', 'settings.json');
+          message = "<b>settings.json</b>";
+        } else if (document.getElementById('option2').checked) {
+          const fileInput = document.getElementById('filePicker');
+          if (fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            localStorage.setItem('dbSource', file.name);
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+              const fileContent = event.target.result;
+              const uint8Array = new Uint8Array(fileContent);
+              let binaryString = '';
+              for (let i = 0; i < uint8Array.length; i++) {
+                binaryString += String.fromCharCode(uint8Array[i]);
+              }
+              const base64Data = btoa(binaryString);
+              localStorage.setItem('dbContent', base64Data);
+            };
+            reader.readAsArrayBuffer(file);
+            message = "<b>" + file.name + "</b>.";
+          } else {
+            message = "Please select a file.";
+          }
+        }
+
+        confirmationDiv.innerHTML = message;
+        confirmationDiv.style.display = "block";
+      }
+
+      function initializeSource() {
+        const savedSource = localStorage.getItem('dbSource');
+        if (savedSource === 'settings.json' || !savedSource) {
+            document.getElementById('option1').checked = true;
+            toggleFilePicker(false);
+
+            const confirmationDiv = document.getElementById("confirmationMessage");
+            if (savedSource === 'settings.json' && settingsFile.ok ) {
+                confirmationDiv.innerHTML = `<b>${savedSource}</b>`;
+            } else if (!savedSource) {
+                confirmationDiv.innerHTML = `<b>settings.json</b>`;
+            } else if (!settingsFile.ok) {
+                confirmationDiv.innerHTML = `<b>No settings file</b>`;
+            }
+
+            confirmationDiv.style.display = "block";
+        } else {
+            document.getElementById('option2').checked = true;
+            toggleFilePicker(true);
+
+            const confirmationDiv = document.getElementById("confirmationMessage");
+            confirmationDiv.innerHTML = `<b>${savedSource}</b>`;
+            confirmationDiv.style.display = "block";
+        }
+      }
+
+
+
+
+      function transformData(input) {
+          if (input) {
+        let result = {};
+
+        input[0].forEach(item => {
+            const { AttributeGroup, Attribute, Value } = item;
+
+            if (AttributeGroup === "Pluigin") {
+                // Fix typo: "Pluigin" -> "Plugin"
+                if (!result["Plugins"]) result["Plugins"] = {};
+                result["Plugins"][Attribute] = JSON.parse(Value);
+            } else if (AttributeGroup === "Plugin") {
+                if (!result["Plugins"]) result["Plugins"] = {};
+                result["Plugins"][Attribute] = JSON.parse(Value);
+            } else {
+                if (!result[AttributeGroup]) result[AttributeGroup] = {};
+                result[AttributeGroup][Attribute] = Value;
+            }
+        });
+
+        return result;
+        } else {return;}
+    }
+
+
+
+    // INIT LIQUID
+    // ===========
+      let engine;
+      let dbInstance;
+      let db;
+
+      async function firstRun() {
+        const { Liquid } = await import( (window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/'))
+                .replace(/\/+$/, '/') + "bundle/liquidjs/liquid.browser.min.js");
+        engine = new Liquid();
+        db = await loadDatabase(); // Use cached database
+      }
+
+    let translation = { "menu": { "overview": "Overview", "statistics": "Statistics", "map": "Map", "dataset": "Dataset", "source": "Source", "about": "About" } };
 
 
     async function updatePageContent(queryParams) {
@@ -364,8 +445,8 @@
             case "trip": {
                 document.title = queryParams.id + " - Immer in Bewegung";
 
-                const diaryFilesArray = await fetchFileList('diary');
-                const passportFilesArray = await fetchFileList('passport');
+                const diaryFilesArray = await fetchFileList('Diary');
+                const passportFilesArray = await fetchFileList('Passport');
 
                 const summary = convertSqlToJson(db, getSqlQuery('trip_summary', queryParams.id), 'trip_summary');
                 const sevents = convertSqlToJson(db, getSqlQuery('trip_events', queryParams.id), 'trip_events');
@@ -373,7 +454,7 @@
                 const tripDomains = convertSqlToJson(db, getSqlQuery('common_tripDomains'), 'common_tripDomains');
                 const borderCrossings = convertSqlToJson(db, getSqlQuery('trip_borderCrossings', queryParams.id), 'trip_borderCrossings');
                 const mapPins = convertSqlToJson(db, getSqlQuery('trip_mapPins', queryParams.id), 'trip_mapPins');
-                const parameters = {translation, queryParams, settings, summary, sevents, allTrips, tripDomains, borderCrossings, mapPins };
+                const parameters = {translation, queryParams, settings, summary, sevents, allTrips, tripDomains, borderCrossings, mapPins, diaryFilesArray, passportFilesArray };
                 document.getElementById("liquidjsContent").innerHTML = await engine.parseAndRender("{% include 'trip.html' %}", parameters);
                 initializeMapTrip();
 
@@ -445,7 +526,15 @@
             case "dataset": {
                 document.title = translation.menu[queryParams.p] + " - Immer in Bewegung";
 
-                document.getElementById("liquidjsContent").innerHTML = await engine.parseAndRender("{% include 'dataset.html' %}", {translation});
+                document.getElementById("liquidjsContent").innerHTML = await engine.parseAndRender("{% include 'dataset.html' %}", { translation, settings });
+                break;
+            }
+
+            case "source": {
+                document.title = translation.menu[queryParams.p] + " - Immer in Bewegung";
+
+                document.getElementById("liquidjsContent").innerHTML = await engine.parseAndRender("{% include 'source.html' %}", { translation, settings });
+                initializeSource();
                 break;
             }
 
@@ -461,7 +550,7 @@
                 const trip = convertSqlToJson(db, getSqlQuery('search_trip', queryParams.s), 'search_trip');
                 const sevent = convertSqlToJson(db, getSqlQuery('search_event', queryParams.s), 'search_event');
                 const tripDomains = convertSqlToJson(db, getSqlQuery('common_tripDomains'), 'common_tripDomains');
-                const parameters = {translation, trip, sevent, tripDomains };
+                const parameters = { translation, trip, sevent, tripDomains };
                 document.getElementById("liquidjsContent").innerHTML = await engine.parseAndRender("{% include 'search.html' %}", parameters);
                 break;
             }
@@ -470,21 +559,73 @@
 
         window.updatePageContent = updatePageContent;
         window.getQueryParams = getQueryParams;
+
+        window.toggleFilePicker = toggleFilePicker;
+        window.saveFilePath = saveFilePath;
     }
 
 
+
+        // FIRST RUN CHECK
+        let settings;
+        let settingsFile;
+        if (localStorage.getItem('dbSource') === "settings.json" || localStorage.getItem('dbSource') === null ) {
+
+            settingsFile = await fetch('personal/settings.json');
+            if (!settingsFile.ok) {
+              console.log('Settings file not found and no binded database.');
+              let queryParams = getQueryParams();
+              if ( queryParams.p != 'source' ) { window.location = '?p=source&m=no_settings_file'; }
+
+            } else {
+              settings = await settingsFile.json();
+              //console.log(settings);
+              console.log("Using database specified in settings.json: " + settings.Base.SqliteFile);
+            }
+
+        } else {
+            console.log('Reading settings from database file in local storage.');
+        }
+
+        //console.log(settings);
+        await firstRun();
+        // Get settings from database file
+        //console.log(db);
+        settings = transformData(convertSqlToJson(db, 'SELECT * FROM bewxx_Settings', 'settings'));
+        console.log(settings);
+
+
+        // READ TRANSLATION FILE IF EXISTS
+        // ===============================
+        try {
+            const translationFile = await fetch("personal/" + settings.Base.LanguageFile);
+            translation = await translationFile.json();
+            console.log(translation);
+        } catch (error) {
+            console.log(`Langugage file error: ${error.message}`);
+        }
+
+
         // Initial page load
-        document.getElementById("liquidjsMenu").innerHTML = await engine.parseAndRender(document.getElementById("liquidjsTemplateMenu").innerHTML, {translation});
+        document.getElementById("liquidjsMenu").innerHTML = await engine.parseAndRender(document.getElementById("liquidjsTemplateMenu").innerHTML, { translation, queryParams: getQueryParams() });
+        document.querySelectorAll('.menuItemSelectable').forEach(item => {
+            item.addEventListener('click', function() {
+                // Get the href of the clicked item
+                const href = this.getAttribute('href');
+
+                // Remove "active" class from all menu items in both menus
+                document.querySelectorAll('.menuItemSelectable').forEach(el => el.classList.remove('active'));
+
+                // Add "active" class to the matching menu items in both menus
+                document.querySelectorAll(`.menuItemActively[href="${href}"]`).forEach(el => el.classList.add('active'));
+            });
+        });
         initializeOffcanvasClose();
         await updatePageContent(getQueryParams());
 
 
-        // Listen for query parameter change
-        /*window.addEventListener('popstate', async () => {
-            await updatePageContent(getQueryParams());
-        });*/
 
-                // Listen for click event and replace href with partial reload
+    // Listen for click event and replace href with partial reload
     document.body.addEventListener('click', function (event) {
         const target = event.target;
         if (target.tagName === 'A' && target.getAttribute('href') && target.getAttribute('href').startsWith('?')) {
@@ -513,6 +654,7 @@
             });
         });
     }
+
 
 
     </script>

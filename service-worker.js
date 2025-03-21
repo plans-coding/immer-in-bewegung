@@ -10,7 +10,7 @@ const urlsToCache = [
     'search.html',
     'statistics.html',
     'map.html',
-    'setup.html',
+    'source.html',
     'trip.html',
 
     'components/menu.html',

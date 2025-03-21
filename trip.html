@@ -48,7 +48,7 @@
 
 <!-- Current triptype -->
 
-<div class="p-1" style="display:flex;" class="currentTripType" data-iib-tripDomain="{{summary[0][0].DomainAbbreviation}}">
+<div class="p-1" style="display:flex;" class="currentTripType" data-iib-tripDomain="{{ summary[0][0].DomainAbbreviation }}">
 
     <div style="display: flex; align-items: center; flex: 1;">
         <button type="button" onclick="document.querySelector('#curtriptype').selectedIndex = (document.querySelector('#curtriptype').selectedIndex - 1 + document.querySelector('#curtriptype').options.length) % document.querySelector('#curtriptype').options.length;document.querySelector('#curtriptype').dispatchEvent(new Event('change'));" class="btn btn-iib-ctt" data-iib-tripDomain="{{summary[0][0].DomainAbbreviation}}">
@@ -60,7 +60,7 @@
 
 
     <div style="flex:1;text-align:center;">
-        <select id="curtriptype"  class="form-control text-center btn-iib-ctt" data-iib-tripDomain="{{summary[0][0].DomainAbbreviation}}">
+        <select id="curtriptype"  class="form-control text-center btn-iib-ctt" data-iib-tripDomain="{{ summary[0][0].DomainAbbreviation }}">
                 {% for trip in allTrips[0] %}
                   {% if trip.DomainAbbreviation == summary[0][0].DomainAbbreviation %}
                     <option value="{{ trip.OuterId }}" {% if queryParams.id == trip.OuterId %}selected{% endif %}>{{ trip.OuterId }}&nbsp; {{trip.OverallDestination}}</option>
@@ -148,7 +148,7 @@
                     <td class="align-middle">
 
                     <!-- count countries WITHOUT prefix ** (but WITH * and +) and only count unique instances -->
-                    {% assign countryCount = borderCrossings[0][0].AllBorderCrossings | split: ", " | where_exp:  "item", "item[0] != '*' and item[1] != '*'" | where_exp:  "item", "item != settings.baseSettings.homeCountry" | join: ", " | remove: "*" | remove: "+" | split: ", " | uniq %}
+                    {% assign countryCount = borderCrossings[0][0].AllBorderCrossings | split: ", " | where_exp:  "item", "item[0] != '*' and item[1] != '*'" | where_exp:  "item", "item != settings.Base.HomeCountry" | join: ", " | remove: "*" | remove: "+" | split: ", " | uniq %}
                     {{ countryCount | size }}
 
                     </td>
@@ -194,7 +194,7 @@
 
               <!--<style>.leaflet-marker-icon svg path {color:{{ tripColor.Color }};}</style>-->
               <div id="map-pin-data" data-map-overall-route='{{ mapPins[0] | json }}'
-              data-map-accommodation='{{ sevents[0] | json | replace: "'", "%27" }}' data-settings-assets='{{ settings.immich-settings | json }}' data-map-color='{{ tripColor.Color }}'></div>
+              data-map-accommodation='{{ sevents[0] | json | replace: "'", "%27" }}' data-settings-assets='{{ settings | json }}' data-map-color='{{ tripColor.Color }}'></div>
               <div id="map" style="min-height:400pt;height:100%;width:100%;"></div>
             </div>
           </div>
@@ -210,31 +210,31 @@
   {% for day in sevents[0] %}
     <tr><td><b>{{ day.Date }}</b><br />{{ day.Date | date: "%A" }}<br />
 
-    {% if settings.immich-settings.enabled %}
-      {% unless settings.baseSettings.tripPhotoException contains day.OuterId %}
+    {% if settings.Base.Immich == 'Enabled' %}
+      {% unless settings.Base.ExcludeDayPhotos contains day.OuterId %}
         <a href="?p=images&id={{ day.OuterId }}&date={{ day.Date }}">
         <button type="button" class="btn mt-2 btn-iib-ctt" data-iib-tripDomain="{{summary[0][0].DomainAbbreviation}}">{{ translation.trip.photos | default: "Photos" }}</button></a>
       {% endunless %}
     {% endif %}
 
-    {% if settings.plugins.diary.enabled %}
+    {% if settings.Plugins.Diary.enabled %}
       {% assign year = day.Date | date: "%Y" %}
       <!-- unclear if ISO standard -->
       {% assign week = day.Date | date: "W%W" %}
       {% assign filteredDiaryFiles = diaryFilesArray | where_exp: "item", "item contains year and item contains week" %}
       {% for file in filteredDiaryFiles %}
-        <button type="button" class="btn mt-2 btn-iib-ctt" data-iib-tripDomain="{{summary[0][0].DomainAbbreviation}}" data-bs-toggle="modal" data-bs-target="#fullScreenModal{{file}}">{{ settings.plugins.diary.translation | default: "Diary" }}</button>
+        <button type="button" class="btn mt-2 btn-iib-ctt" data-iib-tripDomain="{{summary[0][0].DomainAbbreviation}}" data-bs-toggle="modal" data-bs-target="#fullScreenModal{{file}}">{{ settings.Plugins.Diary.translation | default: "Diary" }}</button>
 
         <!-- Full-Screen Modal -->
         <div class="modal fade" id="fullScreenModal{{file}}" tabindex="-1" aria-labelledby="fullScreenModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="fullScreenModalLabel">{{ settings.plugins.diary.translation | default: "Diary" }}</h5>
+                <h5 class="modal-title" id="fullScreenModalLabel">{{ settings.Plugins.Diary.translation | default: "Diary" }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <p><img style="max-height:100%;max-width:100%;" src="{{settings.plugins.diary.path}}{{file}}"></p>
+                <p><img style="max-height:100%;max-width:100%;" src="{{settings.Plugins.Diary.path}}{{file}}"></p>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ translation.menu.close | default: "Close" }}</button>
@@ -245,22 +245,22 @@
 
       {% endfor %}
     {% endif %}
-    {% if settings.plugins.passport.enabled %}
+    {% if settings.Plugins.Passport.enabled %}
       {% assign date = day.Date | date: "%Y%m%d" %}
       {% assign filteredPassportFiles = passportFilesArray | where_exp: "item", "item contains date" %}
       {% for file in filteredPassportFiles %}
-      <button type="button" class="btn mt-2 btn-iib-ctt" data-iib-tripDomain="{{summary[0][0].DomainAbbreviation}}" data-bs-toggle="modal" data-bs-target="#fullScreenModal{{file}}">{{ settings.plugins.passport.translation | default: "Passport" }}</button>
+      <button type="button" class="btn mt-2 btn-iib-ctt" data-iib-tripDomain="{{summary[0][0].DomainAbbreviation}}" data-bs-toggle="modal" data-bs-target="#fullScreenModal{{file}}">{{ settings.Plugins.Passport.translation | default: "Passport" }}</button>
 
         <!-- Full-Screen Modal -->
         <div class="modal fade" id="fullScreenModal{{file}}" tabindex="-1" aria-labelledby="fullScreenModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="fullScreenModalLabel">{{ settings.plugins.passport.translation | default: "Passport" }}</h5>
+                <h5 class="modal-title" id="fullScreenModalLabel">{{ settings.Plugins.Passport.translation | default: "Passport" }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <p><img style="max-height:100%;max-width:100%;" src="{{settings.plugins.passport.path}}{{file}}"></p>
+                <p><img style="max-height:100%;max-width:100%;" src="{{settings.Plugins.Passport.path}}{{file}}"></p>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ translation.menu.close | default: "Close" }}</button>
