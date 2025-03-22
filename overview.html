@@ -11,6 +11,10 @@
   margin:2pt 0 2pt 0;
   color:#fff;
 }
+.btn-filter-domain[data-iib-tripDomain={{ tripDomain.DomainAbbreviation }}] {
+  background-color: {{ tripDomain.Color }};
+  color:#fff;
+}
 .participantGroup {
   background-color: #000;
   padding: 3pt 5pt 3pt 5pt;
@@ -22,12 +26,26 @@
 <div class="container text-center">
 
 
-  <!--
+    <!--
     <div class="input-group">
       <div class="input-group-text" id="btnGroupAddon2">Filter</div>
       <input type="text" class="form-control" placeholder="SQL Syntax" aria-label="Input group example" aria-describedby="btnGroupAddon2">
-    </div>-->
+    </div>
+    -->
 
+    <div class="mb-3">
+        <div class="btn-group m-1" role="group" aria-label="Filter Domain" style="max-width:100%;overflow-x:auto;">
+        {% for tripDomain in tripDomains[0] %}
+            <button type="button" class="btn btn-filter-domain" onclick='this.style.textDecoration = this.style.textDecoration ? "" : "line-through"; document.querySelectorAll(".iib-item[data-iib-tripDomain={{ tripDomain.DomainAbbreviation }}]").forEach(el => el.classList.toggle("iib-hide-item"))' data-iib-tripDomain="{{ tripDomain.DomainAbbreviation }}">{{ tripDomain.DomainDescription }}</button>
+        {% endfor %}
+        </div>
+
+        <div class="btn-group m-1" role="group" aria-label="Filter Group" style="max-width:100%;overflow-x:auto;">
+        {% for participantGroup in participantGroups[0] %}
+            <button type="button" class="btn btn-dark" onclick='this.style.textDecoration = this.style.textDecoration ? "" : "line-through"; document.querySelectorAll(".iib-item[data-iib-participantGroup={{ participantGroup.ParticipantGroup }}]").forEach(el => el.classList.toggle("iib-hide-item"))' data-iib-participantGroup="{{ participantGroup.ParticipantGroup }}">{{ participantGroup.ParticipantGroup }}</button>
+        {% endfor %}
+        </div>
+    </div>
 
   <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
@@ -79,11 +97,11 @@
       {% endif %}
       <tr>
         <td class="align-middle pl-3 pr-3 iib-silver-grey" style="font-weight: bold;">{{ trip.TripYear }}</td>
-        <td class="text-start"><a href="?p=trip&id={{ trip.OuterId }}"><div style="display:inline-block;" class="iib-decade" data-iib-participantGroup="{{ trip.ParticipantGroup }}" data-iib-tripDomain="{{ trip.TripDomain }}">{{ trip.OuterId }} {{ trip.OverallDestination }}</div></a>
+        <td class="text-start"><a href="?p=trip&id={{ trip.OuterId }}"><div style="display:inline-block;" class="iib-decade iib-item" data-iib-participantGroup="{{ trip.ParticipantGroup }}" data-iib-tripDomain="{{ trip.TripDomain }}">{{ trip.OuterId }} {{ trip.OverallDestination }}</div></a>
       {% assign last_year = trip.TripYear %}
     {% else %}
       <!-- Add subsequent trips for the same year in the same cell -->
-      <a href="?p=trip&id={{ trip.OuterId }}"><div style="display:inline-block;" class="iib-decade" data-iib-participantGroup="{{ trip.ParticipantGroup }}" data-iib-tripDomain="{{ trip.TripDomain }}">{{ trip.OuterId }} {{ trip.OverallDestination }}</div></a>
+      <a href="?p=trip&id={{ trip.OuterId }}"><div style="display:inline-block;" class="iib-decade iib-item" data-iib-participantGroup="{{ trip.ParticipantGroup }}" data-iib-tripDomain="{{ trip.TripDomain }}">{{ trip.OuterId }} {{ trip.OverallDestination }}</div></a>
     {% endif %}
   {% endfor %}
   </td></tr> <!-- Close the last year row -->
@@ -117,9 +135,10 @@
         {% assign countryOuterId = row.OuterIDs | split: ", " %}
         {% assign countryInnerId = row.InnerIDs | split: ", " %}
         {% assign countryOverallDestination = row.OverallDestination | split: " | " %}
+        {% assign countryParticipantGroup = row.ParticipantGroup | split: " | " %}
         {% for trip in countryOuterId %}
           {% assign i = forloop.index0 %}
-          <a href="?p=trip&id={{ countryOuterId[i] }}"><div style="display:inline-block;" class="iib-decade" data-iib-participantGroup="" data-iib-tripDomain="{{ countryInnerId[i] | slice: 0, 1 }}">{{ countryOuterId[i] }} {{ countryOverallDestination[i] }}</div></a>
+          <a href="?p=trip&id={{ countryOuterId[i] }}"><div style="display:inline-block;" class="iib-decade iib-item" data-iib-participantGroup="{{ countryParticipantGroup[i] }}" data-iib-tripDomain="{{ countryInnerId[i] | slice: 0, 1 }}">{{ countryOuterId[i] }} {{ countryOverallDestination[i] }}</div></a>
         {% endfor %}
 
       {% assign last_country = row.Country %}
@@ -143,7 +162,7 @@
   <tbody>
     {% for trip in overviewYear[0] %}
 
-    <tr>
+    <tr class="iib-item" data-iib-participantGroup="{{ trip.ParticipantGroup }}" data-iib-tripDomain="{{ trip.TripDomain }}">
       <td><a href="?p=trip&id={{ trip.OuterId }}" style="text-decoration:none;"><div class="text-nowrap iib-decade" data-iib-participantGroup="{{ trip.ParticipantGroup }}" data-iib-tripDomain="{{ trip.TripDomain }}">{{trip.OuterId}}</div></a></td><td class="align-middle">{{trip.OverallDestination}}</td><td class="align-middle"><div class="text-nowrap">{{trip.DepartureDate}}</div></td><td class="align-middle"><div class="text-nowrap">{{trip.ReturnDate}}</div></td><td class="align-middle">
       {% assign startDate = trip.DepartureDate | date: "%s" %}
       {% assign endDate = trip.ReturnDate | date: "%s" %}

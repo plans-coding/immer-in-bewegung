@@ -60,6 +60,7 @@
         .bewegung-font-uc {font-family: 'Righteous', sans-serif;text-transform: uppercase;}
         .iib-silver-grey{background-color:#6f757e!important;color:#fff!important;font-weight:normal!important;}
         .iib-nav-link {color:#1d655e!important;}
+        .iib-hide-item {display:none!important;}
 
         h1 {font-family: 'Cairo', sans-serif;font-weight:bold;margin-top:0.5em;}
 
@@ -437,7 +438,8 @@
                 const overviewYear = convertSqlToJson(db, getSqlQuery('overview_year'), 'overview_year');
                 const overviewCountry = convertSqlToJson(db, getSqlQuery('overview_country'), 'overview_country');
                 const tripDomains = convertSqlToJson(db, getSqlQuery('common_tripDomains'), 'common_tripDomains');
-                const parameters = {translation, overviewYear, overviewCountry, tripDomains };
+                const participantGroups = convertSqlToJson(db, getSqlQuery('common_participantGroups'), 'common_participantGroups');
+                const parameters = {translation, overviewYear, overviewCountry, tripDomains, participantGroups };
                 document.getElementById("liquidjsContent").innerHTML = await engine.parseAndRender("{% include 'overview.html' %}", parameters);
                 break;
             }

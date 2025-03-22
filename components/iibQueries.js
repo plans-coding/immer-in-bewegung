@@ -7,7 +7,16 @@ function getSqlQuery(section, parameter = null) {
             return `SELECT
                     *
                 FROM
-                    bewx_TripDomains;`;
+                    bewx_TripDomains
+                WHERE
+                    DomainAbbreviation != 'X';`;
+        break;
+
+        case "common_participantGroups":
+            return `SELECT
+                    *
+                FROM
+                    bewx_ParticipantGroups;`;
         break;
 
         // OVERVIEW
@@ -30,25 +39,27 @@ function getSqlQuery(section, parameter = null) {
 
         case "overview_country":
             return `WITH normalized AS (
-                                            SELECT
-                                                a.OuterID,
-                                                a.InnerId,
-                                                TRIM(REPLACE(REPLACE(REPLACE(value, '*', ''), '+', ''), '**', '')) AS Country,
-                                                value AS OriginalCountry,
-                                                b.OverallDestination
-                                            FROM IIBc_BorderCrossings AS a,
-                                                json_each('["' || REPLACE(AllBorderCrossings, ', ', '", "') || '"]')
-                                            LEFT JOIN  bewa_Overview AS b
-                                            ON b.InnerId = a.InnerId
-                                        )
+                                SELECT
+                                    a.OuterID,
+                                    a.InnerId,
+                                    TRIM(REPLACE(REPLACE(REPLACE(value, '*', ''), '+', ''), '**', '')) AS Country,
+                                    value AS OriginalCountry,
+                                    b.OverallDestination,
+                                    b.ParticipantGroup
+                                FROM IIBc_BorderCrossings AS a,
+                                    json_each('["' || REPLACE(AllBorderCrossings, ', ', '", "') || '"]')
+                                LEFT JOIN  bewa_Overview AS b
+                                ON b.InnerId = a.InnerId
+                            )
                     SELECT
                         c.Continent,
                         n.Country,
                         GROUP_CONCAT(n.OuterID, ', ') AS OuterIDs,
                         GROUP_CONCAT(n.InnerId, ', ') AS InnerIDs,
-                        GROUP_CONCAT(n.OverallDestination, ' | ') AS OverallDestination
+                        GROUP_CONCAT(n.OverallDestination, ' | ') AS OverallDestination,
+						GROUP_CONCAT(n.ParticipantGroup, ' | ') AS ParticipantGroup
                     FROM (
-                        SELECT DISTINCT Country, OuterID, InnerId, OverallDestination
+                        SELECT DISTINCT Country, OuterID, InnerId, OverallDestination, ParticipantGroup
                         FROM normalized
                         WHERE OriginalCountry NOT LIKE '+%'
                         AND OriginalCountry NOT LIKE '**%'
