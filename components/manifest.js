@@ -10,12 +10,12 @@ const basePath = (window.location.origin + window.location.pathname.replace(/\/[
 const manifest = {
   name: "Immer in Bewegung",
   short_name: "IIB",
-  start_url: basePath + "/", // Ensure it's a proper relative path
+  start_url: basePath, // Ensure it's a proper relative path
   display: "standalone",
   background_color: "#6f757e",
   "icons": [
     {
-      "src": "icons/icon.svg",
+      "src": basePath + "img/frog.svg",
       "sizes": "any",
       "type": "image/svg+xml"
     }
