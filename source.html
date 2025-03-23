@@ -30,7 +30,7 @@ rgb(29,101,94,0.2);">{{ translation.source.currentSource | default: "Current sou
           </div>
 
           <button class="btn mt-3" style="background-color:#1d655e;color:#fff;" onclick="saveFilePath()">{{ translation.source.applySettings | default: "Apply settings" }}</button>
-          <button class="btn mt-3 btn-dark" onclick="location.reload(true);">{{ translation.source.reload | default: "Reload app and go to start page" }}</button>
+          <a href="?p=overview"><button class="btn mt-3 btn-dark">{{ translation.source.reload | default: "Reload app and go to start page" }}</button></a>
 
 
 </div>
