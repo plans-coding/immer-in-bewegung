@@ -13,9 +13,12 @@ const manifest = {
   start_url: basePath + "/", // Ensure it's a proper relative path
   display: "standalone",
   background_color: "#6f757e",
-  icons: [
-    { src: `${basePath}/favicon.webp`, sizes: "64x64", type: "image/png" }, // Correct relative path
-    { src: `${basePath}/img/frog_g_150.webp`, sizes: "150x150", type: "image/png" } // Correct relative path
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
   ]
 };
 
