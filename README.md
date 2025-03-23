@@ -30,7 +30,7 @@ Bind same SQLite file as you used for viewing to https://libsqlstudio.com/local
 1. Expose your SQLite file by HTTP via https://github.com/tursodatabase/libsql
 2. Open via Turso in https://libsqlstudio.com/local
 
-## Sreenshots
+## Screenshots
 ![img](https://raw.githubusercontent.com/plans-coding/iib-docs/refs/heads/main/img/iib-computer.png)
 
 ## Licenses
