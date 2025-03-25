@@ -67,6 +67,7 @@
         :root[data-bs-theme="light"] .iib-nav-link.active {background-color:#6f757e !important;color:#fff !important;}
         :root[data-bs-theme="light"] body, :root[data-bs-theme="light"] #offcanvasNavbar {background-color:#f8fafd;}
 
+        :root[data-bs-theme="dark"] .border{border-color:#4C6C6C!important;}
         :root[data-bs-theme="dark"] .form-check-input:checked {background-color:#1d655e !important;}
         :root[data-bs-theme="dark"] body, :root[data-bs-theme="dark"] #offcanvasNavbar {background-color:#000D0D!important;}
         :root[data-bs-theme="dark"] .iib-silver-grey{background-color:#002D2D!important;color:#fff!important;font-weight:normal!important;}
@@ -420,7 +421,7 @@
         db = await loadDatabase(); // Use cached database
       }
 
-    let translation = { "menu": { "overview": "Overview", "statistics": "Statistics", "map": "Map", "dataset": "Dataset", "source": "Source", "about": "About" } };
+    let translation = { "menu": { "overview": "Overview", "statistics": "Statistics", "map": "Map", "dataset": "Dataset", "source": "Source Database", "about": "About" } };
 
 
     async function updatePageContent(queryParams) {

@@ -10,7 +10,8 @@
 {% endfor %}
 </style>
 <!-- All trips -->
-<div class="p-1" style="display:flex;">
+
+<div class="p-1" style="display:flex;margin-left:6pt;margin-right:6pt;">
 
     <div style="display: flex; align-items: center; flex: 1;">
         <button type="button" onclick="document.querySelector('#alltrip').selectedIndex = (document.querySelector('#alltrip').selectedIndex - 1 + document.querySelector('#alltrip').options.length) % document.querySelector('#alltrip').options.length;document.querySelector('#alltrip').dispatchEvent(new Event('change'));" class="btn iib-silver-grey">
@@ -42,13 +43,12 @@
 
     </div>
 
-
 </div>
 
 
 <!-- Current triptype -->
 
-<div class="p-1" style="display:flex;" class="currentTripType" data-iib-tripDomain="{{ summary[0][0].DomainAbbreviation }}">
+<div class="p-1" style="display:flex;margin-left:6pt;margin-right:6pt;" class="currentTripType" data-iib-tripDomain="{{ summary[0][0].DomainAbbreviation }}">
 
     <div style="display: flex; align-items: center; flex: 1;">
         <button type="button" onclick="document.querySelector('#curtriptype').selectedIndex = (document.querySelector('#curtriptype').selectedIndex - 1 + document.querySelector('#curtriptype').options.length) % document.querySelector('#curtriptype').options.length;document.querySelector('#curtriptype').dispatchEvent(new Event('change'));" class="btn btn-iib-ctt" data-iib-tripDomain="{{summary[0][0].DomainAbbreviation}}">
@@ -100,11 +100,11 @@
 </ul>
 
 <div class="tab-content" id="myTabContent">
-  <div class="tab-pane fade show active bg-white" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+  <div class="tab-pane fade show active bg-white border" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
 
    <div class="row m-0">
 
-        <table class="table border">
+        <table class="table">
           <tr>
             <td class="btn-iib-ctt" data-iib-tripDomain="{{summary[0][0].DomainAbbreviation}}">{{ summary[0][0].TripDescription }}</td>
           </tr>

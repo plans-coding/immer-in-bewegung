@@ -21,6 +21,11 @@
   color:#fff;
 }
 
+.iib-decade[data-iib-tripDomain={{ tripDomain.DomainAbbreviation }}]:hover, .btn-filter-domain[data-iib-tripDomain={{ tripDomain.DomainAbbreviation }}]:active {
+  background-color: {{ tripDomain.Color }}cc;
+  color:#fff;
+}
+
 {% endfor %}
 </style>
 <div class="container text-center">
