@@ -32,6 +32,7 @@ Bind same SQLite file as you used for viewing to https://libsqlstudio.com/local
 
 ## Screenshots
 ![img](https://raw.githubusercontent.com/plans-coding/iib-docs/refs/heads/main/img/iib-computer.png)
+Image from: https://mockuphone.com/
 
 ## Licenses
 * Immer in Bewegung: MIT license
