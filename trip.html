@@ -1,13 +1,19 @@
 <style>
 {% for tripDomain in tripDomains[0] %}
-.iib-trip-tab.active[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'], .btn-iib-ctt[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {
+.iib-trip-tab.active[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'], .btn-iib-ctt[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'], :root[data-bs-theme="dark"] .btn-iib-ctt[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {
   background-color: {{ tripDomain.Color }}!important;
   color:#fff;
 }
 .iib-trip-tab[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}']:not(.active){
   color: {{ tripDomain.Color }}!important;
 }
+  {% if tripDomain.DomainAbbreviation == summary[0][0].DomainAbbreviation %}
+  .accommodationColor, .overviewColor {fill:{{ tripDomain.Color }};}
+  .polylineMap {stroke:{{ tripDomain.Color }};}
+  {% endif %}
 {% endfor %}
+:root[data-bs-theme="dark"] .accommodationColor, :root[data-bs-theme="dark"] .overviewColor {fill:gold;}
+:root[data-bs-theme="dark"] .polylineMap {stroke:gold;}
 </style>
 <!-- All trips -->
 
@@ -99,8 +105,8 @@
   </li>
 </ul>
 
-<div class="tab-content" id="myTabContent">
-  <div class="tab-pane fade show active bg-white border" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+<div class="tab-content bg-white rounded-bottom" id="myTabContent">
+  <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
 
    <div class="row m-0">
 
@@ -194,7 +200,7 @@
 
               <!--<style>.leaflet-marker-icon svg path {color:{{ tripColor.Color }};}</style>-->
               <div id="map-pin-data" data-map-overall-route='{{ mapPins[0] | json }}'
-              data-map-accommodation='{{ sevents[0] | json | replace: "'", "%27" }}' data-settings-assets='{{ settings | json }}' data-map-color='{{ tripColor.Color }}'></div>
+              data-map-accommodation='{{ sevents[0] | json | replace: "'", "%27" }}' data-settings-assets='{{ settings | json }}' data-tripDomain='{{summary[0][0].DomainAbbreviation}}'></div>
               <div id="map" style="min-height:400pt;height:100%;width:100%;"></div>
             </div>
           </div>
@@ -206,7 +212,7 @@
 
   <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
 
-  <table class="table border border-top-0">
+  <table class="table">
   {% for day in sevents[0] %}
     <tr><td><b>{{ day.Date }}</b><br />{{ day.Date | date: "%A" }}<br />
 

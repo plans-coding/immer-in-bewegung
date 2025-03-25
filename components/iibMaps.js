@@ -7,7 +7,7 @@
             var overviewData = JSON.parse(mapPinDataContainer.getAttribute("data-map-overall-route"));
             var accommodationData = JSON.parse(mapPinDataContainer.getAttribute("data-map-accommodation"));
             var assetsSettings = JSON.parse(mapPinDataContainer.getAttribute("data-settings-assets"));
-            var mapColor = mapPinDataContainer.getAttribute("data-map-color");
+            var tripDomain = mapPinDataContainer.getAttribute("data-tripDomain");
 
             //console.log(overviewData);
             //console.log(accommodationData);
@@ -41,7 +41,7 @@
 
                 const svgIconCar = L.divIcon({
         className: 'custom-icon',
-        html: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" class="bi bi-car-front-fill" viewBox="0 0 16 16">  <path fill="`+mapColor+`" d="M2.52 3.515A2.5 2.5 0 0 1 4.82 2h6.362c1 0 1.904.596 2.298 1.515l.792 1.848c.075.175.21.319.38.404.5.25.855.715.965 1.262l.335 1.679q.05.242.049.49v.413c0 .814-.39 1.543-1 1.997V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.338c-1.292.048-2.745.088-4 .088s-2.708-.04-4-.088V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.892c-.61-.454-1-1.183-1-1.997v-.413a2.5 2.5 0 0 1 .049-.49l.335-1.68c.11-.546.465-1.012.964-1.261a.8.8 0 0 0 .381-.404l.792-1.848ZM3 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2m10 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2M6 8a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2zM2.906 5.189a.51.51 0 0 0 .497.731c.91-.073 3.35-.17 4.597-.17s3.688.097 4.597.17a.51.51 0 0 0 .497-.731l-.956-1.913A.5.5 0 0 0 11.691 3H4.309a.5.5 0 0 0-.447.276L2.906 5.19Z"/></svg>`,
+        html: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" class="bi bi-car-front-fill" viewBox="0 0 16 16">  <path class="overviewColor" d="M2.52 3.515A2.5 2.5 0 0 1 4.82 2h6.362c1 0 1.904.596 2.298 1.515l.792 1.848c.075.175.21.319.38.404.5.25.855.715.965 1.262l.335 1.679q.05.242.049.49v.413c0 .814-.39 1.543-1 1.997V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.338c-1.292.048-2.745.088-4 .088s-2.708-.04-4-.088V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.892c-.61-.454-1-1.183-1-1.997v-.413a2.5 2.5 0 0 1 .049-.49l.335-1.68c.11-.546.465-1.012.964-1.261a.8.8 0 0 0 .381-.404l.792-1.848ZM3 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2m10 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2M6 8a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2zM2.906 5.189a.51.51 0 0 0 .497.731c.91-.073 3.35-.17 4.597-.17s3.688.097 4.597.17a.51.51 0 0 0 .497-.731l-.956-1.913A.5.5 0 0 0 11.691 3H4.309a.5.5 0 0 0-.447.276L2.906 5.19Z"/></svg>`,
         });
         /*'img/car.svg', iconSize: [25, 25] }) })*/
 
@@ -61,7 +61,7 @@
 
                     const svgIcon = L.divIcon({
         className: 'custom-icon',
-        html: `<svg class="iib-trip-tab" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"	 width="32px" height="32px" viewBox="0 0 460.298 460.297" style="enable-background:new 0 0 460.298 460.297;"	 xml:space="preserve"><g>	<g>		<path fill="#000" d="M230.149,120.939L65.986,256.274c0,0.191-0.048,0.472-0.144,0.855c-0.094,0.38-0.144,0.656-0.144,0.852v137.041			c0,4.948,1.809,9.236,5.426,12.847c3.616,3.613,7.898,5.431,12.847,5.431h109.63V303.664h73.097v109.64h109.629			c4.948,0,9.236-1.814,12.847-5.435c3.617-3.607,5.432-7.898,5.432-12.847V257.981c0-0.76-0.104-1.334-0.288-1.707L230.149,120.939			z"/>		<path fill="#000" d="M457.122,225.438L394.6,173.476V56.989c0-2.663-0.856-4.853-2.574-6.567c-1.704-1.712-3.894-2.568-6.563-2.568h-54.816			c-2.666,0-4.855,0.856-6.57,2.568c-1.711,1.714-2.566,3.905-2.566,6.567v55.673l-69.662-58.245			c-6.084-4.949-13.318-7.423-21.694-7.423c-8.375,0-15.608,2.474-21.698,7.423L3.172,225.438c-1.903,1.52-2.946,3.566-3.14,6.136			c-0.193,2.568,0.472,4.811,1.997,6.713l17.701,21.128c1.525,1.712,3.521,2.759,5.996,3.142c2.285,0.192,4.57-0.476,6.855-1.998			L230.149,95.817l197.57,164.741c1.526,1.328,3.521,1.991,5.996,1.991h0.858c2.471-0.376,4.463-1.43,5.996-3.138l17.703-21.125			c1.522-1.906,2.189-4.145,1.991-6.716C460.068,229.007,459.021,226.961,457.122,225.438z"/>	</g></g></svg>`,
+        html: `<svg class="iib-trip-tab" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"	 width="32px" height="32px" viewBox="0 0 460.298 460.297" style="enable-background:new 0 0 460.298 460.297;"	 xml:space="preserve"><g>	<g>		<path class="accommodationColor" d="M230.149,120.939L65.986,256.274c0,0.191-0.048,0.472-0.144,0.855c-0.094,0.38-0.144,0.656-0.144,0.852v137.041			c0,4.948,1.809,9.236,5.426,12.847c3.616,3.613,7.898,5.431,12.847,5.431h109.63V303.664h73.097v109.64h109.629			c4.948,0,9.236-1.814,12.847-5.435c3.617-3.607,5.432-7.898,5.432-12.847V257.981c0-0.76-0.104-1.334-0.288-1.707L230.149,120.939			z"/>		<path class="accommodationColor" d="M457.122,225.438L394.6,173.476V56.989c0-2.663-0.856-4.853-2.574-6.567c-1.704-1.712-3.894-2.568-6.563-2.568h-54.816			c-2.666,0-4.855,0.856-6.57,2.568c-1.711,1.714-2.566,3.905-2.566,6.567v55.673l-69.662-58.245			c-6.084-4.949-13.318-7.423-21.694-7.423c-8.375,0-15.608,2.474-21.698,7.423L3.172,225.438c-1.903,1.52-2.946,3.566-3.14,6.136			c-0.193,2.568,0.472,4.811,1.997,6.713l17.701,21.128c1.525,1.712,3.521,2.759,5.996,3.142c2.285,0.192,4.57-0.476,6.855-1.998			L230.149,95.817l197.57,164.741c1.526,1.328,3.521,1.991,5.996,1.991h0.858c2.471-0.376,4.463-1.43,5.996-3.138l17.703-21.125			c1.522-1.906,2.189-4.145,1.991-6.716C460.068,229.007,459.021,226.961,457.122,225.438z"/>	</g></g></svg>`,
         });
 
                     if (coords.length === 2 && !isNaN(coords[0]) && !isNaN(coords[1])) {
@@ -75,9 +75,9 @@
             });
 
             // Function to add polylines with arrows
-            function addPolylineDecorators(layer, coords, color) {
+            function addPolylineDecorators(layer, coords, tripDomain) {
                 if (coords.length > 1) {
-                    const polyline = L.polyline(coords, { color: color, weight: 5 }).addTo(layer);
+                    const polyline = L.polyline(coords, { className: 'polylineMap' }).addTo(layer);
 
                     const decorator = L.polylineDecorator(polyline, {
                         patterns: [
@@ -87,7 +87,7 @@
                                     pixelSize: 15,
                                     headAngle: 30,
                                     polygon: false,
-                                    pathOptions: { stroke: true, color: color }
+                                    pathOptions: { className: 'polylineMap'  }
                                 })
                             }
                         ]
@@ -96,8 +96,8 @@
             }
 
             // Add polylines with arrows
-            addPolylineDecorators(overviewLayer, overviewCoords, mapColor);
-            addPolylineDecorators(accommodationLayer, accommodationCoords, '#000');
+            addPolylineDecorators(overviewLayer, overviewCoords, tripDomain);
+            addPolylineDecorators(accommodationLayer, accommodationCoords, tripDomain);
 
             // Add Layer Control
             L.control.layers(null, {
