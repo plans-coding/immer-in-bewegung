@@ -12,7 +12,7 @@ const manifest = {
   short_name: "IIB",
   start_url: basePath, // Ensure it's a proper relative path
   display: "standalone",
-  background_color: "#6f757e",
+  background_color: "#1d655e",
   "icons": [
     {
       "src": basePath + "img/frog.svg",
