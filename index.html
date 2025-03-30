@@ -370,15 +370,19 @@
         }
 
 
+        async function versionCheck() {
+            try {
+                const response = await fetch("https://raw.githubusercontent.com/plans-coding/immer-in-bewegung/refs/heads/main/version");
+                const latestVersion = await response.text(); // Get the latest version text
+                const currentVersionElement = document.getElementById('currentVersion');
+                const currentVersion = currentVersionElement.innerHTML;
 
-        function versionCheck() {
-            const currentVersionElement = document.getElementById('currentVersion');
-            const latestVersionElement = document.getElementById('latestVersion');
-            const currentVersion = currentVersionElement.innerHTML;
-            const latestVersion = latestVersionElement.innerHTML;
-            if (currentVersion < latestVersion) {
-                document.getElementById('updateText').innerHTML="New version available "+latestVersion;
-                console.log("New version available");
+                if (currentVersion < latestVersion) {
+                    document.getElementById('updateText').innerHTML = "New version available " + latestVersion;
+                    console.log("New version available");
+                }
+            } catch (error) {
+                console.error("Error fetching the latest version:", error);
             }
         }
 
