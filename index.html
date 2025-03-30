@@ -254,7 +254,10 @@
             let dbContentBind = localStorage.getItem('dbContentBind');
             let dbContentServer = localStorage.getItem('dbContentServer');
 
-            if ( ! dbSource ) { localStorage.setItem('dbSource', 'settings.json'); }
+            if ( ! dbSource ) {
+                localStorage.setItem('dbSource', 'settings.json');
+                dbSource = localStorage.getItem('dbSource');
+            }
 
             // USE DATABASE DEFINED IN SETTINGS.JSON
 
@@ -308,7 +311,6 @@
                     const arrayBuffer = await response.arrayBuffer();
                     dbInstance = new sqlPromise.Database(new Uint8Array(arrayBuffer));
                     console.log("Database loaded.");
-
                     return dbInstance;
 
                 }
@@ -323,7 +325,7 @@
                 const arrayBuffer = await response.arrayBuffer();
                 dbInstance = new sqlPromise.Database(new Uint8Array(arrayBuffer));
                 console.log("Database loaded.");
-
+                console.log(dbInstance);
                 return dbInstance;
 
             }
