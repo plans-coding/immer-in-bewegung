@@ -16,6 +16,6 @@
         </select>
 </div>
 
-<div id="map-pin-data" data-map='{{ mapData[0] | json }}'></div>
+<div id="map-pin-data" data-map='{{ mapData[0] | json | escape }}'></div>
 
 <div id="map" style="height:100%;width:100%;"></div>

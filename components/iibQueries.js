@@ -180,7 +180,8 @@ function getSqlQuery(section, parameter = null) {
             return `SELECT
                         * FROM IIBb_Events
                     WHERE
-                        AccommodationCountry = "${parameter}";`;
+                        AccommodationCountry = "${parameter}"
+                        AND AccommodationCoordinates IS NOT NULL;`;
         break;
 
         // STATISTICS
