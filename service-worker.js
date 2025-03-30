@@ -126,6 +126,11 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     (async () => {
       try {
+
+        if (event.request.url === 'https://raw.githubusercontent.com/plans-coding/immer-in-bewegung/refs/heads/main/version') {
+          return fetch(event.request);
+        }
+
         if (event.request.url.includes('tile.openstreetmap.org')) {
           return fetch(event.request);
         }
