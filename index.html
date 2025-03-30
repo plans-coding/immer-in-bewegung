@@ -531,9 +531,11 @@
                 let diaryFilesArray;
                 let passportFilesArray;
 
-                if ( settings.Plugins.Diary.enabled ) {
-                    //diaryFilesArray = await fetchFileList('Diary');
-                    //passportFilesArray = await fetchFileList('Passport');
+                if ( settings.Plugins?.Diary?.enabled ) {
+                    diaryFilesArray = await fetchFileList('Diary');
+                }
+                if ( settings.Plugins?.Passport?.enabled ) {
+                    passportFilesArray = await fetchFileList('Passport');
                 }
 
                 const summary = convertSqlToJson(db, getSqlQuery('trip_summary', queryParams.id), 'trip_summary');
