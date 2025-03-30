@@ -242,6 +242,7 @@
             const sqlPromise = await initSqlJs({ locateFile: file => `bundle/sqljs/${file}` });
 
             let response;
+            let settingsFileAvailable = true;
             let dbSource = localStorage.getItem('dbSource');
             let dbContentBind = localStorage.getItem('dbContentBind');
             let dbContentServer = localStorage.getItem('dbContentServer');
@@ -285,12 +286,25 @@
 
                             reader.readAsArrayBuffer(blob);
                         });
+                    } else {
+                        console.log("Settings file missing.");
+                        settingsFileAvailable = false;
+
                     }
                 }
 
+                if (settingsFileAvailable) {
 
-                const binaryData = new Uint8Array(atob(dbContentServer).split('').map(char => char.charCodeAt(0)));
-                response = { arrayBuffer: async () => binaryData.buffer };
+                    const binaryData = new Uint8Array(atob(dbContentServer).split('').map(char => char.charCodeAt(0)));
+                    response = { arrayBuffer: async () => binaryData.buffer };
+
+                    const arrayBuffer = await response.arrayBuffer();
+                    dbInstance = new sqlPromise.Database(new Uint8Array(arrayBuffer));
+                    console.log("Database loaded.");
+
+                    return dbInstance;
+
+                }
 
             // USE DATABASE DEFINED IN BINDED DATABASE FILE
 
@@ -299,15 +313,15 @@
                 const binaryData = new Uint8Array(atob(dbContentBind).split('').map(char => char.charCodeAt(0)));
                 response = { arrayBuffer: async () => binaryData.buffer };
 
+                const arrayBuffer = await response.arrayBuffer();
+                dbInstance = new sqlPromise.Database(new Uint8Array(arrayBuffer));
+                console.log("Database loaded.");
+
+                return dbInstance;
+
             }
 
-            // VALID FOR BOTH
 
-            const arrayBuffer = await response.arrayBuffer();
-            dbInstance = new sqlPromise.Database(new Uint8Array(arrayBuffer));
-            console.log("Database loaded.");
-
-            return dbInstance;
         }
 
 
