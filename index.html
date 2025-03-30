@@ -39,9 +39,6 @@
 
     <script src="components/manifest.js"></script>
 
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo&family=Francois+One&family=Righteous&display=swap" rel="stylesheet">
-
     <!-- Bootstrap -->
     <link href="bundle/bootstrap/bootstrap.5.3.3.min.css" rel="stylesheet">
 
@@ -53,6 +50,16 @@
     <script src="bundle/leaflet/leaflet.polylineDecorator.1.6.0.min.js"></script>
 
     <style>
+
+        @font-face {
+            font-family: 'Cairo';
+            src: url('bundle/fonts/Cairo-VariableFont_slnt,wght.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Righteous';
+            src: url('bundle/fonts/Righteous-Regular.ttf') format('truetype');
+        }
 
         .dropdown-item.active, .dropdown-item:active, .form-check-input:checked {background-color:#1d655e;}
         .menuItemSelectable.active {font-weight:bold;}
@@ -515,8 +522,13 @@
             case "trip": {
                 document.title = queryParams.id + " - Immer in Bewegung";
 
-                const diaryFilesArray = await fetchFileList('Diary');
-                const passportFilesArray = await fetchFileList('Passport');
+                let diaryFilesArray;
+                let passportFilesArray;
+
+                if ( settings.Plugins.Diary.enabled ) {
+                    //diaryFilesArray = await fetchFileList('Diary');
+                    //passportFilesArray = await fetchFileList('Passport');
+                }
 
                 const summary = convertSqlToJson(db, getSqlQuery('trip_summary', queryParams.id), 'trip_summary');
                 const sevents = convertSqlToJson(db, getSqlQuery('trip_events', queryParams.id), 'trip_events');

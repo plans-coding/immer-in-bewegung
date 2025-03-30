@@ -1,5 +1,8 @@
 const CACHE_NAME = 'immer-in-bewegung-cache-1';
+
+
 const urlsToCache = [
+    './',
     'favicon.webp',
     'index.html',
 
@@ -33,8 +36,12 @@ const urlsToCache = [
     'bundle/leaflet/leaflet.polylineDecorator.1.6.0.min.js',
     'bundle/leaflet/icon-fullscreen.svg',
 
+    'bundle/fonts/Cairo-VariableFont_slnt,wght.ttf',
+    'bundle/fonts/Righteous-Regular.ttf',
+
     'img/car.svg',
     'img/coordinate.svg',
+    'img/frog.svg',
     'img/frog_g_72.webp',
     'img/frog_g_150.webp',
     'img/house.svg',
@@ -80,10 +87,72 @@ self.addEventListener('activate', event => {
     );
 });
 
-// Fetch event - Serve files from cache
-self.addEventListener('fetch', event => {
-    event.respondWith(
-        caches.match(event.request)
-            .then(response => response || fetch(event.request))
-    );
+/*
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    (async () => {
+      try {
+        // Skip caching for Leaflet tile requests
+        if (event.request.url.includes('tile.openstreetmap.org')) {
+          return fetch(event.request);
+        }
+
+        // Check if the requested resource is available in cache
+        const response = await caches.match(event.request);
+
+        // If the resource is available in cache, return it
+        if (response) {
+          return response;
+        }
+
+        // If not available in cache, try fetching from the network
+        const networkResponse = await fetch(event.request);
+
+        // If the network request is successful, cache the response and return it
+        const cache = await caches.open(CACHE_NAME);
+        cache.put(event.request, networkResponse.clone());
+
+        return networkResponse;
+      } catch (error) {
+        // If the resource is not available (both in cache and network), drop the request
+        console.warn(`Resource not available: ${event.request.url}`);
+        return new Response('Resource not found', { status: 404 });
+      }
+    })()
+  );
+});*/
+
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    (async () => {
+      try {
+        if (event.request.url.includes('tile.openstreetmap.org')) {
+          return fetch(event.request);
+        }
+
+        // Normalize URL by stripping query parameters (optional, depends on needs) to handle eg ?p=map&country=Sweden
+        const url = new URL(event.request.url);
+        url.search = ''; // Remove all query parameters
+
+        const cache = await caches.open(CACHE_NAME);
+        const response = await cache.match(url.toString());
+
+        if (response) {
+          return response;
+        }
+
+        // Fetch from network
+        const networkResponse = await fetch(event.request);
+        cache.put(event.request, networkResponse.clone());
+
+        return networkResponse;
+      } catch (error) {
+        console.warn(`Resource not available: ${event.request.url}`);
+        return new Response('Resource not found', { status: 404 });
+      }
+    })()
+  );
 });
+
+
+
