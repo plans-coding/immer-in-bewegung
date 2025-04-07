@@ -6,6 +6,12 @@
   padding: 3pt 5pt 3pt 5pt;
 }
 {% endfor %}
+
+:root[data-bs-theme="light"] .accommodationColor, :root[data-bs-theme="light"] .overviewColor {fill:#1d655e;}
+:root[data-bs-theme="light"] .polylineMap {stroke:#1d655e;}
+
+:root[data-bs-theme="dark"] .accommodationColor, :root[data-bs-theme="dark"] .overviewColor {fill:gold;}
+:root[data-bs-theme="dark"] .polylineMap {stroke:gold;}
 </style>
 <div style="z-index:1001;position:absolute;width:100%;text-align:center;" class="p-2">
         <select id="alltrip"  class="form-control text-center" style="max-width:200pt;margin:auto;" onchange="document.location='?p=map&country='+this.value;">

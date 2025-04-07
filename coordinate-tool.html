@@ -1,69 +1,54 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
 
-    <link rel="shortcut icon" href="/img/frog_g_64.webp" />
     <meta charset="utf-8">
-    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
-    <title>Coordinate Tool - Immer in Bewegung</title>
-    <link href="https://fonts.googleapis.com/css?family=Cairo|Francois+One|Merriweather|Righteous" rel="stylesheet">
-    <meta name="theme-color" content="grey" id="themeColorMeta">
-    <meta name="msapplication-navbutton-color" content="#e3e3e3">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Coordinate Tool - Immer in Bewegung</title>
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#6f757e" id="themeColorMeta">
+    <meta name="msapplication-navbutton-color" content="#6f757e">
+    <link rel="shortcut icon" href="img/frog.svg" />
+    <link href="bundle/bootstrap/bootstrap.5.3.3.min.css" rel="stylesheet">
 
     <style>
 
-        html {height:100%;}
-        body{margin: 0;padding: 0;font-family: 'Merriweather', serif;height:100%;font-size:1.2em;}
-        .searchButton {font-family: 'Francois+One', sans-serif;font-size:18pt;background-color:grey;color:#fff;display:flex;cursor:pointer;border:0;}
-        .searchButton:hover {background-color:#b3b3b3;}
-        .leaflet-control-geocoder-form input {font-size: 20pt !important;padding: 5pt !important;border: 3pt solid grey;}
-
-        /* ##### ANNAN CSS FÖR DARK MODE ##### */
-        @media (prefers-color-scheme: dark) {
-            a {color:#07ad67;}
-            body {background-color:#000 !important;}
-            body {color:#fff !important;}
-            input[type="text"] {background-color:#444 !important;color:#fff;}
-            .searchButton {background-color:grey;}
-
-            /* Leaflet */
-            .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out{color:#fff;background-color:#000 !important;}
-            .leaflet-control-fullscreen a {background: #FFD2D2 url('fullscreen.png') no-repeat 0 0;filter: invert(1);}
-            .leaflet-container .leaflet-control-attribution{background-color:#000 !important;color:#fff;}
-            .leaflet-container .leaflet-control-attribution a{color:#fff !important;}
-            .leaflet-popup-content-wrapper, .leaflet-popup-tip {background-color:#000!important;color:#fff !important;}
-
+        @font-face {
+            font-family: 'Cairo';
+            src: url('bundle/fonts/Cairo-VariableFont_slnt,wght.ttf') format('truetype');
         }
-        /* ##### ANNAN CSS FÖR DARK MODE ##### */
+
+        @font-face {
+            font-family: 'Righteous';
+            src: url('bundle/fonts/Righteous-Regular.ttf') format('truetype');
+        }
+
+        html {height:100%;font-family:Cairo;}
+        .btn {font-family:Cairo;background-color:#1d655e;color:#fff;font-size:1.2em;}
+        .btn:hover {background-color:#1d655e;color:#fff;}
+        body {margin: 0;padding: 0;height:100%;font-size:1.2em;}
+
+
+        .leaflet-control-geocoder .leaflet-control-geocoder-form {
+            display: inline-block !important;
+            font-size: 16pt;
+            font-family:Cairo;
+        }
+
+        .leaflet-control-geocoder, .form-control {
+            border: 3pt solid #1d655e !important;
+        }
+
 
     </style>
-
-    <script>
-
-        const themeColorMeta = document.querySelector('meta[name="theme-color"]');
-
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        themeColorMeta.setAttribute('content', 'black');  // Dark mode color
-        } else {
-        themeColorMeta.setAttribute('content', 'grey');   // Light mode color
-        }
-
-        // Optional: Listen for changes in the color scheme
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-        themeColorMeta.setAttribute('content', event.matches ? 'black' : 'grey');
-        });
-
-</script>
 
 </head>
 
 <body>
 
 
-    <div style="position:absolute;display:flex;gap:5pt;bottom:10pt;left:10pt;flex-wrap: wrap;margin-right:10pt;z-index:10000;"><input type="text" id="markedCoordinate" style="flex:1;font-size:20pt;padding:5pt;border:3pt solid grey;" disabled /><button class="searchButton" style="align-items:center;padding-left:5pt;" onclick="copyToClipboard();" id="lang-coordTool-copy-coordinates">Copy coordinates</button></div>
+    <div style="position:absolute;display:flex;gap:5pt;bottom:10pt;left:10pt;flex-wrap: wrap;margin-right:10pt;z-index:10000;"><input type="text" id="markedCoordinate" style="flex:1;font-size:20pt;padding:5pt;border:3pt solid grey;" class="form-control" disabled /><button class="btn" style="align-items:center;" onclick="copyToClipboard();" id="lang-coordTool-copy-coordinates">Copy coordinates</button></div>
     <div id="coordMap" style="width:100%;height:100%;cursor:pointer;"></div>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -85,7 +70,7 @@
             const lat = e.latlng.lat.toFixed(6); // Latitude
             const lng = e.latlng.lng.toFixed(6); // Longitude
             //console.log(`Clicked coordinates: Latitude: ${lat}, Longitude: ${lng}`);
-            document.getElementById('markedCoordinate').value = `${lat},${lng}`;
+            document.getElementById('markedCoordinate').value = `${lat}, ${lng}`;
         });
 
         // Initialize the geocoder
@@ -100,6 +85,8 @@
                 .openPopup();
         })
         .addTo(map);
+
+        geocoder._container.classList.add('form-control');
 
         function copyToClipboard() {
             const text = document.getElementById('markedCoordinate').value;

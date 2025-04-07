@@ -5,6 +5,7 @@ const urlsToCache = [
     './',
     'favicon.webp',
     'index.html',
+    'version',
 
     'about.html',
     'dataset.html',
