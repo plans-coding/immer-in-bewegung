@@ -31,13 +31,13 @@
     </div>
 
 
-{% if photoTime[0][0].PhotoStarttime %}
+{% if photoTime[0][0].PhotoStarttime and photoTime[0][0].DepartureDate == queryParams.date %}
     {% assign photoStarttime =  photoTime[0][0].PhotoStarttime %}
 {% else %}
     {% assign photoStarttime =  "00:00" %}
 {% endif %}
 
-{% if photoTime[0][0].PhotoEndtime %}
+{% if photoTime[0][0].PhotoEndtime and photoTime[0][0].ReturnDate == queryParams.date %}
     {% assign photoEndtime =  photoTime[0][0].PhotoEndtime %}
 {% else %}
     {% assign photoEndtime =  "23:59" %}
