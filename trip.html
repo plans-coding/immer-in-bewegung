@@ -3,6 +3,7 @@
 .iib-trip-tab.active[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'], .btn-iib-ctt[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'], :root[data-bs-theme="dark"] .btn-iib-ctt[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {
   background-color: {{ tripDomain.Color }}!important;
   color:#fff;
+  border-color:#ffffff33;
 }
 .iib-trip-tab[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}']:not(.active){
   color: {{ tripDomain.Color }}!important;
@@ -105,7 +106,7 @@
   </li>
 </ul>
 
-<div class="tab-content bg-white rounded-bottom" id="myTabContent">
+<div class="tab-content bg-white rounded-bottom border" id="myTabContent">
   <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
 
    <div class="row m-0">
@@ -214,7 +215,7 @@
 
   <table class="table">
   {% for day in sevents[0] %}
-    <tr><td><b>{{ day.Date }}</b><br />{{ day.Date | date: "%A" }}<br />
+    <tr><td class="p-3"><b>{{ day.Date }}</b><br />{{ day.Date | date: "%A" }}<br />
 
     {% if settings.Base.Immich == 'Enabled' %}
       {% unless settings.Base.ExcludeDayPhotos contains day.OuterId %}
@@ -277,7 +278,7 @@
 
       {% endfor %}
     {% endif %}
-    </td><td class="text-start">{{ day.Events }}<br /><div class="mt-2"><a style="text-decoration:none;" target="_blank" href="https://www.google.com/maps/?q={{ day.AccommodationCoordinates }}" class="iib-trip-tab" data-iib-tripDomain="{{summary[0][0].DomainAbbreviation}}"><img style="height:0.9em;" src="img/house.svg?color=6f757e" /> {{ day.Accommodation }} - {{ day.AccommodationCountry }} {{ day.AccommodationCoordinates }} {{ day.AccommodationCoordinateAccuracy }}</a></div></td></tr>
+    </td><td class="text-start p-3">{{ day.Events }}<br /><div class="mt-2"><a style="text-decoration:none;" target="_blank" href="https://www.google.com/maps/?q={{ day.AccommodationCoordinates }}" class="iib-trip-tab" data-iib-tripDomain="{{summary[0][0].DomainAbbreviation}}"><img style="height:0.9em;" src="img/house.svg?color=6f757e" /> {{ day.Accommodation }} - {{ day.AccommodationCountry }} {{ day.AccommodationCoordinates }} {{ day.AccommodationCoordinateAccuracy }}</a></div></td></tr>
   {% endfor %}
     </table>
 

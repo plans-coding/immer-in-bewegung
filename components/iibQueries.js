@@ -46,11 +46,14 @@ function getSqlQuery(section, parameter = null) {
                                     TRIM(REPLACE(REPLACE(REPLACE(value, '*', ''), '+', ''), '**', '')) AS Country,
                                     value AS OriginalCountry,
                                     b.OverallDestination,
-                                    b.ParticipantGroup
+                                    b.ParticipantGroup,
+                                    b.DepartureDate
                                 FROM IIBc_BorderCrossings AS a,
                                     json_each('["' || REPLACE(AllBorderCrossings, ', ', '", "') || '"]')
                                 LEFT JOIN  bewa_Overview AS b
                                 ON b.InnerId = a.InnerId
+                                ORDER BY
+                                    b.DepartureDate ASC
                             )
                     SELECT
                         c.Continent,
