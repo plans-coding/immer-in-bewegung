@@ -11,10 +11,23 @@
   {% if tripDomain.DomainAbbreviation == summary[0][0].DomainAbbreviation %}
   .accommodationColor, .overviewColor {fill:{{ tripDomain.Color }};}
   .polylineMap {stroke:{{ tripDomain.Color }};}
+  .acc-icon {
+    mask: url(img/house.svg) no-repeat center / contain;
+    -webkit-mask: url(img/house.svg) no-repeat center / contain;
+    width: 0.9em;
+    height: 0.9em;
+    display:inline-block;
+  }
+  :root[data-bs-theme="light"] .acc-icon { background-color: {{ tripDomain.Color }}; }
+  :root[data-bs-theme="dark"] .acc-icon { background-color: gold; }
+  :root[data-bs-theme="dark"] .acc-text {color:gold;}
   {% endif %}
 {% endfor %}
 :root[data-bs-theme="dark"] .accommodationColor, :root[data-bs-theme="dark"] .overviewColor {fill:gold;}
 :root[data-bs-theme="dark"] .polylineMap {stroke:gold;}
+
+
+
 </style>
 <!-- All trips -->
 
@@ -278,7 +291,7 @@
 
       {% endfor %}
     {% endif %}
-    </td><td class="text-start p-3">{{ day.Events }}<br /><div class="mt-2"><a style="text-decoration:none;" target="_blank" href="https://www.google.com/maps/?q={{ day.AccommodationCoordinates }}" class="iib-trip-tab" data-iib-tripDomain="{{summary[0][0].DomainAbbreviation}}"><img style="height:0.9em;" src="img/house.svg?color=6f757e" /> {{ day.Accommodation }} - {{ day.AccommodationCountry }} {{ day.AccommodationCoordinates }} {{ day.AccommodationCoordinateAccuracy }}</a></div></td></tr>
+    </td><td class="text-start p-3">{{ day.Events }}<br /><div class="mt-2"><a style="text-decoration:none;" target="_blank" href="https://www.google.com/maps/?q={{ day.AccommodationCoordinates }}" class="iib-trip-tab" data-iib-tripDomain="{{summary[0][0].DomainAbbreviation}}"><div class="acc-icon"></div> <span class="acc-text">{{ day.Accommodation }} - {{ day.AccommodationCountry }} {{ day.AccommodationCoordinates }} {{ day.AccommodationCoordinateAccuracy }}</span></a></div></td></tr>
   {% endfor %}
     </table>
 

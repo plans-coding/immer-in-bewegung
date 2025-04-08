@@ -18,7 +18,20 @@
   background-color: {{ tripDomain.Color }}!important;
   color:#fff;
 }
+
+.acc-icon[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {
+  mask: url(img/house.svg) no-repeat center / contain;
+  -webkit-mask: url(img/house.svg) no-repeat center / contain;
+  width: 0.9em;
+  height: 0.9em;
+  display:inline-block;
+}
+:root[data-bs-theme="light"] .acc-icon[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] { background-color: {{ tripDomain.Color }}; }
+:root[data-bs-theme="dark"] .acc-icon[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] { background-color: gold; }
+:root[data-bs-theme="dark"] .acc-text[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {color:gold;}
+
 {% endfor %}
+
 </style>
 
 <div class="container text-center">
@@ -71,7 +84,7 @@
 
   {% for day in sevent[0] %}
     <tr><td><a href="?p=trip&id={{ day.OuterId }}" style="text-decoration:none;"><div class="text-nowrap iib-search-domain" data-iib-tripDomain="{{ day.InnerId | slice: 0, 1 }}">{{ day.OuterId }}</div></a></td><td style="white-space: nowrap;"><b>{{ day.Date }}</b><br />{{ day.Date | date: "%A" }}<br /><a href="?p=images&id={{ day.OuterId }}&date={{ day.Date }}"><button type="button" class="btn mt-2 iib-search-photos" data-iib-tripDomain="{{ day.InnerId | slice: 0, 1 }}">{{ translation.search.photos | default: "Photos" }}</button></a>
-</td><td class="text-start">{{ day.Events }}<br /><div class="mt-2"><a style="text-decoration:none;" target="_blank" href="https://www.google.com/maps/?q={{ day.AccommodationCoordinates }}" class="iib-search-accommodation" data-iib-tripDomain="{{ day.InnerId | slice: 0, 1 }}"><img style="height:0.9em;" src="img/house.svg?color=6f757e" /> {{ day.Accommodation }} - {{ day.AccommodationCountry }} {{ day.AccommodationCoordinates }} {{ day.AccommodationCoordinateAccuracy }}</a></div></td></tr>
+</td><td class="text-start">{{ day.Events }}<br /><div class="mt-2"><a style="text-decoration:none;" target="_blank" href="https://www.google.com/maps/?q={{ day.AccommodationCoordinates }}" class="iib-search-accommodation" data-iib-tripDomain="{{ day.InnerId | slice: 0, 1 }}"><div class="acc-icon" data-iib-tripDomain="{{ day.InnerId | slice: 0, 1 }}"></div> <span class="acc-text" data-iib-tripDomain="{{ day.InnerId | slice: 0, 1 }}">{{ day.Accommodation }} - {{ day.AccommodationCountry }} {{ day.AccommodationCoordinates }} {{ day.AccommodationCoordinateAccuracy }}</span></a></div></td></tr>
   {% endfor %}
     </table>
 
