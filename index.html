@@ -73,6 +73,7 @@
 
         :root[data-bs-theme="light"] .iib-nav-link.active {background-color:#6f757e !important;color:#fff !important;}
         :root[data-bs-theme="light"] body, :root[data-bs-theme="light"] #offcanvasNavbar {background-color:#f8fafd;}
+        :root[data-bs-theme="light"] .icon-color {color:#6f757e;}
 
         :root[data-bs-theme="dark"] .border, :root[data-bs-theme="dark"] .nav-tabs, :root[data-bs-theme="dark"] .iib-nav-link.active{border-color:#ffffff33!important;}
         :root[data-bs-theme="dark"] .form-check-input:checked {background-color:#1d655e !important;}
@@ -81,6 +82,9 @@
         :root[data-bs-theme="dark"] .iib-nav-link.active {background-color:#002D2D !important;color:#fff !important;}
 
         :root[data-bs-theme="dark"] .table { --bs-table-border-color: #ffffff33; }
+        :root[data-bs-theme="dark"] .btn-dark { background-color:#ffffff33; }
+        :root[data-bs-theme="dark"] .form-control { background-color:#022626;color:; }
+        :root[data-bs-theme="dark"] .icon-color { color: #ffffff33; }
 
         /* Leaflet */
         :root[data-bs-theme="dark"] .leaflet-touch .leaflet-control-layers,  :root[data-bs-theme="dark"] .leaflet-touch .leaflet-control-zoom-in,  :root[data-bs-theme="dark"] .leaflet-touch .leaflet-control-zoom-out{color:#fff;background-color:#002D2D !important;}
@@ -94,7 +98,7 @@
 
 
         @media (max-width: 799px) {
-                .prevnext {display:none;}
+                #iib-foot, .prevnext {display:none;}
         }
 
     </style>
@@ -435,6 +439,24 @@
         confirmationDiv.style.display = "block";
       }
 
+        function clearCache() {
+            // Clear local storage
+            localStorage.clear();
+            // Delete all caches
+            caches.keys().then(cacheNames => {
+            return Promise.all(
+                cacheNames.map(cacheName => caches.delete(cacheName))
+            );
+            });
+            // Unregister all service workers
+            navigator.serviceWorker.getRegistrations().then(registrations => {
+            for (let registration of registrations) {
+                registration.unregister();
+            }
+            });
+            document.getElementById("confirmationMessage").innerHTML = "-";
+        }
+
       function initializeSource() {
         const savedSource = localStorage.getItem('dbSource');
         if (savedSource === 'settings.json' || !savedSource) {
@@ -654,6 +676,7 @@
 
         window.toggleFilePicker = toggleFilePicker;
         window.saveFilePath = saveFilePath;
+        window.clearCache = clearCache;
     }
 
 
@@ -746,7 +769,6 @@
             });
         });
     }
-
 
 
     </script>
