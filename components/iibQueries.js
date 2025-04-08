@@ -34,7 +34,8 @@ function getSqlQuery(section, parameter = null) {
                 WHERE
                     InnerId IS NOT NULL
                 ORDER BY
-                    DepartureDate DESC;`
+                    TripYear DESC,
+                    DepartureDate ASC;`
         break;
 
         case "overview_country":
