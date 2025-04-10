@@ -1,5 +1,5 @@
 # Immer in Bewegung 
-Open source travel documentation app for self-hosting or using directly online
+Open source travel documentation app for self-hosting or serverless usage
 
 Available in
 * 🇬🇧 English
