@@ -207,11 +207,12 @@
                 </tbody>
               </table>
 
-
-            {% assign photoAlbums = summary[0][0].PhotoAlbums | split: ", " %}
-            {% for photoAlbum in photoAlbums %}
-              <div type="button" class="btn btn-iib-ctt" data-iib-tripdomain="U" onclick="openAlbum('{{ photoAlbum }}', '{{ settings.Feature.ImmichApiUrl }}', '{{ settings.Feature.ImmichApiKey }}')">Immich {{ photoAlbum }}</div>
-            {% endfor %}
+            {% if settings.Base.Immich == 'Enabled' %}
+              {% assign photoAlbums = summary[0][0].PhotoAlbums | split: ", " %}
+              {% for photoAlbum in photoAlbums %}
+                <div type="button" class="btn btn-iib-ctt" data-iib-tripdomain="U" onclick="openAlbum('{{ photoAlbum }}', '{{ settings.Feature.ImmichApiUrl }}', '{{ settings.Feature.ImmichApiKey }}')">Immich {{ photoAlbum }}</div>
+              {% endfor %}
+            {% endif %}
 
 
             </div>
