@@ -457,6 +457,28 @@
             document.getElementById("confirmationMessage").innerHTML = "-";
         }
 
+
+        function openAlbum(name, immichApiUrl, immichApiKey) {
+            fetch(immichApiUrl + 'albums', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': immichApiKey
+                }
+                })
+            .then(response => response.json())
+            .then(albums => {
+            const matchingAlbums = albums.filter(album =>
+                album.albumName.toLowerCase() === name.toLowerCase()
+            );
+            console.log('Immich ablum id: ', matchingAlbums[0].id);
+            window.open(settings.Feature.ImmichUrl + "albums/"+matchingAlbums[0].id, "_blank");
+
+            })
+            .catch(console.error);
+        }
+
+
       function initializeSource() {
         const savedSource = localStorage.getItem('dbSource');
         if (savedSource === 'settings.json' || !savedSource) {
@@ -677,6 +699,7 @@
         window.toggleFilePicker = toggleFilePicker;
         window.saveFilePath = saveFilePath;
         window.clearCache = clearCache;
+        window.openAlbum = openAlbum;
     }
 
 
@@ -708,7 +731,6 @@
         //console.log(db);
         settings = transformData(convertSqlToJson(db, 'SELECT * FROM bewxx_Settings', 'settings'));
         console.log(settings);
-
 
         // READ TRANSLATION FILE IF EXISTS
         // ===============================

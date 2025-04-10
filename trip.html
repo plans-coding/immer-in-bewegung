@@ -208,6 +208,12 @@
               </table>
 
 
+            {% assign photoAlbums = summary[0][0].PhotoAlbums | split: ", " %}
+            {% for photoAlbum in photoAlbums %}
+              <div type="button" class="btn btn-iib-ctt" data-iib-tripdomain="U" onclick="openAlbum('{{ photoAlbum }}', '{{ settings.Feature.ImmichApiUrl }}', '{{ settings.Feature.ImmichApiKey }}')">Immich {{ photoAlbum }}</div>
+            {% endfor %}
+
+
             </div>
             <div class="col-md">
             {% assign tripColor = tripDomains[0] | where: "DomainAbbreviation", summary[0][0].DomainAbbreviation | first | dig: "Color" %}
