@@ -478,6 +478,42 @@
             .catch(console.error);
         }
 
+        async function getCoverPhoto(path, immichApiUrl, immichApiKey) {
+            fetch(immichApiUrl + 'search/metadata', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': immichApiKey
+                },
+                body: JSON.stringify({
+                    originalPath: path
+                })
+                })
+            .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+            })
+            .then(data => {
+            //console.log('Cover photo id:', data.assets.items[0].id);
+            const coverPhotoUrl = immichApiUrl + "assets/" + data.assets.items[0].id + "/thumbnail?size=preview";
+            //console.log(coverPhotoUrl);
+
+                /*if (coverPhotoUrl) {
+                  document.body.style.background = `linear-gradient(to bottom, #f8fafd, #f8fafd99, #f8fafd), url(` + coverPhotoUrl + `)`;
+                  document.body.style.backgroundRepeat = 'no-repeat, no-repeat';
+                  document.body.style.backgroundSize = '100% 100%, 100% 100%';
+                  document.body.style.backgroundPosition = 'center, center';
+                }*/
+
+            })
+            .catch(error => {
+            console.error('Fetch error:', error);
+            });
+        }
+
+
 
       function initializeSource() {
         const savedSource = localStorage.getItem('dbSource');
@@ -590,6 +626,23 @@
                 const tripDomains = convertSqlToJson(db, getSqlQuery('common_tripDomains'), 'common_tripDomains');
                 const borderCrossings = convertSqlToJson(db, getSqlQuery('trip_borderCrossings', queryParams.id), 'trip_borderCrossings');
                 const mapPins = convertSqlToJson(db, getSqlQuery('trip_mapPins', queryParams.id), 'trip_mapPins');
+
+                // GET COVER PHOTO IF DEFINED
+                /*
+                if ( settings.Feature?.ImmichApiUrl && settings.Feature?.ImmichApiKey ) {
+                  const coverPhotoPath = summary[0][0].DocumentationNote?.match(/\[COVER:(.*?)\]/)[1];
+                  //console.log(coverPhotoPath);
+
+                  // Remove old cover photo
+                  document.body.style.background = '';
+                  document.body.style.backgroundRepeat = '';
+                  document.body.style.backgroundSize = '';
+                  document.body.style.backgroundPosition = '';
+                  if (coverPhotoPath) {
+                    getCoverPhoto(coverPhotoPath, settings.Feature.ImmichApiUrl, settings.Feature.ImmichApiKey);
+                  }
+                }*/
+
                 const parameters = {translation, queryParams, settings, summary, sevents, allTrips, tripDomains, borderCrossings, mapPins, diaryFilesArray, passportFilesArray };
                 document.getElementById("liquidjsContent").innerHTML = await engine.parseAndRender("{% include 'trip.html' %}", parameters);
                 initializeMapTrip();
