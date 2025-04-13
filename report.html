@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+  <title>Register of Trips</title>
+
+  <link rel="shortcut icon" href="img/frog.svg" />
+
+  <script>
+    window.PagedConfig = {
+      auto: false //Prevent Paged.js from auto-starting
+    };
+  </script>
+
+  <script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script>
+  <script src="bundle/sqljs/sql-wasm.js"></script>
+
+  <style>
+
+        @font-face {
+            font-family: 'Cairo';
+            src: url('bundle/fonts/Cairo-VariableFont_slnt,wght.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Righteous';
+            src: url('bundle/fonts/Righteous-Regular.ttf') format('truetype');
+        }
+
+        body {font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";}
+
+        .immer-in-font-uc {font-family: 'Cairo', sans-serif;text-transform: uppercase;}
+        .bewegung-font-uc {font-family: 'Righteous', sans-serif;text-transform: uppercase;}
+
+        @page {
+          size: A4;
+
+          @bottom-center {
+            content: string(title);
+          }
+
+        }
+
+        @page :left  {
+
+          @bottom-left {
+            content: counter(page);
+          }
+
+        }
+
+        @page :right {
+
+          @bottom-right {
+            content: counter(page);
+          }
+
+        }
+
+        @page :first {
+          @left-top { content: none }
+          @top-center { content: none }
+          @bottom-center { content: none }
+          @bottom-right { content: none }
+        }
+
+        @page final-page {
+          @left-top { content: none }
+          @top-center { content: none }
+          @bottom-center { content: none }
+          @bottom-right { content: none }
+        }
+
+        .title-page {
+          page: title;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+        }
+
+        .final-page {
+          page: final-page;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          align-items: center;
+          height: 100%;
+          font-size: 1em;
+        }
+
+        @page title {
+          margin: 0;
+        }
+
+        .link::after {
+          content: ", page " target-counter(attr(href url), page);
+        }
+
+        h1 {
+          font-size: 3em;
+          string-set: title attr(data-title);
+          font-family: 'Cairo', sans-serif;
+        }
+
+        section.tripSection::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100vh;
+          height: 12cm;
+          background: #1d655e;
+          z-index: -1;
+          margin:-1in;
+        }
+
+        section.title-page-background::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100vh;
+          height: 12cm;
+          background: #1d655e;
+          z-index: -1;
+          margin:-1in;
+        }
+
+        section {
+          break-before: page;
+        }
+
+        section.tripSection {
+          page: section-page;
+        }
+
+        .tripHeader {
+          height: 9.45cm;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          color:#fff;
+        }
+
+        h1.tripHeader {
+
+        }
+
+        .tripSection > h1 { color:#fff; }
+
+        @page section-page:left {
+          @left-top {
+            content: string(title);
+            width: 28mm;
+            height: 10mm;
+            line-height:10mm;
+            transform: rotate(-90deg);
+            transform-origin: top left;
+            position: relative;
+            top: 28mm;
+            background: #1d655e;
+            color:#fff;
+          }
+        }
+
+        @page section-page:right {
+          @right-top {
+            content: string(title);
+            width: 28mm;
+            height: 10mm;
+            right: 2.5mm;
+            line-height:10mm;
+            transform: rotate(90deg);
+            transform-origin: top right;
+            position: relative;
+            top: 28mm;
+            background: #1d655e;
+            color:#fff;
+          }
+        }
+
+        .table {border-collapse: collapse;margin-top:20pt;width:100%;}
+        .table tr td, .table tr th {border-bottom:1pt solid red;}
+
+  </style>
+
+  <template id="liquidjsTemplate">
+
+    <!-- Cover page -->
+    <section class="title-page title-page-background">
+      <div style="text-align:center;margin-top:-110pt;">
+        <img src="img/frog.svg" style="height:200pt;filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.4));" />
+        <div class="image-mask"></div>
+      </div>
+      <div style="height:100pt;margin-top:100pt;image-mask"><h1 style="line-height: 0;">{{ translation.report.registerOfTrips | default: "Register of Trips" }}</h1></div>
+      <div style="height:100pt;font-family: 'Cairo', sans-serif;font-size: 2em;">{{ translation.report.myTripsUntil | default: "My trips until" }} 2025</div>
+    </section>
+
+    <!-- Blank page -->
+    <section class="blank-page"></section>
+
+    <!-- Table of Contents -->
+    <section>
+      <h1>{{ translation.menu.overview | default: 'Overview' }}</h1>
+      <a class="link" href="#F-1">F-1</a><br />
+      <a class="link" href="#F-2">F-2</a>
+    </section>
+
+    {% assign currentTrip = "" %}
+    {% assign openSection = false %}
+
+    {% for row in tripData[0] %}
+
+        {% if currentTrip != row.InnerId %}
+          {% if openSection %}
+            </table>
+            </section>
+          {% assign openSection = false %}
+          {% endif %}
+        {% endif %}
+
+        {% if currentTrip != row.InnerId %}
+          {% unless openSection %}
+          <section class="tripSection" data-iib-tripDomain="{{row.DomainAbbreviation}}" id="">
+
+            <div class="tripHeader">
+              <h1 style="margin:0;" data-title="{{ row.OuterId }}">{{ row.OuterId }} {{ row.OverallDestination }}</h1>
+              <div style="padding-bottom:20pt;">{{ row.TripDescription }}</div>
+            </div>
+
+
+            <table class="table">
+              <tbody>
+                <tr>
+                  <th>{{ translation.trip.departureDate | default: 'Departure Date' }}</th>
+                  <td>{{ row.DepartureDate }}</td>
+                </tr>
+                <tr>
+                  <th>{{ translation.trip.returnDate | default: 'Return Date' }}</th>
+                  <td>{{ row.ReturnDate }}</td>
+                </tr>
+                <tr>
+                  <th>{{ translation.trip.numberOfDays | default: 'Number of Days' }}</th>
+                  <td>{{ row.NumberOfDays }}
+                    {% assign start_date = row.DepartureDate | date: "%s" %}
+                    {% assign end_date = row.ReturnDate | date: "%s" %}
+                    {% assign difference_in_seconds = end_date | minus: start_date %}
+                    {% assign difference_in_days = difference_in_seconds | divided_by: 86400 %}
+                    {{difference_in_days}}
+                  </td>
+                </tr>
+                <tr>
+                  <th>{{ translation.trip.participantGroup | default: 'Participant Group' }}</th>
+                  <td>{{ row.ParticipantGroup }}</td>
+                </tr>
+                <tr>
+                  <th>{{ translation.trip.outerId | default: 'ID' }}</th>
+                  <td>{{ row.OuterId }}</td>
+                </tr>
+                <tr>
+                  <th>{{ translation.trip.numberOfCountries | default: 'Number of Countries' }}</th>
+                  <td class="align-middle">
+
+                  <!-- count countries WITHOUT prefix ** (but WITH * and +) and only count unique instances -->
+                  {% assign countryCount = borderCrossings[0][0].AllBorderCrossings | split: ", " | where_exp:  "item", "item[0] != '*' and item[1] != '*'" | where_exp:  "item", "item != settings.Base.HomeCountry" | join: ", " | remove: "*" | remove: "+" | split: ", " | uniq %}
+                  {{ countryCount | size }}
+
+                  </td>
+                </tr>
+                <tr><th colspan="2">{{ translation.trip.uniqueCountries | default: 'Unique Countries' }}</th></tr>
+                <tr><td colspan="2">
+
+                ?? {{ countryCount  | join: ", " }}
+
+                </td></tr>
+                <tr><th colspan="2">{{ translation.trip.overallRoute | default: 'Overall Route' }}</th></tr>
+                <tr><td colspan="2">
+
+                ??
+
+                </td></tr>
+
+                <tr><th colspan="2">{{ translation.trip.countryTripMovements | default: 'Country Trip Movements' }}</th></tr>
+                <tr><td colspan="2">
+
+                ?? {{ borderCrossings[0][0].AllBorderCrossings | replace: ",", "&nbsp;>" }}
+
+                </td></tr>
+              </tbody>
+            </table>
+            <table class="table rounded-bottom border">
+
+          {% assign openSection = true %}
+
+          {% endunless %}
+        {% endif %}
+
+
+
+        <tr><td class="p-3"><b>{{ row.Date }}</b><br />{{ row.Date | date: "%A" }}<br />
+        </td><td class="text-start p-3">{{ row.Events }}<br /><div class="mt-2"><a style="text-decoration:none;" target="_blank" href="https://www.google.com/maps/?q={{ row.AccommodationCoordinates }}" class="iib-trip-tab" data-iib-tripDomain="{{row.DomainAbbreviation}}"><div class="acc-icon"></div> <span class="acc-text">{{ row.Accommodation }} - {{ row.AccommodationCountry }} {{ row.AccommodationCoordinates }} {{ row.AccommodationCoordinateAccuracy }}</span></a></div></td></tr>
+
+
+        {% assign currentTrip = row.InnerId %}
+
+    {% endfor %}
+
+    {% if openSection %}
+      </table>
+      </section>
+    {% endif %}
+
+    <!-- Last page -->
+    <section class="final-page">
+      <div>
+        <img src="img/frog.svg" style="height:50pt;" />
+      </div>
+      <div>
+        <span class="immer-in-font-uc">Immer in</span>&nbsp;<span class="bewegung-font-uc">Bewegung</span>
+      </div>
+      <div>
+        {{ translation.report.generated | default: 'Generated' }} 2025-04-12
+      </div>
+    </section>
+
+
+  </template>
+
+</head>
+<body>
+
+  <!-- Trips -->
+  <div id="liquidjsContent"></div>
+
+  <script type="module">
+
+        let translation;
+
+        try {
+            const translationFile = await fetch("personal/swedish.json"); // + settings.Base.LanguageFile
+            translation = await translationFile.json();
+            console.log(translation);
+        } catch (error) {
+            console.log(`Langugage file error: ${error.message}`);
+        }
+
+        function convertSqlToJson(db, sqlQuery, sqlQueryName) {
+          if (db) {
+
+              const sqlResult = db.exec(sqlQuery);
+              //console.log("SQL Result:", sqlResult);
+              // Loop through each result (columns and values for each query)
+              const jsonData = sqlResult.map(result => {
+                  const columnNames = result.columns;
+                  return result.values.map(row => {
+                      let obj = {};
+                      columnNames.forEach((col, index) => {
+                          obj[col] = row[index];
+                      });
+                      return obj;
+                  });
+              });
+              console.log("JSON Data for "+sqlQueryName, jsonData);
+              return jsonData;
+
+          } else {
+              return;
+          }
+      }
+
+      const sqlPromise = await initSqlJs({ locateFile: file => `bundle/sqljs/${file}` });
+
+      let dbContentBind = localStorage.getItem('dbContentServer');
+      const binaryData = new Uint8Array(atob(dbContentBind).split('').map(char => char.charCodeAt(0)));
+      const response = { arrayBuffer: async () => binaryData.buffer };
+
+      const arrayBuffer = await response.arrayBuffer();
+      const dbInstance = new sqlPromise.Database(new Uint8Array(arrayBuffer));
+      console.log("Database loaded.");
+      //console.log(dbInstance);
+
+      const tripData = convertSqlToJson(dbInstance, `
+      SELECT * FROM bewb_Events
+      LEFT JOIN bewa_Overview USING (InnerId)
+      WHERE InnerId IS NOT NULL
+      ORDER BY Date DESC LIMIT 50;
+      `, "AllTripData");
+
+      //console.log(tripData);
+
+
+      const { Liquid } = await import("./bundle/liquidjs/liquid.browser.min.js");
+      let engine = new Liquid();
+
+      const parameters = { translation, tripData };
+      console.log(parameters);
+
+      document.getElementById("liquidjsContent").innerHTML = await engine.parseAndRender(document.getElementById("liquidjsTemplate").innerHTML, parameters );
+
+       //window.PagedPolyfill.preview();
+
+  </script>
+
+</body>
+</html>
