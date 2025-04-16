@@ -37,7 +37,7 @@
           size: A4;
 
           @bottom-center {
-            content: string(title);
+            content: string(title-full);
           }
 
         }
@@ -113,7 +113,7 @@
 
         h1 {
           font-size: 3em;
-          string-set: title attr(data-title);
+          string-set: title attr(data-title) title-full attr(data-title-full);
           font-family: 'Cairo', sans-serif;
           line-height: 1.2;
         }
@@ -267,6 +267,14 @@
       {% assign currentTrip = "" %}
       {% for row in tripData[0] %}
         {% if row.InnerId != currentTrip %}
+
+
+          {% if row.Year != currentYear %}
+            <div>{{ row.Year }}</div>
+            {% assign currentYear = row.Year %}
+          {% endif %}
+
+
           <div><a class="link" href="#{{ row.InnerId }}">{{ row.OuterId }} {{ row.OverallDestination }}</a></div>
         {% assign currentTrip = row.InnerId %}
         {% endif %}
@@ -286,7 +294,7 @@
             <section class="tripSection" data-iib-tripDomain="{{row.DomainAbbreviation}}">
 
             <div class="tripHeader themeColorDark" data-iib-tripDomain="{{row.DomainAbbreviation}}">
-              <h1 style="margin:0;" data-title="{{ row.InnerId }}">{{ row.OuterId }} {{ row.OverallDestination }}</h1>
+              <h1 style="margin:0;" data-title="{{ row.OuterId }}" data-title-full="{{ row.OuterId }} {{ row.OverallDestination }}" data-iib-tripDomain="{{row.DomainAbbreviation}}" id="{{ row.InnerId }}">{{ row.OuterId }} {{ row.OverallDestination }}</h1>
               <div style="padding-bottom:20pt;margin-top:10pt;font-size:1.1em;">{{ row.TripDescription }}</div>
             </div>
 
@@ -313,8 +321,9 @@
 
                 <div>{{ row.ParticipantGroup }}</div>
                 <div>{{ row.OuterId }}</div>
-                <div>                  <!-- count countries WITHOUT prefix ** (but WITH * and +) and only count unique instances -->
-                    {% assign countryCount = borderCrossings[0][0].AllBorderCrossings | split: ", " | where_exp:  "item", "item[0] != '*' and item[1] != '*'" | where_exp:  "item", "item != settings.Base.HomeCountry" | join: ", " | remove: "*" | remove: "+" | split: ", " | uniq %}
+                <div>
+                    <!-- count countries WITHOUT prefix ** (but WITH * and +) and only count unique instances -->
+                    {% assign countryCount = row.AllBorderCrossings | split: ", " | where_exp:  "item", "item[0] != '*' and item[1] != '*'" | where_exp:  "item", "item != settings.Base.HomeCountry" | join: ", " | remove: "*" | remove: "+" | split: ", " | uniq %}
                     {{ countryCount | size }}
                 </div>
 
@@ -322,13 +331,29 @@
 
               <div style="text-align:center;">
                 <div style="margin-top:3pt;font-weight:bold;">{{ translation.trip.uniqueCountries | default: 'Unique Countries' }}</div>
-                <div>?? {{ countryCount  | join: ", " }}</div>
+                <div>{{ countryCount  | join: ", " }}</div>
 
                 <div style="margin-top:3pt;font-weight:bold;">{{ translation.trip.overallRoute | default: 'Overall Route' }}</div>
-                <div>??</div>
+                <div>
+                {% assign locations = row.MapPins | split: " }" %}
+
+                  {% for location in locations %}
+                    {% if location contains "@" %}
+                      {% continue %}
+                    {% endif %}
+
+                    {% assign parts = location | remove: "{" | split: " | " %}
+
+                    {% if parts %}
+                      {% assign mapPinName = parts[0] %}
+                      {{mapPinName}}
+                      {% unless forloop.last %}&nbsp;> {% endunless %}
+                    {% endif %}
+                  {% endfor %}
+                  </div>
 
                 <div style="margin-top:3pt;font-weight:bold;">{{ translation.trip.countryTripMovements | default: 'Country Trip Movements' }}</div>
-                <div>?? {{ borderCrossings[0][0].AllBorderCrossings | replace: ",", "&nbsp;>" }}</div>
+                <div>{{ row.AllBorderCrossings | replace: ",", "&nbsp;>" }}</div>
               </div>
             </div>
 
@@ -340,8 +365,8 @@
 
 
       <div class="eventDay" data-iib-tripDomain="{{row.DomainAbbreviation}}">
-        <div style="width:5cm;padding:0.2cm;position:absolute;"><b>{{ row.Date }}</b><br />{{ row.Date | date: "%A" }}</div>
-        <div style="padding:5pt;margin-left:3cm;">{{ row.Events }}<br /><div><a class="themeTextColor" style="text-decoration:none;" target="_blank" href="https://www.google.com/maps/?q={{ row.AccommodationCoordinates }}" data-iib-tripDomain="{{row.DomainAbbreviation}}"><div class="acc-icon" data-iib-tripDomain="{{row.DomainAbbreviation}}"></div> <span class="acc-text">{{ row.Accommodation }} - {{ row.AccommodationCountry }} {{ row.AccommodationCoordinates }} {{ row.AccommodationCoordinateAccuracy }}</span></a></div></div>
+        <div style="width:5cm;padding:0.2cm;position:;break-inside: avoid;display:flex;flex-direction:column;page-break-after: avoid;"><div><b>{{ row.Date }}</b></div><div>{{ row.Date | date: "%A" }}</div></div>
+        <div style="padding:5pt;margin-left:3cm;">{{ row.Events }}<br /><div style="page-break-before: avoid;break-inside: avoid;"><a class="themeTextColor" style="text-decoration:none;" target="_blank" href="https://www.google.com/maps/?q={{ row.AccommodationCoordinates }}" data-iib-tripDomain="{{row.DomainAbbreviation}}"><div class="acc-icon" data-iib-tripDomain="{{row.DomainAbbreviation}}"></div> <span class="acc-text">{{ row.Accommodation }} - {{ row.AccommodationCountry }} {{ row.AccommodationCoordinates }} {{ row.AccommodationCoordinateAccuracy }}</span></a></div></div>
       </div>
 
 
@@ -421,7 +446,8 @@
       const tripData = convertSqlToJson(dbInstance, `
       SELECT *, SUBSTR(InnerId, 1, 1) AS DomainAbbreviation, SUBSTR(DepartureDate, 1, 4) AS Year FROM bewb_Events
       LEFT JOIN bewa_Overview USING (InnerId)
-      WHERE InnerId IS NOT NULL AND OuterId LIKE '%AÄ%'
+	  LEFT JOIN IIBc_BorderCrossings USING (InnerId)
+	  WHERE bewb_Events.InnerId IS NOT NULL AND bewa_Overview.OuterId LIKE '%AÄ%'
       ORDER BY Year DESC, Date ASC;
       `, "AllTripData");
 
