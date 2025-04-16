@@ -65,13 +65,6 @@
           @bottom-right { content: none }
         }
 
-        @page final-page {
-          @left-top { content: none }
-          @top-center { content: none }
-          @bottom-center { content: none }
-          @bottom-right { content: none }
-        }
-
         .title-page {
           page: title;
           display: flex;
@@ -91,16 +84,6 @@
           background: #1d655e;
           z-index: -1;
           margin:-1in;
-        }
-
-        .final-page {
-          page: final-page;
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-end;
-          align-items: center;
-          height: 100vh;
-          font-size: 1em;
         }
 
         @page title {
@@ -200,12 +183,33 @@
           }
         }
 
+        @page final-page {
+        margin:0;
+          @left-top { content: none; }
+          @top-center { content: none; }
+          @bottom-center { content: none; }
+          @bottom-right { content: none; }
+          @bottom-left { content: none; }
+        }
+
       .tripSummary {
           padding:10pt;
           border-radius:20pt;
           margin-top:20pt;
           margin-bottom:10pt;
         }
+
+      .final-page {
+        page: final-page;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+        height: 100vh;
+        font-size: 1em;
+        break-before: left;
+        padding-bottom: 2cm;
+      }
 
 </style>
 
@@ -277,7 +281,7 @@
         <div class="image-mask"></div>
       </div>
       <div style="height:100pt;margin-top:100pt;image-mask"><h1 style="line-height: 0;">{{ translation.report.registerOfTrips | default: "Register of Trips" }}</h1></div>
-      <div style="height:100pt;font-family: 'Cairo', sans-serif;font-size: 2em;">{{ translation.report.myTripsUntil | default: "My trips until" }} 2025</div>
+      <div style="height:100pt;font-family: 'Cairo', sans-serif;font-size: 2em;">{{ queryParams.t }}</div>
     </section>
 
     <!-- Blank page -->
@@ -293,7 +297,7 @@
 
 
           {% if row.Year != currentYear %}
-            <div style="font-size:1.2em;margin-top:10pt;"><b>{{ row.Year }}</b></div>
+            <div style="font-size:1.2em;margin-top:10pt;margin-bottom:5pt;"><b>{{ row.Year }}</b></div>
             {% assign currentYear = row.Year %}
           {% endif %}
 
@@ -388,7 +392,7 @@
 
 
       <div class="eventDay" data-iib-tripDomain="{{row.DomainAbbreviation}}">
-        <div style="width:5cm;padding:0.2cm;position:;break-inside: avoid;display:flex;flex-direction:column;page-break-after: avoid;"><div><b>{{ row.Date }}</b></div><div>{{ row.Date | date: "%A" }}</div></div>
+        <div style="width:5cm;padding:0.2cm;position:absolute;break-inside: avoid;display:flex;flex-direction:column;page-break-after: avoid;"><div><b>{{ row.Date }}</b></div><div>{{ row.Date | date: "%A" }}</div></div>
         <div style="padding:5pt;margin-left:3cm;">{{ row.Events }}<br /><div style="page-break-before: avoid;break-inside: avoid;"><a class="themeTextColor" style="text-decoration:none;" target="_blank" href="https://www.google.com/maps/?q={{ row.AccommodationCoordinates }}" data-iib-tripDomain="{{row.DomainAbbreviation}}"><div class="acc-icon" data-iib-tripDomain="{{row.DomainAbbreviation}}"></div> <span class="acc-text">{{ row.Accommodation }} - {{ row.AccommodationCountry }} {{ row.AccommodationCoordinates }} {{ row.AccommodationCoordinateAccuracy }}</span></a></div></div>
       </div>
 
@@ -406,7 +410,7 @@
         <span class="immer-in-font-uc">Immer in</span>&nbsp;<span class="bewegung-font-uc">Bewegung</span>
       </div>
       <div>
-        {{ translation.report.generated | default: 'Generated' }} 2025-04-12
+        {{ queryParams.g }}
       </div>
     </section>
 
@@ -420,16 +424,6 @@
   <div id="liquidjsContent"></div>
 
   <script type="module">
-
-        let translation;
-
-        try {
-            const translationFile = await fetch("personal/swedish.json"); // + settings.Base.LanguageFile
-            translation = await translationFile.json();
-            console.log(translation);
-        } catch (error) {
-            console.log(`Langugage file error: ${error.message}`);
-        }
 
         function convertSqlToJson(db, sqlQuery, sqlQueryName) {
           if (db) {
@@ -455,6 +449,15 @@
           }
       }
 
+      function getQueryParams() {
+          const params = new URLSearchParams(window.location.search);
+          let queryObject = {};
+          for (const [key, value] of params.entries()) {
+              queryObject[key] = value;
+          }
+          return queryObject;
+      }
+
       const sqlPromise = await initSqlJs({ locateFile: file => `bundle/sqljs/${file}` });
 
       let dbContentBind = localStorage.getItem('dbContentServer');
@@ -465,6 +468,20 @@
       const dbInstance = new sqlPromise.Database(new Uint8Array(arrayBuffer));
       console.log("Database loaded.");
       //console.log(dbInstance);
+
+
+      const language = convertSqlToJson(dbInstance, `SELECT Value FROM bewxx_Settings WHERE Attribute = 'LanguageFile'`, "Settings");
+      console.log(language[0][0].Value);
+
+      let translation;
+
+        try {
+            const translationFile = await fetch("personal/"+language[0][0].Value);
+            translation = await translationFile.json();
+            console.log(translation);
+        } catch (error) {
+            console.log(`Langugage file error: ${error.message}`);
+        }
 
       const tripData = convertSqlToJson(dbInstance, `
       SELECT *, SUBSTR(InnerId, 1, 1) AS DomainAbbreviation, SUBSTR(DepartureDate, 1, 4) AS Year FROM bewb_Events
@@ -482,7 +499,7 @@
 
       const tripDomains = convertSqlToJson(dbInstance, `SELECT * FROM bewx_TripDomains WHERE DomainAbbreviation != 'X';`, 'common_tripDomains');
 
-      const parameters = { translation, tripData, tripDomains };
+      const parameters = { translation, tripData, tripDomains, queryParams: getQueryParams() };
       console.log(parameters);
 
       const style = document.createElement('style');
