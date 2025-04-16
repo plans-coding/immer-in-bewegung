@@ -58,7 +58,7 @@
 
         }
 
-        @page :first {
+        @page title-page {
           @left-top { content: none }
           @top-center { content: none }
           @bottom-center { content: none }
@@ -108,12 +108,18 @@
         }
 
         .link::after {
-          content: ", page " target-counter(attr(href url), page);
+          content: target-counter(attr(href url), page);
+          color:#000;
+          background-color:#fff;
+          border-radius:20pt;
+          width:20pt;
+          text-align:center;
+          display:inline-block;
         }
 
         h1 {
           font-size: 3em;
-          string-set: title attr(data-title) title-full attr(data-title-full);
+          string-set: title attr(data-title) title-full attr(data-title-full) iib-tripDomain attr(data-iib-tripDomain);
           font-family: 'Cairo', sans-serif;
           line-height: 1.2;
         }
@@ -201,7 +207,6 @@
           margin-bottom:10pt;
         }
 
-
 </style>
 
 <template id="liquidjsTemplateStyle">
@@ -225,9 +230,23 @@
 
   }
 
-  .themeTextColor[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {
-      color: {{ tripDomain.Color }};
-    }
+  .themeBgColor[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {
+    background-color: {{ tripDomain.Color }};
+    padding:3pt 10pt 3pt 10pt;
+    margin:2pt;
+    color:#fff;
+    display:inline-block;
+    border-radius:10pt;
+  }
+
+  .link[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {
+    color: {{ tripDomain.Color }};
+    text-decoration: none;
+  }
+
+  .themeTextColor[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}']{
+    color: {{ tripDomain.Color }};
+  }
 
   .accommodationColor[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'], .overviewColor[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {fill:{{ tripDomain.Color }};}
       .polylineMap[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {stroke:{{ tripDomain.Color }};}
@@ -240,6 +259,10 @@
       }
 
   .acc-icon[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] { background-color: {{ tripDomain.Color }}; }
+
+  div[style*='first-iib-tripDomain: "{{ tripDomain.DomainAbbreviation }};'] .pagedjs_margin-left-top, div[style*='first-iib-tripDomain: "{{ tripDomain.DomainAbbreviation }};'] .pagedjs_margin-right-top {
+  background-color: {{ tripDomain.Color }} !important;
+}
 
 {% endfor %}
 </template>
@@ -270,12 +293,12 @@
 
 
           {% if row.Year != currentYear %}
-            <div>{{ row.Year }}</div>
+            <div style="font-size:1.2em;margin-top:10pt;"><b>{{ row.Year }}</b></div>
             {% assign currentYear = row.Year %}
           {% endif %}
 
 
-          <div><a class="link" href="#{{ row.InnerId }}">{{ row.OuterId }} {{ row.OverallDestination }}</a></div>
+          <div style="margin-left:1cm;"><a class="link" href="#{{ row.InnerId }}"  data-iib-tripDomain="{{row.DomainAbbreviation}}"><div style="width:3cm;display:inline-block;"><div class="themeBgColor" data-iib-tripDomain="{{row.DomainAbbreviation}}">{{ row.OuterId }}</div></div>&nbsp;<b>{{ row.OverallDestination }}</b>&nbsp;</a></div>
         {% assign currentTrip = row.InnerId %}
         {% endif %}
       {% endfor %}
@@ -447,7 +470,7 @@
       SELECT *, SUBSTR(InnerId, 1, 1) AS DomainAbbreviation, SUBSTR(DepartureDate, 1, 4) AS Year FROM bewb_Events
       LEFT JOIN bewa_Overview USING (InnerId)
 	  LEFT JOIN IIBc_BorderCrossings USING (InnerId)
-	  WHERE bewb_Events.InnerId IS NOT NULL AND bewa_Overview.OuterId LIKE '%AÄ%'
+	  WHERE bewb_Events.InnerId IS NOT NULL AND bewa_Overview.OuterId LIKE '%AÄ-SE%'
       ORDER BY Year DESC, Date ASC;
       `, "AllTripData");
 
@@ -467,6 +490,7 @@
       document.head.appendChild(style);
 
       document.getElementById("liquidjsContent").innerHTML = await engine.parseAndRender(document.getElementById("liquidjsTemplate").innerHTML, parameters );
+      document.title = translation.report.registerOfTrips;
 
        window.PagedPolyfill.preview();
 
