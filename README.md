@@ -40,3 +40,4 @@ Image from: https://mockuphone.com/
 * Sqljs: MIT license
 * Chartjs: MIT license
 * Leaflet: BSD-2-Clause license
+* Pagedjs: MIT license
