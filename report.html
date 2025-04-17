@@ -13,7 +13,7 @@
     };
   </script>
 
-  <script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script>
+  <script src="bundle/pagedjs/paged.polyfill.js"></script>
   <script src="bundle/sqljs/sql-wasm.js"></script>
 
   <style>
@@ -116,6 +116,7 @@
           height: 12cm;
           z-index: -1;
           margin:-1in;
+
         }
 
         section.title-page-background::before {
@@ -138,19 +139,15 @@
           page: section-page;
         }
 
+        .tripSection h1 {color:#fff;}
+
         .tripHeader {
           height: 9.45cm;
           display: flex;
           flex-direction: column;
           justify-content: flex-end;
-          color:#fff;
         }
 
-        h1.tripHeader {
-
-        }
-
-        .tripSection > h1 { color:#fff; }
 
         @page section-page:left {
           @left-top {
@@ -162,7 +159,6 @@
             transform-origin: top left;
             position: relative;
             top: 28mm;
-            background: #1d655e;
             color:#fff;
           }
         }
@@ -178,7 +174,6 @@
             transform-origin: top right;
             position: relative;
             top: 28mm;
-            background: #1d655e;
             color:#fff;
           }
         }
@@ -210,7 +205,7 @@
         break-before: left;
         padding-bottom: 2cm;
       }
-
+      /*background: {{ tripDomain.Color }};, url('/20240504_211117.jpg')linear-gradient(to bottom, transparent, {{ tripDomain.Color }})*/
 </style>
 
 <template id="liquidjsTemplateStyle">
@@ -224,8 +219,22 @@
       border-top:1pt solid {{ tripDomain.Color }}22;
     }
 
+  /* Add theme cover photo here */
+  /*
+  div[data-page-number='5'] section.tripSection[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}']::before {
+      background-color: {{ tripDomain.Color }};
+      background: linear-gradient(to bottom, transparent 50%, {{ tripDomain.Color }}), url('');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      color:#fff;
+    }*/
+
   section.tripSection[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}']::before {
-      background: {{ tripDomain.Color }};
+      background-color: {{ tripDomain.Color }};
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
       color:#fff;
     }
 
@@ -292,17 +301,16 @@
       <h1>{{ translation.menu.overview | default: 'Overview' }}</h1>
       {% assign currentYear = "" %}
       {% assign currentTrip = "" %}
-      {% for row in tripData[0] %}
+      {% for row in overview[0] %}
         {% if row.InnerId != currentTrip %}
 
-
+          <div style="display:flex;align-items: center;"><div style="width:2cm;">
           {% if row.Year != currentYear %}
-            <div style="font-size:1.2em;margin-top:10pt;margin-bottom:5pt;"><b>{{ row.Year }}</b></div>
+            <b>{{ row.Year }}</b>
             {% assign currentYear = row.Year %}
           {% endif %}
+          </div><div><a class="link" href="#{{ row.InnerId }}" data-iib-tripDomain="{{row.DomainAbbreviation}}"><div style="width:3cm;display:inline-block;"><div class="themeBgColor" data-iib-tripDomain="{{row.DomainAbbreviation}}">{{ row.OuterId }}</div></div>&nbsp;<b>{{ row.OverallDestination }}</b>&nbsp;</a></div></div>
 
-
-          <div style="margin-left:1cm;"><a class="link" href="#{{ row.InnerId }}"  data-iib-tripDomain="{{row.DomainAbbreviation}}"><div style="width:3cm;display:inline-block;"><div class="themeBgColor" data-iib-tripDomain="{{row.DomainAbbreviation}}">{{ row.OuterId }}</div></div>&nbsp;<b>{{ row.OverallDestination }}</b>&nbsp;</a></div>
         {% assign currentTrip = row.InnerId %}
         {% endif %}
       {% endfor %}
@@ -322,7 +330,7 @@
 
             <div class="tripHeader themeColorDark" data-iib-tripDomain="{{row.DomainAbbreviation}}">
               <h1 style="margin:0;" data-title="{{ row.OuterId }}" data-title-full="{{ row.OuterId }} {{ row.OverallDestination }}" data-iib-tripDomain="{{row.DomainAbbreviation}}" id="{{ row.InnerId }}">{{ row.OuterId }} {{ row.OverallDestination }}</h1>
-              <div style="padding-bottom:20pt;margin-top:10pt;font-size:1.1em;">{{ row.TripDescription }}</div>
+              <div style="padding-bottom:20pt;margin-top:10pt;font-size:1.1em;color:#fff;">{{ row.TripDescription }}</div>
             </div>
 
             <div class="tripSummary themeColorLight" data-iib-tripDomain="{{row.DomainAbbreviation}}">
@@ -392,17 +400,16 @@
 
 
       <div class="eventDay" data-iib-tripDomain="{{row.DomainAbbreviation}}">
-        <div style="width:5cm;padding:0.2cm;position:absolute;break-inside: avoid;display:flex;flex-direction:column;page-break-after: avoid;"><div><b>{{ row.Date }}</b></div><div>{{ row.Date | date: "%A" }}</div></div>
-        <div style="padding:5pt;margin-left:3cm;">{{ row.Events }}<br /><div style="page-break-before: avoid;break-inside: avoid;"><a class="themeTextColor" style="text-decoration:none;" target="_blank" href="https://www.google.com/maps/?q={{ row.AccommodationCoordinates }}" data-iib-tripDomain="{{row.DomainAbbreviation}}"><div class="acc-icon" data-iib-tripDomain="{{row.DomainAbbreviation}}"></div> <span class="acc-text">{{ row.Accommodation }} - {{ row.AccommodationCountry }} {{ row.AccommodationCoordinates }} {{ row.AccommodationCoordinateAccuracy }}</span></a></div></div>
+        {% assign weekday = row.Date | date: "%A" | downcase %}
+        <div style="padding:5pt;"><div style="display:inline-block;margin-bottom:3pt;"><i>{{ translation.trip[weekday] | default: weekday }}</i>&nbsp;<b>{{ row.Date }}</b><br />{{ row.Events }}<br /><div style="page-break-before: avoid;break-inside: avoid;margin-top:3pt;"><a class="themeTextColor" style="text-decoration:none;" target="_blank" href="https://www.google.com/maps/?q={{ row.AccommodationCoordinates }}" data-iib-tripDomain="{{row.DomainAbbreviation}}"><div class="acc-icon" data-iib-tripDomain="{{row.DomainAbbreviation}}"></div> <span class="acc-text">{{ row.Accommodation }} - {{ row.AccommodationCountry }} {{ row.AccommodationCoordinates }} {{ row.AccommodationCoordinateAccuracy }}</span></a></div></div>
       </div>
-
 
     {% endfor %}
     </div>
     </section>
 
     <!-- Last page -->
-    <section class="final-page">
+    <section class="final-page" style="break-before: left;">
       <div>
         <img src="img/frog.svg" style="height:50pt;" />
       </div>
@@ -483,12 +490,21 @@
             console.log(`Langugage file error: ${error.message}`);
         }
 
+      const queryParams = getQueryParams();
+      console.log(queryParams);
+
+      const overview = convertSqlToJson(dbInstance, `
+      SELECT *, SUBSTR(InnerId, 1, 1) AS DomainAbbreviation, SUBSTR(DepartureDate, 1, 4) AS Year FROM bewa_Overview
+	  WHERE InnerId IS NOT NULL AND OuterId LIKE '%`+queryParams.oi+`%' AND bewa_Overview.ParticipantGroup LIKE '%`+queryParams.pg+`%'
+      ORDER BY Year DESC, DepartureDate DESC;
+      `, "Overview");
+
       const tripData = convertSqlToJson(dbInstance, `
       SELECT *, SUBSTR(InnerId, 1, 1) AS DomainAbbreviation, SUBSTR(DepartureDate, 1, 4) AS Year FROM bewb_Events
       LEFT JOIN bewa_Overview USING (InnerId)
 	  LEFT JOIN IIBc_BorderCrossings USING (InnerId)
-	  WHERE bewb_Events.InnerId IS NOT NULL AND bewa_Overview.OuterId LIKE '%AÄ-SE%'
-      ORDER BY Year DESC, Date ASC;
+	  WHERE bewb_Events.InnerId IS NOT NULL AND bewa_Overview.OuterId LIKE '%`+queryParams.oi+`%' AND bewa_Overview.ParticipantGroup LIKE '%`+queryParams.pg+`%'
+      ORDER BY Year DESC, DepartureDate DESC, Date ASC;
       `, "AllTripData");
 
       //console.log(tripData);
@@ -499,7 +515,7 @@
 
       const tripDomains = convertSqlToJson(dbInstance, `SELECT * FROM bewx_TripDomains WHERE DomainAbbreviation != 'X';`, 'common_tripDomains');
 
-      const parameters = { translation, tripData, tripDomains, queryParams: getQueryParams() };
+      const parameters = { translation, overview, tripData, tripDomains, queryParams };
       console.log(parameters);
 
       const style = document.createElement('style');
