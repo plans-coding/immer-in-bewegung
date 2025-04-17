@@ -465,6 +465,30 @@
           return queryObject;
       }
 
+      function transformData(input) {
+          if (input) {
+        let result = {};
+
+        input[0].forEach(item => {
+            const { AttributeGroup, Attribute, Value } = item;
+
+            if (AttributeGroup === "Pluigin") {
+                // Fix typo: "Pluigin" -> "Plugin"
+                if (!result["Plugins"]) result["Plugins"] = {};
+                result["Plugins"][Attribute] = JSON.parse(Value);
+            } else if (AttributeGroup === "Plugin") {
+                if (!result["Plugins"]) result["Plugins"] = {};
+                result["Plugins"][Attribute] = JSON.parse(Value);
+            } else {
+                if (!result[AttributeGroup]) result[AttributeGroup] = {};
+                result[AttributeGroup][Attribute] = Value;
+            }
+        });
+
+        return result;
+        } else {return;}
+    }
+
       const sqlPromise = await initSqlJs({ locateFile: file => `bundle/sqljs/${file}` });
 
       let dbContentBind = localStorage.getItem('dbContentServer');
@@ -476,18 +500,39 @@
       console.log("Database loaded.");
       //console.log(dbInstance);
 
+      let settings;
+      let settingsFile;
+      if (localStorage.getItem('dbSource') === "settings.json" || localStorage.getItem('dbSource') === null ) {
 
-      const language = convertSqlToJson(dbInstance, `SELECT Value FROM bewxx_Settings WHERE Attribute = 'LanguageFile'`, "Settings");
-      console.log(language[0][0].Value);
+          settingsFile = await fetch('personal/settings.json');
+          if (!settingsFile.ok) {
+            console.log('Settings file not found and no binded database.');
+            let queryParams = getQueryParams();
+            if ( queryParams.p != 'source' ) { window.location = 'index.html?p=source&m=no_settings_file'; }
+
+          } else {
+            settings = await settingsFile.json();
+            //console.log(settings);
+            console.log("Using database specified in settings.json: " + settings.Base.SqliteFile);
+          }
+
+      } else {
+          console.log('Reading settings from database file in local storage.');
+      }
+
+      settings = transformData(convertSqlToJson(dbInstance, 'SELECT * FROM bewxx_Settings', 'settings'));
+      console.log(settings);
+
 
       let translation;
 
         try {
-            const translationFile = await fetch("personal/"+language[0][0].Value);
+            const translationFile = await fetch("personal/"+settings.Base?.LanguageFile);
             translation = await translationFile.json();
             console.log(translation);
         } catch (error) {
             console.log(`Langugage file error: ${error.message}`);
+            translation = {};
         }
 
       const queryParams = getQueryParams();
@@ -509,13 +554,16 @@
 
       //console.log(tripData);
 
+      if (translation.report.registerOfTrips) {
+        document.title = translation.report.registerOfTrips;
+      }
 
       const { Liquid } = await import("./bundle/liquidjs/liquid.browser.min.js");
       let engine = new Liquid();
 
       const tripDomains = convertSqlToJson(dbInstance, `SELECT * FROM bewx_TripDomains WHERE DomainAbbreviation != 'X';`, 'common_tripDomains');
 
-      const parameters = { translation, overview, tripData, tripDomains, queryParams };
+      const parameters = { translation, settings, overview, tripData, tripDomains, queryParams };
       console.log(parameters);
 
       const style = document.createElement('style');
@@ -523,9 +571,8 @@
       document.head.appendChild(style);
 
       document.getElementById("liquidjsContent").innerHTML = await engine.parseAndRender(document.getElementById("liquidjsTemplate").innerHTML, parameters );
-      document.title = translation.report.registerOfTrips;
 
-       window.PagedPolyfill.preview();
+      window.PagedPolyfill.preview();
 
   </script>
 
