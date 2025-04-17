@@ -559,6 +559,8 @@
         document.title = translation.report.registerOfTrips;
       }
 
+      alert(translation?.report?.startMessage ?? "Click OK to start. Then wait until the print dialouge is shown. This step may take minutes.");
+
       const { Liquid } = await import("./bundle/liquidjs/liquid.browser.min.js");
       let engine = new Liquid();
 
@@ -573,7 +575,9 @@
 
       document.getElementById("liquidjsContent").innerHTML = await engine.parseAndRender(document.getElementById("liquidjsTemplate").innerHTML, parameters );
 
-      window.PagedPolyfill.preview();
+      window.PagedPolyfill.preview().then(() => {
+        window.print();
+      });
 
   </script>
 
