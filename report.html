@@ -526,7 +526,7 @@
 
       let translation;
 
-      if (settings.Base.LanguageFile) {
+      if (settings.Base.LanguageFile != "english.json") {
         try {
             const translationFile = await fetch("personal/"+settings.Base?.LanguageFile);
             translation = await translationFile.json();
