@@ -526,14 +526,15 @@
 
       let translation;
 
+      if (settings.Base.LanguageFile) {
         try {
             const translationFile = await fetch("personal/"+settings.Base?.LanguageFile);
             translation = await translationFile.json();
             console.log(translation);
         } catch (error) {
             console.log(`Langugage file error: ${error.message}`);
-            translation = {};
         }
+      } else { translation = {}; }
 
       const queryParams = getQueryParams();
       console.log(queryParams);
