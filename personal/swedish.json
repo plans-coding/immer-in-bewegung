@@ -7,6 +7,7 @@
     "more": "Mer",
     "coordinateTool": "Koordinatverktyg",
     "source": "Källdatabas",
+    "report": "Generera rapport",
     "search": "Sök",
     "searchTrip": "Sök resa",
     "about": "Om",
@@ -122,5 +123,10 @@
   },
   "update": {
     "message": "En ny version finns tillgänglig"
+  },
+  "report": {
+    "registerOfTrips": "Reseregister",
+    "myTripsUntil": "Mina resor fram till",
+    "generated": "Genererad"
   }
 }
