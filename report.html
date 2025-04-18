@@ -18,225 +18,216 @@
 
   <style>
 
-        @font-face {
-            font-family: 'Cairo';
-            src: url('bundle/fonts/Cairo-VariableFont_slnt,wght.ttf') format('truetype');
-        }
+    @font-face {
+        font-family: 'Cairo';
+        src: url('bundle/fonts/Cairo-VariableFont_slnt,wght.ttf') format('truetype');
+    }
 
-        @font-face {
-            font-family: 'Righteous';
-            src: url('bundle/fonts/Righteous-Regular.ttf') format('truetype');
-        }
+    @font-face {
+        font-family: 'Righteous';
+        src: url('bundle/fonts/Righteous-Regular.ttf') format('truetype');
+    }
 
-        body {font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";}
+    body {font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";}
 
-        .immer-in-font-uc {font-family: 'Cairo', sans-serif;text-transform: uppercase;}
-        .bewegung-font-uc {font-family: 'Righteous', sans-serif;text-transform: uppercase;}
+    .immer-in-font-uc {font-family: 'Cairo', sans-serif;text-transform: uppercase;}
+    .bewegung-font-uc {font-family: 'Righteous', sans-serif;text-transform: uppercase;}
 
-        @page {
-          size: A4;
+    @page {
+      size: A4;
 
-          @bottom-center {
-            content: string(title-full);
-          }
-
-        }
-
-        @page :left  {
-
-          @bottom-left {
-            content: counter(page);
-          }
-
-        }
-
-        @page :right {
-
-          @bottom-right {
-            content: counter(page);
-          }
-
-        }
-
-        @page title-page {
-          @left-top { content: none }
-          @top-center { content: none }
-          @bottom-center { content: none }
-          @bottom-right { content: none }
-        }
-
-        .title-page {
-          page: title;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          height: 100vh;
-        }
-
-        section.title-page::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100vh;
-          height: 12cm;
-          background: #1d655e;
-          z-index: -1;
-          margin:-1in;
-        }
-
-        @page title {
-          margin: 0;
-        }
-
-        .link::after {
-          content: target-counter(attr(href url), page);
-          color:#000;
-          background-color:#fff;
-          border-radius:20pt;
-          width:20pt;
-          text-align:center;
-          display:inline-block;
-        }
-
-        h1 {
-          font-size: 3em;
-          string-set: title attr(data-title) title-full attr(data-title-full) iib-tripDomain attr(data-iib-tripDomain);
-          font-family: 'Cairo', sans-serif;
-          line-height: 1.2;
-        }
-
-        section.tripSection::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100vh;
-          height: 12cm;
-          z-index: -1;
-          margin:-1in;
-
-        }
-
-        section.title-page-background::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100vh;
-          height: 12cm;
-          background: #1d655e;
-          z-index: -1;
-          margin:-1in;
-        }
-
-        section {
-          break-before: page;
-        }
-
-        section.tripSection {
-          page: section-page;
-        }
-
-        .tripSection h1 {color:#fff;}
-
-        .tripHeader {
-          height: 9.45cm;
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-end;
-        }
-
-
-        @page section-page:left {
-          @left-top {
-            content: string(title);
-            width: 28mm;
-            height: 10mm;
-            line-height:10mm;
-            transform: rotate(-90deg);
-            transform-origin: top left;
-            position: relative;
-            top: 28mm;
-            color:#fff;
-          }
-        }
-
-        @page section-page:right {
-          @right-top {
-            content: string(title);
-            width: 28mm;
-            height: 10mm;
-            right: 2.5mm;
-            line-height:10mm;
-            transform: rotate(90deg);
-            transform-origin: top right;
-            position: relative;
-            top: 28mm;
-            color:#fff;
-          }
-        }
-
-        @page final-page {
-        margin:0;
-          @left-top { content: none; }
-          @top-center { content: none; }
-          @bottom-center { content: none; }
-          @bottom-right { content: none; }
-          @bottom-left { content: none; }
-        }
-
-      .tripSummary {
-          padding:10pt;
-          border-radius:20pt;
-          margin-top:20pt;
-          margin-bottom:10pt;
-        }
-
-      .final-page {
-        page: final-page;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        align-items: center;
-        height: 100vh;
-        font-size: 1em;
-        break-before: left;
-        padding-bottom: 2cm;
+      @bottom-center {
+        content: string(title-full);
       }
-      /*background: {{ tripDomain.Color }};, url('/20240504_211117.jpg')linear-gradient(to bottom, transparent, {{ tripDomain.Color }})*/
+
+    }
+
+    @page :left  {
+
+      @bottom-left {
+        content: counter(page);
+      }
+
+    }
+
+    @page :right {
+
+      @bottom-right {
+        content: counter(page);
+      }
+
+    }
+
+    @page title {
+      margin:0;
+      @left-top { content: none; }
+      @top-center { content: none; }
+      @bottom-center { content: none; }
+      @bottom-right { content: none; }
+    }
+
+    .title-page {
+      page: title;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    section.title-page::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vh;
+      height: 12cm;
+      background: #1d655e;
+      z-index: -1;
+      margin:-1in;
+    }
+
+    @page title {
+      margin: 0;
+    }
+
+    .link::after {
+      content: target-counter(attr(href url), page);
+      color:#000;
+      background-color:#fff;
+      border-radius:20pt;
+      width:20pt;
+      text-align:center;
+      display:inline-block;
+    }
+
+    h1 {
+      font-size: 3em;
+      string-set: title attr(data-title) title-full attr(data-title-full) iib-tripDomain attr(data-iib-tripDomain);
+      font-family: 'Cairo', sans-serif;
+      line-height: 1.2;
+    }
+
+    section.tripSection::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vh;
+      height: 12cm;
+      z-index: -1;
+      margin:-1in;
+
+    }
+
+    section.title-page-background::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vh;
+      height: 12cm;
+      background: #1d655e;
+      z-index: -1;
+      margin:-1in;
+    }
+
+    section {
+      break-before: page;
+    }
+
+    section.tripSection {
+      page: section-page;
+    }
+
+    .tripSection h1 {color:#fff;}
+
+    .tripHeader {
+      height: 9.45cm;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+
+    @page section-page:left {
+      @left-top {
+        content: string(title);
+        width: 28mm;
+        height: 10mm;
+        line-height:10mm;
+        transform: rotate(-90deg);
+        transform-origin: top left;
+        position: relative;
+        top: 28mm;
+        color:#fff;
+      }
+    }
+
+    @page section-page:right {
+      @right-top {
+        content: string(title);
+        width: 28mm;
+        height: 10mm;
+        right: 2.5mm;
+        line-height:10mm;
+        transform: rotate(90deg);
+        transform-origin: top right;
+        position: relative;
+        top: 28mm;
+        color:#fff;
+      }
+    }
+
+    @page final-page {
+    margin:0;
+      @left-top { content: none; }
+      @top-center { content: none; }
+      @bottom-center { content: none; }
+      @bottom-right { content: none; }
+      @bottom-left { content: none; }
+    }
+
+    .tripSummary {
+        padding:10pt;
+        border-radius:20pt;
+        margin-top:20pt;
+        margin-bottom:10pt;
+      }
+
+    .final-page {
+      page: final-page;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      height: 100vh;
+      font-size: 1em;
+      break-before: left;
+      padding-bottom: 2cm;
+    }
+  
 </style>
 
 <template id="liquidjsTemplateStyle">
 {% for tripDomain in tripDomains[0] %}
 
-        .pagedjs_margin-left-top[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}']{
-            background: {{ tripDomain.Color }}!important;
-        }
+  :root {
+    --theme-color-{{ tripDomain.DomainAbbreviation }}: {{ tripDomain.Color }};
+  }
+
+  .pagedjs_margin-left-top[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}']{
+    background: {{ tripDomain.Color }}!important;
+  }
 
   .eventDay:not(:first-child)[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {
-      border-top:1pt solid {{ tripDomain.Color }}22;
-    }
-
-  /* Add theme cover photo here */
-  /*
-  div[data-page-number='5'] section.tripSection[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}']::before {
-      background-color: {{ tripDomain.Color }};
-      background: linear-gradient(to bottom, transparent 50%, {{ tripDomain.Color }}), url('');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      color:#fff;
-    }*/
+    border-top:1pt solid {{ tripDomain.Color }}22;
+  }
 
   section.tripSection[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}']::before {
-      background-color: {{ tripDomain.Color }};
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      color:#fff;
-    }
+    background-color: {{ tripDomain.Color }};
+    color:#fff;
+  }
 
   .themeColorLight[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {
     background-color: {{ tripDomain.Color }}22;
@@ -262,26 +253,39 @@
   }
 
   .accommodationColor[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'], .overviewColor[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {fill:{{ tripDomain.Color }};}
-      .polylineMap[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {stroke:{{ tripDomain.Color }};}
-      .acc-icon[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {
-        mask: url(img/house.svg) no-repeat center / contain;
-        -webkit-mask: url(img/house.svg) no-repeat center / contain;
-        width: 0.9em;
-        height: 0.9em;
-        display:inline-block;
-      }
+  .polylineMap[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {stroke:{{ tripDomain.Color }};}
+  .acc-icon[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {
+    mask: url(img/house.svg) no-repeat center / contain;
+    -webkit-mask: url(img/house.svg) no-repeat center / contain;
+    width: 0.9em;
+    height: 0.9em;
+    display:inline-block;
+  }
 
   .acc-icon[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] { background-color: {{ tripDomain.Color }}; }
 
   div[style*='first-iib-tripDomain: "{{ tripDomain.DomainAbbreviation }};'] .pagedjs_margin-left-top, div[style*='first-iib-tripDomain: "{{ tripDomain.DomainAbbreviation }};'] .pagedjs_margin-right-top {
   background-color: {{ tripDomain.Color }} !important;
+
 }
 
 {% endfor %}
+
+{% for row in overview[0] %}
+  {% if row.CoverPhoto %}
+    /* {{ settings.Feature.ImmichUrl }} */
+    /*section.tripSection[data-inner-id='{{ row.InnerId }}']::before {
+      background: linear-gradient(to bottom, transparent 50%, var(--theme-color-{{ row.DomainAbbreviation }})), url('');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }*/
+  {% endif %}
+{% endfor %}
+
 </template>
 
   <template id="liquidjsTemplate">
-
 
     <!-- Cover page -->
     <section class="title-page title-page-background">
@@ -326,7 +330,7 @@
           </div>
           </section>
         {% endunless %}
-            <section class="tripSection" data-iib-tripDomain="{{row.DomainAbbreviation}}">
+            <section class="tripSection" data-iib-tripDomain="{{row.DomainAbbreviation}}" data-inner-id="{{ row.InnerId }}">
 
             <div class="tripHeader themeColorDark" data-iib-tripDomain="{{row.DomainAbbreviation}}">
               <h1 style="margin:0;" data-title="{{ row.OuterId }}" data-title-full="{{ row.OuterId }} {{ row.OverallDestination }}" data-iib-tripDomain="{{row.DomainAbbreviation}}" id="{{ row.InnerId }}">{{ row.OuterId }} {{ row.OverallDestination }}</h1>
@@ -401,7 +405,7 @@
 
       <div class="eventDay" data-iib-tripDomain="{{row.DomainAbbreviation}}">
         {% assign weekday = row.Date | date: "%A" | downcase %}
-        <div style="padding:5pt;"><div style="display:inline-block;margin-bottom:3pt;"><i>{{ translation.trip[weekday] | default: weekday }}</i>&nbsp;<b>{{ row.Date }}</b><br />{{ row.Events }}<br /><div style="page-break-before: avoid;break-inside: avoid;margin-top:3pt;"><a class="themeTextColor" style="text-decoration:none;" target="_blank" href="https://www.google.com/maps/?q={{ row.AccommodationCoordinates }}" data-iib-tripDomain="{{row.DomainAbbreviation}}"><div class="acc-icon" data-iib-tripDomain="{{row.DomainAbbreviation}}"></div> <span class="acc-text">{{ row.Accommodation }} - {{ row.AccommodationCountry }} {{ row.AccommodationCoordinates }} {{ row.AccommodationCoordinateAccuracy }}</span></a></div></div>
+        <div style="padding:5pt;"><div style="display:inline-block;margin-bottom:3pt;"><i style="text-transform: capitalize;">{{ translation.trip[weekday] | default: weekday }}</i>&nbsp;<b>{{ row.Date }}</b><br />{{ row.Events }}<br /><div style="page-break-before: avoid;break-inside: avoid;margin-top:3pt;"><a class="themeTextColor" style="text-decoration:none;" target="_blank" href="https://www.google.com/maps/?q={{ row.AccommodationCoordinates }}" data-iib-tripDomain="{{row.DomainAbbreviation}}"><div class="acc-icon" data-iib-tripDomain="{{row.DomainAbbreviation}}"></div> <span class="acc-text">{{ row.Accommodation }} - {{ row.AccommodationCountry }} {{ row.AccommodationCoordinates }} {{ row.AccommodationCoordinateAccuracy }}</span></a></div></div>
       </div>
 
     {% endfor %}
@@ -570,7 +574,7 @@
       console.log(parameters);
 
       const style = document.createElement('style');
-      style.textContent = await engine.parseAndRender(document.getElementById("liquidjsTemplateStyle").innerHTML, {tripDomains} );
+      style.textContent = await engine.parseAndRender(document.getElementById("liquidjsTemplateStyle").innerHTML, {settings, tripDomains, overview} );
       document.head.appendChild(style);
 
       document.getElementById("liquidjsContent").innerHTML = await engine.parseAndRender(document.getElementById("liquidjsTemplate").innerHTML, parameters );
