@@ -260,6 +260,7 @@
     width: 0.9em;
     height: 0.9em;
     display:inline-block;
+    transform: translateY(2px);
   }
 
   .acc-icon[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] { background-color: {{ tripDomain.Color }}; }
@@ -271,17 +272,20 @@
 
 {% endfor %}
 
-{% for row in overview[0] %}
-  {% if row.CoverPhoto %}
-    /* {{ settings.Feature.ImmichUrl }} */
-    /*section.tripSection[data-inner-id='{{ row.InnerId }}']::before {
-      background: linear-gradient(to bottom, transparent 50%, var(--theme-color-{{ row.DomainAbbreviation }})), url('');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-    }*/
-  {% endif %}
-{% endfor %}
+{% if settings.Feature.ImmichCoverAlbumId %}
+  {% for row in overview[0] %}
+    {% if row.CoverPhoto %}
+
+        .tripSection[data-inner-id='{{ row.InnerId }}']::before {
+          background: linear-gradient(to bottom, transparent 50%, var(--theme-color-{{ row.DomainAbbreviation }})), url('{{ row.CoverPhoto }}');
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+        }
+
+    {% endif %}
+  {% endfor %}
+{% endif %}
 
 </template>
 
@@ -405,7 +409,7 @@
 
       <div class="eventDay" data-iib-tripDomain="{{row.DomainAbbreviation}}">
         {% assign weekday = row.Date | date: "%A" | downcase %}
-        <div style="padding:5pt;"><div style="display:inline-block;margin-bottom:3pt;"><i style="text-transform: capitalize;">{{ translation.trip[weekday] | default: weekday }}</i>&nbsp;<b>{{ row.Date }}</b><br />{{ row.Events }}<br /><div style="page-break-before: avoid;break-inside: avoid;margin-top:3pt;"><a class="themeTextColor" style="text-decoration:none;" target="_blank" href="https://www.google.com/maps/?q={{ row.AccommodationCoordinates }}" data-iib-tripDomain="{{row.DomainAbbreviation}}"><div class="acc-icon" data-iib-tripDomain="{{row.DomainAbbreviation}}"></div> <span class="acc-text">{{ row.Accommodation }} - {{ row.AccommodationCountry }} {{ row.AccommodationCoordinates }} {{ row.AccommodationCoordinateAccuracy }}</span></a></div></div>
+        <div style="padding:5pt;"><div style="display:inline-block;margin-bottom:3pt;"><i style="text-transform: capitalize;">{{ translation.trip[weekday] | default: weekday }}</i>&nbsp;<b>{{ row.Date }}</b><br />{{ row.Events }}<br /><div style="page-break-before: avoid;break-inside: avoid;margin-top:3pt;"><a class="themeTextColor" style="text-decoration:none;" target="_blank" href="https://www.google.com/maps/?q={{ row.AccommodationCoordinates }}" data-iib-tripDomain="{{row.DomainAbbreviation}}"><div class="acc-icon" data-iib-tripDomain="{{row.DomainAbbreviation}}"></div> <span class="acc-text">{{ row.Accommodation }} – {{ row.AccommodationCountry }} – {{ row.AccommodationCoordinates }} {{ row.AccommodationCoordinateAccuracy }}</span></a></div></div>
       </div>
 
     {% endfor %}
@@ -491,7 +495,7 @@
 
         return result;
         } else {return;}
-    }
+      }
 
       const sqlPromise = await initSqlJs({ locateFile: file => `bundle/sqljs/${file}` });
 
@@ -567,6 +571,33 @@
 
       const { Liquid } = await import("./bundle/liquidjs/liquid.browser.min.js");
       let engine = new Liquid();
+
+      /* ##### Get cover photo ##### */
+      if (settings.Feature.ImmichCoverAlbumId) {
+          const coverPhotoAlbum = await fetch(settings.Feature.ImmichApiUrl + 'albums/' + settings.Feature.ImmichCoverAlbumId, { headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': settings.Feature.ImmichApiKey
+                    }});
+          const coverPhotoAlbumJson = await coverPhotoAlbum.json();
+          //console.log(coverPhotoAlbumJson);
+          const immichTransformed = Object.fromEntries(
+            coverPhotoAlbumJson['assets'].map(item => [item.originalPath, item.id])
+          );
+          console.log(immichTransformed);
+          /* ##### Update cover photo link ##### */
+          const replaceCoverPhoto = (data, mapping, immichApiUrl) => {
+              return data.map(entry => {
+                  if (entry.CoverPhoto && mapping[entry.CoverPhoto]) {
+                      entry.CoverPhoto = immichApiUrl + 'assets/' + mapping[entry.CoverPhoto] + '/thumbnail?size=preview';
+                  } else if (entry.CoverPhoto) {
+                    entry.CoverPhoto = null;
+                  }
+                  return entry;
+              });
+          };
+          overview[0] = replaceCoverPhoto(overview[0], immichTransformed, settings.Feature.ImmichApiUrl);
+      }
+      /* ##### End ##### */
 
       const tripDomains = convertSqlToJson(dbInstance, `SELECT * FROM bewx_TripDomains WHERE DomainAbbreviation != 'X';`, 'common_tripDomains');
 
