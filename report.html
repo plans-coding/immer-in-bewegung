@@ -549,7 +549,7 @@
 
       const overview = convertSqlToJson(dbInstance, `
       SELECT *, SUBSTR(InnerId, 1, 1) AS DomainAbbreviation, SUBSTR(DepartureDate, 1, 4) AS Year FROM bewa_Overview
-	  WHERE InnerId IS NOT NULL AND OuterId LIKE '%`+queryParams.oi+`%' AND bewa_Overview.ParticipantGroup LIKE '%`+queryParams.pg+`%'
+	  WHERE InnerId IS NOT NULL AND OuterId LIKE '%`+queryParams.oi+`%' AND bewa_Overview.ParticipantGroup LIKE '%`+queryParams.pg+`%' AND bewa_Overview.InnerId LIKE '%`+queryParams.ii+`%'
       ORDER BY Year DESC, DepartureDate DESC;
       `, "Overview");
 
@@ -557,7 +557,7 @@
       SELECT *, SUBSTR(InnerId, 1, 1) AS DomainAbbreviation, SUBSTR(DepartureDate, 1, 4) AS Year FROM bewb_Events
       LEFT JOIN bewa_Overview USING (InnerId)
 	  LEFT JOIN IIBc_BorderCrossings USING (InnerId)
-	  WHERE bewb_Events.InnerId IS NOT NULL AND bewa_Overview.OuterId LIKE '%`+queryParams.oi+`%' AND bewa_Overview.ParticipantGroup LIKE '%`+queryParams.pg+`%'
+	  WHERE bewb_Events.InnerId IS NOT NULL AND bewa_Overview.OuterId LIKE '%`+queryParams.oi+`%' AND bewa_Overview.ParticipantGroup LIKE '%`+queryParams.pg+`%' AND bewa_Overview.InnerId LIKE '%`+queryParams.ii+`%'
       ORDER BY Year DESC, DepartureDate DESC, Date ASC;
       `, "AllTripData");
 
