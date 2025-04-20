@@ -7,6 +7,7 @@
     "more": "Plus",
     "coordinateTool": "Outil de coordonnées",
     "source": "Base de données source",
+    "report": "Générer le rapport",
     "search": "Rechercher",
     "searchTrip": "Rechercher un voyage",
     "about": "À propos",
@@ -122,5 +123,11 @@
   },
   "update": {
     "message": "Une nouvelle version est disponible"
+  },
+  "report": {
+  "registerOfTrips": "Registre des voyages",
+  "myTripsUntil": "Mes voyages jusqu’au",
+  "generated": "Généré",
+  "startMessage": "Cliquez sur OK pour commencer. Attendez ensuite que la boîte de dialogue d’impression apparaisse. Cela peut prendre plusieurs minutes."
   }
 }

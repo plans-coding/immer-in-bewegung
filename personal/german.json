@@ -7,6 +7,7 @@
     "more": "Mehr",
     "coordinateTool": "Koordinatenwerkzeug",
     "source": "Quelldatenbank",
+    "report": "Bericht erstellen",
     "search": "Suchen",
     "searchTrip": "Reise suchen",
     "about": "Über",
@@ -122,5 +123,11 @@
   },
   "update": {
     "message": "Eine neue Version ist verfügbar"
+  },
+  "report": {
+  "registerOfTrips": "Reiseregis­ter",
+  "myTripsUntil": "Meine Reisen bis",
+  "generated": "Erstellt",
+  "startMessage": "Klicken Sie auf OK, um zu starten. Warten Sie anschließend, bis das Druckdialogfeld angezeigt wird. Dies kann mehrere Minuten dauern."
   }
 }

@@ -127,6 +127,7 @@
   "report": {
     "registerOfTrips": "Reseregister",
     "myTripsUntil": "Mina resor fram till",
-    "generated": "Genererad"
+    "generated": "Genererad",
+    "startMessage": "Klicka på OK för att starta. Vänta sedan tills dialogrutan för utskrift visas. Detta kan ta flera minuter."
   }
 }
