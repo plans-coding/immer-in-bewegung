@@ -33,6 +33,8 @@
     .immer-in-font-uc {font-family: 'Cairo', sans-serif;text-transform: uppercase;}
     .bewegung-font-uc {font-family: 'Righteous', sans-serif;text-transform: uppercase;}
 
+    /* Standard page margin 1 inch (2.54 cm) */
+
     @page {
       size: A4;
 
@@ -117,19 +119,6 @@
       height: 12cm;
       z-index: -1;
       margin:-1in;
-
-    }
-
-    section.title-page-background::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vh;
-      height: 12cm;
-      background: #1d655e;
-      z-index: -1;
-      margin:-1in;
     }
 
     section {
@@ -151,6 +140,10 @@
 
 
     @page section-page:left {
+
+      margin-left: 2.04cm;
+      margin-right: 3.04cm;
+
       @left-top {
         content: string(title);
         width: 28mm;
@@ -164,12 +157,20 @@
       }
     }
 
+    .pagedjs_right_page section.tripSection::before {
+      margin-left:-3.04cm!important;
+    }
+
     @page section-page:right {
+
+      margin-left: 3.04cm;
+      margin-right: 2.04cm;
+
       @right-top {
         content: string(title);
         width: 28mm;
         height: 10mm;
-        right: 2.5mm;
+        right: 7.6mm;
         line-height:10mm;
         transform: rotate(90deg);
         transform-origin: top right;
@@ -312,12 +313,12 @@
       {% for row in overview[0] %}
         {% if row.InnerId != currentTrip %}
 
-          <div style="display:flex;align-items: center;"><div style="width:2cm;">
+          <div style="display:flex;align-items: center;"><div style="width:1.5cm;font-size:1.2em;">
           {% if row.Year != currentYear %}
             <b>{{ row.Year }}</b>
             {% assign currentYear = row.Year %}
           {% endif %}
-          </div><div><a class="link" href="#{{ row.InnerId }}" data-iib-tripDomain="{{row.DomainAbbreviation}}"><div style="width:3cm;display:inline-block;"><div class="themeBgColor" data-iib-tripDomain="{{row.DomainAbbreviation}}">{{ row.OuterId }}</div></div>&nbsp;<b>{{ row.OverallDestination }}</b>&nbsp;</a></div></div>
+          </div><div><a class="link" href="#{{ row.InnerId }}" data-iib-tripDomain="{{row.DomainAbbreviation}}"><div style="width:3cm;display:inline-block;text-align:center;"><div class="themeBgColor" data-iib-tripDomain="{{row.DomainAbbreviation}}">{{ row.OuterId }}</div></div>&nbsp;<b>{{ row.OverallDestination }}</b>&nbsp;</a></div></div>
 
         {% assign currentTrip = row.InnerId %}
         {% endif %}
@@ -573,6 +574,7 @@
       let engine = new Liquid();
 
       /* ##### Get cover photo ##### */
+      console.log(settings.Feature.ImmichApiKey);
       if (settings.Feature.ImmichCoverAlbumId) {
           const coverPhotoAlbum = await fetch(settings.Feature.ImmichApiUrl + 'albums/' + settings.Feature.ImmichCoverAlbumId, { headers: {
                         'Content-Type': 'application/json',
