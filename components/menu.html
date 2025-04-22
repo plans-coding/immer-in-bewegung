@@ -1,3 +1,70 @@
+<!-- Modal: Gererate Report -->
+<div class="modal fade" id="generateReportModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">{{ translation.menu.report | default: 'Generate Report' }}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <div class="mb-3">
+            <label for="grInputTitle" class="col-sm-12 col-form-label">{{ translation.report.titleText | default: 'Title' }}</label>
+            <div class="col-sm-12">
+            <input type="text" class="form-control" id="grInputTitle" value="{{ translation.report.myTripsUntil | default: 'My trips until' }} {{ 'now' | date: '%Y' }}">
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="grInputInfo" class="col-sm-12 col-form-label">{{ translation.report.backsideText | default: 'Backside' }}</label>
+            <div class="col-sm-12">
+            <input type="text" class="form-control" id="grInputInfo" value="{{ translation.report.generated | default: 'Generated' }} {{ 'now' | date: '%Y-%m-%d' }}">
+            </div>
+        </div>
+
+<hr />
+        <div><i>{{ translation.report.filterInfo | default: 'Leave the following fields empty if you want to generate a report with all trips included.' }}</i></div>
+        <div class="mb-3 row">
+            <label for="grInputOI" class="col-sm-9 col-form-label text-end"><b>OuterId</b> {{ translation.report.contains | default: 'contains' }}</label>
+            <div class="col-sm-3">
+            <input type="text" class="form-control" id="grInputOI">
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="grInputII" class="col-sm-9 col-form-label text-end"><b>InnerId</b> {{ translation.report.contains | default: 'contains' }}</label>
+            <div class="col-sm-3">
+            <input type="text" class="form-control" id="grInputII">
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="grInputPG" class="col-sm-9 col-form-label text-end"><b>ParticipantGroup</b> {{ translation.report.contains | default: 'contains' }}</label>
+            <div class="col-sm-3">
+            <input type="text" class="form-control" id="grInputPG">
+            </div>
+        </div>
+
+        <!--
+        <hr />
+        <div><i>{{ translation.report.startMessage | default: "Click OK to start. Then wait until the print dialouge is shown. This step may take minutes." }}</i></div>
+        -->
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">{{ translation.menu.close | default: 'Close' }}</button>
+        <button type="button" id="generateReportSubmit" class="btn btn-dark" data-bs-dismiss="modal"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
+  <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
+</svg> {{ translation.menu.report | default: 'Generate Report' }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Menu content -->
 <div class="container-fluid">
     <a href="?p=overview" style="text-decoration:none;"><div class="navbar-brand">
           <img src="img/frog.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
@@ -31,10 +98,7 @@
   <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
   <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
 </svg></a></li>
-            <li><a class="dropdown-item" target="_blank" href="report.html?t={{ translation.report.myTripsUntil | default: 'My trips until' }} {{ 'now' | date: '%Y' }}&g={{ translation.report.generated | default: 'Generated' }} {{ 'now' | date: '%Y-%m-%d' }}&oi=&pg=&ii=">{{ translation.menu.report | default: 'Generate Report' }} <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
-  <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
-</svg></a></li>
+            <li><a class="dropdown-item" style="cursor:pointer;" target="_blank" data-bs-toggle="modal" data-bs-target="#generateReportModal" data-old-href="report.html?t={{ translation.report.myTripsUntil | default: 'My trips until' }} {{ 'now' | date: '%Y' }}&g={{ translation.report.generated | default: 'Generated' }} {{ 'now' | date: '%Y-%m-%d' }}&oi=&pg=&ii=">{{ translation.menu.report | default: 'Generate Report' }}</a></li>
             <li><a class="dropdown-item menuItemSelectable" href="?p=source">{{ translation.menu.source | default: 'Source Database' }}</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item menuItemSelectable" href="?p=about">{{ translation.about.title | default: 'About' }}</a></li>
@@ -92,10 +156,7 @@
 </svg></a>
                     </li>
 
-                    <li class="nav-item"><a class="nav-link p-2 rounded"  target="_blank" href="report.html?t={{ translation.report.myTripsUntil | default: 'My trips until' }} {{ 'now' | date: '%Y' }}&g={{ translation.report.generated | default: 'Generated' }} {{ 'now' | date: '%Y-%m-%d' }}&oi=&pg=&ii=">{{ translation.menu.report | default: 'Generate Report' }} <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
-  <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
-</svg></a></li>
+                    <li class="nav-item"><a class="nav-link p-2 rounded" style="cursor:pointer;" target="_blank" data-bs-toggle="modal" data-bs-target="#generateReportModal" data-old-href="report.html?t={{ translation.report.myTripsUntil | default: 'My trips until' }} {{ 'now' | date: '%Y' }}&g={{ translation.report.generated | default: 'Generated' }} {{ 'now' | date: '%Y-%m-%d' }}&oi=&pg=&ii=">{{ translation.menu.report | default: 'Generate Report' }}</a></li>
 
                     <li class="nav-item">
                         <a class="nav-link menuItemSelectable menuItemActively p-2 rounded" href="?p=source">{{ translation.menu.source | default: 'Source Database' }}</a>
