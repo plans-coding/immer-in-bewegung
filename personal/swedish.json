@@ -125,6 +125,10 @@
     "message": "En ny version finns tillgänglig"
   },
   "report": {
+    "filterInfo": "Lämna följande fält tomma om du vill skapa en rapport som inkluderar alla resor.",
+    "contains": "innehåller",
+    "titleText": "Titel",
+    "backsideText": "Baksida",
     "registerOfTrips": "Reseregister",
     "myTripsUntil": "Mina resor fram till",
     "generated": "Genererad",
