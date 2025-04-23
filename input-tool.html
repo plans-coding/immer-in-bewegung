@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+  <title>Input Tool</title>
+
+  <link rel="shortcut icon" href="img/frog.svg" />
+
+  <!-- Bootstrap -->
+  <link href="bundle/bootstrap/bootstrap.5.3.3.min.css" rel="stylesheet">
+
+  <style>
+
+    @font-face {
+        font-family: 'Cairo';
+        src: url('bundle/fonts/Cairo-VariableFont_slnt,wght.ttf') format('truetype');
+    }
+
+    @font-face {
+        font-family: 'Righteous';
+        src: url('bundle/fonts/Righteous-Regular.ttf') format('truetype');
+    }
+
+    body {font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";}
+
+    .immer-in-font-uc {font-family: 'Cairo', sans-serif;text-transform: uppercase;}
+    .bewegung-font-uc {font-family: 'Righteous', sans-serif;text-transform: uppercase;}
+
+    body {background-color:#f8fafd;}
+
+</style>
+</head>
+<body>
+
+  <div class="container">
+
+    <h1 class="text-center mb-3 mt-3">Trip creation template</h1>
+
+    <div class="row">
+      <div class="border rounded row p-1 mb-3 bg-warning-subtle">
+        <div class="col mb-3">
+          <label for="formII" class="form-label">InnerId</label><br />
+          <input type="text" class="form-control" id="formII" placeholder="X1" oninput="updateSQL()">
+        </div>
+
+        <div class="col mb-3">
+          <label for="formOI" class="form-label">OuterId</label><br />
+          <input type="text" class="form-control" id="formOI" placeholder="A-1" oninput="updateSQL()">
+        </div>
+
+        <div class="col mb-3">
+          <label for="formCN" class="form-label"><span onclick="navigator.clipboard.writeText(document.getElementById('formCN').value)" style="cursor:pointer;color:blue;">Get current</span> (remember to add one afterwards)</label><br />
+          <textarea id="formCN" class="form-control" disabled>
+-- Get current highest InnerId for U
+SELECT InnerId
+FROM bewa_Overview
+WHERE InnerId LIKE 'U%'
+ORDER BY SUBSTR(InnerId, 2) + 0
+DESC LIMIT 1;
+-- Get current highest OuterId for P
+SELECT OuterId
+FROM bewa_Overview
+WHERE OuterId LIKE 'P-%'
+  AND OuterId NOT LIKE 'P-%-%'  -- optional: avoid 'P-SE-' and similar
+ORDER BY CAST(SUBSTR(OuterId, LENGTH('P-') + 1) AS INTEGER) DESC
+LIMIT 1;</textarea>
+        </div>
+
+      </div>
+
+    </div>
+    <div class="row">
+
+      <div class="col mb-3">
+        <label for="formOD" class="form-label">OverallDestination</label><br />
+        <input type="text" class="form-control" id="formOD" placeholder="String" oninput="updateSQL()">
+      </div>
+
+      <div class="col mb-3">
+        <label for="formTD" class="form-label">TripDescription</label><br />
+        <input type="text" class="form-control" id="formTD" placeholder="String" oninput="updateSQL()">
+      </div>
+
+      <div class="col mb-3">
+        <label for="formPG" class="form-label">ParticipantGroup</label><br />
+        <input type="text" class="form-control" id="formPG" placeholder="Word" oninput="updateSQL()">
+      </div>
+
+      <div class="col mb-3">
+        <label for="formTP" class="form-label">Events All Rows: TravelParticipants</label><br />
+        <input type="text" class="form-control" id="formTP" placeholder="Name A, Name B" oninput="updateSQL()">
+      </div>
+
+    </div>
+
+    <div class="row">
+
+      <div class="col mb-3">
+        <label for="formDD" class="form-label">DepartureDate</label><br />
+        <input type="date" class="form-control" id="formDD" placeholder="YYYY-MM-DD" oninput="updateSQL()">
+      </div>
+
+      <div class="col mb-3">
+        <label for="formRD" class="form-label">ReturnDate</label><br />
+        <input type="date" class="form-control" id="formRD" placeholder="YYYY-MM-DD" oninput="updateSQL()">
+      </div>
+
+      <div class="col mb-3">
+        <label for="formMP" class="form-label">MapPins</label><br />
+        <input type="text" class="form-control" id="formMP" placeholder="Add after creation" disabled>
+      </div>
+
+      <div class="col mb-3">
+        <label for="formPS" class="form-label">PhotoStarttime</label><br />
+        <input type="text" class="form-control" id="formPS" placeholder="Add after creation" disabled>
+      </div>
+
+      <div class="col mb-3">
+        <label for="formPE" class="form-label">PhotoEndtime</label><br />
+        <input type="text" class="form-control" id="formPE" placeholder="Add after creation" disabled>
+      </div>
+
+    </div>
+
+    <div class="text-end"><button class="btn btn-dark mb-3" onclick="navigator.clipboard.writeText(document.getElementById('sqlOutput').value)">Copy SQL code</button></div>
+    <div><textarea class="form-control" id="sqlOutput" style="width:100%;height:100pt;" disabled></textarea></div>
+
+    <div class="p-2 text-center"><img src="img/frog.svg" style="height:30pt;" /></div>
+
+  </div>
+
+  <script>
+
+    function generateDateRows(startDate, endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      const dates = [];
+
+      // Loop from start date to end date
+      while (start <= end) {
+        const year = start.getFullYear();
+        const month = String(start.getMonth() + 1).padStart(2, '0');
+        const day = String(start.getDate()).padStart(2, '0');
+        dates.push(`${year}-${month}-${day}`);
+
+        // Move to next day
+        start.setDate(start.getDate() + 1);
+      }
+
+      return dates;
+    }
+
+    function updateSQL() {
+      document.getElementById('sqlOutput').value =
+      `-- Create row in bewa_Overview
+      INSERT INTO bewa_Overview (InnerId, ParticipantGroup, OuterId, OverallDestination, DepartureDate, ReturnDate, TravelDescription)
+      VALUES ('` + document.getElementById('formII').value +`', '`+
+      document.getElementById('formPG').value +`', '`+
+      document.getElementById('formOI').value +`', '`+
+      document.getElementById('formOD').value +`', '`+
+      document.getElementById('formDD').value +`', '`+
+      document.getElementById('formRD').value +`', '`+
+      document.getElementById('formTD').value + `') WHERE NOT EXISTS (
+        SELECT 1 FROM bewa_Overview WHERE InnerId = '` + document.getElementById('formII').value +`' AND OuterId = '` + document.getElementById('formOI').value +`'
+      );\n` +
+      `-- Create rows in bewb_Events`;
+
+      if (document.getElementById('formDD').value && document.getElementById('formRD').value) {
+        const dateArray = generateDateRows(document.getElementById('formDD').value, document.getElementById('formRD').value);
+        document.getElementById('sqlOutput').value += ``;
+        dateArray.forEach(date => {
+          document.getElementById('sqlOutput').value += `\nINSERT INTO bewb_Events (InnerId, Date, TravelParticipants) VALUES ('` + document.getElementById('formII').value + `', '` + date + `', '` + document.getElementById('formTP').value + `');`;
+        });
+      }
+
+       //document.getElementById('formTP').value;
+    }
+
+  </script>
+
+</body>
+</html>
