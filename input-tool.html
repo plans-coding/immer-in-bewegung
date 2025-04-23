@@ -9,6 +9,7 @@
 
   <!-- Bootstrap -->
   <link href="bundle/bootstrap/bootstrap.5.3.3.min.css" rel="stylesheet">
+  <script src="bundle/sqljs/sql-wasm.js"></script>
 
   <style>
 
@@ -22,6 +23,11 @@
         src: url('bundle/fonts/Righteous-Regular.ttf') format('truetype');
     }
 
+    h1 {
+      font-weight:bold;
+      font-family: 'Cairo', sans-serif;
+    }
+
     body {font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";}
 
     .immer-in-font-uc {font-family: 'Cairo', sans-serif;text-transform: uppercase;}
@@ -30,6 +36,7 @@
     body {background-color:#f8fafd;}
 
 </style>
+
 </head>
 <body>
 
@@ -37,18 +44,26 @@
 
     <h1 class="text-center mb-3 mt-3">Trip creation template</h1>
 
-    <div class="row">
-      <div class="border rounded row p-1 mb-3 bg-warning-subtle">
+        <div class="row">
+      <div class="border rounded row p-1 mb-3 bg-danger-subtle">
         <div class="col mb-3">
-          <label for="formII" class="form-label">InnerId</label><br />
-          <input type="text" class="form-control" id="formII" placeholder="X1" oninput="updateSQL()">
+          <select class="form-control mt-2 mb-2" id="selectTripDomain" onchange="updateMaxII(this.value)">
+            <option value="X">Choose trip domain</option>
+          </select>
+          <label for="currentMaxII" class="form-label">Current Max(InnerId)</label><br />
+          <input type="text" class="form-control" id="currentMaxII" placeholder="" disabled>
+
         </div>
 
         <div class="col mb-3">
-          <label for="formOI" class="form-label">OuterId</label><br />
-          <input type="text" class="form-control" id="formOI" placeholder="A-1" oninput="updateSQL()">
+          <select class="form-control mt-2 mb-2" id="selectOuterIdPrefixes" onchange="updateMaxOI(this.value)">
+            <option value="X">Choose numbering format</option>
+          </select>
+          <label for="currentMaxOI" class="form-label">Current Max(OuterId)</label><br />
+          <input type="text" class="form-control" id="currentMaxOI" disabled>
         </div>
 
+        <!--
         <div class="col mb-3">
           <label for="formCN" class="form-label"><span onclick="navigator.clipboard.writeText(document.getElementById('formCN').value)" style="cursor:pointer;color:blue;">Get current</span> (remember to add one afterwards)</label><br />
           <textarea id="formCN" class="form-control" disabled>
@@ -65,11 +80,32 @@ WHERE OuterId LIKE 'P-%'
   AND OuterId NOT LIKE 'P-%-%'  -- optional: avoid 'P-SE-' and similar
 ORDER BY CAST(SUBSTR(OuterId, LENGTH('P-') + 1) AS INTEGER) DESC
 LIMIT 1;</textarea>
-        </div>
+        </div>-->
 
       </div>
 
     </div>
+
+    <div class="row">
+      <div class="border rounded row p-1 mb-3 bg-warning-subtle">
+
+        <div class="col mb-3">
+          <br />
+          <button class="btn btn-dark" onclick="copyPlusOne()">Copy above numbers +1 > </button>
+        </div>
+
+        <div class="col mb-3">
+          <label for="formII" class="form-label">New InnerId</label><br />
+          <input type="text" class="form-control" id="formII" placeholder="X1" oninput="updateSQL()">
+        </div>
+
+        <div class="col mb-3">
+          <label for="formOI" class="form-label">New OuterId</label><br />
+          <input type="text" class="form-control" id="formOI" placeholder="A-1" oninput="updateSQL()">
+        </div>
+      </div>
+    </div>
+
     <div class="row">
 
       <div class="col mb-3">
@@ -83,12 +119,15 @@ LIMIT 1;</textarea>
       </div>
 
       <div class="col mb-3">
-        <label for="formPG" class="form-label">ParticipantGroup</label><br />
-        <input type="text" class="form-control" id="formPG" placeholder="Word" oninput="updateSQL()">
+        <label for="selectParticipantGroup" class="form-label">ParticipantGroup</label><br />
+          <select class="form-control" id="selectParticipantGroup" onchange="updateSQL()">
+            <option value="X">Choose participant group</option>
+          </select>
+<!--         <input type="text" class="form-control" id="formPG" placeholder="Word" oninput="updateSQL()"> -->
       </div>
 
       <div class="col mb-3">
-        <label for="formTP" class="form-label">Events All Rows: TravelParticipants</label><br />
+        <label for="formTP" class="form-label"><b>Events [All Rows]:</b> TravelParticipants</label><br />
         <input type="text" class="form-control" id="formTP" placeholder="Name A, Name B" oninput="updateSQL()">
       </div>
 
@@ -126,9 +165,209 @@ LIMIT 1;</textarea>
     <div class="text-end"><button class="btn btn-dark mb-3" onclick="navigator.clipboard.writeText(document.getElementById('sqlOutput').value)">Copy SQL code</button></div>
     <div><textarea class="form-control" id="sqlOutput" style="width:100%;height:100pt;" disabled></textarea></div>
 
-    <div class="p-2 text-center"><img src="img/frog.svg" style="height:30pt;" /></div>
+    <div class="p-2 text-center mt-3 mb-3"><img src="img/frog.svg" style="height:30pt;" /></div>
 
   </div>
+
+    <script type="module">
+
+        function convertSqlToJson(db, sqlQuery, sqlQueryName) {
+          if (db) {
+
+              const sqlResult = db.exec(sqlQuery);
+              //console.log("SQL Result:", sqlResult);
+              // Loop through each result (columns and values for each query)
+              const jsonData = sqlResult.map(result => {
+                  const columnNames = result.columns;
+                  return result.values.map(row => {
+                      let obj = {};
+                      columnNames.forEach((col, index) => {
+                          obj[col] = row[index];
+                      });
+                      return obj;
+                  });
+              });
+              console.log("JSON Data for "+sqlQueryName, jsonData);
+              return jsonData;
+
+          } else {
+              return;
+          }
+      }
+
+      function getQueryParams() {
+          const params = new URLSearchParams(window.location.search);
+          let queryObject = {};
+          for (const [key, value] of params.entries()) {
+              queryObject[key] = value;
+          }
+          return queryObject;
+      }
+
+      function transformData(input) {
+          if (input) {
+        let result = {};
+
+        input[0].forEach(item => {
+            const { AttributeGroup, Attribute, Value } = item;
+
+            if (AttributeGroup === "Pluigin") {
+                // Fix typo: "Pluigin" -> "Plugin"
+                if (!result["Plugins"]) result["Plugins"] = {};
+                result["Plugins"][Attribute] = JSON.parse(Value);
+            } else if (AttributeGroup === "Plugin") {
+                if (!result["Plugins"]) result["Plugins"] = {};
+                result["Plugins"][Attribute] = JSON.parse(Value);
+            } else {
+                if (!result[AttributeGroup]) result[AttributeGroup] = {};
+                result[AttributeGroup][Attribute] = Value;
+            }
+        });
+
+        return result;
+        } else {return;}
+      }
+
+      const sqlPromise = await initSqlJs({ locateFile: file => `bundle/sqljs/${file}` });
+
+      let dbContentBind = localStorage.getItem('dbContentServer');
+      const binaryData = new Uint8Array(atob(dbContentBind).split('').map(char => char.charCodeAt(0)));
+      const response = { arrayBuffer: async () => binaryData.buffer };
+
+      const arrayBuffer = await response.arrayBuffer();
+      const dbInstance = new sqlPromise.Database(new Uint8Array(arrayBuffer));
+      console.log("Database loaded.");
+      //console.log(dbInstance);
+
+      let settings;
+      let settingsFile;
+      if (localStorage.getItem('dbSource') === "settings.json" || localStorage.getItem('dbSource') === null ) {
+
+          settingsFile = await fetch('personal/settings.json');
+          if (!settingsFile.ok) {
+            console.log('Settings file not found and no binded database.');
+            let queryParams = getQueryParams();
+            if ( queryParams.p != 'source' ) { window.location = 'index.html?p=source&m=no_settings_file'; }
+
+          } else {
+            settings = await settingsFile.json();
+            //console.log(settings);
+            console.log("Using database specified in settings.json: " + settings.Base.SqliteFile);
+          }
+
+      } else {
+          console.log('Reading settings from database file in local storage.');
+      }
+
+      settings = transformData(convertSqlToJson(dbInstance, 'SELECT * FROM bewxx_Settings', 'settings'));
+      console.log(settings);
+
+
+      let translation;
+
+      if (settings.Base.LanguageFile != "english.json") {
+        try {
+            const translationFile = await fetch("personal/"+settings.Base?.LanguageFile);
+            translation = await translationFile.json();
+            console.log(translation);
+        } catch (error) {
+            console.log(`Langugage file error: ${error.message}`);
+        }
+      } else { translation = {}; }
+
+      /*const queryParams = getQueryParams();
+      console.log(queryParams);*/
+
+      const tripDomains = convertSqlToJson(dbInstance, `SELECT
+                    *
+                FROM
+                    bewx_TripDomains
+                WHERE
+                    DomainAbbreviation != 'X';`, "TripDomains");
+
+      const outerIds = convertSqlToJson(dbInstance, `SELECT
+              OuterId
+          FROM
+              bewa_Overview
+          WHERE
+              OuterId IS NOT NULL;`, "OuterIdPrefixes");
+      const outerIdPrefixes = outerIds[0].map(str => str.OuterId.replace(/[0-9]/g, ''));
+      const uniquePrefixes = [...new Set(outerIdPrefixes)];
+      console.log(uniquePrefixes);
+
+      const participantGroups = convertSqlToJson(dbInstance, `SELECT
+          ParticipantGroup
+      FROM
+          bewx_ParticipantGroups;`, "ParticipantGroups");
+
+      // Fill selection with trip domains
+      const selectTripDomain = document.getElementById('selectTripDomain');
+
+      tripDomains[0].forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.DomainAbbreviation;
+        option.text = item.DomainDescription;
+        selectTripDomain.add(option);
+      });
+
+      // Fill selection with outer id prefixes
+      const selectNumberPrefix = document.getElementById('selectOuterIdPrefixes');
+
+      uniquePrefixes.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item;
+        option.text = item;
+        selectNumberPrefix.add(option);
+      });
+
+      // Fill selection with participant groups
+      const selectParticipantGroups = document.getElementById('selectParticipantGroup');
+      participantGroups[0].forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.ParticipantGroup;
+        option.text = item.ParticipantGroup;
+        selectParticipantGroups.add(option);
+      });
+
+      function updateMaxII(domain) {
+        if (domain != "X" ) {
+          const sql = `
+            SELECT InnerId
+            FROM bewa_Overview
+            WHERE InnerId LIKE '${domain}%'
+            ORDER BY SUBSTR(InnerId, 2) + 0 DESC
+            LIMIT 1;
+          `;
+          const maxII = convertSqlToJson(dbInstance, sql, "maxII");
+          document.getElementById('currentMaxII').value = maxII[0][0].InnerId;
+        } else { document.getElementById('currentMaxII').value = ""; }
+      }
+
+      function updateMaxOI(prefix) {
+        if (prefix != "X" ) {
+          const sql = `
+            SELECT OuterId
+            FROM bewa_Overview
+            WHERE OuterId GLOB '${prefix}[0-9]*'
+            ORDER BY CAST(substr(OuterId, length('${prefix}') + 1) AS INTEGER) DESC
+            LIMIT 1;
+          `;
+          const maxOI = convertSqlToJson(dbInstance, sql, "maxOI");
+          document.getElementById('currentMaxOI').value = maxOI[0][0].OuterId;
+        } else { document.getElementById('currentMaxOI').value = ""; }
+      }
+
+      function copyPlusOne() {
+        document.getElementById('formII').value = document.getElementById('currentMaxII').value.replace(/[0-9]/g, '') + parseInt(parseInt(document.getElementById('currentMaxII').value.replace(/\D/g, ''), 10) + 1);
+        document.getElementById('formOI').value = document.getElementById('currentMaxOI').value.replace(/[0-9]/g, '') + parseInt(parseInt(document.getElementById('currentMaxOI').value.replace(/\D/g, ''), 10) + 1);
+      }
+
+      window.updateMaxII = updateMaxII;
+      window.updateMaxOI = updateMaxOI;
+      window.convertSqlToJson = convertSqlToJson;
+      window.copyPlusOne = copyPlusOne;
+
+      </script>
 
   <script>
 
@@ -156,7 +395,7 @@ LIMIT 1;</textarea>
       `-- Create row in bewa_Overview
       INSERT INTO bewa_Overview (InnerId, ParticipantGroup, OuterId, OverallDestination, DepartureDate, ReturnDate, TravelDescription)
       VALUES ('` + document.getElementById('formII').value +`', '`+
-      document.getElementById('formPG').value +`', '`+
+      document.getElementById('selectParticipantGroup').value +`', '`+
       document.getElementById('formOI').value +`', '`+
       document.getElementById('formOD').value +`', '`+
       document.getElementById('formDD').value +`', '`+
@@ -174,8 +413,8 @@ LIMIT 1;</textarea>
         });
       }
 
-       //document.getElementById('formTP').value;
     }
+
 
   </script>
 
