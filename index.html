@@ -104,6 +104,48 @@
                 #iib-foot, .prevnext {display:none;}
         }
 
+
+        /* Loader css code */
+
+        .gradient-bar {
+            height: 5pt;
+            width: 100%;
+            background: linear-gradient(90deg, #1d655e, #1d655ecc, #82ec3e, #1d655e);
+            background-size: 500%;
+            animation: moveGradient 7s linear infinite;
+        }
+
+        @keyframes moveGradient {
+            0% { background-position: 0 0; }
+            0% { background-position: 500% 0; }
+        }
+
+        .delayed-pulse {
+            opacity: 0;
+            animation: showImage 2s 3s forwards, pulse 1s 2s infinite;
+        }
+
+        @keyframes showImage {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
     </style>
 
 
@@ -130,11 +172,15 @@
   <body>
 
         <template id="loader">
-            <div class="loader"></div>
+            <!-- <div class="loader"></div> -->
+            <div class="gradient-bar"></div>
+            <div class="text-center" style="margin-top:50pt;"><img src="img/frog.svg" style="width:233px;height:200px;" class="delayed-pulse" /></div>
         </template>
+
         <template id="liquidjsTemplateMenu">
             {% include 'components/menu.html' %}
         </template>
+
         <template id="liquidjsTemplateContent">
             {% if not queryParams.p or queryParams.p == '' or queryParams.p == 'overview' %}
                 {% include 'overview.html' %}
@@ -167,7 +213,11 @@
                     </nav>
 
                     <main style="height:100%;" id="liquidjsContent">
-                        <div id=""><div class="loader"></div></div>
+                        <div>
+                            <!--<div class="loader"></div>-->
+                            <div class="gradient-bar"></div>
+                            <div class="text-center" style="margin-top:50pt;"><img src="img/frog.svg" style="width:233px;height:200px;" class="delayed-pulse" /></div>
+                        </div>
                     </main>
 
                 </div>
