@@ -33,21 +33,34 @@
 
     body {font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";}
 
-    .immer-in-font-uc {font-family: 'Cairo', sans-serif;text-transform: uppercase;}
-    .bewegung-font-uc {font-family: 'Righteous', sans-serif;text-transform: uppercase;}
+    .immer-in-font-uc {font-family: 'Cairo', sans-serif;text-transform: uppercase;font-size:1.2em;}
+    .bewegung-font-uc {font-family: 'Righteous', sans-serif;text-transform: uppercase;font-size:1.2em}
 
     body {background-color:#f8fafd;}
+
+    a {text-decoration:none;color:#1d655e;}
+
+    .tool-button {background-color:#fff;border-radius:20pt;padding:0pt 5pt 0pt 5pt;}
 
 </style>
 
 </head>
 <body>
 
+  <div style="padding-left:10pt;padding-bottom:2pt;background-color:#1d655e;color:#fff;" class="align-items-center">
+<!--       <img src="img/frog.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top"> -->
+      <span class="immer-in-font-uc">II</span><span class="bewegung-font-uc">B&nbsp;Toolbox</span>&nbsp;&nbsp;&nbsp;
+      <a href="coordinate-tool.html"><button class="btn border" style="background-color:#1d655e;color:#fff;">Coordinate Tool</button></a>&nbsp;&nbsp;
+      <button class="btn border" style="background-color:#fff;color:#1d655e;">Input Tool</button>
+  </div>
+
   <div class="container">
 
-    <h1 class="text-center mb-3 mt-3">Trip creation template</h1>
 
-        <div class="row rounded p-1 mb-3 text-center bg-warning-subtle" style="border: 3pt solid gold;">
+
+     <h1 class="text-center mb-3 mt-3">Generate trip creation code</h1>
+
+        <div class="row rounded p-1 mt-3 mb-3 text-center bg-warning-subtle" style="border: 3pt solid gold;">
         <div class="col">
           <select class="form-control mt-2 mb-2 text-center" id="selectTripDomain" onchange="updateMaxII(this.value)">
             <option value="X">Choose trip domain</option>
@@ -89,7 +102,7 @@ LIMIT 1;</textarea>
 
     <div class="row mb-3 rounded p-2 pb-3 text-center align-items-center" style="background-color:rgb(29,101,94,0.2);">
 
-        <div class="col text-center">
+        <div class="col text-center"><br />
           <button class="btn" onclick="copyPlusOne()" style="background-color:#1d655e;color:#fff;">Copy numbers from above +1 &#8608; </button>
         </div>
 
@@ -161,7 +174,7 @@ LIMIT 1;</textarea>
 
     </div>
 
-    <div class="text-end"><button class="btn btn-dark mb-3" onclick="navigator.clipboard.writeText(document.getElementById('sqlOutput').value)">Copy SQL code</button></div>
+    <div class="text-end"><button class="btn btn-dark mb-3" onclick="navigator.clipboard.writeText(document.getElementById('sqlOutput').value)">Copy SQLite code</button></div>
     <div><textarea class="form-control" id="sqlOutput" style="width:100%;height:100pt;" disabled></textarea></div>
 
     <div class="p-2 text-center mt-3 mb-3"><img src="img/frog.svg" style="height:30pt;" /></div>
