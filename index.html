@@ -107,6 +107,12 @@
 
         /* Loader css code */
 
+        .gradient-bar-inactive {
+            height: 5pt;
+            width: 100%;
+            background: linear-gradient(90deg, #1d655e, #1d655ecc, #82ec3e, #1d655e);
+        }
+
         .gradient-bar {
             height: 5pt;
             width: 100%;
@@ -173,8 +179,8 @@
 
         <template id="loader">
             <!-- <div class="loader"></div> -->
-            <div class="gradient-bar"></div>
-            <div class="text-center" style="margin-top:50pt;"><img src="img/frog.svg" style="width:233px;height:200px;" class="delayed-pulse" /></div>
+             <!-- <div class="gradient-bar"></div> -->
+            <div class="text-center" style="margin-top:50pt;"><img src="img/frog.svg" style="width:233px;height:233px;" class="delayed-pulse" /></div>
         </template>
 
         <template id="liquidjsTemplateMenu">
@@ -208,6 +214,7 @@
             <div class="container-fluid vh-100 d-flex flex-column p-0">
                 <div class="wrapper d-flex flex-column flex-grow-1">
 
+                    <div class="gradient-bar-inactive"></div>
                     <nav class="navbar navbar-expand-lg" id="liquidjsMenu">
 
                     </nav>
@@ -216,7 +223,7 @@
                         <div>
                             <!--<div class="loader"></div>-->
                             <div class="gradient-bar"></div>
-                            <div class="text-center" style="margin-top:50pt;"><img src="img/frog.svg" style="width:233px;height:200px;" class="delayed-pulse" /></div>
+                            <div class="text-center" style="margin-top:50pt;"><img src="img/frog.svg" style="width:233px;height:233px;" class="delayed-pulse" /></div>
                         </div>
                     </main>
 
@@ -639,6 +646,8 @@
 
     async function updatePageContent(queryParams) {
 
+    document.querySelector('.gradient-bar-inactive').classList.add('gradient-bar');
+
     document.getElementById("liquidjsContent").innerHTML = document.getElementById('loader').innerHTML;
 
         console.log("Query Parameters:", queryParams);
@@ -655,6 +664,7 @@
                 const participantGroups = convertSqlToJson(db, getSqlQuery('common_participantGroups'), 'common_participantGroups');
                 const parameters = {translation, overviewYear, overviewCountry, tripDomains, participantGroups };
                 document.getElementById("liquidjsContent").innerHTML = await engine.parseAndRender("{% include 'overview.html' %}", parameters);
+                document.querySelector('.gradient-bar-inactive').classList.remove('gradient-bar');
                 break;
             }
 
@@ -706,7 +716,7 @@
                     window.history.pushState({}, '', '?p=trip&id=' + this.value);
                     updatePageContent({p: 'trip', id: this.value});
                 });
-
+                document.querySelector('.gradient-bar-inactive').classList.remove('gradient-bar');
                 break;
             }
 
@@ -722,7 +732,7 @@
                     window.history.pushState({}, '', '?p=images&id=' + this.getAttribute('data-image-trip-id') + '&date=' + this.value);
                     updatePageContent({p: 'images', id: this.getAttribute('data-image-trip-id'), date: this.value});
                 });
-
+                document.querySelector('.gradient-bar-inactive').classList.remove('gradient-bar');
                 break;
             }
 
@@ -745,6 +755,7 @@
                 } else {
                     initializeMapCountry();
                 }
+                document.querySelector('.gradient-bar-inactive').classList.remove('gradient-bar');
                 break;
             }
 
@@ -760,6 +771,7 @@
                 document.getElementById("liquidjsContent").innerHTML = await engine.parseAndRender("{% include 'statistics.html' %}", parameters);
                 initializeChart();
                 initializeChartOvernights();
+                document.querySelector('.gradient-bar-inactive').classList.remove('gradient-bar');
                 break;
             }
 
@@ -767,6 +779,7 @@
                 document.title = translation.menu[queryParams.p] + " - Immer in Bewegung";
 
                 document.getElementById("liquidjsContent").innerHTML = await engine.parseAndRender("{% include 'dataset.html' %}", { translation, settings });
+                document.querySelector('.gradient-bar-inactive').classList.remove('gradient-bar');
                 break;
             }
 
@@ -775,6 +788,7 @@
 
                 document.getElementById("liquidjsContent").innerHTML = await engine.parseAndRender("{% include 'source.html' %}", { translation, settings });
                 initializeSource();
+                document.querySelector('.gradient-bar-inactive').classList.remove('gradient-bar');
                 break;
             }
 
@@ -782,6 +796,7 @@
                 document.title = translation.menu[queryParams.p] + " - Immer in Bewegung";
                 document.getElementById("liquidjsContent").innerHTML = await engine.parseAndRender("{% include 'about.html' %}", {translation});
                 versionCheck();
+                document.querySelector('.gradient-bar-inactive').classList.remove('gradient-bar');
                 break;
             }
 
@@ -792,6 +807,7 @@
                 const tripDomains = convertSqlToJson(db, getSqlQuery('common_tripDomains'), 'common_tripDomains');
                 const parameters = { translation, trip, sevent, tripDomains };
                 document.getElementById("liquidjsContent").innerHTML = await engine.parseAndRender("{% include 'search.html' %}", parameters);
+                document.querySelector('.gradient-bar-inactive').classList.remove('gradient-bar');
                 break;
             }
 

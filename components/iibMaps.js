@@ -99,10 +99,13 @@
             addPolylineDecorators(overviewLayer, overviewCoords, tripDomain);
             addPolylineDecorators(accommodationLayer, accommodationCoords, tripDomain);
 
+            const overviewTranslation = mapPinDataContainer.getAttribute("data-translation-overview");
+            const accommodationsTranslation = mapPinDataContainer.getAttribute("data-translation-accommodations");
+
             // Add Layer Control
             L.control.layers(null, {
-                "Overview": overviewLayer,
-                "Accommodation": accommodationLayer
+                [overviewTranslation]: overviewLayer,
+                [accommodationsTranslation]: accommodationLayer
             }, {collapsed: false}).addTo(map);
 
             // Add layers to the map

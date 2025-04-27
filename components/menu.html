@@ -67,7 +67,7 @@
 <!-- Menu content -->
 <div class="container-fluid">
     <a href="?p=overview" style="text-decoration:none;"><div class="navbar-brand">
-          <img src="img/frog.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+          <img src="img/frog.svg" alt="Logo" width="24" height="auto" class="d-inline-block align-text-center">
           <span class="immer-in-font-uc">Immer in</span>&nbsp;<span class="bewegung-font-uc">Bewegung</span>
   </div></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,12 +94,13 @@
             {{ translation.menu.more | default: 'More' }}
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="coordinate-tool.html" target="_blank">{{ translation.menu.coordinateTool | default: 'Coordinate Tool' }} <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
-  <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
-</svg></a></li>
+
             <li><a class="dropdown-item" style="cursor:pointer;" target="_blank" data-bs-toggle="modal" data-bs-target="#generateReportModal" data-old-href="report.html?t={{ translation.report.myTripsUntil | default: 'My trips until' }} {{ 'now' | date: '%Y' }}&g={{ translation.report.generated | default: 'Generated' }} {{ 'now' | date: '%Y-%m-%d' }}&oi=&pg=&ii=">{{ translation.menu.report | default: 'Generate Report' }}</a></li>
             <li><a class="dropdown-item menuItemSelectable" href="?p=source">{{ translation.menu.source | default: 'Source Database' }}</a></li>
+            <li><a class="dropdown-item" href="coordinate-tool.html" target="_blank">{{ translation.menu.toolbox | default: 'Toolbox' }} <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
+              <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
+            </svg></a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item menuItemSelectable" href="?p=about">{{ translation.about.title | default: 'About' }}</a></li>
           </ul>
@@ -149,17 +150,18 @@
                         <a class="nav-link menuItemSelectable menuItemActively p-2 rounded {% if queryParams.p == 'dataset' %}active{% endif %}" href="?p=dataset">{{ translation.dataset.title | default: 'Dataset' }}</a>
                     </li>
                     {% endif %}
-                    <li class="nav-item">
-                        <a class="nav-link p-2 rounded" href="coordinate-tool.html" target="_blank">{{ translation.menu.coordinateTool | default: 'Coordinate Tool' }} <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
-  <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
-</svg></a>
-                    </li>
+
 
                     <li class="nav-item"><a class="nav-link p-2 rounded" style="cursor:pointer;" target="_blank" data-bs-toggle="modal" data-bs-target="#generateReportModal" data-old-href="report.html?t={{ translation.report.myTripsUntil | default: 'My trips until' }} {{ 'now' | date: '%Y' }}&g={{ translation.report.generated | default: 'Generated' }} {{ 'now' | date: '%Y-%m-%d' }}&oi=&pg=&ii=">{{ translation.menu.report | default: 'Generate Report' }}</a></li>
 
                     <li class="nav-item">
                         <a class="nav-link menuItemSelectable menuItemActively p-2 rounded" href="?p=source">{{ translation.menu.source | default: 'Source Database' }}</a>
+                    </li>
+                    <li class="nav-item">
+                                            <a class="nav-link p-2 rounded" href="coordinate-tool.html" target="_blank">{{ translation.menu.toolbox | default: 'Toolbox' }} <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
+                      <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
+                    </svg></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link menuItemSelectable menuItemActively p-2 rounded {% if queryParams.p == 'about' %}active{% endif %}" href="?p=about">{{ translation.about.title | default: 'About' }}</a>

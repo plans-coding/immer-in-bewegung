@@ -17,6 +17,7 @@
     width: 0.9em;
     height: 0.9em;
     display:inline-block;
+    transform: translateY(2px);
   }
   :root[data-bs-theme="light"] .acc-icon { background-color: {{ tripDomain.Color }}; }
   :root[data-bs-theme="dark"] .acc-icon { background-color: gold; }
@@ -192,7 +193,8 @@
                     {% if parts.size > 1 %}
                       {% assign mapPinName = parts[0] %}
                       {% assign mapPinCoord = parts[1] %}
-                      {{mapPinName}}<!--({{mapPinCoord}})--> {% unless forloop.last %}&nbsp;> {% endunless %}
+                      {{mapPinName}}<!--({{mapPinCoord}})-->
+                      {% unless forloop.last %}&nbsp;> {% endunless %}
                     {% endif %}
                   {% endfor %}
 
@@ -210,7 +212,7 @@
             {% if settings.Base.Immich == 'Enabled' %}
               {% assign photoAlbums = summary[0][0].PhotoAlbums | split: ", " %}
               {% for photoAlbum in photoAlbums %}
-                <div type="button" class="btn btn-iib-ctt" data-iib-tripdomain="U" onclick="openAlbum('{{ photoAlbum }}', '{{ settings.Feature.ImmichApiUrl }}', '{{ settings.Feature.ImmichApiKey }}')">Immich {{ photoAlbum }}</div>
+                <div type="button" class="btn btn-iib-ctt mb-3" data-iib-tripdomain="U" onclick="openAlbum('{{ photoAlbum }}', '{{ settings.Feature.ImmichApiUrl }}', '{{ settings.Feature.ImmichApiKey }}')">Immich {{ photoAlbum }}</div>
               {% endfor %}
             {% endif %}
 
@@ -221,7 +223,7 @@
 
               <!--<style>.leaflet-marker-icon svg path {color:{{ tripColor.Color }};}</style>-->
               <div id="map-pin-data" data-map-overall-route='{{ mapPins[0] | json }}'
-              data-map-accommodation='{{ sevents[0] | json | replace: "'", "%27" }}' data-settings-assets='{{ settings | json }}' data-tripDomain='{{summary[0][0].DomainAbbreviation}}'></div>
+              data-map-accommodation='{{ sevents[0] | json | replace: "'", "%27" }}' data-settings-assets='{{ settings | json }}' data-tripDomain='{{summary[0][0].DomainAbbreviation}}' data-translation-overview='{{ translation.overview.title }}' data-translation-accommodations='{{ translation.trip.accommodations }}'></div>
               <div id="map" style="min-height:400pt;height:100%;width:100%;"></div>
             </div>
           </div>
@@ -298,7 +300,7 @@
 
       {% endfor %}
     {% endif %}
-    </td><td class="text-start p-3">{{ day.Events }}<br /><div class="mt-2"><a style="text-decoration:none;" target="_blank" href="https://www.google.com/maps/?q={{ day.AccommodationCoordinates }}" class="iib-trip-tab" data-iib-tripDomain="{{summary[0][0].DomainAbbreviation}}"><div class="acc-icon"></div> <span class="acc-text">{{ day.Accommodation }} - {{ day.AccommodationCountry }} {{ day.AccommodationCoordinates }} {{ day.AccommodationCoordinateAccuracy }}</span></a></div></td></tr>
+    </td><td class="text-start p-3">{{ day.Events }}<br /><div class="mt-2"><a style="text-decoration:none;" target="_blank" href="https://www.google.com/maps/?q={{ day.AccommodationCoordinates }}" class="iib-trip-tab" data-iib-tripDomain="{{summary[0][0].DomainAbbreviation}}"><div class="acc-icon"></div> <span class="acc-text">{{ day.Accommodation }} – {{ day.AccommodationCountry }} – {{ day.AccommodationCoordinates }} {{ day.AccommodationCoordinateAccuracy }}</span></a></div></td></tr>
   {% endfor %}
     </table>
 
