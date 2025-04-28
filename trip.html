@@ -215,6 +215,11 @@
                 <div type="button" class="btn btn-iib-ctt mb-3" data-iib-tripdomain="U" onclick="openAlbum('{{ photoAlbum }}', '{{ settings.Feature.ImmichApiUrl }}', '{{ settings.Feature.ImmichApiKey }}')">Immich {{ photoAlbum }}</div>
               {% endfor %}
             {% endif %}
+            {% if settings.Plugins.Movie.enabled %}
+              {% if settings.Plugins.Movie.mapping[summary[0][0].OuterId] %}
+                <a href="{{ settings.Plugins.Movie.path }}{{ settings.Plugins.Movie.mapping[summary[0][0].OuterId] }}" target="_blank"><div type="button" class="btn btn-iib-ctt mb-3" data-iib-tripdomain="U">{{ settings.Plugins.Movie.translation }} {{ settings.Plugins.Movie.mapping[summary[0][0].OuterId] }}</div></a>
+              {% endif %}
+            {% endif %}
 
 
             </div>

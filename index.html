@@ -809,7 +809,7 @@
                 const trip = convertSqlToJson(db, getSqlQuery('search_trip', queryParams.s), 'search_trip');
                 const sevent = convertSqlToJson(db, getSqlQuery('search_event', queryParams.s), 'search_event');
                 const tripDomains = convertSqlToJson(db, getSqlQuery('common_tripDomains'), 'common_tripDomains');
-                const parameters = { translation, trip, sevent, tripDomains };
+                const parameters = { settings, translation, trip, sevent, tripDomains };
                 document.getElementById("liquidjsContent").innerHTML = await engine.parseAndRender("{% include 'search.html' %}", parameters);
                 document.querySelector('.gradient-bar-inactive').classList.remove('gradient-bar');
                 break;
