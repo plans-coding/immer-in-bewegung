@@ -27,7 +27,19 @@
 :root[data-bs-theme="dark"] .accommodationColor, :root[data-bs-theme="dark"] .overviewColor {fill:gold;}
 :root[data-bs-theme="dark"] .polylineMap {stroke:gold;}
 
-
+/* Plugin: Theme */
+.sightseeing-icon {
+  mask: url(img/bookmark-star-fill.svg) no-repeat center / contain;
+  -webkit-mask: url(img/bookmark-star-fill.svg) no-repeat center / contain;
+  width: 0.9em;
+  height: 0.9em;
+  display:inline-block;
+  transform: translateY(2px);
+}
+:root[data-bs-theme="light"] .sightseeing-text {color:#6f757e;}
+:root[data-bs-theme="light"] .sightseeing-icon { background-color: #6f757e; }
+:root[data-bs-theme="dark"] .sightseeing-icon { background-color: gold; }
+:root[data-bs-theme="dark"] .sightseeing-text {color:gold;}
 
 </style>
 <!-- All trips -->
@@ -239,7 +251,6 @@
   </div>
 
   <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-
   <table class="table rounded-bottom border">
   {% for day in sevents[0] %}
     <tr><td class="p-3"><b>{{ day.Date }}</b><br />{{ day.Date | date: "%A" }}<br />
@@ -305,8 +316,27 @@
 
       {% endfor %}
     {% endif %}
-    </td><td class="text-start p-3">{{ day.Events }}<br /><div class="mt-2"><a style="text-decoration:none;" target="_blank" href="https://www.google.com/maps/?q={{ day.AccommodationCoordinates }}" class="iib-trip-tab" data-iib-tripDomain="{{summary[0][0].DomainAbbreviation}}"><div class="acc-icon"></div> <span class="acc-text">{{ day.Accommodation }} – {{ day.AccommodationCountry }} – {{ day.AccommodationCoordinates }} {{ day.AccommodationCoordinateAccuracy }}</span></a></div></td></tr>
+    </td><td class="text-start p-3">{{ day.Events }}
+      <br /><div class="mt-2"><a style="text-decoration:none;" target="_blank" href="https://www.google.com/maps/?q={{ day.AccommodationCoordinates }}" class="iib-trip-tab" data-iib-tripDomain="{{summary[0][0].DomainAbbreviation}}"><div class="acc-icon"></div> <span class="acc-text">{{ day.Accommodation }} – {{ day.AccommodationCountry }} – {{ day.AccommodationCoordinates }} {{ day.AccommodationCoordinateAccuracy }}</span></a></div>
+
+
+      {% if settings.Plugins.Theme.enabled %}
+        {% assign parsedThemeLocations = day.AdditionalNotes | parseThemeLocations %}
+        {% if parsedThemeLocations.size > 0 %}
+          <div class="mt-2 sightseeing-text"><div class="sightseeing-icon"></div> <b>{{ settings.Plugins.Theme.translation }}</b>:
+            {% for item in parsedThemeLocations %}
+              <span><a class="sightseeing-text" href="https://www.google.com/maps/?q={{ item.coordinates }}" target="_blank">{{ item.place }}</a>{% unless forloop.last %}, {% endunless %}</span>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endif %}
+
+
+    </td></tr>
+
   {% endfor %}
+
+
     </table>
 
   </div>

@@ -183,7 +183,7 @@
 
         <template id="loader">
             <!-- <div class="loader"></div> -->
-             <!-- <div class="gradient-bar"></div> -->
+            <!--  <div class="gradient-bar"></div> -->
             <div class="text-center" style="margin-top:50pt;"><img src="img/frog.svg" style="width:233px;height:233px;" class="delayed-pulse" /></div>
         </template>
 
@@ -226,7 +226,6 @@
                     <main style="height:100%;" id="liquidjsContent">
                         <div>
                             <!--<div class="loader"></div>-->
-                            <div class="gradient-bar"></div>
                             <div class="text-center" style="margin-top:50pt;"><img src="img/frog.svg" style="width:233px;height:233px;" class="delayed-pulse" /></div>
                         </div>
                     </main>
@@ -642,7 +641,24 @@
         const { Liquid } = await import( (window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/'))
                 .replace(/\/+$/, '/') + "bundle/liquidjs/liquid.browser.min.js");
         engine = new Liquid();
+
+        // Own Liquidjs functions
+        engine.registerFilter('parseThemeLocations', (input) => {
+            const regex = /\{([^{}]*?)\|([^{}]*?)\|([^{}]*?)\}/g;
+            const result = [];
+            let match;
+            while ((match = regex.exec(input)) !== null) {
+                result.push({
+                place: match[1].trim(),
+                coordinates: match[2].trim(),
+                theme: match[3].trim()
+                });
+            }
+            return result;
+            });
+
         db = await loadDatabase(); // Use cached database
+
       }
 
     let translation = { "menu": { "overview": "Overview", "statistics": "Statistics", "map": "Map", "dataset": "Dataset", "source": "Source Database", "about": "About" } };
