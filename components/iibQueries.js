@@ -188,6 +188,13 @@ function getSqlQuery(section, parameter = null) {
                         AND AccommodationCoordinates IS NOT NULL;`;
         break;
 
+        case "map_theme":
+            return `SELECT
+                        * FROM IIBb_Events
+                    WHERE
+                        AdditionalNotes LIKE "%| ${parameter} }%";`;
+        break;
+
         // STATISTICS
         case "statistics_perDomainYear":
             return `SELECT
@@ -292,6 +299,25 @@ function getSqlQuery(section, parameter = null) {
                 FROM Aggregated
                 ORDER BY OL DESC;`;
         break;
+
+        case "statistics_theme_count":
+            return `SELECT
+                    json_extract(j.value, '$.key') AS key,
+                    SUM(
+                        (LENGTH(e.AdditionalNotes) - LENGTH(REPLACE(e.AdditionalNotes, '| ' || json_extract(j.value, '$.key'), '')))
+                        / LENGTH('| ' || json_extract(j.value, '$.key'))
+                    ) AS total_count
+                    FROM
+                    bewb_Events AS e
+                    CROSS JOIN
+                    (SELECT j.value
+                    FROM bewxx_Settings AS s,
+                            json_each(s.Value, '$.mapping') AS j
+                    WHERE s.Attribute = 'Theme') AS j
+                    WHERE
+                    e.AdditionalNotes LIKE '%| ' || json_extract(j.value, '$.key') || '%'
+                    GROUP BY
+                    key;`;
 
         // SEARCH
         case "search_trip":

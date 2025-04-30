@@ -6,6 +6,9 @@
       <button class="nav-link iib-nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ translation.statistics.summary | default: 'Summary' }}</button>
       <button class="nav-link iib-nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">{{ translation.statistics.visits | default: 'Visits' }}</button>
       <button class="nav-link iib-nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">{{ translation.statistics.overnights | default: 'Overnights' }}</button>
+      {% if settings.Plugins.Theme.enabled %}
+          <button class="nav-link iib-nav-link" id="nav-theme-tab" data-bs-toggle="tab" data-bs-target="#nav-theme" type="button" role="tab" aria-controls="nav-theme" aria-selected="false">{{ settings.Plugins.Theme.translation }}</button>
+      {% endif %}
     </div>
   </nav>
   <div class="tab-content" id="nav-tabContent">
@@ -98,6 +101,21 @@ short or very short visit to another country.' }}
 
           </div>
         </div>
+
+
+        {% if settings.Plugins.Theme.enabled %}
+          <div class="tab-pane fade bg-white rounded-bottom border" id="nav-theme" role="tabpanel" aria-labelledby="nav-theme-tab" tabindex="0">
+            <table class="table table-hover">
+              <thead style="position:sticky;top:0;background-color:;"><tr style=""><td><b>{{ settings.Plugins.Theme.translation }}</b></td><td><b>{{ translation.statistics.count | default: 'Count' }}</b></td></tr></thead>
+              {% for item in settings.Plugins.Theme.mapping %}
+                {% assign match = statistics_theme_count[0] | where: "key", item.key | first %}
+                  {% if match %}
+                    <tr><td>{{ item.label }}</b></td><td style="text-align:center;">{{ match.total_count }}</td></tr>
+                  {% endif %}
+              {% endfor %}
+            </table>
+          </div>
+        {% endif %}
 
 </div>
 

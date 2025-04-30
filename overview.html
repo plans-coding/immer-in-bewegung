@@ -41,13 +41,13 @@
     <div class="mb-3">
         <div class="btn-group m-1" role="group" aria-label="Filter Domain" style="max-width:100%;overflow-x:auto;">
         {% for tripDomain in tripDomains[0] %}
-            <button type="button" class="btn btn-filter-domain" onclick='this.style.textDecoration = this.style.textDecoration ? "" : "line-through"; document.querySelectorAll(".iib-item[data-iib-tripDomain={{ tripDomain.DomainAbbreviation }}]").forEach(el => el.classList.toggle("iib-hide-item"))' data-iib-tripDomain="{{ tripDomain.DomainAbbreviation }}">{{ tripDomain.DomainDescription }}</button>
+            <button type="button" class="btn btn-filter-domain" onclick='this.style.textDecoration = this.style.textDecoration ? "" : "line-through"; document.querySelectorAll(".iib-item[data-iib-tripDomain={{ tripDomain.DomainAbbreviation }}]").forEach(el => el.classList.toggle("iib-hide-td-item"))' data-iib-tripDomain="{{ tripDomain.DomainAbbreviation }}">{{ tripDomain.DomainDescription }}</button>
         {% endfor %}
         </div>
 
         <div class="btn-group m-1" role="group" aria-label="Filter Group" style="max-width:100%;overflow-x:auto;">
         {% for participantGroup in participantGroups[0] %}
-            <button type="button" class="btn btn-dark" onclick='this.style.textDecoration = this.style.textDecoration ? "" : "line-through"; document.querySelectorAll(".iib-item[data-iib-participantGroup={{ participantGroup.ParticipantGroup }}]").forEach(el => el.classList.toggle("iib-hide-item"))' data-iib-participantGroup="{{ participantGroup.ParticipantGroup }}">{{ participantGroup.ParticipantGroup }}</button>
+            <button type="button" class="btn btn-dark" onclick='this.style.textDecoration = this.style.textDecoration ? "" : "line-through"; document.querySelectorAll(".iib-item[data-iib-participantGroup={{ participantGroup.ParticipantGroup }}]").forEach(el => el.classList.toggle("iib-hide-pg-item"))' data-iib-participantGroup="{{ participantGroup.ParticipantGroup }}">{{ participantGroup.ParticipantGroup }}</button>
         {% endfor %}
         </div>
     </div>

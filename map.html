@@ -1,6 +1,6 @@
 <style>
 {% for tripDomain in tripDomains[0] %}
-:root[data-bs-theme="light"] .iib-map-ref[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {
+.iib-map-ref[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {
   background-color: {{ tripDomain.Color }}!important;
   color:#fff;
   padding: 3pt 5pt 3pt 5pt;
@@ -13,15 +13,25 @@
 :root[data-bs-theme="dark"] .accommodationColor, :root[data-bs-theme="dark"] .overviewColor {fill:gold;}
 :root[data-bs-theme="dark"] .polylineMap {stroke:gold;}
 </style>
-<div style="z-index:1001;position:absolute;width:100%;text-align:center;" class="p-2">
-        <select id="alltrip"  class="form-control text-center" style="max-width:200pt;margin:auto;" onchange="document.location='?p=map&country='+this.value;">
+<div style="z-index:900;position:absolute;width:100%;text-align:center;" class="p-2">
+        <select id="alltrip"  class="form-control text-center" style="max-width:200pt;display:inline-block;" onchange="document.location='?p=map&country='+this.value;">
         <option value="">{{ translation.map.overallRoute | default: "Overall route for all trips" }}</option>
                 {% for trip in countryList[0] %}
                     <option value="{{ trip.AccommodationCountry }}" {% if queryParams.country == trip.AccommodationCountry %}selected{% endif %}>{{ trip.AccommodationCountry }}</option>
                 {% endfor %}
         </select>
+
+        {% if settings.Plugins.Theme.enabled %}
+          <select id="themeSelector" class="form-control text-center" style="max-width:200pt;display:inline-block;" onchange="document.location='?p=map&theme=' + this.value;">
+          <option value="">{{ settings.Plugins.Theme.translation }}</option>
+          {% for item in settings.Plugins.Theme.mapping %}
+            <option value="{{ item.key }}" {% if queryParams.theme == item.key %}selected{% endif %}>{{ item.label }}</option>
+          {% endfor %}
+          </select>
+        {% endif %}
+
 </div>
 
-<div id="map-pin-data" data-map='{{ mapData[0] | json | escape }}'></div>
+<div id="map-pin-data" data-map='{{ mapData[0] | json | escape }}' data-settings-assets='{{ settings | json }}'></div>
 
 <div id="map" style="height:100%;width:100%;"></div>

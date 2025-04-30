@@ -290,3 +290,112 @@
                 setTimeout(initializeMapCountry, 100);
             }
         }
+
+
+        function initializeMapTheme() {
+
+            const mapContainer = document.getElementById('map');
+            const mapPinDataContainer = document.getElementById('map-pin-data');
+            const rawData = mapPinDataContainer.getAttribute('data-map');
+            var assetsSettings = JSON.parse(mapPinDataContainer.getAttribute("data-settings-assets"));
+
+            if (mapContainer && mapPinDataContainer ) {
+
+
+                const map = L.map('map', {fullscreenControl: true}).setView([51.505, -0.09], 6);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; OpenStreetMap contributors'
+                }).addTo(map);
+
+                if (rawData !== "") { // CHECK EMPTYNESS - NEEDS OWN ROW
+                        try {
+
+                            const jsonData = JSON.parse(rawData);
+                            const bounds = L.latLngBounds(); // Create bounds object
+
+                            const allSubThemes = [];
+                            jsonData.forEach(item => {
+                                const regex = /\{([^{}]*?)\|([^{}]*?)\|([^{}]*?)\}/g;
+
+
+                                if (typeof item.AdditionalNotes === 'string') {
+                                    let match;
+                                    while ((match = regex.exec(item.AdditionalNotes)) !== null) {
+                                        const [ThemeLat, ThemeLon] = match[2].split(',').map(coord => parseFloat(coord.trim()));
+                                        const themeName = assetsSettings.Plugins.Theme.mapping.find(t => t.key === match[3].trim());
+
+                                        allSubThemes.push({
+                                            InnerId: item.InnerId,
+                                            OuterId: item.OuterId,
+                                            ParticipantGroup: item.ParticipantGroup,
+                                            TravelParticipants: item.TravelParticipants,
+                                            Date: item.Date,
+                                            OverallDestination: item.OverallDestination,
+                                            ThemePlaceName: match[1].trim(),
+                                            ThemeCoordinates: match[2].trim(),
+                                            ThemeLat,
+                                            ThemeLon,
+                                            ThemeAbbr: match[3].trim(),
+                                            ThemeName: themeName.label
+                                        });
+                                    }
+                                }
+
+                            });
+                            console.log("allSubThemes" , allSubThemes);
+
+                        allSubThemes.forEach(item => {
+
+                            // Split coordinates from the 'AccommodationCoordinates' field
+                            const [lat, lon] = [item.ThemeLat, item.ThemeLon];
+
+                            // Popup content with conditional rendering for accuracy
+                            let popupContent = `
+                                <a class="link-color" href="https://www.google.com/maps/?q=${lat}, ${lon}" target="_blank"><b>${item.ThemePlaceName}</b></a><br />
+                                ${item.ParticipantGroup} ${item.TravelParticipants} <br>
+                                ${item.Date} <br>
+                                <a href="?p=trip&id=${item.OuterId}"><div class="iib-map-ref" data-iib-tripDomain="${item.InnerId.charAt(0)}">${item.OuterId} ${item.OverallDestination}</div></a> <br>
+                            `;
+
+                            // Add accuracy only if it's not null
+                            /*if (AccommodationCoordinatesAccuracy) {
+                                popupContent += `<b>Coordinate Accuracy:</b> ${AccommodationCoordinatesAccuracy} <br>`;
+                            }*/
+
+
+                        const svgIcon = L.divIcon({
+            className: 'custom-icon',
+            html: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-bookmark-star-fill" viewBox="0 0 16 16">
+  <path class="accommodationColor" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5M8.16 4.1a.178.178 0 0 0-.32 0l-.634 1.285a.18.18 0 0 1-.134.098l-1.42.206a.178.178 0 0 0-.098.303L6.58 6.993c.042.041.061.1.051.158L6.39 8.565a.178.178 0 0 0 .258.187l1.27-.668a.18.18 0 0 1 .165 0l1.27.668a.178.178 0 0 0 .257-.187L9.368 7.15a.18.18 0 0 1 .05-.158l1.028-1.001a.178.178 0 0 0-.098-.303l-1.42-.206a.18.18 0 0 1-.134-.098z"/>
+</svg>`,
+            });
+
+                            const marker = L.marker([lat, lon], { icon: svgIcon })
+                                .addTo(map)
+                                .bindPopup(popupContent)
+                                .on('click', function () {
+                                    this.openPopup();
+                                });
+
+                            bounds.extend([lat, lon]); // Extend bounds for each marker
+                        });
+
+                        if (jsonData.length > 0) {
+                            map.fitBounds(bounds, { padding: [50, 50] }); // Auto-zoom to markers
+                        }
+
+                        console.log("Map initialized with auto-zoom");
+
+
+                    } catch (error) {
+                        console.error("JSON Parse Error:", error);
+                    }
+
+                } // CHECK EMPTYNESS END - NEEDS OWN ROW
+
+            } else {
+                setTimeout(initializeMapTheme, 100);
+            }
+        }
+

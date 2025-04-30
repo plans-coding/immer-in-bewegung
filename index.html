@@ -67,7 +67,7 @@
         .bewegung-font-uc {font-family: 'Righteous', sans-serif;text-transform: uppercase;}
         .iib-silver-grey{background-color:#6f757e!important;color:#fff!important;font-weight:normal!important;}
         .iib-nav-link {color:#1d655e!important;}
-        .iib-hide-item {display:none!important;}
+        .iib-hide-td-item, .iib-hide-pg-item {display:none!important;}
 
         .modal-content{background-color:#f8fafd!important;}
         :root[data-bs-theme="dark"] .modal-content{background-color:#022626!important;}
@@ -760,7 +760,9 @@
                 document.title = translation.menu[queryParams.p] + " - Immer in Bewegung";
                 let mapData;
                 const countryList = convertSqlToJson(db, getSqlQuery('map_countryList', queryParams.id), 'map_countryList');
-                if (!queryParams.country) {
+                if (queryParams.theme) {
+                    mapData = convertSqlToJson(db, getSqlQuery('map_theme', decodeURIComponent(queryParams.theme)), 'map_theme');
+                } else if (!queryParams.country) {
                     mapData = convertSqlToJson(db, getSqlQuery('map_contour', queryParams.id), 'map_contour');
                 } else {
                     mapData = convertSqlToJson(db, getSqlQuery('map_country', queryParams.country), 'map_country');
@@ -768,9 +770,11 @@
 
                 console.log(mapData);
                 const tripDomains = convertSqlToJson(db, getSqlQuery('common_tripDomains'), 'common_tripDomains');
-                const parameters = {translation, queryParams, countryList, mapData, tripDomains };
+                const parameters = {settings, translation, queryParams, countryList, mapData, tripDomains };
                 document.getElementById("liquidjsContent").innerHTML = await engine.parseAndRender("{% include 'map.html' %}", parameters);
-                if (!queryParams.country) {
+                if (queryParams.theme) {
+                    initializeMapTheme();
+                } else if (!queryParams.country) {
                     initializeMapContours();
                 } else {
                     initializeMapCountry();
@@ -787,7 +791,13 @@
                 const overnights = convertSqlToJson(db, getSqlQuery('statistics_overnights', queryParams.id), 'statistics_overnights');
                 const tripDomains = convertSqlToJson(db, getSqlQuery('common_tripDomains'), 'common_tripDomains');
                 const OLSSVSS = convertSqlToJson(db, getSqlQuery('statistics_OLSSVSS'), 'statistics_OLSSVSS');
-                const parameters = {translation, perDomainYear, tripCount, overnights, tripDomains, tripDomains, OLSSVSS };
+
+                let statistics_theme_count = {}
+                if (settings.Plugins?.Theme.enabled) {
+                    statistics_theme_count = convertSqlToJson(db, getSqlQuery('statistics_theme_count'), 'statistics_theme_count');
+                }
+
+                const parameters = {settings, translation, perDomainYear, tripCount, overnights, tripDomains, tripDomains, OLSSVSS, statistics_theme_count };
                 document.getElementById("liquidjsContent").innerHTML = await engine.parseAndRender("{% include 'statistics.html' %}", parameters);
                 initializeChart();
                 initializeChartOvernights();
