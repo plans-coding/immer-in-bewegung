@@ -240,7 +240,7 @@
 
               <!--<style>.leaflet-marker-icon svg path {color:{{ tripColor.Color }};}</style>-->
               <div id="map-pin-data" data-map-overall-route='{{ mapPins[0] | json }}'
-              data-map-accommodation='{{ sevents[0] | json | replace: "'", "%27" }}' data-settings-assets='{{ settings | json }}' data-tripDomain='{{summary[0][0].DomainAbbreviation}}' data-translation-overview='{{ translation.overview.title }}' data-translation-accommodations='{{ translation.trip.accommodations }}'></div>
+              data-map-accommodation='{{ sevents[0] | json | replace: "'", "%27" }}' data-settings-assets='{{ settings | json }}' data-tripDomain='{{summary[0][0].DomainAbbreviation}}' data-translation-overview='{{ translation.overview.title | default: "Overview" }}' data-translation-accommodations='{{ translation.trip.accommodations | default: "Accommodations" }}'></div>
               <div id="map" style="min-height:400pt;height:100%;width:100%;"></div>
             </div>
           </div>
