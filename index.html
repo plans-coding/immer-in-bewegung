@@ -61,6 +61,7 @@
             src: url('bundle/fonts/Righteous-Regular.ttf') format('truetype');
         }
 
+        .no-underline {text-decoration:none;}
         .dropdown-item.active, .dropdown-item:active, .form-check-input:checked {background-color:#1d655e;}
         .menuItemSelectable.active {font-weight:bold;}
         .immer-in-font-uc {font-family: 'Cairo', sans-serif;text-transform: uppercase;}
@@ -655,7 +656,34 @@
                 });
             }
             return result;
+        });
+
+        engine.registerFilter('parseThemeLocationsEventString', (input) => {
+            const regex = /\{([^}]*)\}\(([^)]*)\)\[([^\]]*)\]/g;
+            const result = [];
+            let match;
+            while ((match = regex.exec(input)) !== null) {
+                const [full, curly, paren, angle] = match;
+                result.push({
+                    place:  curly.trim().charAt(0).toUpperCase() + curly.trim().slice(1),
+                    coordinates: paren.trim(),
+                    theme: angle.trim().split(",")
+                });
+            }
+            return result;
+        });
+
+        engine.registerFilter('parseCoordinateLink', (input) => {
+            //const regex = /\{([^}]*)\}\(([^)]*)\)\[([^\]]*)\]/g;
+            const regex = /\{([^}]*)\}\(([^)]*)\)(?:\[([^\]]*)\])?/g; // Last group is optional
+            const result = [];
+            const replaced = input.replace(regex, (full, curly, paren, square) => {
+                return `<a target="_blank" class="link-color no-underline" href="${settings.Base.ExternalMapProvider}${paren.trim()}">${curly.trim()}</a>`;
             });
+
+            return replaced;
+        });
+
 
         db = await loadDatabase(); // Use cached database
 
