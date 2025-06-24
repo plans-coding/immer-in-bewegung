@@ -408,17 +408,15 @@ LIMIT 1;</textarea>
 
     function updateSQL() {
       document.getElementById('sqlOutput').value =
-      `-- Create row in bewa_Overview
-      INSERT INTO bewa_Overview (InnerId, ParticipantGroup, OuterId, OverallDestination, DepartureDate, ReturnDate, TravelDescription)
+      `-- Create row in bewa_Overview UNIQUE constraint on (InnerId, OuterId)
+      INSERT OR IGNORE INTO bewa_Overview (InnerId, ParticipantGroup, OuterId, OverallDestination, DepartureDate, ReturnDate, TripDescription)
       VALUES ('` + document.getElementById('formII').value +`', '`+
       document.getElementById('selectParticipantGroup').value +`', '`+
       document.getElementById('formOI').value +`', '`+
       document.getElementById('formOD').value +`', '`+
       document.getElementById('formDD').value +`', '`+
       document.getElementById('formRD').value +`', '`+
-      document.getElementById('formTD').value + `') WHERE NOT EXISTS (
-        SELECT 1 FROM bewa_Overview WHERE InnerId = '` + document.getElementById('formII').value +`' AND OuterId = '` + document.getElementById('formOI').value +`'
-      );\n` +
+      document.getElementById('formTD').value + `');\n` +
       `-- Create rows in bewb_Events`;
 
       if (document.getElementById('formDD').value && document.getElementById('formRD').value) {
