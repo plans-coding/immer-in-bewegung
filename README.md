@@ -31,6 +31,8 @@ Bind same SQLite file as you used for viewing to https://libsqlstudio.com/local 
 2. (Optional) Proxy Cloudbeaver via Caddy
 3. Set the address to Cloudbeaver in Immer in Bewegung settings *DatasetEditorUrl*
 
+See [configuration examples](./CLOUDBEAVER.md) 
+
 ## Screenshots
 ![img](https://raw.githubusercontent.com/plans-coding/iib-docs/refs/heads/main/img/iib-computer.png)
 Image from: https://mockuphone.com/
