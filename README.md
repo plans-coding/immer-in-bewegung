@@ -24,11 +24,12 @@ You can check out a demo app running at https://online.bewegung.app/.
 See quick start instructions at https://bewegung.app/docs/quick-start
 
 ## Edit database via web browser (live demo)
-Bind same SQLite file as you used for viewing to https://libsqlstudio.com/local
+Bind same SQLite file as you used for viewing to https://libsqlstudio.com/local or set another service in Immer in Bewegung settings *DatasetEditorUrl*
 
-## Edit database via web browser (self-host)
-1. Expose your SQLite file by HTTP via https://github.com/tursodatabase/libsql
-2. Open via Turso in https://libsqlstudio.com/local
+## Edit database from web browser remotely (self-hosted)
+1. Install Clooudbeaver Community Edition (https://github.com/dbeaver/cloudbeaver) preferably via Docker Compose
+2. (Optional) Proxy Cloudbeaver via Caddy
+3. Set the address to Cloudbeaver in Immer in Bewegung settings *DatasetEditorUrl*
 
 ## Screenshots
 ![img](https://raw.githubusercontent.com/plans-coding/iib-docs/refs/heads/main/img/iib-computer.png)
