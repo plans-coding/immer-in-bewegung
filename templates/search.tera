@@ -1,0 +1,187 @@
+<style>
+{% for tripDomain in common.common_trip_domains %}
+.iib-search-domain[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {
+  background-color: {{ tripDomain.Color }};
+  padding: 3pt 5pt 3pt 5pt;
+  margin:2pt 0 2pt 0;
+  color:#fff;
+  text-align:center;
+  text-decoration:none;
+}
+
+.iib-search-date {
+  background-color: var(--color-hover-background);
+  padding: 3pt 5pt 3pt 5pt;
+  margin:2pt 0 2pt 0;
+  color:#fff;
+}
+
+.iib-search-accommodation[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}']{
+  color: {{ tripDomain.Color }}!important;
+}
+.iib-search-photos[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}']{
+  background-color: {{ tripDomain.Color }}!important;
+  color:#fff;
+}
+.acc-icon[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {
+  mask: url(images/house.svg) no-repeat center / contain;
+  -webkit-mask: url(images/house.svg) no-repeat center / contain;
+  width: 0.9em;
+  height: 0.9em;
+  display:inline-block;
+}
+:root[data-bs-theme="light"] .acc-icon[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] { background-color: {{ tripDomain.Color }}; }
+:root[data-bs-theme="dark"] .acc-icon[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] { background-color: gold; }
+:root[data-bs-theme="dark"] .acc-text[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] { color: gold; }
+
+
+{% endfor %}
+</style>
+
+
+<div class="breadcrumb">
+  <img class="widescreen icon-color" src="images/frog.svg" />
+  <div class="widescreen">{{ translation.menu.search | default(value="Search") }}</div>
+  <img class="widescreen" src="images/arrow-right.svg" />
+  <div class="breadcrumb-link active">{{ query_params.path | split(pat=":") | last }}</div>
+</div>
+
+<details open class="search">
+    <summary>{{ translation.search.trips | default(value="Trips") }} ({{ search_trip | length }})</summary>
+    <table class="table" style="width:100%;">
+      {% set tripCount = search_trip | length %}
+      {% if tripCount == 0 %}
+        <tr>
+          <td class="text-center align-middle p-3 icon-color">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-calendar2-x" viewBox="0 0 16 16">
+              <path d="M6.146 8.146a.5.5 0 0 1 .708 0L8 9.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 10l1.147 1.146a.5.5 0 0 1-.708.708L8 10.707l-1.146 1.147a.5.5 0 0 1-.708-.708L7.293 10 6.146 8.854a.5.5 0 0 1 0-.708"/>
+              <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/>
+              <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5z"/>
+            </svg>
+          </td>
+        </tr>
+      {% endif %}
+
+      {% for trip in search_trip %}
+        <tr>
+          <td class="text-start">
+            <a href="?path=trip:{{ trip.OuterId }}" class="iib-search-domain" data-iib-tripDomain="{{ trip.DomainAbbreviation }}">
+              
+                {{ trip.OuterId }} {{ trip.OverallDestination }}
+              
+            </a>
+          </td>
+          <td class="text-start align-middle">
+            {{ trip.TripDescription }} {{ trip.DepartureDate }} {{ translation.trip.to | default(value="until")  }} {{ trip.ReturnDate }}
+          </td>
+          <td>
+            <div class="participantGroup">{{ trip.ParticipantGroup }}</div>
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+</details>
+
+<br />
+<details open class="search">
+    <summary>{{ translation.search.dayNotes | default(value="Day Notes") }} ({{ search_event | length }})</summary>
+    
+    <div class="" style="padding:5pt;"><!-- class: days -->
+    {% for day in search_event %}
+    
+      <div class="day" data-iib-tripDomain="{{ day.DomainAbbreviation }}">
+      
+        <div class="day-left">
+        
+          <div class="day-event">
+
+
+            <div style="float:right;display:flex;flex-direction:column;gap:2pt;margin:0 0 5pt 5pt;">
+
+            {# Immich photos #}
+            {% if settings.Photos.Immich == "Enabled" and day.OuterId not in settings.Other.ExcludeDayPhotos %}
+
+                <a class="to-image-viewer" href="?path=images:{{ day.OuterId }}:{{ day.Date }}" target="_blank">
+                    <button type="button" class="item-viewer-button filter-button" data-iib-tripDomain="{{ day.DomainAbbreviation }}">
+                        <img src="images/photos.svg" />
+                    </button>
+                </a>
+
+            {% endif %}
+
+            {# Diary plugin #}
+
+              {% set_global day_year = day.Date | date(format="%G") %}
+              {% set_global day_week = day.Date | date(format="W%V") %} {# You need W before the letter not to match 19 to 1989 (W19 not in 1989) #}
+              {% set_global day_date = day.Date | date(format="%Y%m%d") %}
+
+              {% set diary_config = [] %}
+              {% if settings.Extension is defined and settings.Extension.Diary is defined %}
+                  {% set diary_lines = settings.Extension.Diary | split(pat="\n") %}
+                  {% set_global diary_config = diary_lines | first | split(pat=",") %}
+                  {% set_global diary_filelist = diary_lines | slice(start=1) %}
+              {% endif %}
+
+              {% if diary_config | length >= 2 and diary_config[0] == "Enabled" %}
+                {% for file in diary_filelist %}
+                  {% if day_year in file and day_week in file %}
+
+                  <button class="item-viewer-button" onclick="document.getElementById('diary_{{ loop.index }}').showModal();" type="button" data-iib-tripDomain="{{ day.DomainAbbreviation }}">
+                      <img src="images/diary.svg" />
+                  </button>
+
+                  <dialog class="item-viewer" id="diary_{{ loop.index }}"  onclick="this.close();">
+                    <div class="item-viewer-filename" style="position:absolute;">{{ file }}</div>
+                    <img src="{{ diary_config[2] }}{{ file }}" title="{{ file }}">
+                  </dialog>
+
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+
+            {# Passport plugin #}
+            {% set passport_config = [] %}
+            {% if settings.Extension is defined and settings.Extension.Passport is defined %}
+                {% set passport_lines = settings.Extension.Diary | split(pat="\n") %}
+                {% set_global passport_config = passport_lines | first | split(pat=",") %}
+                {% set_global passport_filelist = passport_lines | slice(start=1) %}
+            {% endif %}
+
+            {% if passport_config | length >= 2 and passport_config[0] == "Enabled" %}
+              {% for file in passport_filelist %}
+                {% if day_date in file %}
+
+                  <button class="item-viewer-button" onclick="document.getElementById('passport_{{ loop.index }}').showModal();" type="button" data-iib-tripDomain="{{ day.DomainAbbreviation }}">
+                      P
+                  </button>
+
+                  <dialog class="item-viewer" id="passport_{{ loop.index }}"  onclick="this.close();">
+                    <div class="item-viewer-filename" style="position:absolute;">{{ file }}</div>
+                    <img src="{{ passport_config[2] }}{{ file }}" title="{{ file }}">
+                  </dialog>
+
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+
+        </div>
+
+
+
+            <a class="iib-search-domain" href="?path=trip:{{ day.OuterId }}" style="text-decoration:none;display:inline-block;margin:2pt;" data-iib-tripDomain="{{ day.DomainAbbreviation }}">{{ day.OuterId }}</a>
+            <span class="day-label">{{ day.Weekday | default(value="") }} <span class="iib-search-date">{{ day.Date }}</span></span><br>{{ day.Events }}
+          </div>
+          <div class="day-foot" data-iib-tripDomain="{{ day.DomainAbbreviation }}">
+             &nbsp; <a style="text-decoration:none;" target="_blank" href="{{ settings.Other.ExternalMapProvider }}{{ day.AccommodationCoordinates }}" data-iib-tripDomain="{{ day.DomainAbbreviation }}">
+                <div class="acc-icon" data-iib-tripDomain='{{ day.DomainAbbreviation }}'></div>
+                <span class="acc-text">{{ day.Accommodation }} – {{ day.AccommodationCountry }} – {{ day.AccommodationCoordinates }} {{ day.AccommodationCoordinateAccuracy | default(value="") }}</span>
+            </a>
+          </div>
+              
+          </div>
+  
+      </div>
+    {% endfor %}
+  </div>
+      
+</details>

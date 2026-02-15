@@ -1,0 +1,1 @@
+SELECT CASE WHEN PhotoAlbums LIKE '!desc[%]%' THEN substr(PhotoAlbums, instr(PhotoAlbums, '[') + 1, instr(PhotoAlbums, ']') - instr(PhotoAlbums, '[') - 1) ELSE NULL END AS ImmichDescSearch FROM bewa_Overview WHERE OuterId = OuterId AND InnerId = InnerId;

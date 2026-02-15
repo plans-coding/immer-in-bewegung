@@ -1,0 +1,50 @@
+<div class="path-about">
+<div class="breadcrumb widescreen">
+  <img class="icon-color" src="images/frog.svg" />
+  <div class="">{{ translation.about.title | default(value='About') }}</div>
+  <!--<img src="images/arrow-right.svg" />-->
+</div>
+
+<div style="text-align:center;">
+
+    
+    <div>
+        <img src="images/frog.svg"
+             style="margin-top:40pt;margin-bottom:0pt;height:150pt;width:150pt;" />
+    </div>
+
+    <div class="breadcrumb-link active" style="width:200pt;margin:auto;padding:5pt;">{{ current_version }}</div>
+
+    {% if latest_version != current_version %}
+          <div style="width:auto;margin-top:15pt;">
+              <a class="breadcrumb-link active warning" style="padding:5pt;display:inline-block;" target="_blank" href="https://github.com/plans-coding/immer-in-bewegung/releases/">{{ translation.update.message | default(value='New update available') }} ({{ latest_version }}) <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"></path>
+                  <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"></path>
+                </svg>
+                </a>
+         </div>
+    {% endif %}
+
+    <p class="lead">
+        <span class="immer-in-font-uc">Immer in</span>&nbsp;
+        <span class="bewegung-font-uc">Bewegung</span>
+        <span>
+            {{ translation.about.description 
+               | default(value="is your open source, lightweight, and future proof travel documentation app.") }}
+        </span>
+    </p>
+
+    <p>
+         
+        <span id="lang-about-update">
+            {{ translation.about.update | default(value="Check for updates at") }}
+        </span>
+        <b>
+            <a target="_blank" href="https://bewegung.app/" class="single-link">
+                bewegung.app
+            </a>
+        </b>
+    </p>
+
+</div>
+</div>

@@ -1,0 +1,240 @@
+<style>
+
+</style>
+
+Test
+
+{{ title_string }}
+{{ backside_string }}
+
+
+{# ---------------- Cover page ---------------- #}
+<section class="title-page title-page-background">
+  <div style="text-align:center;margin-top:-100pt;">
+    <img src="img/frog.svg"
+         style="height:200pt;filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.4));" />
+    <div class="image-mask"></div>
+  </div>
+
+  <div style="height:100pt;margin-top:100pt;image-mask">
+    <h1 style="line-height:0;">
+      {{ translation.report.registerOfTrips | default(value="Register of Trips") }}
+    </h1>
+  </div>
+
+  <div style="height:100pt;font-family:'Cairo', sans-serif;font-size:2em;">
+    {{ queryParams.t }}
+  </div>
+</section>
+
+{# ---------------- Blank page ---------------- #}
+<section class="blank-page"></section>
+
+{# ---------------- Table of Contents ---------------- #}
+<section>
+  <h1>{{ translation.menu.overview | default(value="Overview") }}</h1>
+
+  {% set currentYear = "" %}
+  {% set currentTrip = "" %}
+
+  {% for row in overview[0] %}
+    {% if row.InnerId != currentTrip %}
+      <div style="display:flex;align-items:center;">
+        <div style="width:1.5cm;font-size:1.2em;">
+          {% if row.Year != currentYear %}
+            <b>{{ row.Year }}</b>
+            {% set currentYear = row.Year %}
+          {% endif %}
+        </div>
+
+        <div>
+          <a class="link"
+             href="#{{ row.InnerId }}"
+             data-iib-tripDomain="{{ row.DomainAbbreviation }}">
+            <div style="width:3cm;display:inline-block;text-align:center;">
+              <div class="themeBgColor"
+                   data-iib-tripDomain="{{ row.DomainAbbreviation }}">
+                {{ row.OuterId }}
+              </div>
+            </div>
+            &nbsp;<b>{{ row.OverallDestination }}</b>&nbsp;
+          </a>
+        </div>
+      </div>
+
+      {% set currentTrip = row.InnerId %}
+    {% endif %}
+  {% endfor %}
+</section>
+
+{# ---------------- Trips ---------------- #}
+{% set currentTrip = "" %}
+{% set firstItem = true %}
+
+{% for row in tripData[0] %}
+  {% if row.InnerId != currentTrip %}
+    {% if not firstItem %}
+        </div>
+      </section>
+    {% endif %}
+
+    <section class="tripSection"
+             data-iib-tripDomain="{{ row.DomainAbbreviation }}"
+             data-inner-id="{{ row.InnerId }}">
+
+      <div class="tripHeader themeColorDark"
+           data-iib-tripDomain="{{ row.DomainAbbreviation }}">
+        <h1 style="margin:0;"
+            id="{{ row.InnerId }}"
+            data-title="{{ row.OuterId }}"
+            data-title-full="{{ row.OuterId }} {{ row.OverallDestination }}"
+            data-iib-tripDomain="{{ row.DomainAbbreviation }}">
+          {{ row.OuterId }} {{ row.OverallDestination }}
+        </h1>
+
+        <div style="padding-bottom:20pt;margin-top:10pt;font-size:1.1em;color:#fff;">
+          {{ row.TripDescription }}
+        </div>
+      </div>
+
+      <div class="tripSummary themeColorLight"
+           data-iib-tripDomain="{{ row.DomainAbbreviation }}">
+
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2pt;text-align:center;">
+
+          <div style="margin-top:3pt;font-weight:bold;">
+            {{ translation.trip.departureDate | default(value="Departure Date") }}
+          </div>
+          <div style="margin-top:3pt;font-weight:bold;">
+            {{ translation.trip.returnDate | default(value="Return Date") }}
+          </div>
+          <div style="margin-top:3pt;font-weight:bold;">
+            {{ translation.trip.numberOfDays | default(value="Number of Days") }}
+          </div>
+
+          <div>{{ row.DepartureDate }}</div>
+          <div>{{ row.ReturnDate }}</div>
+          <div>
+            {{ row.NumberOfDays }}
+            {# Optional recompute if needed #}
+            {% set start_date = row.DepartureDate | date(format="%s") %}
+            {% set end_date = row.ReturnDate | date(format="%s") %}
+            {% set difference_in_days = (end_date - start_date) / 86400 %}
+            {{ difference_in_days }}
+          </div>
+
+          <div style="margin-top:3pt;font-weight:bold;">
+            {{ translation.trip.participantGroup | default(value="Participant Group") }}
+          </div>
+          <div style="margin-top:3pt;font-weight:bold;">
+            {{ translation.trip.outerId | default(value="ID") }}
+          </div>
+          <div style="margin-top:3pt;font-weight:bold;">
+            {{ translation.trip.numberOfCountries | default(value="Number of Countries") }}
+          </div>
+
+          <div>{{ row.ParticipantGroup }}</div>
+          <div>{{ row.OuterId }}</div>
+
+          <div>
+            {# Filter + normalize countries #}
+            {% set rawCountries = row.AllBorderCrossings | split(pat=", ") %}
+            {% set countries = [] %}
+
+            {% for c in rawCountries %}
+              {% if not c starts_with("**")
+                    and c != settings.Base.HomeCountry %}
+                {% set clean = c | replace(from="*", to="") | replace(from="+", to="") %}
+                {% set countries = countries | concat(with=[clean]) %}
+              {% endif %}
+            {% endfor %}
+
+            {% set uniqueCountries = countries | unique %}
+            {{ uniqueCountries | length }}
+          </div>
+        </div>
+
+        <div style="text-align:center;">
+          <div style="margin-top:3pt;font-weight:bold;">
+            {{ translation.trip.uniqueCountries | default(value="Unique Countries") }}
+          </div>
+          <div>{{ uniqueCountries | join(sep=", ") }}</div>
+
+          <div style="margin-top:3pt;font-weight:bold;">
+            {{ translation.trip.overallRoute | default(value="Overall Route") }}
+          </div>
+
+          <div>
+            {% set locations = row.MapPins | split(pat=" }") %}
+            {% for location in locations %}
+              {% if "@" in location %}
+                {% continue %}
+              {% endif %}
+
+              {% set parts = location | replace(from="{", to="") | split(pat=" | ") %}
+              {% if parts | length > 0 %}
+                {{ parts[0] }}
+                {% if not loop.last %}&nbsp;&gt;&nbsp;{% endif %}
+              {% endif %}
+            {% endfor %}
+          </div>
+
+          <div style="margin-top:3pt;font-weight:bold;">
+            {{ translation.trip.countryTripMovements | default(value="Country Trip Movements") }}
+          </div>
+          <div>{{ row.AllBorderCrossings | replace(from=",", to="&nbsp;&gt;") | safe }}</div>
+        </div>
+      </div>
+
+      <div class="table">
+
+      {% set currentTrip = row.InnerId %}
+      {% set firstItem = false %}
+  {% endif %}
+
+  {# ---------------- Event day ---------------- #}
+  <div class="eventDay" data-iib-tripDomain="{{ row.DomainAbbreviation }}">
+    {% set weekday = row.Date | date(format="%A") | lower %}
+    <div style="padding:5pt;">
+      <div style="display:inline-block;margin-bottom:3pt;">
+        <i style="text-transform:capitalize;">
+          {{ translation.trip[weekday] | default(value=weekday) }}
+        </i>
+        &nbsp;<b>{{ row.Date }}</b><br />
+        {{ row.Events }}<br />
+
+        <div style="page-break-before:avoid;break-inside:avoid;margin-top:3pt;">
+          <a class="themeTextColor"
+             style="text-decoration:none;"
+             target="_blank"
+             href="https://www.google.com/maps/?q={{ row.AccommodationCoordinates }}"
+             data-iib-tripDomain="{{ row.DomainAbbreviation }}">
+            <div class="acc-icon"
+                 data-iib-tripDomain="{{ row.DomainAbbreviation }}"></div>
+            <span class="acc-text">
+              {{ row.Accommodation }} – {{ row.AccommodationCountry }}
+              – {{ row.AccommodationCoordinates }}
+              {{ row.AccommodationCoordinateAccuracy }}
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+</div>
+</section>
+
+{# ---------------- Last page ---------------- #}
+<section class="final-page" style="break-before:left;">
+  <div>
+    <img src="img/frog.svg" style="height:50pt;" />
+  </div>
+  <div>
+    <span class="immer-in-font-uc">Immer in</span>&nbsp;
+    <span class="bewegung-font-uc">Bewegung</span>
+  </div>
+  <div>
+    {{ queryParams.g }}
+  </div>
+</section>

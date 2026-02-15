@@ -1,0 +1,67 @@
+<style>
+html, body {height:100%;}
+section {max-width:100%!important;width:100%!important;margin:0!important;}
+#app{flex:1;}
+#iib-foot{display:none;}
+
+{% for tripDomain in common_trip_domains %}
+.iib-map-ref[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {
+  background-color: {{ tripDomain.Color }} !important;
+  color: #fff;
+  padding: 3pt 5pt;
+  text-decoration:none;
+}
+{% endfor %}
+
+:root[data-bs-theme="light"] .accommodationColor,
+:root[data-bs-theme="light"] .overviewColor { fill: #1d655e; }
+:root[data-bs-theme="light"] .polylineMap { stroke: #1d655e; }
+
+:root[data-bs-theme="dark"] .accommodationColor,
+:root[data-bs-theme="dark"] .overviewColor { fill: gold; }
+:root[data-bs-theme="dark"] .polylineMap { stroke: gold; }
+</style>
+
+<div style="margin-top:10pt;z-index:900; position:absolute; width:100%; text-align:center;">
+
+    <select id="alltrip" class="form-control text-center" style="max-width:200pt; display:inline-block;" onchange="history.pushState(null,'','?path=map'+this.value);page_load();">
+        <option value="">{{ translation.map.overallRoute | default(value="Overall route for all trips") }}</option>
+        {% for trip in map_country_list %}
+            <option value=":country:{{ trip.AccommodationCountry }}" {% if query_params.path is containing("country:") %}{% if query_params.path | split(pat="country:") | last == trip.AccommodationCountry %}selected{% endif %}{% endif %}>
+                {{ trip.AccommodationCountry }}
+            </option>
+        {% endfor %}
+    </select>
+
+    {% set theme_config = [] %}
+    {% if settings.Extension is defined and settings.Extension.Theme is defined %}
+        {% set theme_lines = settings.Extension.Theme | split(pat="\n") %}
+        {% set_global theme_config = theme_lines | first | split(pat=",") %}
+        {% set_global theme_list = theme_lines | slice(start=1) %}
+    {% endif %}
+
+    {% if theme_config | length >= 2 and theme_config[0] == "Enabled" %}
+
+    <select id="themeSelector" class="form-control text-center" style="max-width:200pt; display:inline-block;" onchange="history.pushState(null,'','?path=map:theme:'+this.value);page_load();">
+
+        <option value="">{{ theme_config[1] }}</option>
+
+        {% for item in theme_list %}
+
+            {% set_global parts = item | split(pat=":") %}
+            {% set theme_key = query_params.path | replace(from=("map:theme:"), to=("")) %}
+
+            <option value="{{ parts[0] }}" {% if theme_key == parts[0] %}selected{% endif %}>
+                {{ parts[1] }}
+            </option>
+
+        {% endfor %}
+
+    </select>
+    {% endif %}
+
+</div>
+
+<div id="map" style="height:100%; width:100%;"></div>
+
+<div id="map-pin-data" data-map='{{ map_data | json_encode }}' data-settings-assets='{% if theme_config | length >= 2 and theme_config[0] == "Enabled" %}{{ settings.Extension.Theme }}{% endif %}'></div>

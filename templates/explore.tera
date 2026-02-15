@@ -1,0 +1,52 @@
+<div id="path-explore">
+  <div class="breadcrumb">
+    <img class="icon-color" src="images/frog.svg" />
+    <div>{{ translation.explore.title | default(value="Explore") }}</div>
+    <!--<img src="images/arrow-right.svg" />
+    <div class="breadcrumb-link active warning"><span class="immer-in-font-uc" style="font-weight:normal;">Immer in</span>&nbsp;<span class="bewegung-font-uc">Bewegung</span></div>
+    -->
+  </div>
+
+  <input type="search" placeholder="{{ translation.menu.searchTrip | default(value="Search trip") }}" class="form-control" onkeydown="if(event.key==='Enter'){ history.pushState(null,'','?path=search:'+encodeURIComponent(this.value));page_load();}" />
+  <br />
+
+
+  <div class="card-container">
+
+
+  {% for row in explore %}
+
+      {% set cover_photo_id = cover_photos_list | get(key=row.OuterId, default="NO") %}
+
+      <a href="?path=trip:{{ row.OuterId }}" class="card" data-trip-domain="{{ row.TripDomain }}">
+        <div class="explore-cover" data-trip-domain="{{ row.TripDomain }}" data-trip-cover-photo-path="{{ row.CoverPhoto }}" style="
+            background-image: {%if cover_photo_id != "NO" %}url('{{ settings.Photos.ImmichUrl | safe }}api/assets/{{cover_photo_id}}/thumbnail'), linear-gradient(rgba(255,255,255,1)), {% endif %}url('images/travel.svg');
+            background-size: {%if cover_photo_id != "NO" %}cover, {% endif %}contain;
+            background-position: {%if cover_photo_id != "NO" %}center, {% endif %}center;
+            background-repeat: {%if cover_photo_id != "NO" %}no-repeat, {% endif %}no-repeat;
+            height:120pt;
+          ">
+          </div>
+        <!--<img src="{{ row.CoverPhoto }}" class="card-img-top" alt="...">-->
+        <div class="card-body">
+          <div class="card-title" data-trip-domain="{{ row.TripDomain }}">{{ row.OuterId }} {{ row.OverallDestination }}</div>
+          <div class="card-text">{{ row.TripDescription }}</div>
+        </div>
+        <div style="flex:1;"></div>
+        <div class="card-footer" data-trip-domain="{{ row.TripDomain }}">
+          <small class="text-body-secondary">{{ row.TripYear }} &#x2022; {{ row.NumberOfDays }} {{ translation.explore.days | default(value="days") }}</small>
+        </div>
+      </a>
+
+  {% endfor %}
+  </div>
+
+  <br />
+  <h2>{{ translation.explore.seeAllTripsPer | default(value="See all trips per") }}</h2>
+
+  <div class="breadcrumb" style="justify-content: center;">
+    <a href="?path=overview:year" class="breadcrumb-link {% if query_params.path == 'overview:year' %}active{% endif %}">{{ translation.overview.year | default(value="Year") }}</a>
+    <a href="?path=overview:country" class="breadcrumb-link {% if query_params.path == 'overview:country' %}active{% endif %}">{{ translation.overview.country | default(value="Country") }}</a>
+    <a href="?path=overview:plain" class="breadcrumb-link {% if query_params.path == 'overview:plain' %}active{% endif %}">{{ translation.overview.plain | default(value="Plain") }}</a>
+  </div>
+</div>

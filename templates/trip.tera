@@ -1,0 +1,315 @@
+<style>
+/* Background photo from thumbnail */
+{% set cover_photo_id = cover_photos_list | get(key=trip_summary[0].OuterId, default="NO") %}
+body {
+    background: {%if cover_photo_id != "NO" %} linear-gradient(var(--color-background-alpha)), url('{{ settings.Photos.ImmichUrl | safe }}api/assets/{{ cover_photo_id }}/thumbnail') {% endif %};
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+    }
+</style>
+<div id="path-trip">
+
+{% set_global theme_color = "" %}
+{% for item in common.common_trip_domains %}
+    {% if item.DomainAbbreviation == trip_summary[0].DomainAbbreviation %}
+        {% set_global theme_color = item.Color %}
+    {% endif %}
+{% endfor %}
+
+
+  <!--<div class="prev_next"><a href="?path=trip:{{ trip_previous[0].OuterId }}"><img src="images/arrow-left.svg" /></a><a href="?path=trip:{{ trip_next[0].OuterId }}"><img src="images/arrow-right.svg" /></a></div>-->
+
+  <div class="breadcrumb-trip">
+    <a href="?path=trip:{{ trip_previous[0].OuterId }}"><div class="breadcrumb-trip-link active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
+</svg></div></a>
+    <div style="display:grid;grid-template-columns: auto auto auto auto;align-items: center;">
+      <div class="widescreen">&nbsp;{{ translation.trip.trip | default(value="Trip") }}&nbsp;</div>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="widescreen bi bi-chevron-right" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+</svg>
+      <div class="breadcrumb-link active" style="background-color:{{ theme_color }}!important;">{{ trip_summary[0].OuterId }} {{ translation.trip.to | default(value="to") }} {{ trip_summary[0].OverallDestination }}</div>
+    </div>
+    <a href="?path=trip:{{ trip_next[0].OuterId }}"><div class="breadcrumb-trip-link active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+</svg>
+</div></a>
+  </div>
+
+
+  <details open class="trip" data-iib-tripDomain="{{ trip_summary[0].DomainAbbreviation }}">
+  <summary data-iib-tripDomain="{{ trip_summary[0].DomainAbbreviation }}" style="border-radius:3pt;user-select:none;">
+    {{ trip_summary[0].TripDescription }}
+  </summary>
+
+  <div class="trip-layout">
+
+    <!-- Left Column -->
+    <div style="display:flex;flex-direction:column; gap: 2pt;">
+
+      <div style="display:flex;gap:2pt;flex-direction:row;">
+        <div class="trip-details-container">
+          <label class="trip-details-label">
+            {{ translation.trip.departureDate | default(value="Departure Date") }}
+          </label>
+          <div class="trip-details-field" data-iib-tripDomain="{{ trip_summary[0].DomainAbbreviation }}">{{ trip_summary[0].DepartureDate }}</div>
+        </div>
+
+        <div class="trip-details-container">
+          <label class="trip-details-label">
+            {{ translation.trip.returnDate | default(value="Return Date") }}
+          </label>
+          <div class="trip-details-field" data-iib-tripDomain="{{ trip_summary[0].DomainAbbreviation }}">{{ trip_summary[0].ReturnDate }}</div>
+        </div>
+
+        <div class="trip-details-container">
+          <label class="trip-details-label">
+            {{ translation.trip.numberOfDays | default(value="Days Count") }}
+          </label>
+          <div class="trip-details-field" data-iib-tripDomain="{{ trip_summary[0].DomainAbbreviation }}">{{ trip_summary[0].NumberOfDays }}</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:2pt;flex-direction:row;">
+        <div class="trip-details-container">
+          <label class="trip-details-label">
+            {{ translation.trip.participantGroup | default(value="Participant Group") }}
+          </label>
+          <div class="trip-details-field" data-iib-tripDomain="{{ trip_summary[0].DomainAbbreviation }}">{{ trip_summary[0].ParticipantGroup }}</div>
+        </div>
+
+        <div class="trip-details-container">
+          <label class="trip-details-label">
+            {{ translation.trip.outerId | default(value="ID") }} ({{ trip_summary[0].InnerId }})
+          </label>
+          <div class="trip-details-field" data-iib-tripDomain="{{ trip_summary[0].DomainAbbreviation }}">{{ trip_summary[0].OuterId }} <span style="font-size: 0.7rem;color:var(--color-hover-background);"></span></div>
+        </div>
+
+        <div class="trip-details-container">
+          <label class="trip-details-label">
+            {{ translation.trip.numberOfCountries | default(value="Countries Count") }}
+          </label>
+          <div class="trip-details-field" data-iib-tripDomain="{{ trip_summary[0].DomainAbbreviation }}">
+          {% set uniqueCountries = trip_border_crossings[0].UniqueCountries | default(value="-") %}
+          {% if uniqueCountries == "-" %}
+            -
+          {% else %}
+            {{ uniqueCountries | split(pat=", ") | length }}
+          {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column; gap:2pt;">
+        <div class="trip-details-container">
+          <label class="trip-details-label">
+            {{ translation.trip.uniqueCountries | default(value="Unique Countries") }}
+          </label>
+          	<div class="trip-details-field" data-iib-tripDomain="{{ trip_summary[0].DomainAbbreviation }}">
+          		{# trip_border_crossings[0].UniqueCountries | default(value="-") #}
+			{% for country in trip_unique_countries %}
+				{{ country.Flag }}&nbsp;{{ country.Country }}{% if not loop.last %}, {% endif %}
+			{% endfor %}
+		</div>
+        </div>
+
+        <div class="trip-details-container">
+          <label class="trip-details-label">
+            {{ translation.trip.overallRoute | default(value="Overall Route") }}
+          </label>
+          <div class="trip-details-field" data-iib-tripDomain="{{ trip_summary[0].DomainAbbreviation }}">
+            {{ trip_border_crossings[0].OverallRoute }}
+          </div>
+        </div>
+
+        <div class="trip-details-container">
+          <label class="trip-details-label">
+            {{ translation.trip.countryTripMovements | default(value="Country Trip Movements") }}
+          </label>
+          <div class="trip-details-field" data-iib-tripDomain="{{ trip_summary[0].DomainAbbreviation }}">
+          {{ trip_border_crossings[0].AllBorderCrossings }}</div>
+        </div>
+
+        {# Optional Immich photo albums #}
+        {% if settings.Photos.Immich == "Enabled" %}
+	    
+	    {# Immich description search #}
+            {% if trip_immich_desc_search[0].ImmichDescSearch %}
+
+                  <a class="to-image-viewer" href='{{ settings.Photos.ImmichUrl }}search?query=%7B"description"%3A"(IIB-{{ trip_summary[0].OtherId }})"%7D#search-chips' target="_blank">
+                      <button type="button" class="item-viewer-button filter-button" data-iib-tripDomain="{{ trip_summary[0].DomainAbbreviation }}" style="width:100%;">
+                          <img src="images/photos.svg" />
+			{{ trip_immich_desc_search[0].ImmichDescSearch }}
+                      </button>
+                  </a>
+
+            {# Immich photo albums #}
+            {% elif trip_immich_album_name[0].ImmichAlbumName %}
+
+                  <a class="to-image-viewer" data-album="{{ trip_immich_album_name[0].ImmichAlbumName }}"   onclick="get_album_id_from_name('{{ settings.Photos.ImmichUrl }}', this.dataset.album).then(function(id){window.open('/albums/'+id)})" target="_blank">
+                      <button type="button" class="item-viewer-button filter-button" data-iib-tripDomain="{{ trip_summary[0].DomainAbbreviation }}" style="width:100%;">
+                          <img src="images/photos.svg" style="vertical-align: middle;" />
+			{{ trip_immich_album_name[0].ImmichAlbumName }}
+                      </button>
+                  </a>
+
+              {#{% if trip_summary[0].PhotoAlbums is containing(", ") %}
+                {% set_global photoAlbums = trip_summary[0].PhotoAlbums | split(pat=", ") %}
+              {% else %}
+                {% set_global photoAlbums = trip_summary[0].PhotoAlbums | split(pat=", ") %}
+              {% endif %}
+
+              {% for photoAlbum in photoAlbums %}
+                  <div type="button" class="filter-button"
+			onclick="openAlbum('{{ photoAlbum }}', '{{ settings.Photo.ImmichUrl }}api/', '{{ settings.Photos.ImmichApiKey }}')">
+                      Immich {{ photoAlbum }}
+                  </div>
+              {% endfor %}#}
+
+            {% endif %}
+        {% endif %}
+        
+        {# Optional Movie plugin #}
+        {% if settings.Plugin.Movie.enabled %}
+            {% set_global movieId = settings.Plugin.Movie.mapping | get(key=trip_summary[0].OuterId, default=false) %}
+            {% if movieId %}
+
+                <button class="filter-button" style="width:100%;" onclick="document.getElementById('movie').showModal();" ><img src="images/photos.svg" />
+                    {{ settings.Plugin.Movie.translation }} {{ movieId }}
+                </button>
+
+
+                <dialog class="item-viewer" id="movie">
+                  <div class="item-viewer-filename" style="position:absolute;">{{ movieId }}</div>
+                  t.mode='hidden';
+                  <video width="640" height="360" controls id="v" controls onloadedmetadata="
+                    t=this.textTracks[0];
+
+                    t.oncuechange=()=>d.innerHTML=[...t.activeCues].map(c=>c.text).join('<br>');
+                    ">
+                    <source src="{{ settings.Plugin.Movie.path }}{{ movieId }}.mp4" type="video/mp4">
+                    <track kind="subtitles" src="{{ settings.Plugin.Movie.path }}{{ movieId }}.txt" default>
+                    Your browser does not support the video tag.
+                  </video>
+
+                  <div id="d"></div>
+
+                </dialog>
+
+          {% endif %}
+        {% endif %}
+            
+
+        <!--<button class="filter-button"><img src="images/photos.svg" />Movie</button>-->
+        
+      </div>
+
+    </div>
+
+    <div><div id="map" style="width:100%;height:100%;border-radius:3pt;"></div></div>
+    <div id="map-pin-data" data-trip-map-overall='{{ trip_map_pins_overall | json_encode }}' data-trip-map-accommodation='{{ trip_map_pins_accommodation | json_encode }}' data-theme-color="{{ theme_color }}"></div>
+
+
+  </div>
+</details>
+
+<div class="days" data-iib-tripDomain="{{ trip_summary[0].DomainAbbreviation }}">
+  {% for day in trip_events %}
+  
+    <div class="day" data-iib-tripDomain="{{ trip_summary[0].DomainAbbreviation }}">
+    
+      <div class="day-left">
+      
+        <div class="day-event">
+
+            <div style="float:right;display:flex;flex-direction:column;gap:2pt;margin:0 0 5pt 5pt;">
+
+              {# Immich photos #}
+              {% if settings.Photos.Immich == "Enabled" and day.OuterId not in settings.Other.ExcludeDayPhotos %}
+
+                  <a class="to-image-viewer" href="?path=images:{{ day.OuterId }}:{{ day.Date }}" target="_blank">
+                      <button type="button" class="item-viewer-button filter-button" data-iib-tripDomain="{{ trip_summary[0].DomainAbbreviation }}">
+                          <img src="images/photos.svg" />
+                      </button>
+                  </a>
+
+              {% endif %}
+
+              {# Diary plugin #}
+
+              {% set_global day_year = day.Date | date(format="%G") %}
+              {% set_global day_week = day.Date | date(format="W%V") %} {# You need W before the letter not to match 19 to 1989 (W19 not in 1989) #}
+              {% set_global day_date = day.Date | date(format="%Y%m%d") %}
+
+              {% set diary_config = [] %}
+              {% if settings.Extension is defined and settings.Extension.Diary is defined %}
+                  {% set diary_lines = settings.Extension.Diary | split(pat="\n") %}
+                  {% set_global diary_config = diary_lines | first | split(pat=",") %}
+                  {% set_global diary_filelist = diary_lines | slice(start=1) %}
+              {% endif %}
+
+              {% if diary_config | length >= 2 and diary_config[0] == "Enabled" %}
+                {% for file in diary_filelist %}
+                  {% if day_year in file and day_week in file %}
+
+                    <button class="item-viewer-button" onclick="const img = document.getElementById('diary_image_{{ loop.index }}');if (!img.src) img.src = img.dataset.src;document.getElementById('diary_{{ loop.index }}').showModal();" type="button" data-iib-tripDomain="{{ trip_summary[0].DomainAbbreviation }}">
+                        <img src="images/diary.svg" />
+                    </button>
+
+                    <dialog class="item-viewer" id="diary_{{ loop.index }}"  onclick="this.close();">
+                      <div class="item-viewer-filename" style="position:absolute;">{{ file }}</div>
+                      <img id="diary_image_{{ loop.index }}" data-src="{{ diary_config[2] }}{{ file }}" title="{{ file }}">
+                    </dialog>
+
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+
+              {# Passport plugin #}
+
+              {% set passport_config = [] %}
+              {% if settings.Extension is defined and settings.Extension.Passport is defined %}
+                  {% set passport_lines = settings.Extension.Diary | split(pat="\n") %}
+                  {% set_global passport_config = passport_lines | first | split(pat=",") %}
+                  {% set_global passport_filelist = passport_lines | slice(start=1) %}
+              {% endif %}
+
+              {% if passport_config | length >= 2 and passport_config[0] == "Enabled" %}
+                {% for file in passport_filelist %}
+                  {% if day_date in file %}
+
+                    <button class="item-viewer-button" onclick="const img = document.getElementById('passport_image_{{ loop.index }}');if (!img.src) img.src = img.dataset.src;document.getElementById('passport_{{ loop.index }}').showModal();" type="button" data-iib-tripDomain="{{ trip_summary[0].DomainAbbreviation }}">
+                        P
+                    </button>
+
+                    <dialog class="item-viewer" id="passport_{{ loop.index }}"  onclick="this.close();">
+                      <div class="item-viewer-filename" style="position:absolute;">{{ file }}</div>
+                      <img id="passport_image_{{ loop.index }}" data-src="{{ passport_config[2] }}{{ file }}" title="{{ file }}">
+                    </dialog>
+
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+
+          </div>
+
+        {{ day.Events }}
+
+        </div>
+                
+        <div class="day-foot" data-iib-tripDomain="{{ trip_summary[0].DomainAbbreviation }}">
+          <div class="day-label"><div class="day-icon" data-iib-tripDomain='{{ trip_summary[0].DomainAbbreviation }}'>{{ loop.index - 1 }}</div> {{ day.Weekday | default(value="") }} {{ day.Date }}</div>
+           &nbsp; <a style="text-decoration:none;" target="_blank" href="{{ settings.Other.ExternalMapProvider }}{{ day.AccommodationCoordinates }}" data-iib-tripDomain="{{ trip_summary[0].DomainAbbreviation }}">
+              <div class="acc-icon" data-iib-tripDomain='{{ trip_summary[0].DomainAbbreviation }}'></div>
+              <span class="acc-text">{{ day.Accommodation }} – {{ day.AccommodationCountryFlag }} {{ day.AccommodationCountry }} – {{ day.AccommodationCoordinates }} {{ day.AccommodationCoordinateAccuracy | default(value="") }}</span>
+          </a>
+        </div>
+      
+      </div>
+            
+
+    </div>
+  {% endfor %}
+</div>
+
+</div>

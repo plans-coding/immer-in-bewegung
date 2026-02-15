@@ -1,0 +1,158 @@
+<style>
+
+  section {max-width:100%!important;width:100%!important;margin:0!important;}
+  #iib-foot{display:none;}
+  #app {height: 100%;overflow: auto;}
+
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+
+  #dataset_container {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+  }
+  #left-column {
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+    border-right: 1px solid var(--color-hover-background);
+    padding:5pt;
+    gap:2pt;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color:var(--color-hover-background);
+  }
+  #right-column {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+    background-color:var(--color-submenu-background);
+  }
+
+  #sql-output {
+    flex: 1;
+    overflow: hidden;
+    padding-top:5pt;
+  }
+
+  #cellViewer { padding:3pt 5pt 3pt 5pt;margin:5pt;border-radius:3pt;font-size:0.8em;max-height:20%;overflow:auto; }
+
+  .tabulator {
+    margin:0 5pt 5pt 5pt;
+  }
+
+  #sql-output-data .tabulator .tabulator-table .tabulator-cell.frozen {
+      background-color: #e0e0e0;  /* same as header background */
+      color: #000;                /* same as header text color */
+      font-weight: bold;           /* optional for emphasis */
+      border-right: 1px solid #ccc; /* match header border */
+  }
+
+  .hidden {display:none!important;}
+
+  summary {background-color:var(--color-hover-background);color:var(--color-hover-text);padding:2pt;}
+  details div {font-size:0.9em;padding:3pt;color:var(--color-text);}
+  details div:hover {background-color:var(--color-filter);border-radius:3pt;color:var(--color-filter-text);}
+
+  .rotate-animation {
+      transform-origin: center;
+      animation: spin 2s linear infinite; /* continuous clockwise rotation */
+  }
+
+  @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+  }
+
+  .inactivated-button {background-color:var(--color-hover-background) !important;color:var(--color-hover-text) !important;}
+
+</style>
+
+<script id="sql_output_data" type="application/json"></script>
+
+<div id="dataset_container">
+
+  <div id="left-column">
+
+    <details>
+      <summary style="cursor:pointer;">{{ translation.dataset.general | default(value="General") }}</summary>
+      <div style="background-color:var(--color-background);padding:2pt;border-radius:5pt;">
+<div style="cursor:pointer;" data-sql="SELECT
+    m.name AS table_name,
+    p.name AS column_name
+FROM sqlite_master m
+JOIN pragma_table_info(m.name) p
+WHERE m.type='table' ORDER BY table_name;"
+            onclick="load_code_editor(this.dataset.sql)">{{ translation.dataset.allFieldNames | default(value="All field names") }}</div>
+          </div>
+    </details>
+
+    <details open>
+      <summary style="cursor:pointer;">{{ translation.dataset.tables | default(value="Tables") }}</summary>
+      <div style="background-color:var(--color-background);padding:2pt;border-radius:5pt;">
+      {% for item in table_list %}
+        <div style="cursor:pointer;" onclick="load_code_editor('SELECT * FROM ' + this.innerHTML + ';');user_sql_execution();">{{ item.name }}</div>
+      {% endfor %}
+      </div>
+    </details>
+
+    <details>
+      <summary style="cursor:pointer;">{{ translation.dataset.predefinedQueries | default(value="Pre-defined queries") }}</summary>
+      <div style="background-color:var(--color-background);padding:2pt;border-radius:5pt;">
+      {% for item in query_templates %}
+        <div style="cursor:pointer;" onclick="load_code_editor(get_predefined_query('{{ item }}'));">{{ item }}</div>
+      {% endfor %}
+    </details>
+
+    <details>
+      <summary style="cursor:pointer;">{{ translation.dataset.customQueries | default(value="Custom queries") }}</summary>
+      <div style="background-color:var(--color-background);padding:2pt;border-radius:5pt;" id="custom_queries">
+
+      {% for query in stored_custom_queries %}
+          <div style="cursor:pointer;"
+              onclick="custom_queries('{{ query.rowid }}');">
+              {{ query.Name }}
+          </div>
+      {% endfor %}
+
+      </div>
+    </details>
+
+
+  </div>
+
+  <div id="right-column">
+
+    <div style="display:flex;padding:10pt 5pt 5pt 5pt;gap:5pt;">
+      <button class="black-button" onclick="document.getElementById('left-column').classList.toggle('hidden');"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filetype-sql" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M14 4.5V14a2 2 0 0 1-2 2v-1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM0 14.841a1.13 1.13 0 0 0 .401.823q.194.162.478.252c.284.09.411.091.665.091q.507 0 .858-.158.355-.159.54-.44a1.17 1.17 0 0 0 .187-.656q0-.336-.135-.56a1 1 0 0 0-.375-.357 2 2 0 0 0-.565-.21l-.621-.144a1 1 0 0 1-.405-.176.37.37 0 0 1-.143-.299q0-.234.184-.384.187-.152.513-.152.214 0 .37.068a.6.6 0 0 1 .245.181.56.56 0 0 1 .12.258h.75a1.1 1.1 0 0 0-.199-.566 1.2 1.2 0 0 0-.5-.41 1.8 1.8 0 0 0-.78-.152q-.44 0-.776.15-.337.149-.528.421-.19.273-.19.639 0 .302.123.524t.351.367q.229.143.54.213l.618.144q.31.073.462.193a.39.39 0 0 1 .153.325q0 .165-.085.29A.56.56 0 0 1 2 15.31q-.167.07-.413.07-.176 0-.32-.04a.8.8 0 0 1-.248-.115.58.58 0 0 1-.255-.384zm6.878 1.489-.507-.739q.264-.243.401-.6.138-.358.138-.806v-.501q0-.556-.208-.967a1.5 1.5 0 0 0-.589-.636q-.383-.225-.917-.225-.527 0-.914.225-.384.223-.592.636a2.14 2.14 0 0 0-.205.967v.5q0 .554.205.965.208.41.592.636a1.8 1.8 0 0 0 .914.222 1.8 1.8 0 0 0 .6-.1l.294.422h.788ZM4.262 14.2v-.522q0-.369.114-.63a.9.9 0 0 1 .325-.398.9.9 0 0 1 .495-.138q.288 0 .495.138a.9.9 0 0 1 .325.398q.115.261.115.63v.522q0 .246-.053.445-.053.196-.155.34l-.106-.14-.105-.147h-.733l.451.65a.6.6 0 0 1-.251.047.87.87 0 0 1-.487-.147.9.9 0 0 1-.32-.404 1.7 1.7 0 0 1-.11-.644m3.986 1.057h1.696v.674H7.457v-3.999h.79z"/>
+</svg></button>
+
+      {% set dataset_config = settings.Other.Dataset | split(pat=",") %}
+
+      {% if dataset_config and dataset_config[0] == "Enabled" and dataset_config[1] %}<button class="black-button" onclick="window.open('{{ dataset_config[1] }}', '_blank');">{{ translation.dataset.externalEditor | default(value="External editor") }} <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"></path>
+          <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"></path>
+        </svg></button>{% endif %}
+      <button style="flex:1;" class="filter-button" id="run_query_button" onclick="user_sql_execution();">{{ translation.dataset.runQuery | default(value="Run query") }} <svg xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;" width="20" height="20" fill="currentColor" class="bi bi-play" viewBox="0 0 16 16">
+    <path d="M10.804 8 5 4.633v6.734zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696z"/>
+</svg></button>
+      <div style="display:none;" id="loading-overlay"><img src="images/frog.svg" style="width:40px;height:40px;" class="rotate-animation" /></div>
+    </div>
+
+	<div style="margin:0 5pt 5pt 5pt;background-color:var(--color-background);border: 3pt solid var(--color-filter);
+          border-radius:3pt;max-height:20%;overflow:auto;"><textarea id="code_editor">SELECT * from bewa_Overview;</textarea></div>
+
+    <div id="sql-output">
+      <div id="sql_output_table"></div>
+    </div>
+
+    <div id="cellViewer" contenteditable="true" onbeforeinput="return false"></div>
+
+  </div>
+
+</div>

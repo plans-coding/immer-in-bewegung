@@ -1,0 +1,39 @@
+<div class="breadcrumb widescreen">
+  <img class="icon-color" src="images/frog.svg" />
+  <div>{{ translation.statistics.title | default(value="Themes") }}</div>
+  <img src="images/arrow-right.svg" />
+  <a href="?path=statistics:summary" class="breadcrumb-link {% if query_params.path == 'statistics:summary' %}active{% endif %}">{{ translation.statistics.summary | default(value="Summary") }}</a>
+  <a href="?path=statistics:visits" class="breadcrumb-link {% if query_params.path == 'statistics:visits' %}active{% endif %}">{{ translation.statistics.visits | default(value="Visits") }}</a>
+  <a href="?path=statistics:overnights" class="breadcrumb-link {% if query_params.path == 'statistics:overnights' %}active{% endif %}">{{ translation.statistics.overnights | default(value="Overnights") }}</a>
+  {% set theme_config = settings.Extension.Theme | split(pat="\n") | first | split(pat=",") %}
+  {% if theme_config[0] == "Enabled" %}
+    <a href="?path=statistics:themes" class="breadcrumb-link {% if query_params.path == 'statistics:themes' %}active{% endif %}">{{ theme_config[1] | default(value="Themes") }}</a>
+  {% endif %}
+</div>
+
+{% if theme_config[0] == "Enabled" %}
+  <table class="table table-hover" style="width:100%;">
+      <thead style="position:sticky;top:0;background-color:;">
+          <tr>
+              <td>
+                  <b>{{ theme_config[1] | default(value="Theme") }}</b>
+              </td>
+              <td style="text-align:center;">
+                  <b>{{ theme_config[2] | default(value="Count") }}</b>
+              </td>
+          </tr>
+      </thead>
+  
+      {% for theme_row in statistics_theme_count %}
+              <tr>
+                  <td>{{ theme_row.ThemeDescription }}</td>
+                  <td style="text-align:center;">{{ theme_row.ThemeCount }}</td>
+              </tr>
+      {% endfor %}
+  </table>
+
+{% else %}
+
+  Themes not activated.
+  
+{% endif %}

@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+  <title>Register of Trips</title>
+
+  <link rel="shortcut icon" href="img/frog.svg" />
+
+  <script>
+    window.PagedConfig = {
+      auto: false //Prevent Paged.js from auto-starting
+    };
+  </script>
+
+  <script src="bundle/pagedjs/paged.polyfill.js"></script>
+  <script src="bundle/sqljs/sql-wasm.js"></script>
+
+  <style>
+
+    @font-face {
+        font-family: 'Cairo';
+        src: url('bundle/fonts/Cairo-VariableFont_slnt,wght.ttf') format('truetype');
+    }
+
+    @font-face {
+        font-family: 'Righteous';
+        src: url('bundle/fonts/Righteous-Regular.ttf') format('truetype');
+    }
+
+    body {font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";}
+
+    .immer-in-font-uc {font-family: 'Cairo', sans-serif;text-transform: uppercase;}
+    .bewegung-font-uc {font-family: 'Righteous', sans-serif;text-transform: uppercase;}
+
+    /* Standard page margin 1 inch (2.54 cm) */
+
+    @page {
+      size: A4;
+
+      @bottom-center {
+        content: string(title-full);
+      }
+
+    }
+
+    @page :left  {
+
+      @bottom-left {
+        content: counter(page);
+      }
+
+    }
+
+    @page :right {
+
+      @bottom-right {
+        content: counter(page);
+      }
+
+    }
+
+    @page title {
+      margin:0;
+      @left-top { content: none; }
+      @top-center { content: none; }
+      @bottom-center { content: none; }
+      @bottom-right { content: none; }
+    }
+
+    .title-page {
+      page: title;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    section.title-page::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vh;
+      height: 12cm;
+      background: #1d655e;
+      z-index: -1;
+      margin:-1in;
+    }
+
+    @page title {
+      margin: 0;
+    }
+
+    .link::after {
+      content: target-counter(attr(href url), page);
+      color:#000;
+      background-color:#fff;
+      border-radius:20pt;
+      width:20pt;
+      text-align:center;
+      display:inline-block;
+    }
+
+    h1 {
+      font-size: 3em;
+      string-set: title attr(data-title) title-full attr(data-title-full) iib-tripDomain attr(data-iib-tripDomain);
+      font-family: 'Cairo', sans-serif;
+      line-height: 1.2;
+    }
+
+    section.tripSection::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vh;
+      height: 12cm;
+      z-index: -1;
+      margin:-1in;
+    }
+
+    section {
+      break-before: page;
+    }
+
+    section.tripSection {
+      page: section-page;
+    }
+
+    .tripSection h1 {color:#fff;}
+
+    .tripHeader {
+      height: 9.45cm;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+
+    @page section-page:left {
+
+      margin-left: 2.04cm;
+      margin-right: 3.04cm;
+
+      @left-top {
+        content: string(title);
+        width: 28mm;
+        height: 10mm;
+        line-height:10mm;
+        transform: rotate(-90deg);
+        transform-origin: top left;
+        position: relative;
+        top: 28mm;
+        color:#fff;
+      }
+    }
+
+    .pagedjs_right_page section.tripSection::before {
+      margin-left:-3.04cm!important;
+    }
+
+    @page section-page:right {
+
+      margin-left: 3.04cm;
+      margin-right: 2.04cm;
+
+      @right-top {
+        content: string(title);
+        width: 28mm;
+        height: 10mm;
+        right: 7.6mm;
+        line-height:10mm;
+        transform: rotate(90deg);
+        transform-origin: top right;
+        position: relative;
+        top: 28mm;
+        color:#fff;
+      }
+    }
+
+    @page final-page {
+    margin:0;
+      @left-top { content: none; }
+      @top-center { content: none; }
+      @bottom-center { content: none; }
+      @bottom-right { content: none; }
+      @bottom-left { content: none; }
+    }
+
+    .tripSummary {
+        padding:10pt;
+        border-radius:20pt;
+        margin-top:20pt;
+        margin-bottom:10pt;
+      }
+
+    .final-page {
+      page: final-page;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      height: 100vh;
+      font-size: 1em;
+      break-before: left;
+      padding-bottom: 2cm;
+    }
+  
+</style>
+
+<template id="liquidjsTemplateStyle">
+{% for tripDomain in tripDomains[0] %}
+
+  :root {
+    --theme-color-{{ tripDomain.DomainAbbreviation }}: {{ tripDomain.Color }};
+  }
+
+  .pagedjs_margin-left-top[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}']{
+    background: {{ tripDomain.Color }}!important;
+  }
+
+  .eventDay:not(:first-child)[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {
+    border-top:1pt solid {{ tripDomain.Color }}22;
+  }
+
+  section.tripSection[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}']::before {
+    background-color: {{ tripDomain.Color }};
+    color:#fff;
+  }
+
+  .themeColorLight[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {
+    background-color: {{ tripDomain.Color }}22;
+
+  }
+
+  .themeBgColor[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {
+    background-color: {{ tripDomain.Color }};
+    padding:3pt 10pt 3pt 10pt;
+    margin:2pt;
+    color:#fff;
+    display:inline-block;
+    border-radius:10pt;
+  }
+
+  .link[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {
+    color: {{ tripDomain.Color }};
+    text-decoration: none;
+  }
+
+  .themeTextColor[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}']{
+    color: {{ tripDomain.Color }};
+  }
+
+  .accommodationColor[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'], .overviewColor[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {fill:{{ tripDomain.Color }};}
+  .polylineMap[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {stroke:{{ tripDomain.Color }};}
+  .acc-icon[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] {
+    mask: url(img/house.svg) no-repeat center / contain;
+    -webkit-mask: url(img/house.svg) no-repeat center / contain;
+    width: 0.9em;
+    height: 0.9em;
+    display:inline-block;
+    transform: translateY(2px);
+  }
+
+  .acc-icon[data-iib-tripDomain='{{ tripDomain.DomainAbbreviation }}'] { background-color: {{ tripDomain.Color }}; }
+
+  div[style*='first-iib-tripDomain: "{{ tripDomain.DomainAbbreviation }};'] .pagedjs_margin-left-top, div[style*='first-iib-tripDomain: "{{ tripDomain.DomainAbbreviation }};'] .pagedjs_margin-right-top {
+  background-color: {{ tripDomain.Color }} !important;
+
+}
+
+{% endfor %}
+
+{% if settings.Feature.ImmichCoverAlbumId %}
+  {% for row in overview[0] %}
+    {% if row.CoverPhoto %}
+
+        .tripSection[data-inner-id='{{ row.InnerId }}']::before {
+          background: linear-gradient(to bottom, transparent 50%, var(--theme-color-{{ row.DomainAbbreviation }})), url('{{ row.CoverPhoto }}');
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+        }
+
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+</template>
+
+  <template id="liquidjsTemplate">
+
+    <!-- Cover page -->
+    <section class="title-page title-page-background">
+      <div style="text-align:center;margin-top:-100pt;">
+        <img src="img/frog.svg" style="height:200pt;filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.4));" />
+        <div class="image-mask"></div>
+      </div>
+      <div style="height:100pt;margin-top:100pt;image-mask"><h1 style="line-height: 0;">{{ translation.report.registerOfTrips | default: "Register of Trips" }}</h1></div>
+      <div style="height:100pt;font-family: 'Cairo', sans-serif;font-size: 2em;">{{ queryParams.t }}</div>
+    </section>
+
+    <!-- Blank page -->
+    <section class="blank-page"></section>
+
+    <!-- Table of Contents -->
+    <section>
+      <h1>{{ translation.menu.overview | default: 'Overview' }}</h1>
+      {% assign currentYear = "" %}
+      {% assign currentTrip = "" %}
+      {% for row in overview[0] %}
+        {% if row.InnerId != currentTrip %}
+
+          <div style="display:flex;align-items: center;"><div style="width:1.5cm;font-size:1.2em;">
+          {% if row.Year != currentYear %}
+            <b>{{ row.Year }}</b>
+            {% assign currentYear = row.Year %}
+          {% endif %}
+          </div><div><a class="link" href="#{{ row.InnerId }}" data-iib-tripDomain="{{row.DomainAbbreviation}}"><div style="width:3cm;display:inline-block;text-align:center;"><div class="themeBgColor" data-iib-tripDomain="{{row.DomainAbbreviation}}">{{ row.OuterId }}</div></div>&nbsp;<b>{{ row.OverallDestination }}</b>&nbsp;</a></div></div>
+
+        {% assign currentTrip = row.InnerId %}
+        {% endif %}
+      {% endfor %}
+    </section>
+
+
+    {% assign currentTrip = "" %}
+    {% assign firstItem = true %}
+
+    {% for row in tripData[0] %}
+      {% if row.InnerId != currentTrip %}
+        {% unless firstItem %}
+          </div>
+          </section>
+        {% endunless %}
+            <section class="tripSection" data-iib-tripDomain="{{row.DomainAbbreviation}}" data-inner-id="{{ row.InnerId }}">
+
+            <div class="tripHeader themeColorDark" data-iib-tripDomain="{{row.DomainAbbreviation}}">
+              <h1 style="margin:0;" data-title="{{ row.OuterId }}" data-title-full="{{ row.OuterId }} {{ row.OverallDestination }}" data-iib-tripDomain="{{row.DomainAbbreviation}}" id="{{ row.InnerId }}">{{ row.OuterId }} {{ row.OverallDestination }}</h1>
+              <div style="padding-bottom:20pt;margin-top:10pt;font-size:1.1em;color:#fff;">{{ row.TripDescription }}</div>
+            </div>
+
+            <div class="tripSummary themeColorLight" data-iib-tripDomain="{{row.DomainAbbreviation}}">
+              <div style="display:grid;grid-template-columns: 1fr 1fr 1fr;;gap:2pt;text-align:center;">
+
+                <div style="margin-top:3pt;font-weight:bold;">{{ translation.trip.departureDate | default: 'Departure Date' }}</div>
+                <div style="margin-top:3pt;font-weight:bold;">{{ translation.trip.returnDate | default: 'Return Date' }}</div>
+                <div style="margin-top:3pt;font-weight:bold;">{{ translation.trip.numberOfDays | default: 'Number of Days' }}</div>
+
+                <div>{{ row.DepartureDate }}</div>
+                <div>{{ row.ReturnDate }}</div>
+                <div>{{ row.NumberOfDays }}
+                  {% assign start_date = row.DepartureDate | date: "%s" %}
+                  {% assign end_date = row.ReturnDate | date: "%s" %}
+                  {% assign difference_in_seconds = end_date | minus: start_date %}
+                  {% assign difference_in_days = difference_in_seconds | divided_by: 86400 %}
+                  {{difference_in_days}}
+                </div>
+
+                <div style="margin-top:3pt;font-weight:bold;">{{ translation.trip.participantGroup | default: 'Participant Group' }}</div>
+                <div style="margin-top:3pt;font-weight:bold;">{{ translation.trip.outerId | default: 'ID' }}</div>
+                <div style="margin-top:3pt;font-weight:bold;">{{ translation.trip.numberOfCountries | default: 'Number of Countries' }}</div>
+
+                <div>{{ row.ParticipantGroup }}</div>
+                <div>{{ row.OuterId }}</div>
+                <div>
+                    <!-- count countries WITHOUT prefix ** (but WITH * and +) and only count unique instances -->
+                    {% assign countryCount = row.AllBorderCrossings | split: ", " | where_exp:  "item", "item[0] != '*' and item[1] != '*'" | where_exp:  "item", "item != settings.Base.HomeCountry" | join: ", " | remove: "*" | remove: "+" | split: ", " | uniq %}
+                    {{ countryCount | size }}
+                </div>
+
+              </div>
+
+              <div style="text-align:center;">
+                <div style="margin-top:3pt;font-weight:bold;">{{ translation.trip.uniqueCountries | default: 'Unique Countries' }}</div>
+                <div>{{ countryCount  | join: ", " }}</div>
+
+                <div style="margin-top:3pt;font-weight:bold;">{{ translation.trip.overallRoute | default: 'Overall Route' }}</div>
+                <div>
+                {% assign locations = row.MapPins | split: " }" %}
+
+                  {% for location in locations %}
+                    {% if location contains "@" %}
+                      {% continue %}
+                    {% endif %}
+
+                    {% assign parts = location | remove: "{" | split: " | " %}
+
+                    {% if parts %}
+                      {% assign mapPinName = parts[0] %}
+                      {{mapPinName}}
+                      {% unless forloop.last %}&nbsp;> {% endunless %}
+                    {% endif %}
+                  {% endfor %}
+                  </div>
+
+                <div style="margin-top:3pt;font-weight:bold;">{{ translation.trip.countryTripMovements | default: 'Country Trip Movements' }}</div>
+                <div>{{ row.AllBorderCrossings | replace: ",", "&nbsp;>" }}</div>
+              </div>
+            </div>
+
+            <div class="table">
+
+        {% assign currentTrip = row.InnerId %}
+        {% assign firstItem = false %}
+      {% endif %}
+
+
+      <div class="eventDay" data-iib-tripDomain="{{row.DomainAbbreviation}}">
+        {% assign weekday = row.Date | date: "%A" | downcase %}
+        <div style="padding:5pt;"><div style="display:inline-block;margin-bottom:3pt;"><i style="text-transform: capitalize;">{{ translation.trip[weekday] | default: weekday }}</i>&nbsp;<b>{{ row.Date }}</b><br />{{ row.Events }}<br /><div style="page-break-before: avoid;break-inside: avoid;margin-top:3pt;"><a class="themeTextColor" style="text-decoration:none;" target="_blank" href="https://www.google.com/maps/?q={{ row.AccommodationCoordinates }}" data-iib-tripDomain="{{row.DomainAbbreviation}}"><div class="acc-icon" data-iib-tripDomain="{{row.DomainAbbreviation}}"></div> <span class="acc-text">{{ row.Accommodation }} – {{ row.AccommodationCountry }} – {{ row.AccommodationCoordinates }} {{ row.AccommodationCoordinateAccuracy }}</span></a></div></div>
+      </div>
+
+    {% endfor %}
+    </div>
+    </section>
+
+    <!-- Last page -->
+    <section class="final-page" style="break-before: left;">
+      <div>
+        <img src="img/frog.svg" style="height:50pt;" />
+      </div>
+      <div>
+        <span class="immer-in-font-uc">Immer in</span>&nbsp;<span class="bewegung-font-uc">Bewegung</span>
+      </div>
+      <div>
+        {{ queryParams.g }}
+      </div>
+    </section>
+
+
+  </template>
+
+</head>
+<body>
+
+  <!-- Trips -->
+  <div id="liquidjsContent"></div>
+
+  <script type="module">
+
+        function convertSqlToJson(db, sqlQuery, sqlQueryName) {
+          if (db) {
+
+              const sqlResult = db.exec(sqlQuery);
+              //console.log("SQL Result:", sqlResult);
+              // Loop through each result (columns and values for each query)
+              const jsonData = sqlResult.map(result => {
+                  const columnNames = result.columns;
+                  return result.values.map(row => {
+                      let obj = {};
+                      columnNames.forEach((col, index) => {
+                          obj[col] = row[index];
+                      });
+                      return obj;
+                  });
+              });
+              console.log("JSON Data for "+sqlQueryName, jsonData);
+              return jsonData;
+
+          } else {
+              return;
+          }
+      }
+
+      function getQueryParams() {
+          const params = new URLSearchParams(window.location.search);
+          let queryObject = {};
+          for (const [key, value] of params.entries()) {
+              queryObject[key] = value;
+          }
+          return queryObject;
+      }
+
+      function transformData(input) {
+          if (input) {
+        let result = {};
+
+        input[0].forEach(item => {
+            const { AttributeGroup, Attribute, Value } = item;
+
+            if (AttributeGroup === "Pluigin") {
+                // Fix typo: "Pluigin" -> "Plugin"
+                if (!result["Plugins"]) result["Plugins"] = {};
+                result["Plugins"][Attribute] = JSON.parse(Value);
+            } else if (AttributeGroup === "Plugin") {
+                if (!result["Plugins"]) result["Plugins"] = {};
+                result["Plugins"][Attribute] = JSON.parse(Value);
+            } else {
+                if (!result[AttributeGroup]) result[AttributeGroup] = {};
+                result[AttributeGroup][Attribute] = Value;
+            }
+        });
+
+        return result;
+        } else {return;}
+      }
+
+      const sqlPromise = await initSqlJs({ locateFile: file => `bundle/sqljs/${file}` });
+
+      let dbContentBind = localStorage.getItem('dbContentServer');
+      const binaryData = new Uint8Array(atob(dbContentBind).split('').map(char => char.charCodeAt(0)));
+      const response = { arrayBuffer: async () => binaryData.buffer };
+
+      const arrayBuffer = await response.arrayBuffer();
+      const dbInstance = new sqlPromise.Database(new Uint8Array(arrayBuffer));
+      console.log("Database loaded.");
+      //console.log(dbInstance);
+
+      let settings;
+      let settingsFile;
+      if (localStorage.getItem('dbSource') === "settings.json" || localStorage.getItem('dbSource') === null ) {
+
+          settingsFile = await fetch('personal/settings.json');
+          if (!settingsFile.ok) {
+            console.log('Settings file not found and no binded database.');
+            let queryParams = getQueryParams();
+            if ( queryParams.p != 'source' ) { window.location = 'index.html?p=source&m=no_settings_file'; }
+
+          } else {
+            settings = await settingsFile.json();
+            //console.log(settings);
+            console.log("Using database specified in settings.json: " + settings.Base.SqliteFile);
+          }
+
+      } else {
+          console.log('Reading settings from database file in local storage.');
+      }
+
+      settings = transformData(convertSqlToJson(dbInstance, 'SELECT * FROM bewxx_Settings', 'settings'));
+      console.log(settings);
+
+
+      let translation;
+
+      if (settings.Base.LanguageFile != "english.json") {
+        try {
+            const translationFile = await fetch("personal/"+settings.Base?.LanguageFile);
+            translation = await translationFile.json();
+            console.log(translation);
+        } catch (error) {
+            console.log(`Langugage file error: ${error.message}`);
+        }
+      } else { translation = {}; }
+
+      const queryParams = getQueryParams();
+      console.log(queryParams);
+
+      const overview = convertSqlToJson(dbInstance, `
+      SELECT *, SUBSTR(InnerId, 1, 1) AS DomainAbbreviation, SUBSTR(DepartureDate, 1, 4) AS Year FROM bewa_Overview
+	  WHERE InnerId IS NOT NULL AND OuterId LIKE '%`+queryParams.oi+`%' AND bewa_Overview.ParticipantGroup LIKE '%`+queryParams.pg+`%' AND bewa_Overview.InnerId LIKE '%`+queryParams.ii+`%'
+      ORDER BY Year DESC, DepartureDate DESC;
+      `, "Overview");
+
+      const tripData = convertSqlToJson(dbInstance, `
+      SELECT *, SUBSTR(InnerId, 1, 1) AS DomainAbbreviation, SUBSTR(DepartureDate, 1, 4) AS Year FROM bewb_Events
+      LEFT JOIN bewa_Overview USING (InnerId)
+	  LEFT JOIN IIBc_BorderCrossings USING (InnerId)
+	  WHERE bewb_Events.InnerId IS NOT NULL AND bewa_Overview.OuterId LIKE '%`+queryParams.oi+`%' AND bewa_Overview.ParticipantGroup LIKE '%`+queryParams.pg+`%' AND bewa_Overview.InnerId LIKE '%`+queryParams.ii+`%'
+      ORDER BY Year DESC, DepartureDate DESC, Date ASC;
+      `, "AllTripData");
+
+      //console.log(tripData);
+
+      if (translation?.report?.registerOfTrips) {
+        document.title = translation.report.registerOfTrips;
+      }
+
+      alert(translation?.report?.startMessage ?? "Click OK to start. Then wait until the print dialouge is shown. This step may take minutes.");
+
+      const { Liquid } = await import("./bundle/liquidjs/liquid.browser.min.js");
+      let engine = new Liquid();
+
+      /* ##### Get cover photo ##### */
+      console.log(settings.Feature.ImmichApiKey);
+      if (settings.Feature.ImmichCoverAlbumId) {
+          const coverPhotoAlbum = await fetch(settings.Feature.ImmichApiUrl + 'albums/' + settings.Feature.ImmichCoverAlbumId, { headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': settings.Feature.ImmichApiKey
+                    }});
+          const coverPhotoAlbumJson = await coverPhotoAlbum.json();
+          //console.log(coverPhotoAlbumJson);
+          const immichTransformed = Object.fromEntries(
+            coverPhotoAlbumJson['assets'].map(item => [item.originalPath, item.id])
+          );
+          console.log(immichTransformed);
+          /* ##### Update cover photo link ##### */
+          const replaceCoverPhoto = (data, mapping, immichApiUrl) => {
+              return data.map(entry => {
+                  if (entry.CoverPhoto && mapping[entry.CoverPhoto]) {
+                      entry.CoverPhoto = immichApiUrl + 'assets/' + mapping[entry.CoverPhoto] + '/thumbnail?size=preview';
+                  } else if (entry.CoverPhoto) {
+                    entry.CoverPhoto = null;
+                  }
+                  return entry;
+              });
+          };
+          overview[0] = replaceCoverPhoto(overview[0], immichTransformed, settings.Feature.ImmichApiUrl);
+      }
+      /* ##### End ##### */
+
+      const tripDomains = convertSqlToJson(dbInstance, `SELECT * FROM bewx_TripDomains WHERE DomainAbbreviation != 'X';`, 'common_tripDomains');
+
+      const parameters = { translation, settings, overview, tripData, tripDomains, queryParams };
+      console.log(parameters);
+
+      const style = document.createElement('style');
+      style.textContent = await engine.parseAndRender(document.getElementById("liquidjsTemplateStyle").innerHTML, {settings, tripDomains, overview} );
+      document.head.appendChild(style);
+
+      document.getElementById("liquidjsContent").innerHTML = await engine.parseAndRender(document.getElementById("liquidjsTemplate").innerHTML, parameters );
+
+      window.PagedPolyfill.preview().then(() => {
+        window.print();
+      });
+
+  </script>
+
+</body>
+</html>

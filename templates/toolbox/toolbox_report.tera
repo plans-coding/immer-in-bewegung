@@ -1,0 +1,37 @@
+<div class="path-toolbox">
+  <div class="breadcrumb">
+    <img class="icon-color" src="images/frog.svg" />
+    <div>{{ translation.menu.report | default(value="Generate report") }}</div>
+
+  </div>
+
+  <div style="max-width:80%;background-color:var(--color-hover-background-alpha);display:flex;border-radius:10pt;flex-direction:column;padding:10pt;gap:5pt;margin:auto;">
+
+      <div style="background-color:var(--color-hover-background-alpha);padding:10pt;border-radius:10pt;">{{ translation.report.currentFilter | default(value="Your current filter selection will apply.") }}</div>
+
+      <div>
+          <label for="grInputTitle">{{ translation.report.titleText | default(value="Title") }}</label>
+          <input type="text" class="form-control" id="grInputTitle" value="{{ translation.report.myTripsUntil | default(value="My trips until") }} {{ now() | date(format="%Y") }}">
+      </div>
+
+      <div class="">
+          <label for="grInputInfo" class="">{{ translation.report.backsideText | default(value="Backside") }}</label>
+          <input type="text" class="form-control" id="grInputInfo" value="{{ translation.report.generated | default(value="Generated") }} {{ now() | date(format="%Y-%m-%d") }}">
+      </div>
+
+
+      <!--
+      <hr />
+      <div><i>{{ translation.report.startMessage | default(value="Click OK to start. Then wait until the print dialouge is shown. This step may take minutes.") }}</i></div>
+      -->
+
+        <br>
+
+  <button class="filter-button" onclick="window.open('?path=toolbox:report:output:test:test');">{{ translation.menu.report | default(value="Generate Report") }} <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
+  <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
+</svg></button>
+
+  </div>
+
+</div>

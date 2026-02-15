@@ -1,0 +1,157 @@
+<div class="breadcrumb">
+  <img class="widescreen icon-color" src="images/frog.svg" />
+  <div class="widescreen">{{ translation.overview.title | default(value="Overview") }}</div>
+  <img class="widescreen" src="images/arrow-right.svg" />
+  <a href="?path=overview:year" class="breadcrumb-link {% if query_params.path == 'overview:year' %}active{% endif %}">{{ translation.overview.year | default(value="Year") }}</a>
+  <a href="?path=overview:country" class="breadcrumb-link {% if query_params.path == 'overview:country' %}active{% endif %}">{{ translation.overview.country | default(value="Country") }}</a>
+  <a href="?path=overview:plain" class="breadcrumb-link {% if query_params.path == 'overview:plain' %}active{% endif %}">{{ translation.overview.plain | default(value="Plain") }}</a>
+</div>
+
+<style>
+/* Continent collapsible section */
+.continent summary {
+    cursor: pointer;
+    padding:8pt;
+    background-color: var(--color-hover-background);
+    color: var(--color-hover-text);
+    user-select:none;
+}
+
+/* Content inside each continent */
+.continent-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2pt;
+    margin-top:2pt;
+}
+
+/* Country row: left country, right trips */
+.country-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    align-items: stretch;
+}
+
+/* Country block on the left */
+.country-block {
+    background-color: var(--color-hover-background);
+    color: var(--color-hover-text);
+    padding:10pt;
+    width: 100pt;
+    flex-shrink: 0;
+}
+
+/* Container for trips in that country */
+.country-trips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+}
+
+</style>
+
+<div style="display:flex;margin:2pt;flex-direction:column;gap:2pt;">
+
+  {% set_global last_continent = "" %}
+
+  {% for row in overviewCountry %}
+
+      {# --- Start a new continent if it changes --- #}
+      {% if row.Continent != last_continent %}
+          {% if last_continent != "" %}
+              </div> {# close previous continent-content #}
+          </details>
+          {% endif %}
+
+          <details open class="continent">
+              <summary>{{ row.Continent }}</summary>
+              <div class="continent-content">
+          {% set_global last_continent = row.Continent %}
+      {% endif %}
+
+      {# --- Country block --- #}
+      <div class="country-row">
+          <div class="country-block">
+              {{ row.Country }}
+          </div>
+          <div class="country-trips">
+
+              {% set countryOuterId = row.OuterIDs | split(pat=", ") %}
+              {% set countryInnerId = row.TripDomains | split(pat=", ") %}
+              {% set countryOverallDestination = row.OverallDestination | split(pat=" | ") %}
+              {% set countryParticipantGroup = row.ParticipantGroup | split(pat=" | ") %}
+
+              {% for trip in countryOuterId %}
+                  {% set i = loop.index0 %}
+                  <a href="?path=trip:{{ countryOuterId[i] }}" class="iib-decade iib-item"
+                      data-iib-participantGroup="{{ countryParticipantGroup[i] }}"
+                      data-iib-tripDomain="{{ countryInnerId[i] }}">
+                      {{ countryOuterId[i] }} {{ countryOverallDestination[i] }}
+                  </a>
+              {% endfor %}
+
+          </div>
+      </div>
+
+  {% endfor %}
+
+  {# --- Close the last continent --- #}
+  {% if last_continent != "" %}
+          </div> {# close last continent-content #}
+  </details>
+  {% endif %}
+</div>
+
+{#
+<table class="table-overview-country">
+
+  {% set_global last_continent = "" %}
+  {% set last_country = "" %}
+
+  {% for row in overviewCountry %}
+
+    {% if row.Continent != last_continent %}
+      <tr>
+        <td colspan="2">{{ row.Continent }}</td>
+      </tr>
+      {% set_global last_continent = row.Continent %}
+    {% endif %}
+
+    {% if row.Country != last_country %}
+      {% if last_country != "" %}
+        </td></tr>
+      {% endif %}
+
+      <tr>
+        <td>
+          {{ row.Country }}
+        </td>
+        <td class="text-start">
+
+          {% set countryOuterId = row.OuterIDs | split(pat=", ") %}
+          {% set countryInnerId = row.TripDomains | split(pat=", ") %}
+          {% set countryOverallDestination = row.OverallDestination | split(pat=" | ") %}
+          {% set countryParticipantGroup = row.ParticipantGroup | split(pat=" | ") %}
+
+          {% for trip in countryOuterId %}
+            {% set i = loop.index0 %}
+            <a href="?path=trip:{{ countryOuterId[i] }}"
+                style="display:inline-block;"
+                class="iib-decade iib-item"
+                data-iib-participantGroup="{{ countryParticipantGroup[i] }}"
+                data-iib-tripDomain="{{ countryInnerId[i] }}"
+              >
+                {{ countryOuterId[i] }} {{ countryOverallDestination[i] }}
+            </a>
+          {% endfor %}
+
+      {% set last_country = row.Country %}
+    {% endif %}
+
+  {% endfor %}
+
+  </td></tr>
+
+</table>#}

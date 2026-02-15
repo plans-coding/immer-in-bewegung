@@ -1,0 +1,177 @@
+<div class="gradient-bar-inactive"></div>
+<style>
+details.trip summary[data-trip-domain=''] { background-color: var(--color-hover-background); }
+details.trip[data-trip-domain=''],
+.trip-details-field[data-trip-domain=''] { background-color: var(--color-hover-background-alpha);  }
+details.trip[data-trip-domain=''],
+.trip-details-field[data-trip-domain=''] { background-color: var(--color-hover-background-alpha);  }
+
+
+{% for tripDomain in common.common_trip_domains %}
+
+.days[data-iib-tripDomain={{ tripDomain.DomainAbbreviation }}] .theme-link {color:{{ tripDomain.Color }};background-color:{{ tripDomain.Color }}22;text-decoration:underline;}
+.card[data-trip-domain={{ tripDomain.DomainAbbreviation }}] {text-decoration:none;color:var(--color-text);border-radius:5pt; border:2pt solid var(--color-hover-background);border-top:5pt solid {{ tripDomain.Color }};padding:5pt;}
+.explore-cover[data-trip-domain={{ tripDomain.DomainAbbreviation }}] {background-color:{{ tripDomain.Color }}22;}
+
+details.trip summary[data-iib-tripDomain={{ tripDomain.DomainAbbreviation }}] { background-color: {{ tripDomain.Color }}; }
+
+details.trip[data-iib-tripDomain={{ tripDomain.DomainAbbreviation }}],
+.trip-details-field[data-iib-tripDomain={{ tripDomain.DomainAbbreviation }}] { background-color: {{ tripDomain.Color }}22; }
+
+.day[data-iib-tripDomain={{ tripDomain.DomainAbbreviation }}]:not(:last-child) { border-bottom: 1pt solid {{ tripDomain.Color }}22;  }
+
+.day-foot[data-iib-tripDomain={{ tripDomain.DomainAbbreviation }}], .day-foot a[data-iib-tripDomain={{ tripDomain.DomainAbbreviation }}] { color: {{ tripDomain.Color }}; }
+
+.acc-icon[data-iib-tripDomain={{ tripDomain.DomainAbbreviation }}] {
+    background-color:{{ tripDomain.Color }};
+    mask: url(images/house.svg) no-repeat center / contain;
+    -webkit-mask: url(images/house.svg) no-repeat center / contain;
+    width: 0.9em;
+    height: 0.9em;
+    display: inline-block;
+    transform: translateY(2px);
+}
+
+.day-icon[data-iib-tripDomain={{ tripDomain.DomainAbbreviation }}] {
+    background-color:{{ tripDomain.Color }};
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.3em;
+    height: 1.3em;
+    margin: 0 0.3em;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 0.7em;
+    font-weight: 600;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+.iib-plain[data-iib-tripDomain={{ tripDomain.DomainAbbreviation }}] {
+  background-color: {{ tripDomain.Color }};
+  padding: 3pt 5pt 3pt 5pt;
+  color:#fff;
+}
+.iib-decade[data-iib-tripDomain={{ tripDomain.DomainAbbreviation }}] {
+  background-color: {{ tripDomain.Color }};
+  padding: 3pt 5pt 3pt 5pt;
+  margin:2pt 0 2pt 0;
+  color:#fff;
+  text-decoration:none;
+}
+.btn-filter-domain[data-iib-tripDomain={{ tripDomain.DomainAbbreviation }}] {
+  background-color: {{ tripDomain.Color }};
+  color:#fff;
+}
+.participantGroup {
+  background-color: #000;
+  padding: 3pt 5pt 3pt 5pt;
+  color:#fff;
+}
+.iib-decade[data-iib-tripDomain={{ tripDomain.DomainAbbreviation }}]:hover,
+.btn-filter-domain[data-iib-tripDomain={{ tripDomain.DomainAbbreviation }}]:active {
+  background-color: {{ tripDomain.Color }}cc;
+  color:#fff;
+}
+
+.card-footer[data-trip-domain={{ tripDomain.DomainAbbreviation }}] {
+  background-color: {{ tripDomain.Color }};
+}
+{% endfor %}
+</style>
+
+<div class="iib-menu">
+
+    <div class="iib-menu-over">
+        <a href="?path=explore"><img src="images/frog.svg"></a>
+        <a id="overview" href="?path=overview:year"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-database" viewBox="0 0 16 16">
+  <path d="M4.318 2.687C5.234 2.271 6.536 2 8 2s2.766.27 3.682.687C12.644 3.125 13 3.627 13 4c0 .374-.356.875-1.318 1.313C10.766 5.729 9.464 6 8 6s-2.766-.27-3.682-.687C3.356 4.875 3 4.373 3 4c0-.374.356-.875 1.318-1.313M13 5.698V7c0 .374-.356.875-1.318 1.313C10.766 8.729 9.464 9 8 9s-2.766-.27-3.682-.687C3.356 7.875 3 7.373 3 7V5.698c.271.202.58.378.904.525C4.978 6.711 6.427 7 8 7s3.022-.289 4.096-.777A5 5 0 0 0 13 5.698M14 4c0-1.007-.875-1.755-1.904-2.223C11.022 1.289 9.573 1 8 1s-3.022.289-4.096.777C2.875 2.245 2 2.993 2 4v9c0 1.007.875 1.755 1.904 2.223C4.978 15.71 6.427 16 8 16s3.022-.289 4.096-.777C13.125 14.755 14 14.007 14 13zm-1 4.698V10c0 .374-.356.875-1.318 1.313C10.766 11.729 9.464 12 8 12s-2.766-.27-3.682-.687C3.356 10.875 3 10.373 3 10V8.698c.271.202.58.378.904.525C4.978 9.71 6.427 10 8 10s3.022-.289 4.096-.777A5 5 0 0 0 13 8.698m0 3V13c0 .374-.356.875-1.318 1.313C10.766 14.729 9.464 15 8 15s-2.766-.27-3.682-.687C3.356 13.875 3 13.373 3 13v-1.302c.271.202.58.378.904.525C4.978 12.71 6.427 13 8 13s3.022-.289 4.096-.777c.324-.147.633-.323.904-.525"/>
+</svg> <span>{{ translation.overview.title | default(value="Overview") }}</span></a>
+        <a id="map_menu" href="?path=map"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-map" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M15.817.113A.5.5 0 0 1 16 .5v14a.5.5 0 0 1-.402.49l-5 1a.5.5 0 0 1-.196 0L5.5 15.01l-4.902.98A.5.5 0 0 1 0 15.5v-14a.5.5 0 0 1 .402-.49l5-1a.5.5 0 0 1 .196 0L10.5.99l4.902-.98a.5.5 0 0 1 .415.103M10 1.91l-4-.8v12.98l4 .8zm1 12.98 4-.8V1.11l-4 .8zm-6-.8V1.11l-4 .8v12.98z"/>
+</svg> <span>{{ translation.map.title | default(value="Map") }}</span></a>
+        <a id="statistics" href="?path=statistics:summary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard-data" viewBox="0 0 16 16">
+  <path d="M4 11a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0zm6-4a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0zM7 9a1 1 0 0 1 2 0v3a1 1 0 1 1-2 0z"/>
+  <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
+  <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
+</svg> <span>{{ translation.statistics.title | default(value="Statistics") }}</span></a>
+        <div id="filter">
+            <img src="images/funnel.svg"> <span>Filter</span>
+            <button id="filter-button-overmenu" class="remove-filter" style="display:none;" onclick="remove_filter();">
+              <img src="images/remove.svg" />
+            </button>
+        </div>
+        <div style="flex: 1;"></div>
+        <a class="widescreen" href="?path=dataset"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-terminal" viewBox="0 0 16 16">
+  <path d="M6 9a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3A.5.5 0 0 1 6 9M3.854 4.146a.5.5 0 1 0-.708.708L4.793 6.5 3.146 8.146a.5.5 0 1 0 .708.708l2-2a.5.5 0 0 0 0-.708z"/>
+  <path d="M2 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/>
+</svg>
+</a>
+        <div id="themeToggle"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-moon-fill" viewBox="0 0 16 16">
+  <path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278"/>
+</svg></div>
+        <div id="search" class="widescreen" onmouseover="document.getElementById('top-search').focus();" onclick="document.getElementById('top-search').focus();"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-binoculars" viewBox="0 0 16 16">
+  <path d="M3 2.5A1.5 1.5 0 0 1 4.5 1h1A1.5 1.5 0 0 1 7 2.5V5h2V2.5A1.5 1.5 0 0 1 10.5 1h1A1.5 1.5 0 0 1 13 2.5v2.382a.5.5 0 0 0 .276.447l.895.447A1.5 1.5 0 0 1 15 7.118V14.5a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 14.5v-3a.5.5 0 0 1 .146-.354l.854-.853V9.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v.793l.854.853A.5.5 0 0 1 7 11.5v3A1.5 1.5 0 0 1 5.5 16h-3A1.5 1.5 0 0 1 1 14.5V7.118a1.5 1.5 0 0 1 .83-1.342l.894-.447A.5.5 0 0 0 3 4.882zM4.5 2a.5.5 0 0 0-.5.5V3h2v-.5a.5.5 0 0 0-.5-.5zM6 4H4v.882a1.5 1.5 0 0 1-.83 1.342l-.894.447A.5.5 0 0 0 2 7.118V13h4v-1.293l-.854-.853A.5.5 0 0 1 5 10.5v-1A1.5 1.5 0 0 1 6.5 8h3A1.5 1.5 0 0 1 11 9.5v1a.5.5 0 0 1-.146.354l-.854.853V13h4V7.118a.5.5 0 0 0-.276-.447l-.895-.447A1.5 1.5 0 0 1 12 4.882V4h-2v1.5a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5zm4-1h2v-.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5zm4 11h-4v.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5zm-8 0H2v.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5z"></path>
+</svg></div>
+        <div id="more"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+  <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+</svg></div>
+    </div>
+
+    <div class="iib-menu-under" id="submenu-overview">
+        <a href="?path=overview:year">{{ translation.overview.year | default(value="Year") }}</a>
+        <a href="?path=overview:country">{{ translation.overview.country | default(value="Country") }}</a>
+        <a href="?path=overview:plain">{{ translation.overview.plain | default(value="Plain") }}</a>
+    </div>
+    <div class="iib-menu-under" id="submenu-statistics">
+        <a href="?path=statistics:summary">{{ translation.statistics.summary | default(value="Summary") }}</a>
+        <a href="?path=statistics:visits">{{ translation.statistics.visits | default(value="Visits") }}</a>
+        <a href="?path=statistics:overnights">{{ translation.statistics.overnights | default(value="Overnights") }}</a>
+
+        {% set theme_config = [] %}
+        {% if settings.Extension is defined and settings.Extension.Theme is defined %}
+            {% set theme_config = settings.Extension.Theme | split(pat="\n") | first | split(pat=",") %}
+        {% endif %}
+
+        {% if theme_config | length >= 2 and theme_config[0] == "Enabled" %}
+            <a href="?path=statistics:themes">{{ theme_config[1] | default(value="Themes") }}</a>
+        {% endif %}
+    </div>
+
+    <div class="iib-menu-under" id="submenu-filter">
+
+        <img src="images/layers.svg" />
+        <select id="TripDomain" multiple size="1" onchange="save_filter_OPFS()">
+          {% for tripDomain in common.common_trip_domains %}
+            <option value="{{ tripDomain.DomainAbbreviation }}">{{ tripDomain.DomainDescription }}</option>
+          {% endfor %}
+        </select>
+
+        <img src="images/persons.svg" />
+        <select id="ParticipantGroup" multiple size="1" onchange="save_filter_OPFS()">
+          {% for participantGroup in common.common_participant_groups %}
+            <option value="{{ participantGroup.ParticipantGroup }}">{{ participantGroup.ParticipantGroup }}</option>
+          {% endfor %}
+        </select>
+
+        <img src="images/reload.svg" onclick="page_load();" style="cursor:pointer;">
+
+            <button id="filter-button-undermenu" class="remove-filter" onclick="navigator.storage.getDirectory().then(dir => dir.removeEntry('filter.json').catch(()=>{})).then(() => page_load())">
+              <img src="images/remove.svg" />
+            </button>
+
+    </div>
+    <div class="iib-menu-under" id="submenu-search">
+        <input type="search" id="top-search" placeholder="{{ translation.menu.searchTrip | default(value="Search trip") }}" style="border:0!important;border-radius:0!important;" class="form-control" onkeydown="if(event.key==='Enter'){ history.pushState(null,'','?path=search:'+encodeURIComponent(this.value));page_load();}" />
+    </div>
+        <div class="iib-menu-under" id="submenu-more">
+        <div style="flex: 1;"></div>
+        <a href="?path=dataset" class="non_widescreen">{{ translation.menu.dataset | default(value="Dataset") }}</a>
+        <a href="?path=toolbox:report" target="_blank">{{ translation.menu.report | default(value="Generate report") }}</a>
+        <a href="?path=toolbox:input" target="_blank">{{ translation.input.title | default(value="Create trip") }}</a>
+        <a href="?path=more:source">{{ translation.source.title | default(value="Source") }}</a>
+        <a href="?path=more:about">{{ translation.about.title | default(value="About") }}</a>
+    </div>
+
+</div>

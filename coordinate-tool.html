@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Coordinate Tool - Immer in Bewegung</title>
+
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#6f757e" id="themeColorMeta">
+    <meta name="msapplication-navbutton-color" content="#6f757e">
+
+    <link rel="shortcut icon" href="img/frog.svg" />
+    <link href="bundle/bootstrap/bootstrap.5.3.3.min.css" rel="stylesheet">
+
+    <!-- MapLibre GL -->
+    <link
+        href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css"
+        rel="stylesheet"
+    />
+    <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+
+    <!-- MapLibre Geocoder -->
+    <link
+        href="https://unpkg.com/@maplibre/maplibre-gl-geocoder@1.5.0/dist/maplibre-gl-geocoder.css"
+        rel="stylesheet"
+    />
+    <script src="https://unpkg.com/@maplibre/maplibre-gl-geocoder@1.5.0/dist/maplibre-gl-geocoder.min.js"></script>
+
+    <style>
+        @font-face {
+            font-family: 'Cairo';
+            src: url('bundle/fonts/Cairo-VariableFont_slnt,wght.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Righteous';
+            src: url('bundle/fonts/Righteous-Regular.ttf') format('truetype');
+        }
+
+        a { text-decoration: none; color: #fff; }
+
+        html {
+            height: 100%;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto,
+                "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial,
+                sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+                "Segoe UI Symbol", "Noto Color Emoji";
+        }
+
+        body { margin: 0; padding: 0; height: 100%; }
+
+        .immer-in-font-uc {
+            font-family: 'Cairo', sans-serif;
+            text-transform: uppercase;
+            font-size: 1.2em;
+        }
+
+        .bewegung-font-uc {
+            font-family: 'Righteous', sans-serif;
+            text-transform: uppercase;
+            font-size: 1.2em;
+        }
+
+        .maplibregl-ctrl-geocoder input {
+            font-size: 16pt;
+            font-family: Cairo;
+        }
+
+        .maplibregl-ctrl-geocoder,
+        .form-control {
+            border: 3pt solid #1d655e !important;
+        }
+    </style>
+</head>
+
+<body>
+
+<div style="display:flex;flex-direction:column;height:100vh;background-color:#1d655e;color:#fff;">
+
+    <div style="height:100%;flex-grow:1;position:relative;">
+        <div
+            style="
+                position:absolute;
+                display:flex;
+                gap:5pt;
+                bottom:10pt;
+                left:10pt;
+                flex-wrap:wrap;
+                margin-right:10pt;
+                z-index:10000;
+            "
+        >
+            <input
+                type="text"
+                id="cityName"
+                style="flex:1;font-size:20pt;padding:5pt;border:3pt solid grey;"
+                class="form-control"
+                value=""
+                placeholder="Enter pin name"
+                oninput="updateCoordField()"
+            />
+
+            <input
+                type="text"
+                id="markedCoordinate"
+                style="flex:1;font-size:20pt;padding:5pt;border:3pt solid grey;"
+                class="form-control"
+                disabled
+            />
+
+            <button
+                class="btn"
+                style="align-items:center;font-size:1.2em;background-color:#1d655e;color:#fff;"
+                onclick="copyToClipboard();"
+                id="lang-coordTool-copy-coordinates"
+            >
+                Copy coordinate string
+            </button>
+        </div>
+
+        <div id="coordMap" style="width:100%;height:100%;cursor:pointer;"></div>
+    </div>
+</div>
+
+<script>
+    let lat;
+    let lng;
+    let marker;
+
+    const map = new maplibregl.Map({
+        container: "coordMap",
+        style: "https://demotiles.maplibre.org/style.json",
+        center: [18.06, 59.32],
+        zoom: 5
+    });
+
+    map.addControl(new maplibregl.NavigationControl(), "top-right");
+
+    const geocoder = new MaplibreGeocoder(
+        {
+            forwardGeocode: async (config) => {
+                const url =
+                    "https://nominatim.openstreetmap.org/search" +
+                    "?format=geojson&q=" +
+                    encodeURIComponent(config.query);
+
+                const response = await fetch(url);
+                const geojson = await response.json();
+
+                return {
+                    features: geojson.features.map((feature) => ({
+                        type: "Feature",
+                        geometry: feature.geometry,
+                        properties: {
+                            title: feature.properties.display_name,
+                            place_name: feature.properties.display_name
+                        }
+                    }))
+                };
+            }
+        },
+        { maplibregl }
+    );
+
+    map.addControl(geocoder, "top-left");
+
+    geocoder.on("result", (e) => {
+        const [lngRes, latRes] = e.result.geometry.coordinates;
+
+        map.flyTo({ center: [lngRes, latRes], zoom: 13 });
+
+        if (marker) marker.remove();
+
+        marker = new maplibregl.Marker()
+            .setLngLat([lngRes, latRes])
+            .addTo(map);
+
+        document.getElementById("cityName").value =
+            e.result.place_name || "";
+    });
+
+    map.on("click", (e) => {
+        lat = e.lngLat.lat.toFixed(6);
+        lng = e.lngLat.lng.toFixed(6);
+
+        if (marker) marker.remove();
+
+        marker = new maplibregl.Marker()
+            .setLngLat([e.lngLat.lng, e.lngLat.lat])
+            .addTo(map);
+
+        document.getElementById("markedCoordinate").value =
+            `{ ${document.getElementById("cityName").value} | ${lat}, ${lng} }`;
+    });
+
+    function copyToClipboard() {
+        const text = document.getElementById("markedCoordinate").value;
+        navigator.clipboard.writeText(text);
+    }
+
+    function updateCoordField() {
+        if (lat && lng) {
+            document.getElementById("markedCoordinate").value =
+                `{ ${document.getElementById("cityName").value} | ${lat}, ${lng} }`;
+        }
+    }
+
+    // Capture Enter in the geocoder input
+    document.addEventListener("keydown", (event) => {
+        const geocoderInput = document.querySelector(
+            ".maplibregl-ctrl-geocoder input"
+        );
+
+        if (
+            geocoderInput &&
+            event.target === geocoderInput &&
+            event.key === "Enter"
+        ) {
+            event.preventDefault();
+            document.getElementById("cityName").value = event.target.value;
+        }
+    });
+</script>
+
+</body>
+</html>

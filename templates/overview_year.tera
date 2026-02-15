@@ -1,0 +1,167 @@
+<div class="breadcrumb">
+  <img class="widescreen icon-color" src="images/frog.svg" />
+  <div class="widescreen">{{ translation.overview.title | default(value="Overview") }}</div>
+  <img class="widescreen" src="images/arrow-right.svg" />
+  <a href="?path=overview:year" class="breadcrumb-link {% if query_params.path == 'overview:year' %}active{% endif %}">{{ translation.overview.year | default(value="Year") }}</a>
+  <a href="?path=overview:country" class="breadcrumb-link {% if query_params.path == 'overview:country' %}active{% endif %}">{{ translation.overview.country | default(value="Country") }}</a>
+  <a href="?path=overview:plain" class="breadcrumb-link {% if query_params.path == 'overview:plain' %}active{% endif %}">{{ translation.overview.plain | default(value="Plain") }}</a>
+</div>
+
+<style>
+
+/* Decade collapsible section */
+.decade summary {
+    cursor: pointer;
+    padding:8pt;
+    background-color: var(--color-hover-background);
+    color: var(--color-hover-text);
+    user-select:none;
+}
+
+/* Content inside each decade */
+.decade-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2pt;
+    margin-top:2pt;
+}
+
+/* Year row: left year, right trips */
+.year-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    align-items: stretch;
+}
+
+/* Year block on the left */
+.year-block {
+    background-color: var(--color-hover-background);
+    color: var(--color-hover-text);
+    padding:10pt;
+}
+
+/* Container for trips in that year */
+.trips-block {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+}
+
+</style>
+
+<div style="display:flex;margin:2pt;flex-direction:column;gap:2pt;">
+    {% set last_decade = 0 %}
+    {% set last_year = 0 %}
+    {% set year_open = false %}
+
+    {% for trip in overviewYear %}
+
+        {# Start a new decade if it changes #}
+        {% if trip.TripDecade != last_decade %}
+            {% if last_decade != 0 %}
+                {% if year_open %}
+                    </div> {# close trips-block #}
+                </div> {# close year-row #}
+                    {% set_global year_open = false %}
+                {% endif %}
+            </div> {# close previous decade-content #}
+            </details>
+            {% endif %}
+
+            <details open class="decade">
+                <summary>{{ trip.TripDecade }}{{ translation.overview.century | default(value="'s") }}</summary>
+                <div class="decade-content">
+            {% set_global last_decade = trip.TripDecade %}
+            {% set_global last_year = 0 %}
+        {% endif %}
+
+        {# If year changes, close previous year-row and start a new one #}
+        {% if trip.TripYear != last_year %}
+            {% if year_open %}
+                </div> {# close trips-block #}
+            </div> {# close previous year-row #}
+            {% endif %}
+
+            <div class="year-row">
+                <div class="year-block">{{ trip.TripYear }}</div>
+                <div class="trips-block">
+            {% set_global last_year = trip.TripYear %}
+            {% set_global year_open = true %}
+        {% endif %}
+
+        {# Add trip entry #}
+        <a href="?path=trip:{{ trip.OuterId }}" style="text-decoration:none;">
+            <div class="iib-decade iib-item"
+                data-iib-participantGroup="{{ trip.ParticipantGroup }}"
+                data-iib-tripDomain="{{ trip.TripDomain }}">
+                {{ trip.OuterId }} {{ trip.OverallDestination }}
+            </div>
+        </a>
+
+    {% endfor %}
+
+    {# Close any remaining open divs #}
+    {% if year_open %}
+            </div> {# close trips-block #}
+        </div> {# close last year-row #}
+    {% endif %}
+    {% if last_decade != 0 %}
+            </div> {# close last decade-content #}
+    </details>
+    {% endif %}
+</div>
+
+{#
+<table class="table-overview-year">
+{% set last_decade = 0 %}
+{% set last_year = 0 %}
+{% set year_row_open = false %}
+
+{% for trip in overviewYear %}
+
+    {% if trip.TripDecade != last_decade %}
+        {% if year_row_open %}
+            </td>
+            </tr>
+            {% set_global year_row_open = false %}
+        {% endif %}
+
+        <tr>
+            <td colspan="2">
+                {{ trip.TripDecade }}{{ translation.overview.century | default(value="'s") }}
+            </td>
+        </tr>
+
+        {% set_global last_decade = trip.TripDecade %}
+        {% set_global last_year = 0 %}
+    {% endif %}
+
+    {% if trip.TripYear != last_year %}
+        {% if year_row_open %}
+            </td>
+            </tr>
+        {% endif %}
+
+        <tr>
+            <td>{{ trip.TripYear }}</td>
+            <td>
+                <a href="?path=trip:{{ trip.OuterId }}"><div style="display:inline-block;" class="iib-decade iib-item" data-iib-participantGroup="{{ trip.ParticipantGroup }}" data-iib-tripDomain="{{ trip.TripDomain }}">{{ trip.OuterId }} {{ trip.OverallDestination }}</div></a>
+
+        {% set_global last_year = trip.TripYear %}
+        {% set_global year_row_open = true %}
+
+    {% else %}
+        <a href="?path=trip:{{ trip.OuterId }}"><div style="display:inline-block;" class="iib-decade iib-item" data-iib-participantGroup="{{ trip.ParticipantGroup }}" data-iib-tripDomain="{{ trip.TripDomain }}">{{ trip.OuterId }} {{ trip.OverallDestination }}</div></a>
+    {% endif %}
+
+{% endfor %}
+
+{% if year_row_open %}
+    </td>
+    </tr>
+{% endif %}
+</table>#}
+
+

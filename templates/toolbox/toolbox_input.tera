@@ -1,0 +1,232 @@
+<style>
+body {backdrop-filter: none !important;} /* Position fixed do not work with backdrop */
+.event:first-child .filter-button { display:none; }
+</style>
+<div id="current_trip_documentation_status" style="z-index:10000;border:5pt solid red;position:fixed;top:0;right:0;background-color:var(--color-filter);"></div>
+
+<div class="path-toolbox">
+  <div class="breadcrumb">
+    <img class="icon-color" src="images/frog.svg" />
+    <div>{{ translation.input.title | default(value="Create trip") }}</div>
+
+  </div>
+    <div style="overflow-x: auto;display:flex;">
+        <div style="display:flex;gap:3pt;margin-bottom:3pt;justify-content:flex-end;">
+
+            <button class="source-button" onclick="removeTripDataFromOPFS()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+        </svg> {{ translation.input.reset | default(value="Reset") }}</button>
+
+            <button class="source-button" onclick="uploadTripDataToOPFS()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">
+        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
+        <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z"/>
+        </svg> {{ translation.input.uploadJson | default(value="Upload JSON") }}</button>
+
+                <a href="coordinate-tool.html" target="_blank"><button class="filter-button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+        <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10"/>
+        <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+        </svg> Coordinate Tool</button></a>
+
+            <button class="filter-button" onclick="generateSQLCode()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filetype-sql" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M14 4.5V14a2 2 0 0 1-2 2v-1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM0 14.841a1.13 1.13 0 0 0 .401.823q.194.162.478.252c.284.09.411.091.665.091q.507 0 .858-.158.355-.159.54-.44a1.17 1.17 0 0 0 .187-.656q0-.336-.135-.56a1 1 0 0 0-.375-.357 2 2 0 0 0-.565-.21l-.621-.144a1 1 0 0 1-.405-.176.37.37 0 0 1-.143-.299q0-.234.184-.384.187-.152.513-.152.214 0 .37.068a.6.6 0 0 1 .245.181.56.56 0 0 1 .12.258h.75a1.1 1.1 0 0 0-.199-.566 1.2 1.2 0 0 0-.5-.41 1.8 1.8 0 0 0-.78-.152q-.44 0-.776.15-.337.149-.528.421-.19.273-.19.639 0 .302.123.524t.351.367q.229.143.54.213l.618.144q.31.073.462.193a.39.39 0 0 1 .153.325q0 .165-.085.29A.56.56 0 0 1 2 15.31q-.167.07-.413.07-.176 0-.32-.04a.8.8 0 0 1-.248-.115.58.58 0 0 1-.255-.384zm6.878 1.489-.507-.739q.264-.243.401-.6.138-.358.138-.806v-.501q0-.556-.208-.967a1.5 1.5 0 0 0-.589-.636q-.383-.225-.917-.225-.527 0-.914.225-.384.223-.592.636a2.14 2.14 0 0 0-.205.967v.5q0 .554.205.965.208.41.592.636a1.8 1.8 0 0 0 .914.222 1.8 1.8 0 0 0 .6-.1l.294.422h.788ZM4.262 14.2v-.522q0-.369.114-.63a.9.9 0 0 1 .325-.398.9.9 0 0 1 .495-.138q.288 0 .495.138a.9.9 0 0 1 .325.398q.115.261.115.63v.522q0 .246-.053.445-.053.196-.155.34l-.106-.14-.105-.147h-.733l.451.65a.6.6 0 0 1-.251.047.87.87 0 0 1-.487-.147.9.9 0 0 1-.32-.404 1.7 1.7 0 0 1-.11-.644m3.986 1.057h1.696v.674H7.457v-3.999h.79z"/>
+        </svg> {{ translation.input.generateSQL | default(value="Generate SQL Code") }}</button>
+
+            <button class="filter-button" onclick="downloadTripDataFromOPFS()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
+        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z"/>
+        </svg> {{ translation.input.downloadJson | default(value="Download JSON") }}</button>
+
+            <button class="filter-button" onclick="saveTrip2OPFS()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
+        <path d="M11 2H9v3h2z"/>
+        <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+        </svg> {{ translation.input.saveJson | default(value="Save to OPFS") }}</button>
+        </div>
+</div>
+  <textarea id="generated_sql_code" style="display:none;background-color:var(--color-hover-background-alpha);padding:5pt;font-size:0.8em;margin-bottom:5pt;border-radius:5pt;border:0;width:100%;" onclick="navigator.clipboard.writeText(this.textContent).then(() => alert('Copied!')).then(() => this.style.display='none');"></textarea>
+
+  <details open id="trip_summary_inputs" class="trip" data-trip-domain="" style="user-select:none;">
+  <summary data-trip-domain="" style="border-radius:3pt;">{{ translation.input.tripSummary | default(value="Trip Summary") }}</summary>
+
+  <div class="trip-layout">
+
+    <!-- Left Column -->
+    <div style="display:flex;flex-direction:column; gap: 2pt;">
+
+      <div style="display:flex;flex-direction:column; gap:2pt;">
+
+              <div class="trip-details-container">
+            <label class="trip-details-label">
+              {{ translation.trip.overallDestination | default(value="Overall Destination") }}
+            </label>
+            <div class="trip-details-field" data-trip-domain=""><input class="form-control" type="text" placeholder="String" name="OverallDestination"></div>
+          </div>
+
+          <div class="trip-details-container">
+            <label class="trip-details-label">
+              {{ translation.input.tripDescription | default(value="Trip Description") }}
+            </label>
+            <div class="trip-details-field" data-trip-domain=""><input class="form-control" type="text" placeholder="String" name="TripDescription"></div>
+          </div>
+
+
+
+      </div>
+
+      <div style="display:flex;gap:2pt;flex-direction:row;flex-wrap:wrap;">
+        <div class="trip-details-container">
+          <label class="trip-details-label">
+            {{ translation.trip.departureDate | default(value="Departure Date") }}
+          </label>
+          <div class="trip-details-field" data-trip-domain=""><input type="date" name="DepartureDate" placeholder="yyyy-mm-dd" class="form-control"></div>
+        </div>
+
+        <div class="trip-details-container">
+          <label class="trip-details-label">
+            {{ translation.trip.returnDate | default(value="Return Date") }}
+          </label>
+          <div class="trip-details-field" data-trip-domain=""><input type="date" name="ReturnDate" placeholder="yyyy-mm-dd" class="form-control"></div>
+        </div>
+
+        <div class="trip-details-container">
+          <label class="trip-details-label">
+            {{ translation.input.tripDomain | default(value="Trip Domain") }}
+          </label>
+          <div class="trip-details-field" data-trip-domain=""><select class="form-control">
+            {% for item in common.common_trip_domains %}
+              <option value="{{ item.DomainAbbreviation }}">{{ item.DomainDescription }}</option>
+            {% endfor %}
+            </select></div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:2pt;flex-direction:row;">
+
+              <div class="trip-details-container">
+          <label class="trip-details-label">
+            {{ translation.input.photoStarttime | default(value="Photo Starttime") }}
+          </label>
+          <div class="trip-details-field" data-trip-domain=""><input type="text" name="PhotoStarttime" placeholder="xx:xx" class="form-control"></div>
+        </div>
+
+        <div class="trip-details-container">
+          <label class="trip-details-label">
+            {{ translation.input.photoEndtime | default(value="Photo Endtime") }}
+          </label>
+          <div class="trip-details-field" data-trip-domain=""><input type="text" name="PhotoEndtime" placeholder="xx:xx" class="form-control"></div>
+        </div>
+
+
+        <div class="trip-details-container">
+          <label class="trip-details-label">
+            {{ translation.trip.participantGroup | default(value="Participant Group") }}
+          </label>
+          <div class="trip-details-field" data-trip-domain="">
+            <!--<input type="text" name="ParticipantGroup">-->
+            <select class="form-control">
+            {% for item in common.common_participant_groups %}
+              <option>{{ item.ParticipantGroup }}</option>
+            {% endfor %}
+            </select>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="display:flex;gap:2pt;flex-direction:row;">
+
+                  <div class="trip-details-container">
+            <label class="trip-details-label">
+              {{ translation.input.startNode | default(value="Start Node") }}
+            </label>
+            <div class="trip-details-field" data-trip-domain=""><input class="form-control" type="text" name="StartNode" placeholder="{SE}"></div>
+          </div>
+
+                    <div class="trip-details-container">
+            <label class="trip-details-label">
+              {{ translation.input.endNode | default(value="End Node") }}
+            </label>
+            <div class="trip-details-field" data-trip-domain=""><input class="form-control" type="text" name="EndNode" placeholder="String"></div>
+          </div>
+
+                    <div class="trip-details-container">
+            <label class="trip-details-label">
+              {{ translation.input.innerId | default(value="Inner Id") }}
+            </label>
+            <div class="trip-details-field" data-trip-domain=""><input class="form-control" type="text" name="InnerId" disabled placeholder="Auto"></div>
+          </div>
+
+                    <div class="trip-details-container">
+            <label class="trip-details-label">
+              {{ translation.input.outerId | default(value="Outer Id") }}
+            </label>
+            <div class="trip-details-field" data-trip-domain=""><input class="form-control" type="text" name="OuterId" placeholder="P-1"></div>
+          </div>
+
+      </div>
+
+      <div style="display:flex;flex-direction:column; gap:2pt;">
+
+        <div class="trip-details-container">
+          <label class="trip-details-label">
+            {{ translation.input.coverPhoto | default(value="Cover Photo") }}
+          </label>
+          <div class="trip-details-field" data-trip-domain=""><input class="form-control" placeholder="/original/path/to/photo.jpg" type="text" name="CoverPhoto"></div>
+        </div>
+
+                <div class="trip-details-container">
+          <label class="trip-details-label">
+            {{ translation.input.photoAlbums | default(value="Photo Albums") }}
+          </label>
+          <div class="trip-details-field" data-trip-domain=""><textarea class="form-control" name="PhotoAlbums" placeholder="!desc[DESCRIPTION_SEARCH_STRING] [ALBUM_NAME_A](/original/path/to/photo1.jpg /original/path/to/photo2.jpg /original/path/to/photoN.jpg)"></textarea></div>
+        </div>
+
+        <div class="trip-details-container">
+          <label class="trip-details-label">
+            {{ translation.input.documentationNote | default(value="Documentation Note") }}
+          </label>
+          <div class="trip-details-field" data-trip-domain=""><input class="form-control" type="text" name="DocumentationNote" placeholder="String"></div>
+        </div>
+
+
+
+
+      </div>
+
+    </div>
+
+    <div>
+
+      <div style="display:flex;flex-direction:column; gap:2pt;">
+
+      <div class="trip-details-container">
+          <label class="trip-details-label">
+            {{ translation.input.mapPins | default(value="Map Pins") }}
+          </label>
+          <div class="trip-details-field" data-trip-domain=""><textarea class="form-control" name="MapPins" placeholder="[PIN_NAME](lat, lng)"></textarea></div>
+        </div>
+
+      </div>
+
+
+
+      {#
+        <div id="map-pin-data" data-trip-map-overall='{{ trip_map_pins_overall | json_encode }}' data-trip-map-accommodation='{{ trip_map_pins_accommodation | json_encode }}' data-theme-color="{{ theme_color }}"></div>
+        <div id="map" style="width:100%;height:100%;border-radius:3pt;"></div>
+      #}
+
+    </div>
+
+
+
+  </div>
+</details>
+
+  </fieldset>
+
+<div id="current_trip_date_selection" style="display:none;color: red;font-weight: bold;background-color: pink;padding: 10pt;margin:5pt 0 5pt 0;border-radius: 5pt;">{{ translation.input.selectStartEnd | default(value="Select start and end date") }}</div>
+
+
+
+
+<div id="eventsFieldset" style="margin-top:5pt;"></div>

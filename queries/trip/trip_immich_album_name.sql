@@ -1,0 +1,1 @@
+SELECT substr(PhotoAlbums, instr(PhotoAlbums, '[') + 1, instr(PhotoAlbums, ']') - instr(PhotoAlbums, '[') - 1) AS ImmichAlbumName FROM bewa_Overview WHERE OuterId = OuterId AND InnerId = InnerId AND PhotoAlbums NOT LIKE '!desc[%]%' AND PhotoAlbums LIKE '%[%]%';

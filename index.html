@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Immer in Bewegung</title>
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="theme-color" content="#6f757e" id="themeColorMeta">
+        <meta name="msapplication-navbutton-color" content="#6f757e">
+        <link rel="shortcut icon" href="images/frog.svg" />
+
+        <link href="bewegung.css" rel="stylesheet">
+
+        <script src='bundle/maplibre-gl/maplibre-gl.js'></script>
+        <link href='bundle/maplibre-gl/maplibre-gl.css' rel='stylesheet' /></link>
+
+        <script src="bundle/codemirror/sql.min.js"></script>
+
+        <link href="bundle/tabulator/tabulator.min.css" rel="stylesheet">
+        <script src="bundle/tabulator/tabulator.min.js"></script>
+
+        <script src="script/bew-filter.js"></script>
+        <script src="script/bew-immich.js"></script>
+        <script src="script/bew-chart.js"></script>
+        <script src="script/bew-map.js"></script>
+        <script src="script/bew-tabulator.js"></script>
+        <script src="script/bew-toolbox-input.js"></script>
+
+    </head>
+    <body>
+
+        <nav id="menu">
+
+        </nav>
+
+        <section id="app">
+
+            <div style="text-align:center;margin-top:50pt;"><img src="images/frog.svg" style="width:233px;height:233px;" class="delayed-pulse" /><br><div onclick="(async()=>{const r=await navigator.storage.getDirectory();for await(const[e,h]of r.entries()){await r.removeEntry(e,{recursive:true})}})()">    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+      <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+      <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+    </svg>OPFS</div>
+            </div>
+            <br>
+            <div id="error_msg"></div>
+
+        </section>
+
+        <div id="iib-foot" style="text-align:center;font-size:32pt;padding-top:20pt;padding-bottom:30pt;"><span class="immer-in-font-uc">II</span><span class="bewegung-font-uc">B</span>
+        <!--<br/><div style="font-size:12pt;font-family: 'Francois+One', sans-serif;">Revisit your travel memories</div>--></div>
+        
+        
+        <dialog id="image-viewer-dialog" style="overflow:hidden;">
+            <button id="close-dialog" style="position:fixed;bottom:10pt;left:10pt;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-closed" viewBox="0 0 16 16">
+  <path d="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v13h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3zm1 13h8V2H4z"/>
+  <path d="M9 9a1 1 0 1 0 2 0 1 1 0 0 0-2 0"/>
+</svg></button>
+          <iframe id="image-viewer-content" style="width:100%;height:100%;overflow:y-scroll;" frameborder="0"></iframe>
+          
+        </dialog>
+
+        <script type="module">
+            import init, { page_load, chart_js, user_run_sql, get_predefined_query } from "./pkg/bewegung.js";
+            await init();
+            
+            document.addEventListener("click", e => {
+              const a = e.target.closest("a");
+              if (!a) return;
+            
+              if (a.classList.contains("to-image-viewer")) {
+                e.preventDefault();
+                iframe.src = a.href;
+                dialog.showModal();
+                return;
+              }
+            
+              const href = a.getAttribute("href");
+              if (!href || !href.startsWith("?")) return;
+            
+              e.preventDefault();
+              history.pushState({}, "", href);
+              page_load();
+            });
+            
+            window.addEventListener("popstate", page_load);
+            
+            window.page_load = page_load;
+            window.user_run_sql =  user_run_sql;
+            window.load_code_editor = load_code_editor;
+            window.get_code_editor = get_code_editor;
+            window.initiate_spreadsheet = initiate_spreadsheet;
+            window.get_predefined_query = get_predefined_query;
+            
+            // Image viewer
+            const links = document.querySelectorAll('.to-image-viewer');
+            const dialog = document.getElementById('image-viewer-dialog');
+            const iframe = document.getElementById('image-viewer-content');
+            const closeBtn = document.getElementById('close-dialog');
+            links.forEach(link => {
+              link.addEventListener('click', (e) => {
+                e.preventDefault(); // prevent navigation
+                iframe.src = link.href; // set iframe src to the link href
+                dialog.showModal(); // show dialog
+              });
+            });
+            closeBtn.addEventListener('click', () => {
+              dialog.close();
+              iframe.src = '';
+            });
+            
+            // Import javascript
+            const jsCode_chartjs = chart_js();
+            const blob_chartjs = new Blob([jsCode_chartjs], { type: "text/javascript" });
+            const url_chartjs = URL.createObjectURL(blob_chartjs);
+            await import(url_chartjs);
+            URL.revokeObjectURL(url_chartjs); 
+            
+            /*const jsCode_maplibre = maplibre_js();
+            const blob_maplibre = new Blob([jsCode_maplibre], { type: "text/javascript" });
+            const url_maplibre = URL.createObjectURL(blob_maplibre);
+            await import(url_maplibre);
+            URL.revokeObjectURL(url_maplibre);*/
+            
+            // Css code called from rusts
+            /*function inject_css(cssText) {
+                const style = document.createElement("style");
+                style.textContent = cssText;
+                document.head.appendChild(style);
+            }*/
+
+
+
+            // CODE EDITOR  -----------------------------------------------------------------------
+
+            let cmView;
+
+            function load_code_editor(newCode = null) {
+                const container = document.getElementById("code_editor");
+                if (!container) return;
+
+                // Destroy old editor if DOM was replaced
+                if (cmView && cmView.dom.parentNode !== container) {
+                    cmView.destroy();
+                    cmView = null;
+                }
+
+                // Create editor if it doesn't exist
+                if (!cmView) {
+                    cmView = cm6.load().textarea(container, {
+                        dark: false,
+                        sql: { dialect: "sqlite" },
+                        completion: true
+                    });
+                    console.log("Editor created");
+                }
+
+                // Apply new code if provided
+                if (typeof newCode === "string") {
+                    cmView.dispatch({
+                        changes: { from: 0, to: cmView.state.doc.length, insert: newCode }
+                    });
+                    console.log("Content updated");
+                }
+                console.log(cmView);
+            }
+
+            function get_code_editor() {
+                if (!cmView) return ""; // editor not initialized yet
+                return cmView.state.doc.toString();
+            }
+
+        </script>
+
+
+        <script>
+
+        // CUSTOM QUERIES  -----------------------------------------------------------------------
+
+            async function load_query_from_file(path) {
+                const res = await fetch(path);
+                const text = await res.text();
+                load_code_editor(text);
+            }
+
+            async function custom_queries(rowid) {
+
+                const sql_req  = await user_run_sql('SELECT * FROM com_CodeCollection WHERE ROWID = "' + rowid + '";');
+                const custom_reponse = JSON.parse(document.getElementById("sql_output_data").textContent);
+                load_code_editor(custom_reponse.rows[0][2]);
+
+            }
+
+        // THEME  -----------------------------------------------------------------------
+
+        function initialize_theme_color() {
+            const button = document.getElementById('themeToggle');
+
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark');
+            }
+
+            button.addEventListener('click', () => {
+                document.body.classList.toggle('dark');
+
+                // Save current theme to localStorage
+                if (document.body.classList.contains('dark')) {
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    localStorage.setItem('theme', 'light');
+                }
+
+            });
+        }
+
+
+        </script>
+
+
+    </body>
+</html>

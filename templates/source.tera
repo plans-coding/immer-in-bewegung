@@ -1,0 +1,96 @@
+<div id="path-source">
+  <div class="breadcrumb">
+    <img class="icon-color" src="images/frog.svg" />
+    <div class="">{{ translation.source.title | default(value='Configure your data source') }}</div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:5pt;">
+
+    <div class="{% if db_loaded == "stored" %}green-text{% else %}red-text{% endif %}" id="opfsStatus" style="display:inline-block;">
+    {% if db_loaded == "stored" %}
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-database" viewBox="0 0 16 16">
+        <path d="M4.318 2.687C5.234 2.271 6.536 2 8 2s2.766.27 3.682.687C12.644 3.125 13 3.627 13 4c0 .374-.356.875-1.318 1.313C10.766 5.729 9.464 6 8 6s-2.766-.27-3.682-.687C3.356 4.875 3 4.373 3 4c0-.374.356-.875 1.318-1.313M13 5.698V7c0 .374-.356.875-1.318 1.313C10.766 8.729 9.464 9 8 9s-2.766-.27-3.682-.687C3.356 7.875 3 7.373 3 7V5.698c.271.202.58.378.904.525C4.978 6.711 6.427 7 8 7s3.022-.289 4.096-.777A5 5 0 0 0 13 5.698M14 4c0-1.007-.875-1.755-1.904-2.223C11.022 1.289 9.573 1 8 1s-3.022.289-4.096.777C2.875 2.245 2 2.993 2 4v9c0 1.007.875 1.755 1.904 2.223C4.978 15.71 6.427 16 8 16s3.022-.289 4.096-.777C13.125 14.755 14 14.007 14 13zm-1 4.698V10c0 .374-.356.875-1.318 1.313C10.766 11.729 9.464 12 8 12s-2.766-.27-3.682-.687C3.356 10.875 3 10.373 3 10V8.698c.271.202.58.378.904.525C4.978 9.71 6.427 10 8 10s3.022-.289 4.096-.777A5 5 0 0 0 13 8.698m0 3V13c0 .374-.356.875-1.318 1.313C10.766 14.729 9.464 15 8 15s-2.766-.27-3.682-.687C3.356 13.875 3 13.373 3 13v-1.302c.271.202.58.378.904.525C4.978 12.71 6.427 13 8 13s3.022-.289 4.096-.777c.324-.147.633-.323.904-.525"/>
+    </svg>
+
+      {{ translation.source.stored | default(value='Database file stored in OPFS.') }}
+    {% else %}
+
+     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-database" viewBox="0 0 16 16">
+        <path d="M4.318 2.687C5.234 2.271 6.536 2 8 2s2.766.27 3.682.687C12.644 3.125 13 3.627 13 4c0 .374-.356.875-1.318 1.313C10.766 5.729 9.464 6 8 6s-2.766-.27-3.682-.687C3.356 4.875 3 4.373 3 4c0-.374.356-.875 1.318-1.313M13 5.698V7c0 .374-.356.875-1.318 1.313C10.766 8.729 9.464 9 8 9s-2.766-.27-3.682-.687C3.356 7.875 3 7.373 3 7V5.698c.271.202.58.378.904.525C4.978 6.711 6.427 7 8 7s3.022-.289 4.096-.777A5 5 0 0 0 13 5.698M14 4c0-1.007-.875-1.755-1.904-2.223C11.022 1.289 9.573 1 8 1s-3.022.289-4.096.777C2.875 2.245 2 2.993 2 4v9c0 1.007.875 1.755 1.904 2.223C4.978 15.71 6.427 16 8 16s3.022-.289 4.096-.777C13.125 14.755 14 14.007 14 13zm-1 4.698V10c0 .374-.356.875-1.318 1.313C10.766 11.729 9.464 12 8 12s-2.766-.27-3.682-.687C3.356 10.875 3 10.373 3 10V8.698c.271.202.58.378.904.525C4.978 9.71 6.427 10 8 10s3.022-.289 4.096-.777A5 5 0 0 0 13 8.698m0 3V13c0 .374-.356.875-1.318 1.313C10.766 14.729 9.464 15 8 15s-2.766-.27-3.682-.687C3.356 13.875 3 13.373 3 13v-1.302c.271.202.58.378.904.525C4.978 12.71 6.427 13 8 13s3.022-.289 4.096-.777c.324-.147.633-.323.904-.525"/>
+    </svg>
+
+      {{ translation.source.missing | default(value='Database file missing in OPFS.') }}
+    {% endif %}
+    </div>
+
+    <input type="file" accept=".db,.sqlite,.sqlite3" onchange="
+    document.getElementById('opfsStatus').textContent='Waiting for confirmation.';
+    navigator.storage.getDirectory()
+    .then(d=>d.getFileHandle('chronik.db',{create:true}))
+    .then(h=>h.createWritable())
+    .then(w=>w.write(this.files[0]).then(()=>w.close()))
+    .then(()=>navigator.storage.getDirectory())
+    .then(d=>d.getFileHandle('chronik.db'))
+    .then(()=>{document.getElementById('opfsStatus').textContent='{{ translation.source.stored | default(value='Database file stored in OPFS.') }}';document.getElementById('opfsStatus').className='green-text';})
+    .catch(()=>{document.getElementById('opfsStatus').textContent='{{ translation.source.missing | default(value='Database file missing in OPFS.') }}';document.getElementById('opfsStatus').className='red-text';})
+    ">
+
+
+    <div style="text-align:center;margin-top:5pt;">
+      {{ translation.source.info | default(value="File will be saved in browser's local storage but not uploaded. Read more about") }}
+      <a style="text-decoration:none;color:#1d655e;display:inline;" href="https://w3c.github.io/FileAPI/">File API</a>.<br /><br />
+    </div>
+
+
+    <button class="source-button" onclick="
+    navigator.storage.getDirectory()
+    .then(d=>d.removeEntry('chronik.db'))
+    .catch(()=>{})
+    .then(()=>{document.getElementById('opfsStatus').textContent='{{ translation.source.missing | default(value='Database file missing in OPFS.') }}';document.getElementById('opfsStatus').className='red-text';}).then(()=>{location.reload()});">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+      <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+      <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+    </svg>
+    {{ translation.source.delete_db | default(value='Delete database file') }}
+    </button>
+
+    <button class="source-button" onclick="localStorage.clear(); caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))); navigator.serviceWorker.getRegistrations().then(r => r.forEach(reg => reg.unregister())).then(()=>{location.reload()});">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+      </svg>
+      {{ translation.source.delete_cache | default(value='Delete web app cache') }}
+    </button>
+
+        <script id="immichUrl" type="application/json">{{ settings.Photos.ImmichUrl | safe }}</script>
+    <script id="coverPhotoOriginalPaths" type="application/json">{{ cover_photo_original_paths | json_encode | safe }}</script>
+
+
+      {% if settings.Photos and settings.Photos.Immich == "Enabled" %}
+
+    <div class="breadcrumb">
+      <!--<img class="icon-color" src="images/frog.svg" />-->
+      <div class="">{{ translation.source.immichInstance | default(value='Immich Instance') }}</div>
+    </div>
+
+    <div class="red-text" id="immich_authorization_status" style="display:block;">
+
+      <div id="immich_authorization_status_NOT_OK" style="display:none;">{{ translation.source.immichNotLoggedOn | default(value='You need to be logged in to you Immich instance for the synchronization to work, please login at') }} <a class="single-link" target="_blank" href="{{ settings.Photos.ImmichUrl }}">{{ settings.Photos.ImmichUrl }}</a>.</div>
+
+      <div id="immich_authorization_status_OK" style="display:none;">
+        {{ translation.source.immichLoggedOn | default(value='You are logged in to you Immich instance at') }} <a class="single-link" target="_blank" href="{{ settings.Photos.ImmichUrl }}">{{ settings.Photos.ImmichUrl }}</a>.
+      </div>
+
+    </div>
+
+    <div id="immich_authorization_status_OK_buttons" style="display:none;margin:auto;">
+        <button class="filter-button" onclick="sync_album_covers('{{ settings.Photos.ImmichUrl }}', '{{ settings.Photos.ImmichCoverAlbumId }}');">{{ translation.source.syncCoverAlbum | default(value='Synchronize Immich Cover Photo Album') }}</button> &nbsp;&nbsp;<span id="count_missing_photos"></span>
+        <button class="filter-button" onclick="save_album_covers_ids2OPFS('{{ settings.Photos.ImmichUrl }}', '{{ settings.Photos.ImmichCoverAlbumId }}');">{{ translation.source.saveCoverJson | default(value='Save Immich Cover Photo Album List to OPFS') }}</button> &nbsp;&nbsp;<span id="cover2opfs"></span>
+      </div>
+
+{% endif %}
+  </div>
+
+
+</div>
