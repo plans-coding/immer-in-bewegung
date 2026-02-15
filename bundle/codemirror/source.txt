@@ -1,0 +1,1 @@
+https://github.com/paul-norman/codemirror6-prebuilt/blob/main/dist/sql.min.js
