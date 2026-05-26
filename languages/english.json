@@ -1,0 +1,340 @@
+{
+  "weekdays": [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday"
+  ],
+  "nav": {
+    "tabs": {
+      "overview": "Overview",
+      "map": "Map",
+      "statistics": "Statistics",
+      "trip": "Trip",
+      "editor": "Editor",
+      "settings": "Settings",
+      "report": "Report",
+      "about": "About"
+    },
+    "search": {
+      "placeholder": "Search trips…",
+      "title": "Search trips",
+      "noResults": "No results found",
+      "sectionTrips": "Trips",
+      "sectionDays": "Days",
+      "showAll": "Show complete results →",
+      "allTrips": "All trips",
+      "closeTitle": "Close"
+    }
+  },
+  "loadScreen": {
+    "dropPrimary": "Drop JSON file here",
+    "dropHint": "or click to browse (.json)",
+    "urlDivider": "or load from URL",
+    "urlPlaceholder": "https://example.com/bewegung.json (default: ./bewegung.json)",
+    "urlButton": "Load",
+    "subtitle": "Open source travel documentation",
+    "resume": "Resume"
+  },
+  "filterBar": {
+    "label": "Filter",
+    "allDomains": "All domains",
+    "allGroups": "All groups",
+    "allLabels": "All labels",
+    "clearFilter": "✕ Clear filter",
+    "tripCountUnit": "trips"
+  },
+  "explore": {
+    "title": "Discover",
+    "subtitle": "6 random trips",
+    "shuffle": "Shuffle",
+    "noDestination": "(no destination)"
+  },
+  "overview": {
+    "tabs": {
+      "cards": "Cards",
+      "year": "Year",
+      "country": "Country",
+      "plain": "Plain",
+      "days": "Days"
+    },
+    "searchPlaceholder": "Search trips…",
+    "noTrips": "No trips found",
+    "noDestination": "(no destination)",
+    "daysSingular": "day",
+    "daysPlural": "days",
+    "decadeSuffix": "{decade}s"
+  },
+  "plainTable": {
+    "id": "ID",
+    "destination": "Destination",
+    "departure": "Departure",
+    "return": "Return",
+    "days": "Days",
+    "group": "Group"
+  },
+  "tripNav": {
+    "drawerTitle": "Trips",
+    "filterPlaceholder": "Filter trips…",
+    "toggleTitle": "Trip navigator",
+    "emptyTitle": "No trip selected",
+    "emptySubtitle": "Click a trip in Explore or Overview"
+  },
+  "tripView": {
+    "loading": "Loading…",
+    "notFound": "Trip not found",
+    "edit": "Edit",
+    "showTopBar": "Show top bar",
+    "hideTopBar": "Hide top bar",
+    "fullscreen": "Fullscreen",
+    "exitFullscreen": "Exit fullscreen",
+    "downloadJson": "Download as JSON",
+    "downloadMd": "Download as Markdown",
+    "photos": "Photos",
+    "fields": {
+      "departure": "Departure",
+      "return": "Return",
+      "days": "Days",
+      "arrangerGroup": "Arranger Group",
+      "countries": "Countries",
+      "uniqueCountries": "Unique Countries",
+      "overallRoute": "Overall Route",
+      "countryMovements": "Country Trip Movements",
+      "arranger": "Arranger",
+      "id": "ID"
+    },
+    "toConnector": "to"
+  },
+  "editor": {
+    "tripsToggle": "☰ Trips ▾",
+    "tripsToggleCollapsed": "☰ Trips ▸",
+    "newTrip": "＋ New Trip",
+    "searchPlaceholder": "Search trips…",
+    "emptyTitle": "No trip selected",
+    "emptySubtitle": "Pick one from the list or create a new trip",
+    "noMatches": "No matches",
+    "tripInfo": "Trip Information",
+    "saveDaysFirst": "Save the trip first to manage days.",
+    "sections": {
+      "tripId": "Trip ID",
+      "classification": "Classification",
+      "tripDetails": "Trip Details",
+      "location": "Location",
+      "photos": "Photos",
+      "notes": "Notes"
+    },
+    "fields": {
+      "innerId": "Inner ID",
+      "outerId": "Outer ID",
+      "tripDomain": "Trip Domain",
+      "arrangerGroup": "Arranger Group",
+      "overallDestination": "Overall Destination",
+      "departureDate": "Departure Date",
+      "returnDate": "Return Date",
+      "tripDescription": "Trip Description",
+      "tripLabels": "Trip Labels",
+      "tripLabelsHint": "Comma-separated: Label1, Label2",
+      "mapPins": "Map Pins",
+      "mapPinsHint": "[ Name ]( lat, lon ) — one per line",
+      "startNode": "Start Node",
+      "endNode": "End Node",
+      "photoStartTime": "Photo Start Time",
+      "photoStartTimeHint": "HH:MM",
+      "photoEndTime": "Photo End Time",
+      "photoAlbums": "Photo Albums",
+      "coverPhoto": "Cover Photo",
+      "documentationNote": "Documentation Note"
+    },
+    "buttons": {
+      "save": "Save Changes",
+      "create": "Create Trip",
+      "delete": "Delete Trip",
+      "cancel": "Cancel"
+    },
+    "days": {
+      "addDay": "＋ Add Day",
+      "noDays": "No days yet. Click “+ Add Day” to start.",
+      "events": "Events",
+      "accommodation": "Accommodation",
+      "copyPrev": "↑ Copy prev",
+      "country": "Country",
+      "coordinates": "Coordinates",
+      "coordsPlaceholder": "lat, lon",
+      "accuracy": "Acc. Accuracy",
+      "participants": "Participants",
+      "additionalNotes": "Additional Notes",
+      "countriesDuringDay": "Countries During Day"
+    },
+    "dangerZone": "Danger zone",
+    "deleteWarning": "Permanently deletes this trip and all its days."
+  },
+  "stats": {
+    "tabs": {
+      "summary": "Summary",
+      "visits": "Visits",
+      "overnights": "Overnights",
+      "themes": "Themes"
+    },
+    "kpi": {
+      "totalTrips": "Total Trips",
+      "uniqueCountries": "Unique Countries",
+      "daysTraveled": "Days Traveled",
+      "avgDays": "Avg Days / Trip"
+    },
+    "charts": {
+      "tripsByDomain": "Trips by Domain",
+      "tripsPerYear": "Trips per Year"
+    },
+    "visits": {
+      "title": "Countries Visited",
+      "colRank": "#",
+      "colCountry": "Country",
+      "colContinent": "Continent",
+      "hdrOneQualified": "One qualified visit per trip",
+      "hdrManyQualified": "More than one qualified per trip",
+      "hdrBorderCrossings": "Border crossings (in and out)",
+      "colOL": "OL",
+      "colSS": "OL+SS",
+      "colVSS": "OL+SS+VSS",
+      "colOLMQ": "OL",
+      "colBorder": "Min.",
+      "colFirst": "First",
+      "colLatest": "Latest",
+      "ttOL": "Ordinary length visits only (one per trip)",
+      "ttSS": "Ordinary length + shorter stops included",
+      "ttVSS": "Ordinary + shorter + very short stops included",
+      "ttOLMQ": "Ordinary length, multiple occurrences per trip counted",
+      "ttBorder": "Minimal border crossings (entries + exits × 2)",
+      "note": "OL = ordinary length visit. SS = shorter stop (*). VSS = very short stop (**). A qualified visit does not resume a previous visit broken only by a short stop in another country. Min. = minimal border crossings, calculated as (OL + SS + VSS occurrences) × 2."
+    },
+    "overnights": {
+      "title": "Overnight Stays per Country",
+      "colRank": "#",
+      "colCountry": "Country",
+      "colContinent": "Continent",
+      "colNights": "Nights",
+      "colRelative": "Relative"
+    },
+    "themes": {
+      "notActivated": "Themes not activated",
+      "qualifiedNote": "Qualified theme locations counted from day notes",
+      "colTheme": "Theme",
+      "colRelative": "Relative"
+    }
+  },
+  "map": {
+    "allTrips": "Overall route for all trips",
+    "showingPrefix": "Showing:",
+    "themePrefix": "Theme:",
+    "legendTitle": "Trip Domain",
+    "openTrip": "Open trip →",
+    "loadError": "Could not load map",
+    "loadErrorHint": "Check your internet connection"
+  },
+  "report": {
+    "title": "Generate Report",
+    "subtitle": "Create a printable PDF of your trips",
+    "note": "Your currently selected filters will be used. The report opens in a new window — use browser Print (Ctrl+P) to save as PDF.",
+    "titleLabel": "Title",
+    "footerLabel": "Footer / backside text",
+    "defaultTitle": "My trips",
+    "generateButton": "Generate Report",
+    "fallbackTitle": "Register of Trips",
+    "printNote": "Use margin “Default” when printing.",
+    "printButton": "🖸 Print / Save as PDF",
+    "addBlankAfterToc": "+ Blank page after TOC",
+    "addBlankBeforeFinal": "+ Blank page before final",
+    "tocTitle": "Overview",
+    "fields": {
+      "departureDate": "Departure Date",
+      "returnDate": "Return Date",
+      "days": "Days",
+      "arrangerGroup": "Arranger Group",
+      "id": "ID",
+      "countries": "Countries",
+      "uniqueCountries": "Unique Countries",
+      "overallRoute": "Overall Route",
+      "countryMovements": "Country Movements"
+    },
+    "generatedOn": "Generated"
+  },
+  "about": {
+    "tagline": "Your open source, lightweight, and future proof travel documentation app.",
+    "sourceLabel": "Source"
+  },
+  "settings": {
+    "currentFile": "Current file",
+    "saveFile": "Save file",
+    "downloadJson": "Download JSON",
+    "startScreen": "Start screen",
+    "reloadFromUrl": "Reload from URL",
+    "immich": {
+      "checkConnection": "Check Immich connection",
+      "connecting": "Connecting…",
+      "connected": "✓ Connected — Immich is reachable",
+      "addMissingCovers": "Add missing covers to Immich album",
+      "saveThumbnails": "Save cover thumbnails → IndexedDB",
+      "albumSync": "Album sync",
+      "thumbnailCache": "Thumbnail cache",
+      "working": "Working…",
+      "photoToggleTitle": "Toggle Immich photo locations"
+    },
+    "offline": {
+      "title": "Offline",
+      "swLabel": "Service Worker",
+      "swDesc": "Caches the app shell for offline use.",
+      "removeWorker": "Remove service worker",
+      "notSupported": "Not supported in this browser",
+      "notRegistered": "Not registered",
+      "removed": "✕ Removed — reload to complete"
+    },
+    "session": {
+      "title": "Session",
+      "description": "Close the current file and return to the start screen.",
+      "returnButton": "Return to start screen"
+    },
+    "sections": {
+      "base": "Base",
+      "definition": "Definition",
+      "extension": "Extension",
+      "other": "Other",
+      "photos": "Photos",
+      "language": "Language",
+      "languageDesc": "Path to a language JSON file relative to the app (e.g. languages/swedish.json). Leave empty for built-in English.",
+      "languageApply": "Apply",
+      "tools": "Tools"
+    }
+  },
+  "fileOverlay": {
+    "previous": "Previous",
+    "next": "Next",
+    "openFile": "↗ Open file"
+  },
+  "photoOverlay": {
+    "previous": "Previous",
+    "next": "Next",
+    "openInImmich": "Open in Immich"
+  },
+  "toasts": {
+    "saved": "Saved",
+    "tripCreated": "Trip created",
+    "tripSaved": "Trip saved",
+    "tripDeleted": "Trip deleted",
+    "dayAdded": "Day added",
+    "dayDeleted": "Day deleted",
+    "accommodationCopied": "Accommodation copied",
+    "swRemoved": "Service worker removed. Reload the page to finish.",
+    "swNotSupported": "Service workers not supported",
+    "swNotRegistered": "No service worker registered",
+    "swRemoveFailed": "Could not remove service worker",
+    "popupBlocked": "Pop-up blocked — allow pop-ups and try again",
+    "dateExists": "A day with that date already exists",
+    "permissionDenied": "Permission denied."
+  },
+  "confirms": {
+    "closeFile": "Close the current file and return to the start screen?"
+  }
+}

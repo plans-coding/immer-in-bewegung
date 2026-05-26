@@ -1,0 +1,340 @@
+{
+  "weekdays": [
+    "Söndag",
+    "Måndag",
+    "Tisdag",
+    "Onsdag",
+    "Torsdag",
+    "Fredag",
+    "Lördag"
+  ],
+  "nav": {
+    "tabs": {
+      "overview": "Översikt",
+      "map": "Karta",
+      "statistics": "Statistik",
+      "trip": "Resa",
+      "editor": "Redigera",
+      "settings": "Inställningar",
+      "report": "Rapport",
+      "about": "Om"
+    },
+    "search": {
+      "placeholder": "Sök resor…",
+      "title": "Sök resor",
+      "noResults": "Inga resultat hittades",
+      "sectionTrips": "Resor",
+      "sectionDays": "Dagar",
+      "showAll": "Visa alla resultat →",
+      "allTrips": "Alla resor",
+      "closeTitle": "Stäng"
+    }
+  },
+  "loadScreen": {
+    "dropPrimary": "Släpp JSON-fil här",
+    "dropHint": "eller klicka för att bläddra (.json)",
+    "urlDivider": "eller ladda från URL",
+    "urlPlaceholder": "https://exempel.se/bewegung.json (standard: ./bewegung.json)",
+    "urlButton": "Ladda",
+    "subtitle": "Öppen källkod för resedokumentation",
+    "resume": "Återuppta"
+  },
+  "filterBar": {
+    "label": "Filter",
+    "allDomains": "Alla domäner",
+    "allGroups": "Alla grupper",
+    "allLabels": "Alla etiketter",
+    "clearFilter": "✕ Rensa filter",
+    "tripCountUnit": "resor"
+  },
+  "explore": {
+    "title": "Upptäck",
+    "subtitle": "6 slumpmässiga resor",
+    "shuffle": "Blanda",
+    "noDestination": "(ingen destination)"
+  },
+  "overview": {
+    "tabs": {
+      "cards": "Kort",
+      "year": "År",
+      "country": "Land",
+      "plain": "Lista",
+      "days": "Dagar"
+    },
+    "searchPlaceholder": "Sök resor…",
+    "noTrips": "Inga resor hittades",
+    "noDestination": "(ingen destination)",
+    "daysSingular": "dag",
+    "daysPlural": "dagar",
+    "decadeSuffix": "{decade}-talet"
+  },
+  "plainTable": {
+    "id": "ID",
+    "destination": "Destination",
+    "departure": "Avresa",
+    "return": "Hemkomst",
+    "days": "Dagar",
+    "group": "Grupp"
+  },
+  "tripNav": {
+    "drawerTitle": "Resor",
+    "filterPlaceholder": "Filtrera resor…",
+    "toggleTitle": "Resenavigator",
+    "emptyTitle": "Ingen resa vald",
+    "emptySubtitle": "Klicka på en resa i Utforska eller Översikt"
+  },
+  "tripView": {
+    "loading": "Laddar…",
+    "notFound": "Resan hittades inte",
+    "edit": "Redigera",
+    "showTopBar": "Visa toppraden",
+    "hideTopBar": "Dölj toppraden",
+    "fullscreen": "Helskärm",
+    "exitFullscreen": "Avsluta helskärm",
+    "downloadJson": "Ladda ner som JSON",
+    "downloadMd": "Ladda ner som Markdown",
+    "photos": "Foton",
+    "fields": {
+      "departure": "Avresa",
+      "return": "Hemkomst",
+      "days": "Dagar",
+      "arrangerGroup": "Arrangörsgrupp",
+      "countries": "Länder",
+      "uniqueCountries": "Unika länder",
+      "overallRoute": "Övergripande rutt",
+      "countryMovements": "Landsrörelser",
+      "arranger": "Arrangör",
+      "id": "ID"
+    },
+    "toConnector": "till"
+  },
+  "editor": {
+    "tripsToggle": "☰ Resor ▾",
+    "tripsToggleCollapsed": "☰ Resor ▸",
+    "newTrip": "＋ Ny resa",
+    "searchPlaceholder": "Sök resor…",
+    "emptyTitle": "Ingen resa vald",
+    "emptySubtitle": "Välj en från listan eller skapa en ny resa",
+    "noMatches": "Inga träffar",
+    "tripInfo": "Reseinformation",
+    "saveDaysFirst": "Spara resan först för att hantera dagar.",
+    "sections": {
+      "tripId": "Rese-ID",
+      "classification": "Klassificering",
+      "tripDetails": "Resedetaljer",
+      "location": "Plats",
+      "photos": "Foton",
+      "notes": "Anteckningar"
+    },
+    "fields": {
+      "innerId": "Internt ID",
+      "outerId": "Externt ID",
+      "tripDomain": "Resedomän",
+      "arrangerGroup": "Arrangörsgrupp",
+      "overallDestination": "Övergripande destination",
+      "departureDate": "Avresedatum",
+      "returnDate": "Hemkomstdatum",
+      "tripDescription": "Resebeskrivning",
+      "tripLabels": "Resetaggar",
+      "tripLabelsHint": "Kommaseparerade: Tagg1, Tagg2",
+      "mapPins": "Kartnålar",
+      "mapPinsHint": "[ Namn ]( lat, lon ) — en per rad",
+      "startNode": "Startnod",
+      "endNode": "Slutnod",
+      "photoStartTime": "Fotots starttid",
+      "photoStartTimeHint": "TT:MM",
+      "photoEndTime": "Fotots sluttid",
+      "photoAlbums": "Fotoalbum",
+      "coverPhoto": "Omslagsfoto",
+      "documentationNote": "Dokumentationsanteckning"
+    },
+    "buttons": {
+      "save": "Spara ändringar",
+      "create": "Skapa resa",
+      "delete": "Ta bort resa",
+      "cancel": "Avbryt"
+    },
+    "days": {
+      "addDay": "＋ Lägg till dag",
+      "noDays": "Inga dagar ännu. Klicka på \"+ Lägg till dag\" för att börja.",
+      "events": "Händelser",
+      "accommodation": "Boende",
+      "copyPrev": "↑ Kopiera föregående",
+      "country": "Land",
+      "coordinates": "Koordinater",
+      "coordsPlaceholder": "lat, lon",
+      "accuracy": "Koordinatnoggrannhet",
+      "participants": "Deltagare",
+      "additionalNotes": "Ytterligare anteckningar",
+      "countriesDuringDay": "Länder under dagen"
+    },
+    "dangerZone": "Farlig zon",
+    "deleteWarning": "Tar bort resan och alla dess dagar permanent."
+  },
+  "stats": {
+    "tabs": {
+      "summary": "Sammanfattning",
+      "visits": "Besök",
+      "overnights": "Övernattningar",
+      "themes": "Teman"
+    },
+    "kpi": {
+      "totalTrips": "Totalt antal resor",
+      "uniqueCountries": "Unika länder",
+      "daysTraveled": "Resdagar",
+      "avgDays": "Snitt dagar / resa"
+    },
+    "charts": {
+      "tripsByDomain": "Resor per domän",
+      "tripsPerYear": "Resor per år"
+    },
+    "visits": {
+      "title": "Besökta länder",
+      "colRank": "#",
+      "colCountry": "Land",
+      "colContinent": "Kontinent",
+      "hdrOneQualified": "Ett kvalificerat besök per resa",
+      "hdrManyQualified": "Fler än ett kvalificerat besök per resa",
+      "hdrBorderCrossings": "Gränspassager (in och ut)",
+      "colOL": "OL",
+      "colSS": "OL+KS",
+      "colVSS": "OL+KS+MKS",
+      "colOLMQ": "OL",
+      "colBorder": "Min.",
+      "colFirst": "Första",
+      "colLatest": "Senaste",
+      "ttOL": "Ordinär längd, ett besök per resa",
+      "ttSS": "Ordinär längd + kortare stopp inkluderat",
+      "ttVSS": "Ordinär + kortare + mycket kortare stopp inkluderat",
+      "ttOLMQ": "Ordinär längd, flera förekomster per resa räknas",
+      "ttBorder": "Minimalt antal gränspassager (in + ut × 2)",
+      "note": "OL = ordinär längd. KS = kortare stopp (*). MKS = mycket kortare stopp (**). Ett kvalificerat besök återupptar inte ett tidigare besök som brutits av ett kort stopp i ett annat land. Min. = minimalt antal gränspassager, beräknat som (OL + KS + MKS förekomster) × 2."
+    },
+    "overnights": {
+      "title": "Övernattningar per land",
+      "colRank": "#",
+      "colCountry": "Land",
+      "colContinent": "Kontinent",
+      "colNights": "Nätter",
+      "colRelative": "Relativ"
+    },
+    "themes": {
+      "notActivated": "Teman inte aktiverade",
+      "qualifiedNote": "Kvalificerade temaplatser räknade från dagsanteckningar",
+      "colTheme": "Tema",
+      "colRelative": "Relativ"
+    }
+  },
+  "map": {
+    "allTrips": "Övergripande rutt för alla resor",
+    "showingPrefix": "Visar:",
+    "themePrefix": "Tema:",
+    "legendTitle": "Resedomän",
+    "openTrip": "Öppna resa →",
+    "loadError": "Kunde inte ladda kartan",
+    "loadErrorHint": "Kontrollera din internetanslutning"
+  },
+  "report": {
+    "title": "Generera rapport",
+    "subtitle": "Skapa en utskrivbar PDF av dina resor",
+    "note": "Dina aktuellt valda filter kommer att användas. Rapporten öppnas i ett nytt fönster — använd webbläsarens Skriv ut (Ctrl+P) för att spara som PDF.",
+    "titleLabel": "Titel",
+    "footerLabel": "Sidfot / baksidetext",
+    "defaultTitle": "Mina resor",
+    "generateButton": "Generera rapport",
+    "fallbackTitle": "Reseregister",
+    "printNote": "Använd marginal \"Standard\" vid utskrift.",
+    "printButton": "🖸 Skriv ut / Spara som PDF",
+    "addBlankAfterToc": "+ Tom sida efter innehållsförteckning",
+    "addBlankBeforeFinal": "+ Tom sida före sista sidan",
+    "tocTitle": "Översikt",
+    "fields": {
+      "departureDate": "Avresedatum",
+      "returnDate": "Hemkomstdatum",
+      "days": "Dagar",
+      "arrangerGroup": "Arrangörsgrupp",
+      "id": "ID",
+      "countries": "Länder",
+      "uniqueCountries": "Unika länder",
+      "overallRoute": "Övergripande rutt",
+      "countryMovements": "Landsrörelser"
+    },
+    "generatedOn": "Genererad"
+  },
+  "about": {
+    "tagline": "En lättviktig och framtidssäker resedokumentationsapp med öppen källkod.",
+    "sourceLabel": "Källkod"
+  },
+  "settings": {
+    "currentFile": "Aktuell fil",
+    "saveFile": "Spara fil",
+    "downloadJson": "Ladda ner JSON",
+    "startScreen": "Startskärm",
+    "reloadFromUrl": "Ladda om från URL",
+    "immich": {
+      "checkConnection": "Kontrollera Immich-anslutning",
+      "connecting": "Ansluter…",
+      "connected": "✓ Ansluten — Immich är nåbart",
+      "addMissingCovers": "Lägg till saknade omslagsfoton i Immich-album",
+      "saveThumbnails": "Spara miniatyrbilder → IndexedDB",
+      "albumSync": "Albumsynkronisering",
+      "thumbnailCache": "Miniatyrbildcache",
+      "working": "Arbetar…",
+      "photoToggleTitle": "Växla Immich-fotoplatser"
+    },
+    "offline": {
+      "title": "Offline",
+      "swLabel": "Service Worker",
+      "swDesc": "Cachelagrar appskalat för offlineanvändning.",
+      "removeWorker": "Ta bort service worker",
+      "notSupported": "Stöds inte i den här webbläsaren",
+      "notRegistered": "Inte registrerad",
+      "removed": "✕ Borttagen — ladda om för att slutföra"
+    },
+    "session": {
+      "title": "Session",
+      "description": "Stäng den aktuella filen och återgå till startskärmen.",
+      "returnButton": "Återgå till startskärmen"
+    },
+    "sections": {
+      "base": "Bas",
+      "definition": "Definition",
+      "extension": "Tillägg",
+      "other": "Övrigt",
+      "photos": "Foton",
+      "language": "Språk",
+      "languageDesc": "Sökväg till en språkfil relativt appen (t.ex. languages/swedish.json). Lämna tomt för inbyggd engelska.",
+      "languageApply": "Verkställ",
+      "tools": "Verktyg"
+    }
+  },
+  "fileOverlay": {
+    "previous": "Föregående",
+    "next": "Nästa",
+    "openFile": "↗ Öppna fil"
+  },
+  "photoOverlay": {
+    "previous": "Föregående",
+    "next": "Nästa",
+    "openInImmich": "Öppna i Immich"
+  },
+  "toasts": {
+    "saved": "Sparad",
+    "tripCreated": "Resa skapad",
+    "tripSaved": "Resa sparad",
+    "tripDeleted": "Resa borttagen",
+    "dayAdded": "Dag tillagd",
+    "dayDeleted": "Dag borttagen",
+    "accommodationCopied": "Boende kopierat",
+    "swRemoved": "Service worker borttagen. Ladda om sidan för att slutföra.",
+    "swNotSupported": "Service workers stöds inte",
+    "swNotRegistered": "Ingen service worker registrerad",
+    "swRemoveFailed": "Kunde inte ta bort service worker",
+    "popupBlocked": "Popup blockerad — tillåt popups och försök igen",
+    "dateExists": "En dag med det datumet finns redan",
+    "permissionDenied": "Åtkomst nekad."
+  },
+  "confirms": {
+    "closeFile": "Stäng den aktuella filen och återgå till startskärmen?"
+  }
+}

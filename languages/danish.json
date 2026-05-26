@@ -1,0 +1,340 @@
+{
+  "weekdays": [
+    "Søndag",
+    "Mandag",
+    "Tirsdag",
+    "Onsdag",
+    "Torsdag",
+    "Fredag",
+    "Lørdag"
+  ],
+  "nav": {
+    "tabs": {
+      "overview": "Oversigt",
+      "map": "Kort",
+      "statistics": "Statistik",
+      "trip": "Rejse",
+      "editor": "Rediger",
+      "settings": "Indstillinger",
+      "report": "Rapport",
+      "about": "Om"
+    },
+    "search": {
+      "placeholder": "Søg rejser…",
+      "title": "Søg rejser",
+      "noResults": "Ingen resultater fundet",
+      "sectionTrips": "Rejser",
+      "sectionDays": "Dage",
+      "showAll": "Vis alle resultater →",
+      "allTrips": "Alle rejser",
+      "closeTitle": "Luk"
+    }
+  },
+  "loadScreen": {
+    "dropPrimary": "Slip JSON-fil her",
+    "dropHint": "eller klik for at browse (.json)",
+    "urlDivider": "eller indlæs fra URL",
+    "urlPlaceholder": "https://eksempel.dk/bewegung.json (standard: ./bewegung.json)",
+    "urlButton": "Indlæs",
+    "subtitle": "Åben kildekode rejsedokumentation",
+    "resume": "Genoptag"
+  },
+  "filterBar": {
+    "label": "Filter",
+    "allDomains": "Alle domæner",
+    "allGroups": "Alle grupper",
+    "allLabels": "Alle etiketter",
+    "clearFilter": "✕ Ryd filter",
+    "tripCountUnit": "rejser"
+  },
+  "explore": {
+    "title": "Opdag",
+    "subtitle": "6 tilfældige rejser",
+    "shuffle": "Bland",
+    "noDestination": "(ingen destination)"
+  },
+  "overview": {
+    "tabs": {
+      "cards": "Kort",
+      "year": "År",
+      "country": "Land",
+      "plain": "Liste",
+      "days": "Dage"
+    },
+    "searchPlaceholder": "Søg rejser…",
+    "noTrips": "Ingen rejser fundet",
+    "noDestination": "(ingen destination)",
+    "daysSingular": "dag",
+    "daysPlural": "dage",
+    "decadeSuffix": "{decade}'erne"
+  },
+  "plainTable": {
+    "id": "ID",
+    "destination": "Destination",
+    "departure": "Afrejse",
+    "return": "Hjemkomst",
+    "days": "Dage",
+    "group": "Gruppe"
+  },
+  "tripNav": {
+    "drawerTitle": "Rejser",
+    "filterPlaceholder": "Filtrer rejser…",
+    "toggleTitle": "Rejsenavigator",
+    "emptyTitle": "Ingen rejse valgt",
+    "emptySubtitle": "Klik på en rejse i Opdag eller Oversigt"
+  },
+  "tripView": {
+    "loading": "Indlæser…",
+    "notFound": "Rejse ikke fundet",
+    "edit": "Rediger",
+    "showTopBar": "Vis topbjælke",
+    "hideTopBar": "Skjul topbjælke",
+    "fullscreen": "Fuld skærm",
+    "exitFullscreen": "Afslut fuld skærm",
+    "downloadJson": "Download som JSON",
+    "downloadMd": "Download som Markdown",
+    "photos": "Fotos",
+    "fields": {
+      "departure": "Afrejse",
+      "return": "Hjemkomst",
+      "days": "Dage",
+      "arrangerGroup": "Arrangørgruppe",
+      "countries": "Lande",
+      "uniqueCountries": "Unikke lande",
+      "overallRoute": "Overordnet rute",
+      "countryMovements": "Landebevægelser",
+      "arranger": "Arrangør",
+      "id": "ID"
+    },
+    "toConnector": "til"
+  },
+  "editor": {
+    "tripsToggle": "☰ Rejser ▾",
+    "tripsToggleCollapsed": "☰ Rejser ▸",
+    "newTrip": "＋ Ny rejse",
+    "searchPlaceholder": "Søg rejser…",
+    "emptyTitle": "Ingen rejse valgt",
+    "emptySubtitle": "Vælg en fra listen eller opret en ny rejse",
+    "noMatches": "Ingen resultater",
+    "tripInfo": "Rejseinformation",
+    "saveDaysFirst": "Gem rejsen først for at administrere dage.",
+    "sections": {
+      "tripId": "Rejse-ID",
+      "classification": "Klassifikation",
+      "tripDetails": "Rejsedetaljer",
+      "location": "Sted",
+      "photos": "Fotos",
+      "notes": "Noter"
+    },
+    "fields": {
+      "innerId": "Internt ID",
+      "outerId": "Eksternt ID",
+      "tripDomain": "Rejsedomæne",
+      "arrangerGroup": "Arrangørgruppe",
+      "overallDestination": "Overordnet destination",
+      "departureDate": "Afrejsedato",
+      "returnDate": "Hjemkomstdato",
+      "tripDescription": "Rejsebeskrivelse",
+      "tripLabels": "Rejseetiketter",
+      "tripLabelsHint": "Kommasepareret: Etiket1, Etiket2",
+      "mapPins": "Kortnåle",
+      "mapPinsHint": "[ Navn ]( lat, lon ) — én pr. linje",
+      "startNode": "Startpunkt",
+      "endNode": "Slutpunkt",
+      "photoStartTime": "Foto starttid",
+      "photoStartTimeHint": "TT:MM",
+      "photoEndTime": "Foto sluttid",
+      "photoAlbums": "Fotoalbummer",
+      "coverPhoto": "Forsidebillede",
+      "documentationNote": "Dokumentationsnote"
+    },
+    "buttons": {
+      "save": "Gem ændringer",
+      "create": "Opret rejse",
+      "delete": "Slet rejse",
+      "cancel": "Annuller"
+    },
+    "days": {
+      "addDay": "＋ Tilføj dag",
+      "noDays": "Ingen dage endnu. Klik på \"+ Tilføj dag\" for at starte.",
+      "events": "Begivenheder",
+      "accommodation": "Indkvartering",
+      "copyPrev": "↑ Kopiér forrige",
+      "country": "Land",
+      "coordinates": "Koordinater",
+      "coordsPlaceholder": "lat, lon",
+      "accuracy": "Koordinatnøjagtighed",
+      "participants": "Deltagere",
+      "additionalNotes": "Yderligere noter",
+      "countriesDuringDay": "Lande i løbet af dagen"
+    },
+    "dangerZone": "Farlig zone",
+    "deleteWarning": "Sletter permanent denne rejse og alle dens dage."
+  },
+  "stats": {
+    "tabs": {
+      "summary": "Resumé",
+      "visits": "Besøg",
+      "overnights": "Overnatninger",
+      "themes": "Temaer"
+    },
+    "kpi": {
+      "totalTrips": "Rejser i alt",
+      "uniqueCountries": "Unikke lande",
+      "daysTraveled": "Rejsedage",
+      "avgDays": "Gns. dage / rejse"
+    },
+    "charts": {
+      "tripsByDomain": "Rejser pr. domæne",
+      "tripsPerYear": "Rejser pr. år"
+    },
+    "visits": {
+      "title": "Besøgte lande",
+      "colRank": "#",
+      "colCountry": "Land",
+      "colContinent": "Kontinent",
+      "hdrOneQualified": "Ét kvalificeret besøg pr. rejse",
+      "hdrManyQualified": "Mere end ét kvalificeret besøg pr. rejse",
+      "hdrBorderCrossings": "Grænsepassager (ind og ud)",
+      "colOL": "OL",
+      "colSS": "OL+KS",
+      "colVSS": "OL+KS+MKS",
+      "colOLMQ": "OL",
+      "colBorder": "Min.",
+      "colFirst": "Første",
+      "colLatest": "Seneste",
+      "ttOL": "Ordinær længde, ét besøg pr. rejse",
+      "ttSS": "Ordinær længde + kortere stop inkluderet",
+      "ttVSS": "Ordinær + kortere + meget kortere stop inkluderet",
+      "ttOLMQ": "Ordinær længde, flere forekomster pr. rejse tælles",
+      "ttBorder": "Minimalt antal grænsepassager (ind + ud × 2)",
+      "note": "OL = ordinær længde. KS = kortere stop (*). MKS = meget kortere stop (**). Et kvalificeret besøg genoptager ikke et tidligere besøg brudt af et kort stop i et andet land. Min. = minimalt antal grænsepassager, beregnet som (OL + KS + MKS forekomster) × 2."
+    },
+    "overnights": {
+      "title": "Overnatninger pr. land",
+      "colRank": "#",
+      "colCountry": "Land",
+      "colContinent": "Kontinent",
+      "colNights": "Nætter",
+      "colRelative": "Relativ"
+    },
+    "themes": {
+      "notActivated": "Temaer ikke aktiveret",
+      "qualifiedNote": "Kvalificerede temastederne talt fra dagsnoter",
+      "colTheme": "Tema",
+      "colRelative": "Relativ"
+    }
+  },
+  "map": {
+    "allTrips": "Overordnet rute for alle rejser",
+    "showingPrefix": "Viser:",
+    "themePrefix": "Tema:",
+    "legendTitle": "Rejsedomæne",
+    "openTrip": "Åbn rejse →",
+    "loadError": "Kunne ikke indlæse kort",
+    "loadErrorHint": "Tjek din internetforbindelse"
+  },
+  "report": {
+    "title": "Generer rapport",
+    "subtitle": "Opret en udskrivbar PDF af dine rejser",
+    "note": "Dine aktuelt valgte filtre vil blive brugt. Rapporten åbnes i et nyt vindue — brug browserens Udskriv (Ctrl+P) for at gemme som PDF.",
+    "titleLabel": "Titel",
+    "footerLabel": "Sidefod / bagsidetekst",
+    "defaultTitle": "Mine rejser",
+    "generateButton": "Generer rapport",
+    "fallbackTitle": "Rejseregister",
+    "printNote": "Brug margen \"Standard\" ved udskrivning.",
+    "printButton": "🖸 Udskriv / Gem som PDF",
+    "addBlankAfterToc": "+ Tom side efter indholdsfortegnelse",
+    "addBlankBeforeFinal": "+ Tom side før slutside",
+    "tocTitle": "Oversigt",
+    "fields": {
+      "departureDate": "Afrejsedato",
+      "returnDate": "Hjemkomstdato",
+      "days": "Dage",
+      "arrangerGroup": "Arrangørgruppe",
+      "id": "ID",
+      "countries": "Lande",
+      "uniqueCountries": "Unikke lande",
+      "overallRoute": "Overordnet rute",
+      "countryMovements": "Landebevægelser"
+    },
+    "generatedOn": "Genereret"
+  },
+  "about": {
+    "tagline": "Din åbne kildekode, letvægts og fremtidssikrede rejsedokumentationsapp.",
+    "sourceLabel": "Kilde"
+  },
+  "settings": {
+    "currentFile": "Aktuel fil",
+    "saveFile": "Gem fil",
+    "downloadJson": "Download JSON",
+    "startScreen": "Startskærm",
+    "reloadFromUrl": "Genindlæs fra URL",
+    "immich": {
+      "checkConnection": "Tjek Immich-forbindelse",
+      "connecting": "Forbinder…",
+      "connected": "✓ Forbundet — Immich er tilgængeligt",
+      "addMissingCovers": "Tilføj manglende forsider til Immich-album",
+      "saveThumbnails": "Gem miniaturebilleder → IndexedDB",
+      "albumSync": "Albumsynkronisering",
+      "thumbnailCache": "Miniaturecache",
+      "working": "Arbejder…",
+      "photoToggleTitle": "Skift Immich fotoplaceringer"
+    },
+    "offline": {
+      "title": "Offline",
+      "swLabel": "Service Worker",
+      "swDesc": "Gemmer app-skallen til offline brug.",
+      "removeWorker": "Fjern service worker",
+      "notSupported": "Ikke understøttet i denne browser",
+      "notRegistered": "Ikke registreret",
+      "removed": "✕ Fjernet — genindlæs for at fuldføre"
+    },
+    "session": {
+      "title": "Session",
+      "description": "Luk den aktuelle fil og vend tilbage til startskærmen.",
+      "returnButton": "Tilbage til startskærm"
+    },
+    "sections": {
+      "base": "Basis",
+      "definition": "Definition",
+      "extension": "Udvidelse",
+      "other": "Andet",
+      "photos": "Fotos",
+      "language": "Sprog",
+      "languageDesc": "Sti til en sprog-JSON-fil relativt til appen (f.eks. languages/danish.json). Lad stå tomt for indbygget engelsk.",
+      "languageApply": "Anvend",
+      "tools": "Værktøjer"
+    }
+  },
+  "fileOverlay": {
+    "previous": "Forrige",
+    "next": "Næste",
+    "openFile": "↗ Åbn fil"
+  },
+  "photoOverlay": {
+    "previous": "Forrige",
+    "next": "Næste",
+    "openInImmich": "Åbn i Immich"
+  },
+  "toasts": {
+    "saved": "Gemt",
+    "tripCreated": "Rejse oprettet",
+    "tripSaved": "Rejse gemt",
+    "tripDeleted": "Rejse slettet",
+    "dayAdded": "Dag tilføjet",
+    "dayDeleted": "Dag slettet",
+    "accommodationCopied": "Indkvartering kopieret",
+    "swRemoved": "Service worker fjernet. Genindlæs siden for at afslutte.",
+    "swNotSupported": "Service workers understøttes ikke",
+    "swNotRegistered": "Ingen service worker registreret",
+    "swRemoveFailed": "Kunne ikke fjerne service worker",
+    "popupBlocked": "Pop-up blokeret — tillad pop-ups og prøv igen",
+    "dateExists": "En dag med den dato findes allerede",
+    "permissionDenied": "Adgang nægtet."
+  },
+  "confirms": {
+    "closeFile": "Luk den aktuelle fil og vend tilbage til startskærmen?"
+  }
+}

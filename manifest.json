@@ -1,0 +1,25 @@
+{
+  "name": "Bewegung",
+  "short_name": "Bewegung",
+  "description": "Open source, lightweight travel documentation app.",
+  "start_url": "./bewegung.html",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#1d655e",
+  "background_color": "#0d3330",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["travel", "productivity"]
+}
