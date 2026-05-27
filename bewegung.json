@@ -6,7 +6,12 @@
             "LanguageFile": null
         },
         "Definition": {
-            "ArrangerGroups": [],
+            "ArrangerGroups": [
+                "Family",
+                "Private",
+                "Denmark",
+                "Sportgroup"
+            ],
             "ContinentCountries": {
                 "Africa": {
                     "Algeria": "DZ",
@@ -236,7 +241,32 @@
                 "Domestic": "#0b5394"
             }
         },
-        "Extension": {},
+        "Extension": {
+          "Diary": {
+            "Enabled": false,
+            "Items": [],
+            "Path": "",
+            "Translation": ""
+          },
+          "Movie": {
+            "Enabled": false,
+            "Items": {},
+            "Path": "",
+            "Translation": ""
+          },
+          "Passport": {
+            "Enabled": false,
+            "Items": [],
+            "Path": "",
+            "Translation": ""
+          },
+          "Theme": {
+            "Enabled": false,
+            "Items": {},
+            "Path": "",
+            "Translation": ""
+          }
+        },
         "Other": {
             "ExcludeDayPhotos": [],
             "ExternalMapProvider": "https://www.google.com/maps/?q="
