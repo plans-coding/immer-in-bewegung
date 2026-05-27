@@ -825,6 +825,9 @@ function applyTheme(theme) {
   const icon = theme === 'light' ? _ICON_MOON : _ICON_SUN;
   document.querySelectorAll('#theme-btn,#ls-theme-btn').forEach(b => b.innerHTML = icon);
   localStorage.setItem('chronik-theme', theme);
+  // Keep the browser/Android top bar in sync with the nav background
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (metaTheme) metaTheme.content = theme === 'dark' ? '#091a15' : '#1d655e';
 }
 function toggleTheme() {
   applyTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
@@ -3452,7 +3455,7 @@ function generateReport() {
       </div>`;
     }).join('');
 
-    return `<section class="rpt-trip" id="${h(trip.InnerId)}">
+    return `<section class="rpt-trip" id="${h(trip.InnerId)}" style="page:${safePageId(trip)}">
       <div class="rpt-cover" style="${coverBg(trip)}">
         <div class="rpt-cover-id" style="background:${c};color:${tx}">${h(trip.OuterId||trip.InnerId)}</div>
         <div class="rpt-cover-title" style="color:${tx}">${h(trip.OverallDestination||'')}</div>
@@ -3482,6 +3485,17 @@ function generateReport() {
   // ── Total stats for cover ─────────────────────────────────────────
   const allUC=new Set(trips.flatMap(trip=>uniqueCountriesFor(trip)));
   let totalDays=0; trips.forEach(trip=>{if(trip.NumberOfDays>0)totalDays+=trip.NumberOfDays;});
+
+  // ── Per-trip @page rules ──────────────────────────────────────────
+  function safePageId(trip) {
+    return 'T-' + (trip.OuterId||trip.InnerId||'x').replace(/[^a-zA-Z0-9_-]/g,'-');
+  }
+  const tripPageCss = trips.map((trip,i) => {
+    const pid = safePageId(trip);
+    const esc = s => (s||'').replace(/\\/g,'\\\\').replace(/"/g,'\\"');
+    const label = `"#${i+1}  —  ${esc(trip.OuterId||trip.InnerId)} ${esc(trip.OverallDestination)}"`;
+    return `@page ${pid}{@bottom-center{content:${label};font-size:8pt;color:#888;font-family:'Cairo',sans-serif}}`;
+  }).join('\n');
 
   // ── Full HTML ─────────────────────────────────────────────────────
   const html=`<!DOCTYPE html>
@@ -3523,7 +3537,7 @@ section{break-before:page;page-break-before:always}
 .rpt-cover-page .rpt-footer{font-size:10pt;opacity:.4;margin-top:48pt;font-style:italic}
 
 /* Blank page */
-.blank-page{min-height:100vh}
+.blank-page{height:0}
 
 /* TOC */
 .rpt-toc{padding:40pt 48pt;min-height:100vh}
@@ -3537,7 +3551,7 @@ section{break-before:page;page-break-before:always}
 
 /* Trip section */
 .rpt-trip{display:flex;flex-direction:column}
-.rpt-cover{min-height:110pt;padding:20pt 28pt;display:flex;flex-direction:column;justify-content:flex-end;gap:4pt}
+.rpt-cover{min-height:160pt;padding:20pt 28pt;display:flex;flex-direction:column;justify-content:flex-end;gap:4pt}
 .rpt-cover-id{display:inline-block;padding:2pt 8pt;border-radius:3pt;font-size:9pt;font-weight:700;font-family:monospace;letter-spacing:.3pt;margin-bottom:6pt;align-self:flex-start}
 .rpt-cover-title{font-size:20pt;font-weight:800;line-height:1.1}
 .rpt-cover-sub{font-size:10.5pt;line-height:1.4;margin-top:3pt}
@@ -3561,7 +3575,7 @@ section{break-before:page;page-break-before:always}
 .rpt-acc-link{color:#555;font-size:8.5pt;line-height:1.45}
 
 /* Final page */
-.rpt-final{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14pt;padding:40pt}
+.rpt-final{min-height:calc(100vh - 5cm);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;text-align:center;gap:14pt;padding:40pt}
 .rpt-final img{height:50pt}
 .rpt-final-name{font-size:26pt;font-weight:900;letter-spacing:-1pt;color:#000}
 .rpt-final-name span{color:#000}
@@ -3571,6 +3585,16 @@ section{break-before:page;page-break-before:always}
   .rpt-trip{break-before:page;page-break-before:always}
   .rpt-day{break-inside:avoid;page-break-inside:avoid}
 }
+
+/* Paged media — page numbers */
+@page{margin:1.5cm 1.5cm 2cm}
+@page :first{margin:0;@bottom-right{content:none}@bottom-left{content:none}}
+@page :right{margin-left:2.5cm;@bottom-right{content:counter(page,upper-roman);font-size:8pt;color:#888;font-family:'Cairo',sans-serif}}
+@page :left{margin-right:2.5cm;@bottom-left{content:counter(page,upper-roman);font-size:8pt;color:#888;font-family:'Cairo',sans-serif}}
+@page final-page{@bottom-right{content:none}@bottom-left{content:none}@bottom-center{content:none}}
+
+/* Per-trip page names (injected) */
+${tripPageCss}
 </style>
 </head>
 <body>
@@ -3599,7 +3623,7 @@ section{break-before:page;page-break-before:always}
 
 ${tripSections}
 
-<section class="rpt-final">
+<section class="rpt-final" style="page:final-page">
   <img src="favicon.svg" alt="">
   <div class="rpt-final-name"><span class="rpt-immer">Immer in</span> <span class="rpt-bew">Bewegung</span></div>
   <div class="rpt-final-foot">${h(footer)}</div>
