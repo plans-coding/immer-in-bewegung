@@ -289,7 +289,8 @@
       "removeWorker": "Remove service worker",
       "notSupported": "Not supported in this browser",
       "notRegistered": "Not registered",
-      "removed": "✕ Removed — reload to complete"
+      "removed": "✕ Removed — reload to complete",
+      "forceReload": "⟳ Force reload"
     },
     "session": {
       "title": "Session",
@@ -303,7 +304,7 @@
       "other": "Other",
       "photos": "Photos",
       "language": "Language",
-      "languageDesc": "Path to a language JSON file relative to the app (e.g. languages/swedish.json). Leave empty for built-in English.",
+      "languageDesc": "Path to a language JSON file relative to the app (e.g. languages/swedish.json). Leave empty for English.",
       "languageApply": "Apply",
       "tools": "Tools"
     }

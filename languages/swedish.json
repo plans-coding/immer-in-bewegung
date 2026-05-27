@@ -205,10 +205,10 @@
       "colLatest": "Senaste",
       "ttOL": "Ordinär längd, ett besök per resa",
       "ttSS": "Ordinär längd + kortare stopp inkluderat",
-      "ttVSS": "Ordinär + kortare + mycket kortare stopp inkluderat",
+      "ttVSS": "Ordinär + kortare + mycket kort stopp inkluderat",
       "ttOLMQ": "Ordinär längd, flera förekomster per resa räknas",
       "ttBorder": "Minimalt antal gränspassager (in + ut × 2)",
-      "note": "OL = ordinär längd. KS = kortare stopp (*). MKS = mycket kortare stopp (**). Ett kvalificerat besök återupptar inte ett tidigare besök som brutits av ett kort stopp i ett annat land. Min. = minimalt antal gränspassager, beräknat som (OL + KS + MKS förekomster) × 2."
+      "note": "OL = ordinär längd. KS = kortare stopp (*). MKS = mycket kort stopp (**). Ett kvalificerat besök återupptar inte ett tidigare besök som brutits av ett kort stopp i ett annat land. Min. = minimalt antal gränspassager, beräknat som (OL + KS + MKS förekomster) × 2."
     },
     "overnights": {
       "title": "Övernattningar per land",
@@ -285,11 +285,12 @@
     "offline": {
       "title": "Offline",
       "swLabel": "Service Worker",
-      "swDesc": "Cachelagrar appskalat för offlineanvändning.",
+      "swDesc": "Cachelagrar appen för offlineanvändning.",
       "removeWorker": "Ta bort service worker",
       "notSupported": "Stöds inte i den här webbläsaren",
       "notRegistered": "Inte registrerad",
-      "removed": "✕ Borttagen — ladda om för att slutföra"
+      "removed": "✕ Borttagen — ladda om för att slutföra",
+      "forceReload": "⟳ Tvinga omladdning"
     },
     "session": {
       "title": "Session",
@@ -303,7 +304,7 @@
       "other": "Övrigt",
       "photos": "Foton",
       "language": "Språk",
-      "languageDesc": "Sökväg till en språkfil relativt appen (t.ex. languages/swedish.json). Lämna tomt för inbyggd engelska.",
+      "languageDesc": "Sökväg till en språkfil relativt appen (t.ex. languages/swedish.json). Lämna tomt för engelska.",
       "languageApply": "Verkställ",
       "tools": "Verktyg"
     }

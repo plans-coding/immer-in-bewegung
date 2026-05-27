@@ -285,11 +285,12 @@
     "offline": {
       "title": "Offline",
       "swLabel": "Service Worker",
-      "swDesc": "Gemmer app-skallen til offline brug.",
+      "swDesc": "Gemmer appen til offline brug.",
       "removeWorker": "Fjern service worker",
       "notSupported": "Ikke understøttet i denne browser",
       "notRegistered": "Ikke registreret",
-      "removed": "✕ Fjernet — genindlæs for at fuldføre"
+      "removed": "✕ Fjernet — genindlæs for at fuldføre",
+      "forceReload": "⟳ Gennemtving genindlæsning"
     },
     "session": {
       "title": "Session",
@@ -303,7 +304,7 @@
       "other": "Andet",
       "photos": "Fotos",
       "language": "Sprog",
-      "languageDesc": "Sti til en sprog-JSON-fil relativt til appen (f.eks. languages/danish.json). Lad stå tomt for indbygget engelsk.",
+      "languageDesc": "Sti til en sprog-JSON-fil relativt til appen (f.eks. languages/danish.json). Lad stå tomt for engelsk.",
       "languageApply": "Anvend",
       "tools": "Værktøjer"
     }
