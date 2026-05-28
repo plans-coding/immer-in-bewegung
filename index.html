@@ -4686,6 +4686,76 @@ function renderSettings() {
   swCard.appendChild(swHdr); swCard.appendChild(swBody);
   content.appendChild(swCard);
 
+  // ── Export ───────────────────────────────────────────────────────
+  const expCard=document.createElement('div'); expCard.className='st-card';
+  const expHdr=document.createElement('div'); expHdr.className='st-group-hdr'; expHdr.textContent=t('settings.export.title','Export');
+  const expBody=document.createElement('div'); expBody.style.cssText='padding:14px 18px;display:flex;flex-direction:column;gap:12px';
+  const expStatus=document.createElement('div'); expStatus.className='immich-status';
+  const _expCount=filteredTrips().length;
+  expStatus.textContent=`${_expCount} ${_expCount===1?t('settings.export.tripSingular','trip'):t('settings.export.tripPlural','trips')} ${t('settings.export.inSelection','in current selection')}`;
+
+  function _buildFilteredObj() {
+    const filtered={};
+    filteredTrips().forEach(trip=>{ filtered[trip.InnerId]=data.Trips[trip.InnerId]; });
+    return { Settings:data.Settings, Trips:filtered };
+  }
+  function _dlJson(obj,filename) {
+    const blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    Object.assign(document.createElement('a'),{href:url,download:filename}).click();
+    URL.revokeObjectURL(url);
+  }
+  async function _fetchBase64(url) {
+    if(!url||url.startsWith('data:'))return url;
+    try {
+      const r=await fetch(url); if(!r.ok)return null;
+      const blob=await r.blob();
+      return await new Promise((res,rej)=>{const rd=new FileReader();rd.onload=()=>res(rd.result);rd.onerror=rej;rd.readAsDataURL(blob);});
+    } catch(e){console.warn('Cover fetch failed:',url,e);return null;}
+  }
+
+  const filtBtn=document.createElement('button'); filtBtn.className='btn btn-g';
+  filtBtn.style.cssText='font-size:12px;padding:5px 13px';
+  filtBtn.textContent=t('settings.export.filteredBtn','⬇ Download filtered JSON');
+  filtBtn.addEventListener('click',()=>{
+    const obj=_buildFilteredObj();
+    const n=Object.keys(obj.Trips).length;
+    _dlJson(obj,`export_${n}trips.json`);
+    expStatus.className='immich-status ok'; expStatus.textContent=`${t('settings.export.downloaded','Downloaded')} ${n} ${n===1?t('settings.export.tripSingular','trip'):t('settings.export.tripPlural','trips')}`;
+  });
+
+  const embedBtn=document.createElement('button'); embedBtn.className='btn btn-p';
+  embedBtn.style.cssText='font-size:12px;padding:5px 13px';
+  embedBtn.textContent=t('settings.export.embedBtn','⬇ Download with embedded cover photos');
+  embedBtn.addEventListener('click',async()=>{
+    embedBtn.disabled=true;
+    const obj=_buildFilteredObj();
+    const entries=Object.entries(obj.Trips);
+    let done=0;
+    for(const [innerId,trip] of entries){
+      if(trip.CoverPhoto){
+        expStatus.className='immich-status'; expStatus.textContent=`${t('settings.export.fetchingCovers','Fetching covers…')} ${done}/${entries.length}`;
+        const idbVal=coverPhotosCache&&trip.OuterId&&coverPhotosCache[trip.OuterId];
+        const idbUrl=idbVal&&(idbVal.startsWith('http')||idbVal.startsWith('/')||idbVal.startsWith('data:'))?idbVal:null;
+        const {url:cpUrl}=parseCoverPhoto(trip.CoverPhoto);
+        const src=idbUrl||cpUrl||null;
+        const b64=await _fetchBase64(src);
+        if(b64)obj.Trips[innerId]={...trip,CoverPhoto:b64};
+      }
+      done++;
+    }
+    const n=Object.keys(obj.Trips).length;
+    _dlJson(obj,`export_${n}trips_embedded.json`);
+    expStatus.className='immich-status ok'; expStatus.textContent=`${t('settings.export.downloaded','Downloaded')} ${n} ${n===1?t('settings.export.tripSingular','trip'):t('settings.export.tripPlural','trips')} ${t('settings.export.withEmbedded','with embedded covers')}`;
+    embedBtn.disabled=false;
+  });
+
+  const expBtns=document.createElement('div'); expBtns.className='immich-btns';
+  expBtns.appendChild(filtBtn); expBtns.appendChild(embedBtn);
+  expBody.appendChild(expBtns); expBody.appendChild(expStatus);
+  expCard.appendChild(expHdr); expCard.appendChild(expBody);
+  content.appendChild(expCard);
+
 }
 
 // ── Toast ─────────────────────────────────────────────────────────

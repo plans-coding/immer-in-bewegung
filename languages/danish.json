@@ -337,5 +337,16 @@
   },
   "confirms": {
     "closeFile": "Luk den aktuelle fil og vend tilbage til startskærmen?"
+  },
+  "export": {
+    "title": "Eksport",
+    "filteredBtn": "⬇ Download filtreret JSON",
+    "embedBtn": "⬇ Download med indlejrede forsidebilleder",
+    "inSelection": "i aktuelt udvalg",
+    "tripSingular": "rejse",
+    "tripPlural": "rejser",
+    "fetchingCovers": "Henter forsidebilleder…",
+    "downloaded": "Downloadet",
+    "withEmbedded": "med indlejrede forsider"
   }
 }

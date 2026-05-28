@@ -337,5 +337,16 @@
   },
   "confirms": {
     "closeFile": "Close the current file and return to the start screen?"
+  },
+  "export": {
+    "title": "Export",
+    "filteredBtn": "⬇ Download filtered JSON",
+    "embedBtn": "⬇ Download with embedded cover photos",
+    "inSelection": "in current selection",
+    "tripSingular": "trip",
+    "tripPlural": "trips",
+    "fetchingCovers": "Fetching covers…",
+    "downloaded": "Downloaded",
+    "withEmbedded": "with embedded covers"
   }
 }
