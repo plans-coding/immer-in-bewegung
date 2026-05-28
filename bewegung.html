@@ -191,6 +191,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;
 
 /* Form cards */
 .card{background:var(--s2);border:1px solid var(--border);margin:0;border-top:none}
+.card-row{display:flex}
+.card-row .card{flex:1;min-width:0;border-top:1px solid var(--border)}
+.card-row .card+.card{border-left:none}
+@media(max-width:600px){.card-row{flex-direction:column}.card-row .card+.card{border-left:1px solid var(--border);border-top:none}}
 .card-title{padding:10px 18px 0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted)}
 .card-body{padding:10px 18px 16px}
 .meta-block{margin-bottom:16px}
@@ -224,10 +228,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;
 /* Event blocks */
 .ev-block{background:var(--s2);border:1px solid var(--border);border-radius:8px;margin-bottom:10px;overflow:hidden;box-shadow:var(--shadow)}
 .ev-block-hdr{display:flex;align-items:center;gap:10px;padding:9px 14px;background:var(--ev-hdr);border-bottom:2px solid var(--border)}
-.ev-date-inp{flex:1;border:none;background:transparent;font-size:14px;font-weight:700;color:var(--text);font-family:inherit;cursor:pointer;min-width:0}
-.ev-date-inp:focus{outline:none}
-.ev-date-inp::-webkit-calendar-picker-indicator{opacity:.5}
-[data-theme="dark"] .ev-date-inp::-webkit-calendar-picker-indicator{filter:invert(1);opacity:.5}
+.ev-date-inp{flex:1;font-size:14px;font-weight:700;color:var(--text);font-family:inherit}
 .ev-block-body{padding:12px 14px}
 .ev-block-body .fg{margin-bottom:10px}
 .ev-block-body .fg:last-child{margin-bottom:0}
@@ -348,6 +349,24 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 }
 [data-theme="dark"] .maplibregl-popup-tip { border-top-color: var(--s2); border-bottom-color: var(--s2); }
 [data-theme="dark"] .maplibregl-popup-close-button { color: var(--muted2); }
+[data-theme="dark"] .tv-summary-map .maplibregl-ctrl-group,
+[data-theme="dark"] #map-container .maplibregl-ctrl-group {
+  background: var(--s2);
+  box-shadow: 0 1px 4px rgba(0,0,0,.5);
+}
+[data-theme="dark"] .tv-summary-map .maplibregl-ctrl-group button,
+[data-theme="dark"] #map-container .maplibregl-ctrl-group button {
+  background-color: transparent;
+  border-bottom-color: var(--border) !important;
+}
+[data-theme="dark"] .tv-summary-map .maplibregl-ctrl-group button:hover,
+[data-theme="dark"] #map-container .maplibregl-ctrl-group button:hover {
+  background-color: var(--s3);
+}
+[data-theme="dark"] .tv-summary-map .maplibregl-ctrl-icon,
+[data-theme="dark"] #map-container .maplibregl-ctrl-icon {
+  filter: invert(1);
+}
 #map-controls{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:20;display:flex;gap:8px;pointer-events:auto}
 .map-sel{padding:6px 14px;border:1px solid var(--border);border-radius:6px;background:var(--s2);color:var(--text);font-size:13px;font-family:inherit;cursor:pointer;box-shadow:var(--shadow);min-width:200px;outline:none;transition:border-color .12s}
 .map-sel:focus,.map-sel.active{border-color:var(--accent);color:var(--accent)}
@@ -637,7 +656,7 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
     <div id="explore-inner">
       <div class="explore-hdr">
         <h2 data-i18n="explore.title">Discover</h2>
-        <span class="sub" data-i18n="explore.subtitle">6 random trips</span>
+        <span class="sub" data-i18n="explore.subtitle">8 random trips</span>
         <button class="shuffle-btn" id="shuffle-btn"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.6 9.6 0 0 0 7.556 8a9.6 9.6 0 0 0 1.318 1.918C9.827 10.99 11.202 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.6 10.6 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.6 9.6 0 0 0 6.444 8a9.6 9.6 0 0 0-1.318-1.918C4.173 5.01 2.798 4 1 4H.5a.5.5 0 0 1-.5-.5m13-1a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H14v.5a.5.5 0 0 1-1 0V3h-.5a.5.5 0 0 1-.5-.5m0 9a.5.5 0 0 1 .5-.5h.5v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1H14.5a.5.5 0 0 1-.5-.5"/></svg><span data-i18n="explore.shuffle">Shuffle</span></button>
       </div>
       <div class="cards-grid" id="explore-cards"></div>
@@ -807,11 +826,14 @@ let mapInstance = null;
 let activeFilter = { domain: [], arranger: [], label: [] };
 let currentFileName = '';
 const APP_VERSION = 'v4';
-const APP_DATE    = '2026-05-25';
+const APP_DATE    = '2026-05-28';
 let mapMode = { type: 'all', value: '' }; // 'all' | 'country' | 'theme'
 let currentTab = 'explore';
 let coverPhotosCache = null; // OuterId → thumbnailUrl, loaded from IndexedDB
 let _navBarHidden = false;
+let _editorDirty = false;   // unsaved changes in Editor form
+let _settingsDirty = false;  // unsaved changes in Settings
+let _settingsSnapshot = null; // deep copy of data.Settings when tab was opened
 
 // ── Theme ─────────────────────────────────────────────────────────
 
@@ -1395,7 +1417,11 @@ async function saveFile() {
   URL.revokeObjectURL(url);
   setMod(false); toast('Downloaded as '+fname,'ok');
 }
-function setMod(v) { document.getElementById('mod-dot').classList.toggle('on', v); }
+function setMod(v) {
+  document.getElementById('mod-dot').classList.toggle('on', v);
+  if (v) { if (currentTab==='settings') _settingsDirty = true; }
+  else { _settingsDirty = false; if (currentTab==='settings' && data) _settingsSnapshot = JSON.parse(JSON.stringify(data.Settings)); }
+}
 
 // ── Helpers ───────────────────────────────────────────────────────
 
@@ -1616,6 +1642,16 @@ function setHash(hash) {
 }
 
 function switchTab(tab, {updateHash=true}={}) {
+  if (_editorDirty && currentTab==='overview' && tab!=='overview') {
+    if (!confirm('You have unsaved changes in the Editor. Discard them?')) return;
+    clearDetail(); setMod(false);
+  }
+  if (_settingsDirty && currentTab==='settings' && tab!=='settings') {
+    if (!confirm('Settings have unsaved changes. Discard them?')) return;
+    if (_settingsSnapshot) { data.Settings = JSON.parse(JSON.stringify(_settingsSnapshot)); renderSettings(); }
+    _settingsDirty = false; setMod(false);
+  }
+  if (tab==='settings' && data) { _settingsSnapshot = JSON.parse(JSON.stringify(data.Settings)); _settingsDirty = false; }
   currentTab = tab;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab===tab));
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.id===`tab-${tab}`));
@@ -1669,7 +1705,7 @@ window.addEventListener('hashchange', () => {
 
 function pickRandomTrips() {
   const all = filteredTrips();
-  explorePicks = [...all].sort(()=>Math.random()-.5).slice(0,6);
+  explorePicks = [...all].sort(()=>Math.random()-.5).slice(0,8);
 }
 
 function renderExplore() {
@@ -1720,16 +1756,16 @@ function renderTrips() {
     list.innerHTML = `<div style="padding:16px;text-align:center;font-size:12px;color:var(--muted)">${t('editor.noMatches','No matches')}</div>`;
     return;
   }
-  trips.forEach(t => {
+  trips.forEach(trip => {
     const el = document.createElement('div');
-    el.className = 'trip-card'+(t.InnerId===selectedId?' active':'');
-    el.dataset.id = t.InnerId;
-    const color = t.TripDomain && colors[t.TripDomain];
+    el.className = 'trip-card'+(trip.InnerId===selectedId?' active':'');
+    el.dataset.id = trip.InnerId;
+    const color = trip.TripDomain && colors[trip.TripDomain];
     el.innerHTML = `
-      <div class="tc-id-row">${t.OuterId?`<span class="tc-outer-id"${color?` style="background:${h(color)};color:${contrastColor(color)}"`:''} >${h(t.OuterId)}</span>`:''}<span class="tc-iid">${h(t.InnerId)}</span></div>
-      <div class="tc-dest">${h(t.OverallDestination||t('overview.noDestination','(no destination)'))}</div>
-      <div class="tc-date">${h(t.DepartureDate||'?')} → ${h(t.ReturnDate||'?')}</div>`;
-    el.addEventListener('click', () => selectTrip(t.InnerId));
+      <div class="tc-id-row">${trip.OuterId?`<span class="tc-outer-id"${color?` style="background:${h(color)};color:${contrastColor(color)}"`:''} >${h(trip.OuterId)}</span>`:''}<span class="tc-iid">${h(trip.InnerId)}</span></div>
+      <div class="tc-dest">${h(trip.OverallDestination||t('overview.noDestination','(no destination)'))}</div>
+      <div class="tc-date">${h(trip.DepartureDate||'?')} → ${h(trip.ReturnDate||'?')}</div>`;
+    el.addEventListener('click', () => selectTrip(trip.InnerId));
     list.appendChild(el);
   });
 }
@@ -1797,7 +1833,8 @@ function renderTripForm(tripData, isNew) {
     else el=`<input type="${f.type||'text'}" data-key="${f.key}" value="${h(val)}">`;
     return `<div class="fg"><label>${h(f.label)}</label>${el}${hint}</div>`;
   }
-  function makeCard(title,bodyHtml) { return `<div class="card"><div class="card-title">${title}</div><div class="card-body">${bodyHtml}</div></div>`; }
+  const _cardBg = domColor ? `background:${domColor}15` : '';
+  function makeCard(title,bodyHtml) { return `<div class="card" style="${_cardBg}"><div class="card-title">${title}</div><div class="card-body">${bodyHtml}</div></div>`; }
   function renderSecBody(fields) {
     const items=[]; let pair=[];
     fields.forEach(f => {
@@ -1812,12 +1849,12 @@ function renderTripForm(tripData, isNew) {
   const tripIdBody=`<div class="form-row"><div class="fg"><label>${t('editor.fields.innerId','Inner ID')}</label><input class="ro" type="text" value="${h(tripData.InnerId)}" readonly></div><div class="fg"><label>${t('editor.fields.outerId','Outer ID')}</label><input type="text" data-key="OuterId" value="${h(tripData.OuterId||'')}"></div></div>`;
   const ovSections=getOvSections();
   const tripIdTitle=t('editor.sections.tripId','Trip ID');
-  const sectionCards = ovSections.map(sec => sec.title===tripIdTitle?makeCard(tripIdTitle,tripIdBody):makeCard(sec.title,renderSecBody(sec.fields))).join('');
+  const _allCards = ovSections.map(sec => sec.title===tripIdTitle?makeCard(tripIdTitle,tripIdBody):makeCard(sec.title,renderSecBody(sec.fields)));
+  const sectionCards = `<div class="card-row">${_allCards[0]}${_allCards[1]}</div>${_allCards.slice(2).join('')}`;
 
   const hdrStyle = domColor
     ? `background:${domColor};color:${domText};border-color:${domColor}`
     : '';
-  const bodyTint = domColor ? `background:${domColor}0d` : '';
 
   detail.innerHTML=`
     <div style="max-width:680px;padding-bottom:22px;">
@@ -1828,7 +1865,7 @@ function renderTripForm(tripData, isNew) {
       </div>
       <div class="meta-block">
         <div class="meta-hdr" style="${hdrStyle}"><span style="${domColor?`color:${domText}`:''}"> ${t('editor.tripInfo','Trip Information')}</span><span class="card-chev" style="${domColor?`color:${domText};opacity:.7`:''}">▾</span></div>
-        <div class="meta-body" style="${bodyTint}">${sectionCards}</div>
+        <div class="meta-body">${sectionCards}</div>
       </div>
       ${isNew?`<div style="background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:16px;color:var(--muted);font-size:13px;text-align:center;">${t('editor.saveDaysFirst','Save the trip first to manage days.')}</div>`:'<div id="inline-ev"></div>'}
       ${!isNew?`<div style="margin-top:32px;padding:16px 18px;border:1px solid var(--danger);border-radius:8px;background:rgba(218,54,51,0.05);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
@@ -1852,10 +1889,55 @@ function renderTripForm(tripData, isNew) {
       const obj = { InnerId: tripData.InnerId, ...trip };
       const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = `${trip.OuterId||tripData.InnerId}.json`; a.click(); URL.revokeObjectURL(url);
+      const a = document.createElement('a'); a.href = url; a.download = `${tripData.InnerId}.json`; a.click(); URL.revokeObjectURL(url);
     });
   }
   document.getElementById('f-cancel').addEventListener('click', clearDetail);
+
+  // Mark form dirty on any field change → show mod-dot
+  detail.addEventListener('input', () => { _editorDirty = true; setMod(true); });
+  detail.addEventListener('change', () => { _editorDirty = true; setMod(true); });
+
+  // Auto-sync days when departure/return dates change (existing trips only)
+  if (!isNew) {
+    const depInp = detail.querySelector('[data-key="DepartureDate"]');
+    const retInp = detail.querySelector('[data-key="ReturnDate"]');
+    function onDateChange() {
+      const dep = detail.querySelector('[data-key="DepartureDate"]')?.value;
+      const ret = detail.querySelector('[data-key="ReturnDate"]')?.value;
+      if (dep && ret && dep <= ret) {
+        syncDaysToDateRange(tripData.InnerId, dep, ret);
+        renderInlineEvents(tripData.InnerId);
+      }
+    }
+    if (depInp) depInp.addEventListener('change', onDateChange);
+    if (retInp) retInp.addEventListener('change', onDateChange);
+  }
+
+  // Auto-fill OuterId from TripDomain + ArrangerGroup
+  const outerIdInp = detail.querySelector('[data-key="OuterId"]');
+  const domainSel  = detail.querySelector('[data-key="TripDomain"]');
+  const groupSel   = detail.querySelector('[data-key="ArrangerGroup"]');
+  function tryAutoFillOuterId() {
+    if (!outerIdInp || !domainSel || !groupSel) return;
+    const cur = outerIdInp.value.trim();
+    // Only overwrite if empty or already an auto-generated id (XX-N)
+    if (cur && !/^[A-Z]{2}-\d+$/.test(cur)) return;
+    const dom = domainSel.value, grp = groupSel.value;
+    if (!dom || !grp) return;
+    const prefix = (dom[0] + grp[0]).toUpperCase();
+    const re = new RegExp(`^${prefix}-(\\d+)$`);
+    let maxN = 0;
+    Object.entries(data.Trips).forEach(([iid, tr]) => {
+      if (iid === tripData.InnerId) return; // skip self
+      const m = (tr.OuterId||'').match(re);
+      if (m) maxN = Math.max(maxN, parseInt(m[1], 10));
+    });
+    outerIdInp.value = `${prefix}-${maxN + 1}`;
+  }
+  if (domainSel) domainSel.addEventListener('change', tryAutoFillOuterId);
+  if (groupSel)  groupSel.addEventListener('change', tryAutoFillOuterId);
+
   if (!isNew) renderInlineEvents(tripData.InnerId);
 }
 
@@ -1869,16 +1951,49 @@ function collectForm() {
   return out;
 }
 
-function saveTrip(innerId, isNew) {
+function syncDaysToDateRange(innerId, dep, ret) {
+  const trip = data.Trips[innerId];
+  if (!trip || !dep || !ret || dep > ret) return;
+  // Build target date list
+  const targets = [];
+  const cur = new Date(dep + 'T12:00:00');
+  const end = new Date(ret + 'T12:00:00');
+  while (cur <= end) { targets.push(cur.toISOString().slice(0,10)); cur.setDate(cur.getDate()+1); }
+  const targetSet = new Set(targets);
+  const existing = trip.Days || [];
+  const existingSet = new Set(existing.map(d => d.Date));
+  // Days to remove
+  const toRemove = existing.filter(d => !targetSet.has(d.Date));
+  function dayHasData(d) {
+    return !!(d.Events?.trim()||d.Accommodation?.trim()||d.AccommodationCoordinates?.trim()||d.AdditionalNotes?.trim()||(d.Countries&&d.Countries.length)||(d.CountriesDuringDay&&d.CountriesDuringDay.length));
+  }
+  const withData = toRemove.filter(dayHasData);
+  if (withData.length) {
+    const list = withData.map(d => d.Date).join('\n');
+    if (!confirm(`These days have data and will be removed:\n${list}\n\nContinue?`)) return false;
+  }
+  // Apply
+  trip.Days = existing.filter(d => targetSet.has(d.Date));
+  targets.forEach(date => { if (!existingSet.has(date)) trip.Days.push({ Date: date }); });
+  trip.Days.sort((a,b) => (a.Date||'').localeCompare(b.Date||''));
+  setMod(true);
+  return true;
+}
+
+async function saveTrip(innerId, isNew) {
   const formData = collectForm();
+  if (!formData.OverallDestination) { toast('Overall Destination is required before saving.', 'err'); return; }
   try {
-    if (isNew) data.Trips[innerId] = { ...formData, Days:[] };
-    else Object.assign(data.Trips[innerId], formData);
-    setMod(true); selectedId=innerId;
+    if (isNew) {
+      data.Trips[innerId] = { ...formData, Days:[] };
+      syncDaysToDateRange(innerId, formData.DepartureDate, formData.ReturnDate);
+    } else Object.assign(data.Trips[innerId], formData);
+    _editorDirty = false; setMod(true); selectedId=innerId;
     renderTrips();
     renderTripForm({ InnerId:innerId, ...data.Trips[innerId] }, false);
     document.querySelectorAll('.trip-card').forEach(el => el.classList.toggle('active', el.dataset.id===innerId));
     toast(isNew?t('toasts.tripCreated','Trip created'):t('toasts.tripSaved','Trip saved'),'ok');
+    if (fileHandle) await saveFile();
   } catch(err) { toast('Error: '+err.message,'err'); }
 }
 function deleteTrip(innerId) {
@@ -1887,7 +2002,7 @@ function deleteTrip(innerId) {
   catch(err) { toast('Error: '+err.message,'err'); }
 }
 function clearDetail() {
-  selectedId=null;
+  _editorDirty = false; selectedId=null;
   document.querySelectorAll('.trip-card').forEach(el=>el.classList.remove('active'));
   document.getElementById('ov-detail').innerHTML=`<div class="empty"><div class="ei">🗺️</div><h3>${t('editor.emptyTitle','No trip selected')}</h3><p>${t('editor.emptySubtitle','Pick one from the list or create a new trip')}</p></div>`;
   // On small screens the list was collapsed when a trip was selected — restore it
@@ -1908,8 +2023,11 @@ function renderInlineEvents(innerId) {
   const days = [...(trip?.Days||[])].sort((a,b)=>(a.Date||'').localeCompare(b.Date||''));
   container.innerHTML='';
   const addBar=document.createElement('div'); addBar.className='ev-add-bar';
-  const addBtn=document.createElement('button'); addBtn.className='btn btn-p'; addBtn.style.cssText='padding:5px 13px;font-size:12px;margin-bottom:8px;'; addBtn.textContent=t('editor.days.addDay','＋ Add Day');
-  addBtn.addEventListener('click',()=>addEvent(innerId)); addBar.appendChild(addBtn); container.appendChild(addBar);
+  if (!trip?.ReturnDate) {
+    const addBtn=document.createElement('button'); addBtn.className='btn btn-p'; addBtn.style.cssText='padding:5px 13px;font-size:12px;margin-bottom:8px;'; addBtn.textContent=t('editor.days.addDay','＋ Add Day');
+    addBtn.addEventListener('click',()=>addEvent(innerId)); addBar.appendChild(addBtn);
+  }
+  container.appendChild(addBar);
   if (!days.length) { const emp=document.createElement('div'); emp.className='ev-empty'; emp.textContent=t('editor.days.noDays','No days yet. Click "+ Add Day" to start.'); container.appendChild(emp); return; }
   days.forEach((day,idx) => container.appendChild(buildEventBlock(day,innerId,idx>0,days[idx-1]||null)));
 }
@@ -1917,7 +2035,7 @@ function renderInlineEvents(innerId) {
 function buildEventBlock(ev, innerId, showCopyBtn, prevEv) {
   const block=document.createElement('div'); block.className='ev-block'; block.dataset.iid=innerId; block.dataset.date=ev.Date||'';
   const hdr=document.createElement('div'); hdr.className='ev-block-hdr';
-  const dateInp=document.createElement('input'); dateInp.type='date'; dateInp.className='ev-date-inp'; dateInp.value=ev.Date||''; dateInp.dataset.col='Date'; dateInp.addEventListener('blur',onEvBlur); hdr.appendChild(dateInp);
+  const dateLbl=document.createElement('span'); dateLbl.className='ev-date-inp'; dateLbl.textContent=ev.Date||''; hdr.appendChild(dateLbl);
   const delBtn=document.createElement('button'); delBtn.className='del-btn'; delBtn.textContent='✕';
   delBtn.addEventListener('click',()=>{ if(confirm(`Delete day on ${block.dataset.date}?`)){const trip=data.Trips[innerId];if(trip){trip.Days=trip.Days.filter(d=>d.Date!==block.dataset.date);setMod(true);renderInlineEvents(innerId);toast(t('toasts.dayDeleted','Day deleted'),'ok');}} });
   hdr.appendChild(delBtn); block.appendChild(hdr);
@@ -1939,7 +2057,18 @@ function buildEventBlock(ev, innerId, showCopyBtn, prevEv) {
   coordRow.appendChild(coordFg);
   coordRow.appendChild(makeEvField(t('editor.days.accuracy','Acc. Accuracy'),'AccommodationCoordinatesAccuracy',ev));
   body.appendChild(coordRow);
-  body.appendChild(makeEvField(t('editor.days.participants','Participants'),'TravelParticipants',ev));
+  const partFg=makeEvField(t('editor.days.participants','Participants'),'TravelParticipants',ev);
+  if (showCopyBtn && prevEv) {
+    const pCpBtn=document.createElement('button'); pCpBtn.className='copy-btn'; pCpBtn.textContent=t('editor.days.copyPrev','↑ Copy prev');
+    pCpBtn.addEventListener('click',()=>{
+      const trip=data.Trips[innerId]; const day=trip?.Days.find(d=>d.Date===block.dataset.date); if(!day)return;
+      const val=prevEv.TravelParticipants||null;
+      const inp=partFg.querySelector('[data-col="TravelParticipants"]'); if(inp) inp.value=val||'';
+      day.TravelParticipants=val; setMod(true); toast(t('toasts.accommodationCopied','Copied'),'ok');
+    });
+    partFg.querySelector('label').appendChild(pCpBtn);
+  }
+  body.appendChild(partFg);
   body.appendChild(makeEvField(t('editor.days.additionalNotes','Additional Notes'),'AdditionalNotes',ev,true));
   body.appendChild(makeEvField(t('editor.days.countriesDuringDay','Countries During Day'),'CountriesDuringDay',ev));
   block.appendChild(body); return block;
@@ -2080,7 +2209,7 @@ async function initTripMap(containerId, trip, domColor, _innerId) {
   });
 
   // ── Built-in controls ────────────────────────────────────────────
-  _tripMapInst.addControl(new maplibregl.NavigationControl({showCompass:false}), 'top-right');
+  _tripMapInst.addControl(new maplibregl.NavigationControl({showCompass:true}), 'top-right');
   _tripMapInst.addControl(new maplibregl.FullscreenControl(), 'top-right');
 
   // ── Photo toggle control ─────────────────────────────────────────
@@ -2900,6 +3029,7 @@ async function initMap() {
     zoom: 3
   });
 
+  mapInstance.addControl(new maplibregl.NavigationControl({showCompass:true}), 'top-right');
   mapInstance.on('load', () => {
     renderMapControls();
     loadMapPins();

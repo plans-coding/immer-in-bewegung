@@ -49,7 +49,7 @@
   },
   "explore": {
     "title": "Upptäck",
-    "subtitle": "6 slumpmässiga resor",
+    "subtitle": "8 slumpmässiga resor",
     "shuffle": "Blanda",
     "noDestination": "(ingen destination)"
   },
@@ -262,7 +262,7 @@
     "generatedOn": "Genererad"
   },
   "about": {
-    "tagline": "En lättviktig och framtidssäker resedokumentationsapp med öppen källkod.",
+    "tagline": "Ett resurssnålt och framtidssäkert resebokföringsverktyg byggt med öppen källkod.",
     "sourceLabel": "Källkod"
   },
   "settings": {
