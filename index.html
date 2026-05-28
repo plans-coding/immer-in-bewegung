@@ -4364,7 +4364,7 @@ async function syncImmichAlbum(setStatus) {
   if (!base || !albumId) { setStatus('err', 'ImmichUrl or ImmichCoverAlbumId not configured'); return; }
 
   const coverList = buildCoverPhotoList()
-    .filter(item => !item.CoverPhoto.startsWith('!genre['));
+    .filter(item => !item.CoverPhoto.startsWith('!genre[') && !item.CoverPhoto.startsWith('data:'));
 
   setStatus('', `Fetching album… (${coverList.length} trips with cover photos)`);
   const albumRes = await immichFetch(`${base}/api/albums/${albumId}`);
@@ -4421,6 +4421,9 @@ async function saveImmichThumbnails(setStatus) {
     const cp = item.CoverPhoto;
     if (cp.startsWith('!genre[') && cp.endsWith(']')) {
       map[item.OuterId] = cp.slice(7, -1); // genre keyword, not a URL
+      matched++;
+    } else if (cp.startsWith('data:')) {
+      map[item.OuterId] = cp; // inline data URL — use directly, skip Immich
       matched++;
     } else {
       const asset = pathToAsset[cp];
