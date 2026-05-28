@@ -179,6 +179,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;
 #trip-search:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-g)}
 #trip-search::placeholder{color:var(--muted)}
 #trip-list{flex:1;overflow-y:auto}
+#url-mode-banner{display:none;align-items:center;gap:7px;padding:7px 12px;background:rgba(240,161,66,.13);border-bottom:1px solid rgba(240,161,66,.35);font-size:11.5px;color:var(--text);line-height:1.35;flex-shrink:0}
+#url-mode-banner.on{display:flex}
+#url-mode-banner .umb-icon{font-size:14px;flex-shrink:0}
+[data-theme="dark"] #url-mode-banner{background:rgba(240,161,66,.08);border-bottom-color:rgba(240,161,66,.25)}
 .trip-card{padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;border-left:3px solid transparent;transition:background .1s,border-color .1s}
 .trip-card:hover{background:var(--s3)}
 .trip-card.active{background:var(--accent-g);border-left-color:var(--accent)}
@@ -367,15 +371,50 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 [data-theme="dark"] #map-container .maplibregl-ctrl-icon {
   filter: invert(1);
 }
-#map-controls{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:20;display:flex;gap:8px;pointer-events:auto}
+
+/* ── Pin Map Overlay ─────────────────────────────────────── */
+.pin-map-overlay{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;background:var(--bg)}
+.pin-map-header{display:flex;align-items:center;gap:10px;padding:0 14px;height:48px;background:var(--s2);border-bottom:1px solid var(--border);flex-shrink:0}
+.pin-map-title{font-weight:700;font-size:14px;flex:1}
+.pin-map-search-row{display:flex;gap:6px;flex:2;max-width:420px}
+.pin-map-search{flex:1;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--s1);color:var(--text);font-size:13px;font-family:inherit;outline:none;min-width:0}
+.pin-map-search:focus{border-color:var(--accent)}
+.pin-map-search-btn{padding:6px 12px;border:none;border-radius:6px;background:var(--accent);color:#fff;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.pin-map-search-btn:hover{background:var(--accent-d)}
+.pin-map-body{position:relative;flex:1;overflow:hidden}
+.pin-map-map{width:100%;height:100%}
+.pin-map-panel{position:absolute;bottom:12px;left:12px;right:60px;z-index:10;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;box-shadow:0 2px 16px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:8px}
+.pin-map-coords{font-size:12px;color:var(--muted2);font-family:monospace;min-height:16px}
+.pin-map-add-row{display:flex;gap:6px;align-items:center}
+.pin-map-name{flex:1;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--s1);color:var(--text);font-size:13px;font-family:inherit;outline:none;min-width:0}
+.pin-map-name:focus{border-color:var(--accent)}
+.pin-map-add-btn{padding:6px 14px;border:none;border-radius:6px;background:var(--accent);color:#fff;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.pin-map-add-btn:hover{background:var(--accent-d)}
+.pin-map-add-btn:disabled{opacity:.45;cursor:default}
+.pin-map-hint{font-size:11px;color:var(--muted);line-height:1.4}
+.pin-map-done{position:absolute;bottom:12px;right:12px;z-index:10;padding:8px 14px;border:none;border-radius:6px;background:var(--s2);color:var(--text);font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.pin-map-done:hover{background:var(--s3)}
+[data-theme="dark"] .pin-map-map .maplibregl-canvas{filter:invert(1) hue-rotate(180deg)}
+[data-theme="dark"] .pin-map-overlay .maplibregl-ctrl-group{background:var(--s2);box-shadow:0 1px 4px rgba(0,0,0,.5)}
+[data-theme="dark"] .pin-map-overlay .maplibregl-ctrl-group button{background-color:transparent;border-bottom-color:var(--border)!important}
+[data-theme="dark"] .pin-map-overlay .maplibregl-ctrl-group button:hover{background-color:var(--s3)}
+[data-theme="dark"] .pin-map-overlay .maplibregl-ctrl-icon{filter:invert(1)}
+[data-theme="dark"] .pin-map-overlay .maplibregl-popup-content{background:var(--s2);color:var(--text)}
+[data-theme="dark"] .pin-map-overlay .maplibregl-popup-tip{border-top-color:var(--s2);border-bottom-color:var(--s2)}
+
+#map-controls{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:20;display:flex;flex-wrap:wrap;justify-content:center;gap:8px;pointer-events:auto}
 .map-sel{padding:6px 14px;border:1px solid var(--border);border-radius:6px;background:var(--s2);color:var(--text);font-size:13px;font-family:inherit;cursor:pointer;box-shadow:var(--shadow);min-width:200px;outline:none;transition:border-color .12s}
 .map-sel:focus,.map-sel.active{border-color:var(--accent);color:var(--accent)}
-#map-mode-badge{position:absolute;top:54px;left:50%;transform:translateX(-50%);z-index:20;background:var(--accent);color:#fff;font-size:11px;font-weight:700;padding:2px 12px;border-radius:20px;pointer-events:none;letter-spacing:.4px;display:none}
+#map-mode-badge{width:100%;text-align:center;pointer-events:none;display:none}
 #map-mode-badge.on{display:block}
+#map-mode-badge span{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;padding:2px 12px;border-radius:20px;letter-spacing:.4px}
 .map-legend{position:absolute;bottom:30px;right:10px;background:var(--s2);padding:10px 14px;border-radius:8px;font-size:12px;box-shadow:var(--shadow);border:1px solid var(--border);color:var(--text);z-index:10;pointer-events:none}
 .map-legend-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted2);margin-bottom:8px}
 .map-legend-item{display:flex;align-items:center;gap:7px;margin-bottom:5px;font-size:12px;color:var(--text)}
 .map-legend-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;border:1.5px solid rgba(255,255,255,.3)}
+.map-photo-btn{padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--s2);color:var(--text);font-size:15px;line-height:1;cursor:pointer;box-shadow:var(--shadow);transition:background .12s,border-color .12s;flex-shrink:0}
+.map-photo-btn:hover{background:var(--s3)}
+.map-photo-btn.active{border-color:#e74c3c;box-shadow:0 0 0 2px rgba(231,76,60,.25)}
 
 /* About */
 #tab-about{flex-direction:column;overflow-y:auto;background:var(--bg)}
@@ -487,7 +526,7 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
   /* Quick-nav sidebar: larger touch target, shifted toward bottom */
   #tq-toggle{width:44px;height:44px;font-size:20px;top:72%;transform:translateY(-50%)}
   /* Map dropdowns wrap */
-  #map-controls{flex-wrap:wrap;justify-content:center;top:8px;width:90%;transform:translateX(-50%)}
+  #map-controls{top:8px;width:90%;transform:translateX(-50%)}
   .map-sel{min-width:0;width:100%;box-sizing:border-box}
   /* Trip ext buttons wrap under foot */
   .tv-day-foot{flex-wrap:wrap}
@@ -680,8 +719,9 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
     <div id="map-controls">
       <select id="map-country-sel" class="map-sel"></select>
       <select id="map-theme-sel" class="map-sel" style="display:none"></select>
+      <button id="map-photo-btn" class="map-photo-btn" style="display:none" title="Toggle Immich photo locations">📷</button>
+      <div id="map-mode-badge"><span></span></div>
     </div>
-    <div id="map-mode-badge"></div>
     <div id="map-container"></div>
   </div>
 
@@ -718,6 +758,7 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
     <button id="ov-list-toggle" data-i18n="editor.tripsToggle">☰ Trips</button>
     <div id="ov-list">
       <button id="new-trip-btn" data-i18n="editor.newTrip">＋ New Trip</button>
+      <div id="url-mode-banner"><span class="umb-icon">⚠</span><span>URL mode — changes cannot be saved back to the source.</span></div>
       <div id="trip-search-wrap">
         <input type="search" id="trip-search" data-i18n-ph="editor.searchPlaceholder" placeholder="Search trips…" autocomplete="off" spellcheck="false">
       </div>
@@ -828,6 +869,7 @@ let currentFileName = '';
 const APP_VERSION = 'v4';
 const APP_DATE    = '2026-05-28';
 let mapMode = { type: 'all', value: '' }; // 'all' | 'country' | 'theme'
+let _mapPhotoVisible = false, _mapPhotoLoaded = false, _mapPhotoCountry = ''; // photo layer state
 let currentTab = 'explore';
 let coverPhotosCache = null; // OuterId → thumbnailUrl, loaded from IndexedDB
 let _navBarHidden = false;
@@ -1006,7 +1048,7 @@ function wire() {
   dz.addEventListener('drop', async e => {
     e.preventDefault(); dz.classList.remove('over');
     if (e.dataTransfer.items?.[0] && 'getAsFileSystemHandle' in e.dataTransfer.items[0]) {
-      try { const hnd = await e.dataTransfer.items[0].getAsFileSystemHandle(); if (hnd.kind==='file') { fileHandle=hnd; await load(await hnd.getFile()); return; } } catch {}
+      try { const hnd = await e.dataTransfer.items[0].getAsFileSystemHandle(); if (hnd.kind==='file') { try { await hnd.requestPermission({mode:'readwrite'}); } catch {} fileHandle=hnd; await load(await hnd.getFile()); return; } } catch {}
     }
     const f = e.dataTransfer.files[0]; if (f) await load(f);
   });
@@ -1023,7 +1065,21 @@ function wire() {
   document.getElementById('trip-search').addEventListener('input', renderTrips);
   document.getElementById('shuffle-btn').addEventListener('click', () => { pickRandomTrips(); renderExplore(); });
   document.getElementById('report-gen-btn').addEventListener('click', generateReport);
-  document.addEventListener('keydown', e => { if ((e.ctrlKey||e.metaKey) && e.key==='s') { e.preventDefault(); saveFile(); } });
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey||e.metaKey) && e.key==='s') {
+      e.preventDefault();
+      if (currentTab==='overview') {
+        if (_editorDirty && selectedId) {
+          saveTrip(selectedId, false); // commits form → resets _editorDirty internally
+        } else {
+          _editorDirty = false; // clear any stale dirty flag (e.g. after Cancel)
+          saveFile();
+        }
+      } else {
+        saveFile();
+      }
+    }
+  });
   // Trip quick-nav drawer toggle
   const tqBtn=document.getElementById('tq-toggle'), tqDrw=document.getElementById('tq-drawer');
   tqBtn.addEventListener('click',()=>{
@@ -1327,7 +1383,7 @@ function wireNavSearch() {
 async function openFile() {
   if ('showOpenFilePicker' in window) {
     try {
-      [fileHandle] = await window.showOpenFilePicker({ types:[{description:'Chronik JSON',accept:{'application/json':['.json']}}] });
+      [fileHandle] = await window.showOpenFilePicker({ types:[{description:'Chronik JSON',accept:{'application/json':['.json']}}], mode:'readwrite' });
       await load(await fileHandle.getFile()); return;
     } catch(err) { if (err.name!=='AbortError') console.warn(err); }
   }
@@ -1409,7 +1465,14 @@ async function loadFromUrl(url) {
 async function saveFile() {
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   if (fileHandle) {
-    try { const wr = await fileHandle.createWritable(); await wr.write(blob); await wr.close(); setMod(false); toast(t('toasts.saved','Saved'),'ok'); return; } catch(e) { console.warn(e); }
+    try {
+      // Ensure write permission is granted (handles restored from IDB may be in 'prompt' state)
+      if (fileHandle.queryPermission) {
+        const perm = await fileHandle.queryPermission({ mode:'readwrite' });
+        if (perm !== 'granted') await fileHandle.requestPermission({ mode:'readwrite' });
+      }
+      const wr = await fileHandle.createWritable(); await wr.write(blob); await wr.close(); setMod(false); toast(t('toasts.saved','Saved'),'ok'); return;
+    } catch(e) { console.warn(e); }
   }
   const fname = currentFileName || 'chronik.json';
   const url = URL.createObjectURL(blob);
@@ -1501,7 +1564,7 @@ function computeOverallRoute(mapPins) {
   const names = mapPins.split('\n')
     .map(p => { const m=p.match(/\[([^\]]*)\]/); return m?m[1].trim():null; })
     .filter(n => n&&!n.startsWith('@')&&n!=='');
-  return names.length ? names.join(' > ') : null;
+  return names.length ? names.join(' › ') : null;
 }
 
 // ── Filter ────────────────────────────────────────────────────────
@@ -1741,6 +1804,8 @@ function makeCard(t, colors) {
 // ── Overview: Trip List (Editor sidebar) ──────────────────────────
 
 function renderTrips() {
+  // Show URL-mode warning when no file handle (loaded from URL)
+  document.getElementById('url-mode-banner')?.classList.toggle('on', !fileHandle);
   const query = (document.getElementById('trip-search')?.value || '').toLowerCase().trim();
   const all = allTrips(), colors = domainColorMap();
   const trips = query ? all.filter(t =>
@@ -1791,11 +1856,9 @@ function newTrip() {
 
 function getOvSections() {
   return [
-    { title:t('editor.sections.tripId','Trip ID'), fields:null },
-    { title:t('editor.sections.classification','Classification'), fields:[{key:'TripDomain',label:t('editor.fields.tripDomain','Trip Domain')},{key:'ArrangerGroup',label:t('editor.fields.arrangerGroup','Arranger Group')}] },
+    { title:t('editor.sections.tripId','Basic'), fields:null },
     { title:t('editor.sections.tripDetails','Trip Details'), fields:[
       {key:'OverallDestination',label:t('editor.fields.overallDestination','Overall Destination'),span:true},
-      {key:'DepartureDate',label:t('editor.fields.departureDate','Departure Date'),type:'date'},{key:'ReturnDate',label:t('editor.fields.returnDate','Return Date'),type:'date'},
       {key:'TripDescription',label:t('editor.fields.tripDescription','Trip Description'),ta:true,span:true},
       {key:'TripLabels',label:t('editor.fields.tripLabels','Trip Labels'),span:true,hint:t('editor.fields.tripLabelsHint','Comma-separated: Label1, Label2')},
     ]},
@@ -1804,8 +1867,6 @@ function getOvSections() {
       {key:'StartNode',label:t('editor.fields.startNode','Start Node')},{key:'EndNode',label:t('editor.fields.endNode','End Node')},
     ]},
     { title:t('editor.sections.photos','Photos'), fields:[
-      {key:'PhotoStarttime',label:t('editor.fields.photoStartTime','Photo Start Time'),type:'time',hint:t('editor.fields.photoStartTimeHint','HH:MM')},
-      {key:'PhotoEndtime',label:t('editor.fields.photoEndTime','Photo End Time'),type:'time',hint:'HH:MM'},
       {key:'PhotoAlbums',label:t('editor.fields.photoAlbums','Photo Albums'),span:true},{key:'CoverPhoto',label:t('editor.fields.coverPhoto','Cover Photo'),span:true},
     ]},
     { title:t('editor.sections.notes','Notes'), fields:[{key:'DocumentationNote',label:t('editor.fields.documentationNote','Documentation Note'),ta:true,span:true}] },
@@ -1813,7 +1874,10 @@ function getOvSections() {
 }
 
 function renderTripForm(tripData, isNew) {
-  const detail = document.getElementById('ov-detail');
+  // Replace with a fresh node to shed any accumulated input/change listeners
+  const _old = document.getElementById('ov-detail');
+  const detail = _old.cloneNode(false); // shallow — no children, no listeners
+  _old.parentNode.replaceChild(detail, _old);
   const domainOptions = parseTripDomains(), arrangerOptions = parseArrangerGroups();
   const colors = domainColorMap();
   const domColor = tripData.TripDomain && colors[tripData.TripDomain];
@@ -1831,10 +1895,13 @@ function renderTripForm(tripData, isNew) {
     else if (f.key==='ArrangerGroup') el=makeSelect('ArrangerGroup',arrangerOptions,val);
     else if (f.ta) el=`<textarea data-key="${f.key}">${h(val)}</textarea>`;
     else el=`<input type="${f.type||'text'}" data-key="${f.key}" value="${h(val)}">`;
+    if (f.key==='MapPins') {
+      return `<div class="fg"><label style="display:flex;align-items:center;gap:6px">${h(f.label)}<button type="button" class="pin-map-open-btn btn btn-g" style="font-size:11px;padding:2px 8px;margin-left:auto">🗺 Map</button></label>${el}${hint}</div>`;
+    }
     return `<div class="fg"><label>${h(f.label)}</label>${el}${hint}</div>`;
   }
   const _cardBg = domColor ? `background:${domColor}15` : '';
-  function makeCard(title,bodyHtml) { return `<div class="card" style="${_cardBg}"><div class="card-title">${title}</div><div class="card-body">${bodyHtml}</div></div>`; }
+  function makeCard(title,bodyHtml,bg) { const _bg=bg!==undefined?bg:_cardBg; return `<div class="card" style="${_bg}">${title?`<div class="card-title">${title}</div>`:''}<div class="card-body"${title?'':' style="padding-top:4px"'}>${bodyHtml}</div></div>`; }
   function renderSecBody(fields) {
     const items=[]; let pair=[];
     fields.forEach(f => {
@@ -1846,11 +1913,30 @@ function renderTripForm(tripData, isNew) {
     return items.join('');
   }
 
-  const tripIdBody=`<div class="form-row"><div class="fg"><label>${t('editor.fields.innerId','Inner ID')}</label><input class="ro" type="text" value="${h(tripData.InnerId)}" readonly></div><div class="fg"><label>${t('editor.fields.outerId','Outer ID')}</label><input type="text" data-key="OuterId" value="${h(tripData.OuterId||'')}"></div></div>`;
+  const _4col = 'display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px';
+  const tripIdBody =
+    `<div style="${_4col};margin-bottom:12px">` +
+    `<div class="fg"><label>${t('editor.fields.innerId','Inner ID')}</label><input class="ro" type="text" value="${h(tripData.InnerId)}" readonly></div>` +
+    fg({key:'OuterId',label:t('editor.fields.outerId','Outer ID')}) +
+    fg({key:'DepartureDate',label:t('editor.fields.departureDate','Departure Date'),type:'date'}) +
+    fg({key:'ReturnDate',label:t('editor.fields.returnDate','Return Date'),type:'date'}) +
+    `</div>` +
+    `<div style="${_4col}">` +
+    fg({key:'TripDomain',label:t('editor.fields.tripDomain','Trip Domain')}) +
+    fg({key:'ArrangerGroup',label:t('editor.fields.arrangerGroup','Arranger Group')}) +
+    fg({key:'PhotoStarttime',label:t('editor.fields.photoStartTime','Photo Start Time'),type:'time'}) +
+    fg({key:'PhotoEndtime',label:t('editor.fields.photoEndTime','Photo End Time'),type:'time'}) +
+    `</div>`;
   const ovSections=getOvSections();
-  const tripIdTitle=t('editor.sections.tripId','Trip ID');
-  const _allCards = ovSections.map(sec => sec.title===tripIdTitle?makeCard(tripIdTitle,tripIdBody):makeCard(sec.title,renderSecBody(sec.fields)));
-  const sectionCards = `<div class="card-row">${_allCards[0]}${_allCards[1]}</div>${_allCards.slice(2).join('')}`;
+  const tripIdTitle=t('editor.sections.tripId','Basic');
+  const tripDetailsTitle=t('editor.sections.tripDetails','Trip Details');
+  const _basicBg = domColor ? `background:${domColor}22` : 'background:var(--s3)';
+  const _allCards = ovSections.map(sec => {
+    if(sec.title===tripIdTitle) return makeCard(tripIdTitle,tripIdBody,_basicBg);
+    if(sec.title===tripDetailsTitle) return makeCard(null,renderSecBody(sec.fields),_basicBg);
+    return makeCard(sec.title,renderSecBody(sec.fields));
+  });
+  const sectionCards = _allCards.join('');
 
   const hdrStyle = domColor
     ? `background:${domColor};color:${domText};border-color:${domColor}`
@@ -1937,6 +2023,15 @@ function renderTripForm(tripData, isNew) {
   }
   if (domainSel) domainSel.addEventListener('change', tryAutoFillOuterId);
   if (groupSel)  groupSel.addEventListener('change', tryAutoFillOuterId);
+
+  // Wire up Map Pin Tool button
+  const pinMapOpenBtn = detail.querySelector('.pin-map-open-btn');
+  if (pinMapOpenBtn) {
+    pinMapOpenBtn.addEventListener('click', () => {
+      const ta = detail.querySelector('[data-key="MapPins"]');
+      if (ta) openPinMapModal(ta);
+    });
+  }
 
   if (!isNew) renderInlineEvents(tripData.InnerId);
 }
@@ -2069,7 +2164,12 @@ function buildEventBlock(ev, innerId, showCopyBtn, prevEv) {
     partFg.querySelector('label').appendChild(pCpBtn);
   }
   body.appendChild(partFg);
-  body.appendChild(makeEvField(t('editor.days.additionalNotes','Additional Notes'),'AdditionalNotes',ev,true));
+  const notesFg=makeEvField(t('editor.days.additionalNotes','Additional Notes'),'AdditionalNotes',ev,true);
+  const notesLbl=notesFg.querySelector('label'); notesLbl.style.cssText='display:flex;align-items:center;gap:6px';
+  const notesPinBtn=document.createElement('button'); notesPinBtn.type='button'; notesPinBtn.className='btn btn-g';
+  notesPinBtn.style.cssText='font-size:11px;padding:2px 8px;margin-left:auto'; notesPinBtn.textContent='🗺 Map';
+  notesPinBtn.addEventListener('click',()=>{const ta=notesFg.querySelector('textarea');if(ta)openNotesPinMapModal(ta);});
+  notesLbl.appendChild(notesPinBtn); body.appendChild(notesFg);
   body.appendChild(makeEvField(t('editor.days.countriesDuringDay','Countries During Day'),'CountriesDuringDay',ev));
   block.appendChild(body); return block;
 }
@@ -2200,11 +2300,12 @@ async function initTripMap(containerId, trip, domColor, _innerId) {
     container,
     style:{
       version:8,
-      sources:{osm:{type:'raster',tiles:['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],tileSize:256,attribution:'© OpenStreetMap'}},
+      sources:{osm:{type:'raster',tiles:['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],tileSize:256,maxzoom:19,attribution:'© OpenStreetMap'}},
       layers:[{id:'osm',type:'raster',source:'osm'}]
     },
     center: accCoords[0] || [pinData[0].lon, pinData[0].lat],
     zoom: 5,
+    maxZoom: 19,
     attributionControl: false
   });
 
@@ -2330,7 +2431,7 @@ async function initTripMap(containerId, trip, domColor, _innerId) {
     // Fit to all initial features
     if (allInitCoords.length > 1) {
       const lons=allInitCoords.map(c=>c[0]),lats=allInitCoords.map(c=>c[1]);
-      try{_tripMapInst.fitBounds([[Math.min(...lons),Math.min(...lats)],[Math.max(...lons),Math.max(...lats)]],{padding:40,maxZoom:12});}catch{}
+      try{_tripMapInst.fitBounds([[Math.min(...lons),Math.min(...lats)],[Math.max(...lons),Math.max(...lats)]],{padding:40,maxZoom:12,duration:450});}catch{}
     }
   });
 }
@@ -3005,6 +3106,322 @@ async function ensureMapLibre() {
   await new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/maplibre-gl@4/dist/maplibre-gl.min.js';s.onload=res;s.onerror=rej;document.body.appendChild(s);});
 }
 
+async function openPinMapModal(ta) {
+  await ensureMapLibre();
+
+  // Parse existing pins from textarea: [ Name ]( lat, lon )
+  function parsePins(text) {
+    const re = /\[\s*([^\]]*?)\s*\]\s*\(\s*([-\d.]+)\s*,\s*([-\d.]+)\s*\)/g;
+    const pins = []; let m;
+    while ((m = re.exec(text)) !== null) {
+      pins.push({ name: m[1], lat: parseFloat(m[2]), lon: parseFloat(m[3]) });
+    }
+    return pins;
+  }
+
+  // Build overlay DOM
+  const overlay = document.createElement('div');
+  overlay.className = 'pin-map-overlay';
+  overlay.innerHTML = `
+    <div class="pin-map-header">
+      <span class="pin-map-title">📍 Map Pins</span>
+      <div class="pin-map-search-row">
+        <input class="pin-map-search" type="text" placeholder="Search place…">
+        <button class="pin-map-search-btn">Search</button>
+      </div>
+      <button class="btn btn-g" id="pmo-done" style="margin-left:10px;flex-shrink:0">✓ Done</button>
+    </div>
+    <div class="pin-map-body">
+      <div class="pin-map-map" id="pmo-map"></div>
+      <div class="pin-map-panel">
+        <div class="pin-map-coords" id="pmo-coords">Click on map to place a pin</div>
+        <div class="pin-map-add-row">
+          <input class="pin-map-name" id="pmo-name" type="text" placeholder="Pin name…">
+          <button class="pin-map-add-btn" id="pmo-add" disabled>＋ Add</button>
+        </div>
+        <div class="pin-map-hint">Existing pins shown in yellow. Click map to place new pin (red), name it, then click ＋ Add.</div>
+      </div>
+      <button class="pin-map-done" id="pmo-done2">✓ Done</button>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  const mapEl = overlay.querySelector('#pmo-map');
+  const coordsEl = overlay.querySelector('#pmo-coords');
+  const nameEl = overlay.querySelector('#pmo-name');
+  const addBtn = overlay.querySelector('#pmo-add');
+  const searchInp = overlay.querySelector('.pin-map-search');
+  const searchBtn = overlay.querySelector('.pin-map-search-btn');
+
+  let pendingLng = null, pendingLat = null;
+  let tempMarker = null;
+  const permanentMarkers = [];
+
+  const mapStyle = {
+    version: 8,
+    glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf',
+    sources: { osm: { type:'raster', tiles:['https://tile.openstreetmap.org/{z}/{x}/{y}.png'], tileSize:256, maxzoom:19, attribution:'© OpenStreetMap contributors'} },
+    layers: [{ id:'osm', type:'raster', source:'osm' }]
+  };
+
+  const pmap = new maplibregl.Map({ container: mapEl, style: mapStyle, center: [10, 48], zoom: 3, maxZoom: 19 });
+  pmap.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'top-right');
+
+  // Add existing pins as yellow markers
+  function addPermMarker(pin) {
+    const el = document.createElement('div');
+    el.style.cssText = 'width:14px;height:14px;border-radius:50%;background:#f0a142;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.5);cursor:default';
+    const popup = new maplibregl.Popup({ offset:10, closeButton:false }).setHTML(`<span style="font-size:12px">${pin.name||''}</span>`);
+    const mk = new maplibregl.Marker({ element: el }).setLngLat([pin.lon, pin.lat]).setPopup(popup).addTo(pmap);
+    el.addEventListener('mouseenter', () => popup.addTo(pmap));
+    el.addEventListener('mouseleave', () => popup.remove());
+    permanentMarkers.push(mk);
+  }
+
+  const existingPins = parsePins(ta.value || '');
+  existingPins.forEach(addPermMarker);
+
+  // Fit map to existing pins
+  pmap.on('load', () => {
+    if (existingPins.length === 1) {
+      pmap.setCenter([existingPins[0].lon, existingPins[0].lat]);
+      pmap.setZoom(8);
+    } else if (existingPins.length > 1) {
+      const lngs = existingPins.map(p => p.lon), lats = existingPins.map(p => p.lat);
+      pmap.fitBounds([[Math.min(...lngs), Math.min(...lats)], [Math.max(...lngs), Math.max(...lats)]], { padding: 60, maxZoom: 12, duration: 450 });
+    }
+  });
+
+  // Click to place temp (red) marker
+  pmap.on('click', e => {
+    pendingLng = parseFloat(e.lngLat.lng.toFixed(6));
+    pendingLat = parseFloat(e.lngLat.lat.toFixed(6));
+    coordsEl.textContent = `${pendingLat}, ${pendingLng}`;
+    addBtn.disabled = false;
+    if (tempMarker) tempMarker.remove();
+    const el = document.createElement('div');
+    el.style.cssText = 'width:14px;height:14px;border-radius:50%;background:#e53935;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.5)';
+    tempMarker = new maplibregl.Marker({ element: el }).setLngLat([pendingLng, pendingLat]).addTo(pmap);
+    nameEl.focus();
+  });
+
+  // Add pin to textarea
+  function addPin() {
+    if (pendingLat === null || pendingLng === null) return;
+    const name = nameEl.value.trim() || 'Pin';
+    const line = `[ ${name} ]( ${pendingLat}, ${pendingLng} )`;
+    const cur = ta.value.trim();
+    ta.value = cur ? cur + '\n' + line : line;
+    ta.dispatchEvent(new Event('input', { bubbles: true }));
+
+    // Convert temp marker to yellow permanent
+    addPermMarker({ name, lat: pendingLat, lon: pendingLng });
+    if (tempMarker) { tempMarker.remove(); tempMarker = null; }
+    pendingLat = null; pendingLng = null;
+    nameEl.value = '';
+    coordsEl.textContent = 'Click on map to place a pin';
+    addBtn.disabled = true;
+  }
+
+  addBtn.addEventListener('click', addPin);
+  nameEl.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addPin(); } });
+
+  // Nominatim search
+  async function doSearch() {
+    const q = searchInp.value.trim();
+    if (!q) return;
+    searchBtn.disabled = true; searchBtn.textContent = '…';
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(q)}`, { headers: { 'Accept-Language': 'en' } });
+      const json = await res.json();
+      if (json && json.length) {
+        const r = json[0];
+        pmap.easeTo({ center: [parseFloat(r.lon), parseFloat(r.lat)], zoom: 12, duration: 450 });
+        searchInp.value = r.display_name.split(',')[0];
+      } else { toast('No results found', 'err'); }
+    } catch(e) { toast('Search failed', 'err'); }
+    finally { searchBtn.disabled = false; searchBtn.textContent = 'Search'; }
+  }
+  searchBtn.addEventListener('click', doSearch);
+  searchInp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); doSearch(); } });
+
+  // Close modal
+  function closeModal() {
+    pmap.remove();
+    overlay.remove();
+    document.removeEventListener('keydown', onKey);
+  }
+  function onKey(e) { if (e.key === 'Escape') closeModal(); }
+  document.addEventListener('keydown', onKey);
+  overlay.querySelector('#pmo-done').addEventListener('click', closeModal);
+  overlay.querySelector('#pmo-done2').addEventListener('click', closeModal);
+}
+
+async function openNotesPinMapModal(ta) {
+  await ensureMapLibre();
+
+  const themeExt = data.Settings?.Extension?.Theme;
+  const themesActive = !!(themeExt?.Enabled && themeExt.Items && Object.keys(themeExt.Items).length);
+  const themeItems = themesActive ? themeExt.Items : {}; // { key: label }
+
+  // Parse existing theme-pins from notes: [ Name ]( lat, lon ){ themekey }
+  // Also parse plain pins: [ Name ]( lat, lon )
+  function parsePins(text) {
+    const re = /\[\s*([^\]]*?)\s*\]\s*\(\s*([-\d.]+)\s*,\s*([-\d.]+)\s*\)(?:\s*\{([^}]*)\})?/g;
+    const pins = []; let m;
+    while ((m = re.exec(text)) !== null) {
+      pins.push({ name: m[1], lat: parseFloat(m[2]), lon: parseFloat(m[3]), theme: (m[4]||'').trim() });
+    }
+    return pins;
+  }
+
+  // Build overlay
+  const overlay = document.createElement('div');
+  overlay.className = 'pin-map-overlay';
+
+  const themeDropdownHtml = themesActive
+    ? `<select class="pin-map-search" id="pno-theme-sel" style="min-width:140px;flex:0 0 auto">
+        <option value="">(no theme)</option>
+        ${Object.entries(themeItems).map(([k,lbl])=>`<option value="${h(k)}">${h(lbl)}</option>`).join('')}
+       </select>`
+    : '';
+
+  overlay.innerHTML = `
+    <div class="pin-map-header">
+      <span class="pin-map-title">📍 Additional Notes Pins</span>
+      <div class="pin-map-search-row">
+        <input class="pin-map-search" type="text" id="pno-search" placeholder="Search place…">
+        <button class="pin-map-search-btn" id="pno-search-btn">Search</button>
+      </div>
+      <button class="btn btn-g" id="pno-done" style="margin-left:10px;flex-shrink:0">✓ Done</button>
+    </div>
+    <div class="pin-map-body">
+      <div class="pin-map-map" id="pno-map"></div>
+      <div class="pin-map-panel">
+        <div class="pin-map-coords" id="pno-coords">Click on map to place a pin</div>
+        <div class="pin-map-add-row">
+          <input class="pin-map-name" id="pno-name" type="text" placeholder="Pin name…">
+          ${themeDropdownHtml}
+          <button class="pin-map-add-btn" id="pno-add" disabled>＋ Add</button>
+        </div>
+        <div class="pin-map-hint">${themesActive?'Select a theme (optional) then click map to place pin.':'Click map to place a pin, name it, then click ＋ Add.'}</div>
+      </div>
+      <button class="pin-map-done" id="pno-done2">✓ Done</button>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  const mapEl   = overlay.querySelector('#pno-map');
+  const coordsEl= overlay.querySelector('#pno-coords');
+  const nameEl  = overlay.querySelector('#pno-name');
+  const themeSel= overlay.querySelector('#pno-theme-sel');
+  const addBtn  = overlay.querySelector('#pno-add');
+  const searchInp = overlay.querySelector('#pno-search');
+  const searchBtn = overlay.querySelector('#pno-search-btn');
+
+  let pendingLng = null, pendingLat = null;
+  let tempMarker = null;
+  const permanentMarkers = [];
+
+  const mapStyle = {
+    version: 8,
+    glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf',
+    sources: { osm: { type:'raster', tiles:['https://tile.openstreetmap.org/{z}/{x}/{y}.png'], tileSize:256, maxzoom:19, attribution:'© OpenStreetMap contributors'} },
+    layers: [{ id:'osm', type:'raster', source:'osm' }]
+  };
+
+  const pmap = new maplibregl.Map({ container: mapEl, style: mapStyle, center: [10, 48], zoom: 3, maxZoom: 19 });
+  pmap.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'top-right');
+
+  // Theme-aware pin color (yellow for no theme, colored accent per theme key)
+  const themeColors = ['#f0a142','#3eb8a8','#9b59b6','#e67e22','#2ecc71','#e74c3c','#3498db','#f39c12'];
+  const themeColorMap = {};
+  Object.keys(themeItems).forEach((k,i)=>{ themeColorMap[k]=themeColors[(i+1)%themeColors.length]; });
+
+  function pinColor(themeKey) {
+    if (!themeKey) return '#f0a142';
+    return themeColorMap[themeKey] || '#f0a142';
+  }
+
+  function addPermMarker(pin) {
+    const el = document.createElement('div');
+    const col = pinColor(pin.theme);
+    el.style.cssText = `width:14px;height:14px;border-radius:50%;background:${col};border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.5);cursor:default`;
+    const themeLbl = pin.theme && themeItems[pin.theme] ? ` <em style="opacity:.7">[${themeItems[pin.theme]}]</em>` : (pin.theme ? ` <em style="opacity:.7">[${pin.theme}]</em>` : '');
+    const popup = new maplibregl.Popup({ offset:10, closeButton:false }).setHTML(`<span style="font-size:12px">${pin.name||''}${themeLbl}</span>`);
+    const mk = new maplibregl.Marker({ element: el }).setLngLat([pin.lon, pin.lat]).setPopup(popup).addTo(pmap);
+    el.addEventListener('mouseenter', ()=>popup.addTo(pmap));
+    el.addEventListener('mouseleave', ()=>popup.remove());
+    permanentMarkers.push(mk);
+  }
+
+  const existingPins = parsePins(ta.value || '');
+  existingPins.forEach(addPermMarker);
+
+  pmap.on('load', () => {
+    if (existingPins.length === 1) {
+      pmap.setCenter([existingPins[0].lon, existingPins[0].lat]); pmap.setZoom(8);
+    } else if (existingPins.length > 1) {
+      const lngs=existingPins.map(p=>p.lon), lats=existingPins.map(p=>p.lat);
+      pmap.fitBounds([[Math.min(...lngs),Math.min(...lats)],[Math.max(...lngs),Math.max(...lats)]],{padding:60,maxZoom:12,duration:450});
+    }
+  });
+
+  pmap.on('click', e => {
+    pendingLng = parseFloat(e.lngLat.lng.toFixed(6));
+    pendingLat = parseFloat(e.lngLat.lat.toFixed(6));
+    coordsEl.textContent = `${pendingLat}, ${pendingLng}`;
+    addBtn.disabled = false;
+    if (tempMarker) tempMarker.remove();
+    const el = document.createElement('div');
+    el.style.cssText = 'width:14px;height:14px;border-radius:50%;background:#e53935;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.5)';
+    tempMarker = new maplibregl.Marker({ element: el }).setLngLat([pendingLng, pendingLat]).addTo(pmap);
+    nameEl.focus();
+  });
+
+  function addPin() {
+    if (pendingLat === null || pendingLng === null) return;
+    const name = nameEl.value.trim() || 'Pin';
+    const themeKey = themeSel ? themeSel.value : '';
+    const themedSuffix = themeKey ? ` { ${themeKey} }` : '';
+    const line = `[ ${name} ]( ${pendingLat}, ${pendingLng} )${themedSuffix}`;
+    const cur = ta.value.trim();
+    ta.value = cur ? cur + '\n' + line : line;
+    ta.dispatchEvent(new Event('input', { bubbles: true }));
+    ta.dispatchEvent(new Event('blur',  { bubbles: true }));
+
+    addPermMarker({ name, lat: pendingLat, lon: pendingLng, theme: themeKey });
+    if (tempMarker) { tempMarker.remove(); tempMarker = null; }
+    pendingLat = null; pendingLng = null;
+    nameEl.value = '';
+    coordsEl.textContent = 'Click on map to place a pin';
+    addBtn.disabled = true;
+  }
+
+  addBtn.addEventListener('click', addPin);
+  nameEl.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addPin(); } });
+
+  async function doSearch() {
+    const q = searchInp.value.trim(); if (!q) return;
+    searchBtn.disabled = true; searchBtn.textContent = '…';
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(q)}`, { headers: { 'Accept-Language': 'en' } });
+      const json = await res.json();
+      if (json && json.length) { const r=json[0]; pmap.easeTo({ center:[parseFloat(r.lon),parseFloat(r.lat)], zoom:12, duration:450 }); searchInp.value=r.display_name.split(',')[0]; }
+      else toast('No results found','err');
+    } catch(e) { toast('Search failed','err'); }
+    finally { searchBtn.disabled=false; searchBtn.textContent='Search'; }
+  }
+  searchBtn.addEventListener('click', doSearch);
+  searchInp.addEventListener('keydown', e => { if (e.key==='Enter') { e.preventDefault(); doSearch(); } });
+
+  function closeModal() {
+    pmap.remove(); overlay.remove(); document.removeEventListener('keydown', onKey);
+  }
+  function onKey(e) { if (e.key==='Escape') closeModal(); }
+  document.addEventListener('keydown', onKey);
+  overlay.querySelector('#pno-done').addEventListener('click', closeModal);
+  overlay.querySelector('#pno-done2').addEventListener('click', closeModal);
+}
+
 async function initMap() {
   try { await ensureMapLibre(); } catch(e) { document.getElementById('map-container').innerHTML=`<div class="empty"><div class="ei">🗺️</div><h3>${t('map.loadError','Could not load map')}</h3><p>${t('map.loadErrorHint','Check your internet connection')}</p></div>`; return; }
   const container=document.getElementById('map-container');
@@ -3020,13 +3437,15 @@ async function initMap() {
           type: 'raster',
           tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
           tileSize: 256,
+          maxzoom: 19,
           attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }
       },
       layers: [{ id: 'osm', type: 'raster', source: 'osm' }]
     },
     center: [10, 48],
-    zoom: 3
+    zoom: 3,
+    maxZoom: 19
   });
 
   mapInstance.addControl(new maplibregl.NavigationControl({showCompass:true}), 'top-right');
@@ -3152,13 +3571,18 @@ function fitMapToBounds(features) {
   });
   if(!coords.length)return;
   const lons=coords.map(c=>c[0]), lats=coords.map(c=>c[1]);
-  try{mapInstance.fitBounds([[Math.min(...lons),Math.min(...lats)],[Math.max(...lons),Math.max(...lats)]],{padding:40});}catch(e){}
+  try{mapInstance.fitBounds([[Math.min(...lons),Math.min(...lats)],[Math.max(...lons),Math.max(...lats)]],{padding:40,duration:450});}catch(e){}
 }
 
 function updateMapPins() {
   const features=buildMapFeatures();
   mapInstance.getSource('pins').setData({ type:'FeatureCollection', features });
   fitMapToBounds(features);
+  // Reset photo layer when mode/country changes
+  if(_mapPhotoVisible){try{mapInstance.setLayoutProperty('map-photo-dots','visibility','none');}catch{}}
+  _mapPhotoVisible=false; _mapPhotoLoaded=false;
+  const photoBtn=document.getElementById('map-photo-btn');
+  if(photoBtn)photoBtn.classList.remove('active');
 }
 
 function renderMapControls() {
@@ -3214,7 +3638,46 @@ function renderMapControls() {
     themeSel.style.display='none';
   }
 
+  // ── Photo button ─────────────────────────────────────────────────
+  const photoCfg=data.Settings?.Photos||{};
+  const immichEnabled=photoCfg.Immich==='Enabled'&&photoCfg.ImmichUrl;
+  const photoBtn=document.getElementById('map-photo-btn');
+  if(photoBtn){
+    photoBtn.style.display=(immichEnabled&&mapMode.type==='country')?'':'none';
+    if(!photoBtn.dataset.wired){
+      photoBtn.dataset.wired='1';
+      photoBtn.addEventListener('click',()=>toggleMapPhotos(photoBtn));
+    }
+  }
+
   updateMapControls();
+}
+
+async function toggleMapPhotos(btn) {
+  if(!mapInstance||!mapInstance.getSource('map-photos'))return;
+  if(_mapPhotoVisible){
+    mapInstance.setLayoutProperty('map-photo-dots','visibility','none');
+    _mapPhotoVisible=false; btn.classList.remove('active'); return;
+  }
+  const country=mapMode.type==='country'?mapMode.value:'';
+  if(!country)return;
+  // Reload if country changed
+  if(!_mapPhotoLoaded||_mapPhotoCountry!==country){
+    btn.disabled=true; btn.style.opacity='0.45';
+    try {
+      const trips=filteredTrips().filter(trip=>(trip.Days||[]).some(d=>d.AccommodationCountry===country));
+      const allDots=[];
+      for(const trip of trips){
+        const coords=await fetchTripImmichPhotoCoords(trip);
+        coords.forEach(p=>allDots.push({type:'Feature',geometry:{type:'Point',coordinates:[p.lon,p.lat]},properties:{id:p.id||''}}));
+      }
+      mapInstance.getSource('map-photos').setData({type:'FeatureCollection',features:allDots});
+      _mapPhotoLoaded=true; _mapPhotoCountry=country;
+    } catch(e){console.warn('Map photo fetch:',e);}
+    btn.disabled=false; btn.style.opacity='1';
+  }
+  mapInstance.setLayoutProperty('map-photo-dots','visibility','visible');
+  _mapPhotoVisible=true; btn.classList.add('active');
 }
 
 function updateMapControls() {
@@ -3222,13 +3685,23 @@ function updateMapControls() {
   const countrySel=document.getElementById('map-country-sel');
   const themeSel=document.getElementById('map-theme-sel');
   const badge=document.getElementById('map-mode-badge');
+  const photoBtn=document.getElementById('map-photo-btn');
   countrySel?.classList.toggle('active', mapMode.type==='country');
   themeSel?.classList.toggle('active', mapMode.type==='theme');
+  // Hide photo button when not in country mode, also hide photo layer
+  if(mapMode.type!=='country'){
+    if(_mapPhotoVisible&&mapInstance){try{mapInstance.setLayoutProperty('map-photo-dots','visibility','none');}catch{}}_mapPhotoVisible=false;_mapPhotoLoaded=false;
+    if(photoBtn){photoBtn.classList.remove('active');photoBtn.style.display='none';}
+  } else {
+    const photoCfg=data.Settings?.Photos||{};
+    const immichEnabled=photoCfg.Immich==='Enabled'&&photoCfg.ImmichUrl;
+    if(photoBtn)photoBtn.style.display=immichEnabled?'':'none';
+  }
   if(mapMode.type==='country'){
-    badge.textContent=`${t('map.showingPrefix','Showing:')} ${mapMode.value}`; badge.classList.add('on');
+    badge.querySelector('span').textContent=`${t('map.showingPrefix','Showing:')} ${mapMode.value}`; badge.classList.add('on');
   } else if(mapMode.type==='theme'){
     const lbl=data.Settings?.Extension?.Theme?.Items?.[mapMode.value]||mapMode.value;
-    badge.textContent=`${t('map.themePrefix','Theme:')} ${lbl}`; badge.classList.add('on');
+    badge.querySelector('span').textContent=`${t('map.themePrefix','Theme:')} ${lbl}`; badge.classList.add('on');
   } else {
     badge.classList.remove('on');
   }
@@ -3270,6 +3743,25 @@ function loadMapPins() {
       'circle-stroke-width':1.5,'circle-stroke-color':'rgba(255,255,255,0.6)','circle-opacity':0.85}});
 
   fitMapToBounds(features);
+
+  // ── Immich photo layer for country mode (empty until toggled) ──
+  mapInstance.addSource('map-photos',{type:'geojson',data:{type:'FeatureCollection',features:[]}});
+  mapInstance.addLayer({id:'map-photo-dots',type:'circle',source:'map-photos',layout:{visibility:'none'},
+    paint:{'circle-radius':4,'circle-color':'#e74c3c','circle-stroke-width':1,'circle-stroke-color':'rgba(255,255,255,0.7)','circle-opacity':0.9}});
+  // Photo dot click → thumbnail popup
+  const _mpImmichBase=(data.Settings?.Photos?.ImmichUrl||'').replace(/\/$/,'');
+  let _mpPhotoPopup=null;
+  mapInstance.on('click','map-photo-dots',e=>{
+    const feat=e.features&&e.features[0]; const assetId=feat?.properties?.id;
+    if(!assetId||!_mpImmichBase)return;
+    if(_mpPhotoPopup){_mpPhotoPopup.remove();_mpPhotoPopup=null;}
+    const thumbUrl=`${_mpImmichBase}/api/assets/${assetId}/thumbnail`;
+    const photoUrl=`${_mpImmichBase}/photos/${assetId}`;
+    const html=`<a href="${photoUrl}" target="_blank" rel="noopener" style="display:block;line-height:0"><img src="${thumbUrl}" style="max-width:180px;max-height:180px;border-radius:6px;display:block" onerror="this.style.display='none'"></a>`;
+    _mpPhotoPopup=new maplibregl.Popup({closeButton:true,closeOnClick:true,maxWidth:'200px'}).setLngLat(e.lngLat).setHTML(html).addTo(mapInstance);
+  });
+  mapInstance.on('mouseenter','map-photo-dots',()=>{mapInstance.getCanvas().style.cursor='pointer';});
+  mapInstance.on('mouseleave','map-photo-dots',()=>{mapInstance.getCanvas().style.cursor='';});
 
   // Legend overlay (only add once)
   if(!document.querySelector('.map-legend')){
@@ -3566,6 +4058,7 @@ function generateReport() {
     const movements=crossings.join(' › ')||'—';
     const numDays=dateDiff(trip.DepartureDate,trip.ReturnDate);
     const days=[...(trip.Days||[])].sort((a,b)=>(a.Date||'').localeCompare(b.Date||''));
+    const _houseIcon=`<svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 2 16 16" fill="currentColor" style="flex-shrink:0"><path d="M8 1 15 7.5V15h-5v-5H6v5H1V7.5Z"/></svg>`;
 
     const daysHtml=days.map((day,idx)=>{
       const wday=getWeekday(day.Date)||'';
@@ -3574,15 +4067,11 @@ function generateReport() {
       const accUrl=coords?`${extMap}${encodeURIComponent(coords)}`:'';
       const accParts=[day.Accommodation, [flag,day.AccommodationCountry].filter(Boolean).join(' '), coords, day.AccommodationCoordinatesAccuracy||''].filter(Boolean).map(v=>h(v)).join(' – ');
       return `<div class="rpt-day">
-        ${day.Events?`<div class="rpt-day-events">${eventsToHtml(day.Events,extMap)}</div>`:''}
-        <div class="rpt-day-foot">
-          <div class="rpt-day-label">
-            <span class="rpt-day-num" style="background:${c};color:${tx}">${idx}</span>
-            <span>${h(wday)}&nbsp;${h(day.Date||'')}</span>
-          </div>
-          ${accUrl?`<a class="rpt-acc-link" href="${h(accUrl)}" target="_blank">🏠 ${accParts}</a>`
-                  :(accParts?`<span class="rpt-acc-link">🏠 ${accParts}</span>`:'')}
+        <div class="rpt-day-hdr">
+          <span class="rpt-day-num" style="color:${c}">${idx}</span><span class="rpt-day-date-str">${h(wday)}&nbsp;${h(day.Date||'')}</span>
         </div>
+        ${day.Events?`<div class="rpt-day-events">${eventsToHtml(day.Events,extMap)}</div>`:''}
+        ${accParts?`<div class="rpt-day-foot">${accUrl?`<a class="rpt-acc-link" href="${h(accUrl)}" target="_blank">${_houseIcon} ${accParts}</a>`:`<span class="rpt-acc-link">${_houseIcon} ${accParts}</span>`}</div>`:''}
       </div>`;
     }).join('');
 
@@ -3683,7 +4172,7 @@ section{break-before:page;page-break-before:always}
 /* Trip section */
 .rpt-trip{display:flex;flex-direction:column}
 .rpt-cover{min-height:160pt;padding:20pt 28pt;display:flex;flex-direction:column;justify-content:flex-end;gap:4pt}
-.rpt-cover-id{display:inline-block;padding:2pt 8pt;border-radius:3pt;font-size:9pt;font-weight:700;font-family:monospace;letter-spacing:.3pt;margin-bottom:6pt;align-self:flex-start}
+.rpt-cover-id{display:inline-block;padding:2pt 8pt;border-radius:3pt;font-size:9pt;font-weight:700;font-family:monospace;letter-spacing:.3pt;margin-bottom:6pt;align-self:flex-start;border:1.5pt solid rgba(255,255,255,.7)}
 .rpt-cover-title{font-size:20pt;font-weight:800;line-height:1.1}
 .rpt-cover-sub{font-size:10.5pt;line-height:1.4;margin-top:3pt}
 
@@ -3699,11 +4188,13 @@ section{break-before:page;page-break-before:always}
 .rpt-days{padding:10pt 28pt;display:flex;flex-direction:column;gap:0}
 .rpt-day{padding:8pt 0;border-bottom:1pt solid #f3f3f3;break-inside:avoid;page-break-inside:avoid}
 .rpt-day:last-child{border-bottom:none}
-.rpt-day-events{font-size:9.5pt;line-height:1.65;white-space:pre-wrap;margin-bottom:5pt;color:#222}
-.rpt-day-foot{display:flex;align-items:flex-start;gap:10pt;font-size:8.5pt;color:#777;flex-wrap:wrap}
-.rpt-day-label{display:flex;align-items:center;gap:5pt;white-space:nowrap;flex-shrink:0}
-.rpt-day-num{display:inline-flex;align-items:center;justify-content:center;width:16pt;height:16pt;border-radius:3pt;font-size:7.5pt;font-weight:700;flex-shrink:0}
-.rpt-acc-link{color:#555;font-size:8.5pt;line-height:1.45}
+.rpt-day-hdr{display:flex;align-items:baseline;gap:12pt;margin-bottom:6pt}
+.rpt-day-num{font-size:9.5pt;font-weight:700}
+.rpt-day-date-str{font-size:9.5pt;font-weight:700;color:#111}
+.rpt-day-events{font-size:9.5pt;line-height:1.65;white-space:pre-wrap;margin-bottom:6pt;color:#222}
+.rpt-day-foot{font-size:9.5pt;color:#777}
+.rpt-acc-link{color:#555;font-size:9.5pt;line-height:1.45}
+.rpt-acc-link svg{width:1em;height:1em;vertical-align:middle;margin-right:2pt}
 
 /* Final page */
 .rpt-final{min-height:calc(100vh - 5cm);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;text-align:center;gap:14pt;padding:40pt}

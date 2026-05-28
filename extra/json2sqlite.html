@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON → SQLite</title>
+<style>
+:root {
+  --bg:#f5f5f5; --s1:#ffffff; --s2:#efefef;
+  --border:#ddd; --border-h:#aaa;
+  --text:#212529; --muted:#999; --muted2:#666;
+  --accent:#1d655e; --accent-d:#155049;
+  --err:#da3633; --ok:#2a9d5c;
+  --shadow:0 1px 4px rgba(0,0,0,.08);
+  --btn-h:28px;
+}
+[data-theme="dark"] {
+  --bg:#0d1f1c; --s1:#111f1c; --s2:#162b27;
+  --border:#1f3e38; --border-h:#2e5a52;
+  --text:#e6edf3; --muted:#6e7681; --muted2:#8b949e;
+  --accent:#3eb8a8; --accent-d:#2d9d8f;
+  --err:#f85149; --ok:#3fb950;
+  --shadow:0 1px 4px rgba(0,0,0,.35);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Header ── */
+header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  height: 44px;
+  background: var(--s1);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  box-shadow: var(--shadow);
+}
+header h1 {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .2px;
+  flex: 1;
+  white-space: nowrap;
+}
+header h1 .arrow { color: var(--accent); font-weight: 400; margin: 0 3px; }
+header h1 .sub { font-size: 11px; font-weight: 400; color: var(--muted); margin-left: 6px; }
+
+/* Unified button style — all same height */
+.btn {
+  height: var(--btn-h);
+  padding: 0 11px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--s2);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background .1s, border-color .1s;
+  line-height: 1;
+}
+.btn:hover { background: var(--border); border-color: var(--border-h); }
+.btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.btn.primary:hover { background: var(--accent-d); border-color: var(--accent-d); }
+.btn svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+/* ── Options bar ── */
+#options {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 14px;
+  height: 32px;
+  background: var(--s2);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+#options label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  color: var(--muted2);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+#options input[type=checkbox] { accent-color: var(--accent); cursor: pointer; width: 13px; height: 13px; }
+.opt-sep { width: 1px; height: 14px; background: var(--border); flex-shrink: 0; }
+#opt-prefix {
+  width: 80px;
+  height: 22px;
+  padding: 0 6px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--s1);
+  color: var(--text);
+  font-size: 12px;
+  font-family: inherit;
+}
+
+/* ── Status bar ── */
+#statusbar {
+  height: 22px;
+  padding: 0 14px;
+  font-size: 11px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  color: var(--muted2);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg);
+}
+.sb-err { color: var(--err); font-weight: 600; }
+.sb-ok  { color: var(--ok);  font-weight: 600; }
+#sb-info { margin-left: auto; color: var(--muted); }
+
+/* ── Split layout ── */
+#split { display: flex; flex: 1; overflow: hidden; }
+.pane { display: flex; flex-direction: column; overflow: hidden; flex: 1; }
+.pane + .pane { border-left: 2px solid var(--border); }
+
+/* ── Pane header ── */
+.pane-hdr {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  background: var(--s2);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  height: 34px;
+}
+.pane-title {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .7px;
+  color: var(--muted2);
+  flex: 1;
+}
+
+/* ── Textareas ── */
+.pane-body { flex: 1; position: relative; overflow: hidden; }
+textarea {
+  width: 100%; height: 100%;
+  border: none; outline: none; resize: none;
+  padding: 14px 16px;
+  font-family: 'Cascadia Code', 'Fira Code', 'SF Mono', 'Consolas', monospace;
+  font-size: 12px;
+  line-height: 1.7;
+  background: var(--s1);
+  color: var(--text);
+  tab-size: 2;
+}
+textarea::placeholder { color: var(--muted); font-family: inherit; }
+#sql-output { background: var(--bg); }
+
+/* ── Drop overlay ── */
+.drop-overlay {
+  display: none; position: absolute; inset: 0;
+  background: rgba(29,101,94,.14);
+  border: 3px dashed var(--accent); border-radius: 4px;
+  pointer-events: none;
+  align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 700; color: var(--accent);
+}
+.drop-overlay.active { display: flex; }
+</style>
+</head>
+<body>
+
+<!-- SVG icon sprites -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="ic-folder" viewBox="0 0 16 16"><path fill="currentColor" d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v7a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 12.5v-9z"/></symbol>
+  <symbol id="ic-copy" viewBox="0 0 16 16"><path fill="currentColor" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1H2z"/></symbol>
+  <symbol id="ic-download" viewBox="0 0 16 16"><path fill="currentColor" d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path fill="currentColor" d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></symbol>
+  <symbol id="ic-x" viewBox="0 0 16 16"><path fill="currentColor" d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854z"/></symbol>
+  <symbol id="ic-sun" viewBox="0 0 16 16"><path fill="currentColor" d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/></symbol>
+  <symbol id="ic-moon" viewBox="0 0 16 16"><path fill="currentColor" d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/></symbol>
+  <symbol id="ic-format" viewBox="0 0 16 16"><path fill="currentColor" d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/><path fill="currentColor" d="M5.854 4.854a.5.5 0 1 0-.708-.708l-3.5 3.5a.5.5 0 0 0 0 .708l3.5 3.5a.5.5 0 0 0 .708-.708L2.707 8l3.147-3.146zm4.292 0a.5.5 0 0 1 .708-.708l3.5 3.5a.5.5 0 0 1 0 .708l-3.5 3.5a.5.5 0 0 1-.708-.708L13.293 8l-3.147-3.146z"/></symbol>
+</svg>
+
+<header>
+  <h1>JSON <span class="arrow">→</span> SQLite<span class="sub">bewegung format</span></h1>
+  <button class="btn" id="load-file-btn"><svg><use href="#ic-folder"/></svg> Open</button>
+  <button class="btn primary" id="copy-btn"><svg><use href="#ic-copy"/></svg> Copy SQL</button>
+  <button class="btn" id="dl-btn"><svg><use href="#ic-download"/></svg> Download</button>
+  <button class="btn" id="clear-btn"><svg><use href="#ic-x"/></svg> Clear</button>
+  <button class="btn" id="theme-btn"><svg id="theme-icon"><use href="#ic-moon"/></svg></button>
+  <input type="file" id="file-input" accept=".json" style="display:none">
+</header>
+
+<div id="options">
+  <label><input type="checkbox" id="opt-ifnotexists" checked> IF NOT EXISTS</label>
+  <label><input type="checkbox" id="opt-drop"> DROP TABLE first</label>
+  <label><input type="checkbox" id="opt-transactions" checked> Wrap in transaction</label>
+  <div class="opt-sep"></div>
+  <label>Table prefix: <input type="text" id="opt-prefix" placeholder="(none)"></label>
+</div>
+
+<div id="statusbar">
+  <span id="sb-msg">Paste or drop a bewegung JSON file on the left.</span>
+  <span id="sb-info"></span>
+</div>
+
+<div id="split">
+
+  <!-- Left: JSON input -->
+  <div class="pane">
+    <div class="pane-hdr">
+      <span class="pane-title">JSON input</span>
+      <button class="btn" id="fmt-btn"><svg><use href="#ic-format"/></svg> Format</button>
+    </div>
+    <div class="pane-body" id="left-body">
+      <textarea id="json-input" placeholder="Paste bewegung JSON here, or drag &amp; drop a .json file…"></textarea>
+      <div class="drop-overlay" id="drop-overlay">Drop JSON file here</div>
+    </div>
+  </div>
+
+  <!-- Right: SQL output -->
+  <div class="pane">
+    <div class="pane-hdr">
+      <span class="pane-title">SQLite output</span>
+      <button class="btn" id="copy-btn2"><svg><use href="#ic-copy"/></svg> Copy</button>
+    </div>
+    <div class="pane-body">
+      <textarea id="sql-output" readonly placeholder="SQL will appear here…"></textarea>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ── Theme ── */
+(function () {
+  const t = localStorage.getItem('j2s-theme') || 'dark';
+  document.documentElement.dataset.theme = t;
+  document.querySelector('#theme-icon use').setAttribute('href', t === 'dark' ? '#ic-sun' : '#ic-moon');
+})();
+document.getElementById('theme-btn').addEventListener('click', () => {
+  const t = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = t;
+  document.querySelector('#theme-icon use').setAttribute('href', t === 'dark' ? '#ic-sun' : '#ic-moon');
+  localStorage.setItem('j2s-theme', t);
+});
+
+/* ── Status ── */
+function setStatus(msg, type) {
+  const el = document.getElementById('sb-msg');
+  el.textContent = msg;
+  el.className = type === 'err' ? 'sb-err' : type === 'ok' ? 'sb-ok' : '';
+}
+function setInfo(msg) { document.getElementById('sb-info').textContent = msg; }
+
+/* ── Schema definition ── */
+const TRIP_COLS = [
+  'InnerId', 'OuterId', 'TripDomain', 'ArrangerGroup', 'OverallDestination',
+  'DepartureDate', 'ReturnDate', 'TripDescription', 'TripLabels', 'MapPins',
+  'StartNode', 'EndNode', 'PhotoStarttime', 'PhotoEndtime', 'PhotoAlbums',
+  'CoverPhoto', 'DocumentationNote'
+];
+const DAY_COLS = [
+  'InnerId', 'Date', 'Events', 'Accommodation', 'AccommodationCountry',
+  'AccommodationCoordinatesAccuracy', 'AccommodationCoordinates',
+  'TravelParticipants', 'AdditionalNotes', 'CountriesDuringDay'
+];
+
+/* ── SQL helpers ── */
+function q(n) { return `"${String(n).replace(/"/g, '""')}"`; }
+function lit(v) {
+  if (v === null || v === undefined) return 'NULL';
+  if (typeof v === 'boolean')        return v ? '1' : '0';
+  if (typeof v === 'number')         return isNaN(v) ? 'NULL' : String(v);
+  if (typeof v === 'object')         return `'${JSON.stringify(v).replace(/'/g, "''")}'`;
+  const s = String(v);
+  return s === '' ? 'NULL' : `'${s.replace(/'/g, "''")}'`;
+}
+function ins(table, cols, obj) {
+  return `INSERT INTO ${q(table)} (${cols.map(q).join(', ')}) VALUES (${cols.map(c => lit(obj[c] !== undefined ? obj[c] : null)).join(', ')});`;
+}
+
+/* ── Converter ── */
+function convert(json) {
+  if (!json || typeof json !== 'object' || Array.isArray(json))
+    throw new Error('Expected a JSON object at the top level.');
+  if (!json.Trips || typeof json.Trips !== 'object')
+    throw new Error('No "Trips" key found in JSON.');
+
+  const pfx  = document.getElementById('opt-prefix').value.trim();
+  const ifne = document.getElementById('opt-ifnotexists').checked ? 'IF NOT EXISTS ' : '';
+  const drop = document.getElementById('opt-drop').checked;
+  const txn  = document.getElementById('opt-transactions').checked;
+
+  const tTrips = pfx + 'aTrips';
+  const tDays  = pfx + 'bDays';
+
+  const ddl = [];
+
+  /* CREATE TABLE aTrips */
+  if (drop) ddl.push(`DROP TABLE IF EXISTS ${q(tDays)};`);   // drop child first
+  if (drop) ddl.push(`DROP TABLE IF EXISTS ${q(tTrips)};`);
+  ddl.push(
+    `CREATE TABLE ${ifne}${q(tTrips)} (\n` +
+    `    ${q('InnerId')} TEXT PRIMARY KEY,\n` +
+    TRIP_COLS.slice(1).map(c => `    ${q(c)} TEXT`).join(',\n') +
+    '\n);'
+  );
+  ddl.push('');
+
+  /* CREATE TABLE bDays */
+  ddl.push(
+    `CREATE TABLE ${ifne}${q(tDays)} (\n` +
+    DAY_COLS.map(c => `    ${q(c)} TEXT`).join(',\n') + ',\n' +
+    `    PRIMARY KEY (${q('InnerId')}, ${q('Date')}),\n` +
+    `    FOREIGN KEY (${q('InnerId')}) REFERENCES ${q(tTrips)} (${q('InnerId')})\n` +
+    ');'
+  );
+
+  /* Collect INSERTs */
+  const tripIns = [], dayIns = [];
+  let tripCount = 0, dayCount = 0;
+
+  for (const [innerId, trip] of Object.entries(json.Trips)) {
+    if (!trip || typeof trip !== 'object') continue;
+    tripIns.push(ins(tTrips, TRIP_COLS, { InnerId: innerId, ...trip }));
+    tripCount++;
+    for (const day of (trip.Days || [])) {
+      if (!day || typeof day !== 'object') continue;
+      dayIns.push(ins(tDays, DAY_COLS, { InnerId: innerId, ...day }));
+      dayCount++;
+    }
+  }
+
+  /* Assemble — transaction wraps everything */
+  const parts = [];
+  if (txn) parts.push('BEGIN TRANSACTION;\n');
+  parts.push(ddl.join('\n'));
+  parts.push('');
+  parts.push(`-- ── aTrips  (${tripCount} rows) ───────────────────────────`);
+  parts.push('');
+  parts.push(tripIns.join('\n'));
+  parts.push('');
+  parts.push(`-- ── bDays  (${dayCount} rows) ────────────────────────────`);
+  parts.push('');
+  parts.push(dayIns.join('\n'));
+  if (txn) { parts.push(''); parts.push('COMMIT;'); }
+
+  return { sql: parts.join('\n'), tripCount, dayCount };
+}
+
+/* ── Run ── */
+let _t = null;
+function run() {
+  const raw = document.getElementById('json-input').value.trim();
+  const out = document.getElementById('sql-output');
+  if (!raw) { out.value = ''; setStatus('Paste or drop a bewegung JSON file on the left.'); setInfo(''); return; }
+  let json;
+  try { json = JSON.parse(raw); }
+  catch (e) { out.value = ''; setStatus('JSON parse error: ' + e.message, 'err'); setInfo(''); return; }
+  try {
+    const { sql, tripCount, dayCount } = convert(json);
+    out.value = sql;
+    setStatus(`OK — ${tripCount} trips, ${dayCount} days`, 'ok');
+    setInfo(`${sql.split('\n').length} lines · ${(new Blob([sql]).size / 1024).toFixed(1)} KB`);
+  } catch (e) { out.value = ''; setStatus('Error: ' + e.message, 'err'); setInfo(''); }
+}
+function schedule() { clearTimeout(_t); _t = setTimeout(run, 280); }
+
+document.getElementById('json-input').addEventListener('input', schedule);
+document.querySelectorAll('#options input, #opt-prefix').forEach(el => {
+  el.addEventListener('change', run); el.addEventListener('input', run);
+});
+
+/* ── Format ── */
+document.getElementById('fmt-btn').addEventListener('click', () => {
+  const ta = document.getElementById('json-input');
+  try { ta.value = JSON.stringify(JSON.parse(ta.value), null, 2); run(); }
+  catch (e) { setStatus('Cannot format: ' + e.message, 'err'); }
+});
+
+/* ── Copy ── */
+function copySql() {
+  const sql = document.getElementById('sql-output').value;
+  if (!sql) return;
+  navigator.clipboard.writeText(sql)
+    .then(() => setStatus('SQL copied to clipboard!', 'ok'))
+    .catch(() => { document.getElementById('sql-output').select(); document.execCommand('copy'); setStatus('Copied!', 'ok'); });
+}
+document.getElementById('copy-btn').addEventListener('click', copySql);
+document.getElementById('copy-btn2').addEventListener('click', copySql);
+
+/* ── Download ── */
+document.getElementById('dl-btn').addEventListener('click', () => {
+  const sql = document.getElementById('sql-output').value; if (!sql) return;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([sql], { type: 'text/plain' }));
+  a.download = 'bewegung.sql'; a.click(); URL.revokeObjectURL(a.href);
+});
+
+/* ── Clear ── */
+document.getElementById('clear-btn').addEventListener('click', () => {
+  document.getElementById('json-input').value = '';
+  document.getElementById('sql-output').value = '';
+  setStatus('Paste or drop a bewegung JSON file on the left.'); setInfo('');
+});
+
+/* ── File open ── */
+document.getElementById('load-file-btn').addEventListener('click', () => document.getElementById('file-input').click());
+document.getElementById('file-input').addEventListener('change', e => {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader(); r.onload = ev => { document.getElementById('json-input').value = ev.target.result; run(); }; r.readAsText(f);
+  e.target.value = '';
+});
+
+/* ── Drag & drop ── */
+const leftBody = document.getElementById('left-body');
+const dropOvl  = document.getElementById('drop-overlay');
+function loadFile(file) {
+  if (!file) return;
+  const r = new FileReader();
+  r.onload = ev => { document.getElementById('json-input').value = ev.target.result; run(); };
+  r.readAsText(file);
+}
+leftBody.addEventListener('dragover',  e => { e.preventDefault(); dropOvl.classList.add('active'); });
+leftBody.addEventListener('dragleave', e => { if (!leftBody.contains(e.relatedTarget)) dropOvl.classList.remove('active'); });
+leftBody.addEventListener('drop',      e => { e.preventDefault(); dropOvl.classList.remove('active'); loadFile(e.dataTransfer.files[0]); });
+window.addEventListener('dragover', e => e.preventDefault());
+window.addEventListener('drop',     e => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f?.name.endsWith('.json')) loadFile(f); });
+</script>
+</body>
+</html>

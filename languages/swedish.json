@@ -119,7 +119,7 @@
     "tripInfo": "Reseinformation",
     "saveDaysFirst": "Spara resan först för att hantera dagar.",
     "sections": {
-      "tripId": "Rese-ID",
+      "tripId": "Grundinfo",
       "classification": "Klassificering",
       "tripDetails": "Resedetaljer",
       "location": "Plats",

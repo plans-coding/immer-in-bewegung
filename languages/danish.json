@@ -119,7 +119,7 @@
     "tripInfo": "Rejseinformation",
     "saveDaysFirst": "Gem rejsen først for at administrere dage.",
     "sections": {
-      "tripId": "Rejse-ID",
+      "tripId": "Grundinfo",
       "classification": "Klassifikation",
       "tripDetails": "Rejsedetaljer",
       "location": "Sted",

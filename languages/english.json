@@ -119,7 +119,7 @@
     "tripInfo": "Trip Information",
     "saveDaysFirst": "Save the trip first to manage days.",
     "sections": {
-      "tripId": "Trip ID",
+      "tripId": "Basic",
       "classification": "Classification",
       "tripDetails": "Trip Details",
       "location": "Location",
