@@ -307,6 +307,17 @@
       "languageDesc": "Sti til en sprog-JSON-fil relativt til appen (f.eks. languages/danish.json). Lad stå tomt for engelsk.",
       "languageApply": "Anvend",
       "tools": "Værktøjer"
+    },
+    "export": {
+      "title": "Eksport",
+      "filteredBtn": "⬇ Download filtreret JSON",
+      "embedBtn": "⬇ Download med indlejrede forsidebilleder",
+      "inSelection": "i aktuelt udvalg",
+      "tripSingular": "rejse",
+      "tripPlural": "rejser",
+      "fetchingCovers": "Henter forsidebilleder…",
+      "downloaded": "Downloadet",
+      "withEmbedded": "med indlejrede forsider"
     }
   },
   "fileOverlay": {
@@ -337,16 +348,5 @@
   },
   "confirms": {
     "closeFile": "Luk den aktuelle fil og vend tilbage til startskærmen?"
-  },
-  "export": {
-    "title": "Eksport",
-    "filteredBtn": "⬇ Download filtreret JSON",
-    "embedBtn": "⬇ Download med indlejrede forsidebilleder",
-    "inSelection": "i aktuelt udvalg",
-    "tripSingular": "rejse",
-    "tripPlural": "rejser",
-    "fetchingCovers": "Henter forsidebilleder…",
-    "downloaded": "Downloadet",
-    "withEmbedded": "med indlejrede forsider"
   }
 }

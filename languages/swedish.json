@@ -307,6 +307,17 @@
       "languageDesc": "Sökväg till en språkfil relativt appen (t.ex. languages/swedish.json). Lämna tomt för engelska.",
       "languageApply": "Verkställ",
       "tools": "Verktyg"
+    },
+    "export": {
+      "title": "Exportera",
+      "filteredBtn": "⬇ Hämta filtrerad JSON",
+      "embedBtn": "⬇ Hämta med inbäddade omslagsfoton",
+      "inSelection": "i aktuellt urval",
+      "tripSingular": "resa",
+      "tripPlural": "resor",
+      "fetchingCovers": "Hämtar omslagsbilder…",
+      "downloaded": "Hämtad",
+      "withEmbedded": "med inbäddade omslagsbilder"
     }
   },
   "fileOverlay": {
@@ -337,16 +348,5 @@
   },
   "confirms": {
     "closeFile": "Stäng den aktuella filen och återgå till startskärmen?"
-  },
-  "export": {
-    "title": "Exportera",
-    "filteredBtn": "⬇ Hämta filtrerad JSON",
-    "embedBtn": "⬇ Hämta med inbäddade omslagsfoton",
-    "inSelection": "i aktuellt urval",
-    "tripSingular": "resa",
-    "tripPlural": "resor",
-    "fetchingCovers": "Hämtar omslagsbilder…",
-    "downloaded": "Hämtad",
-    "withEmbedded": "med inbäddade omslagsbilder"
   }
 }

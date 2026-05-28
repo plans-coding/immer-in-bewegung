@@ -307,6 +307,17 @@
       "languageDesc": "Path to a language JSON file relative to the app (e.g. languages/swedish.json). Leave empty for English.",
       "languageApply": "Apply",
       "tools": "Tools"
+    },
+    "export": {
+      "title": "Export",
+      "filteredBtn": "⬇ Download filtered JSON",
+      "embedBtn": "⬇ Download with embedded cover photos",
+      "inSelection": "in current selection",
+      "tripSingular": "trip",
+      "tripPlural": "trips",
+      "fetchingCovers": "Fetching covers…",
+      "downloaded": "Downloaded",
+      "withEmbedded": "with embedded covers"
     }
   },
   "fileOverlay": {
@@ -337,16 +348,5 @@
   },
   "confirms": {
     "closeFile": "Close the current file and return to the start screen?"
-  },
-  "export": {
-    "title": "Export",
-    "filteredBtn": "⬇ Download filtered JSON",
-    "embedBtn": "⬇ Download with embedded cover photos",
-    "inSelection": "in current selection",
-    "tripSingular": "trip",
-    "tripPlural": "trips",
-    "fetchingCovers": "Fetching covers…",
-    "downloaded": "Downloaded",
-    "withEmbedded": "with embedded covers"
   }
 }
