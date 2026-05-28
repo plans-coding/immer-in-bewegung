@@ -302,6 +302,9 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 .ex-cover{height:120px;display:flex;align-items:flex-end;padding:10px 12px;background:var(--s3);position:relative;overflow:hidden;background-size:cover;background-position:center}
 .ex-cover::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55) 0%,transparent 60%)}
 .ex-outer-id{font-size:11px;font-weight:700;font-family:'SF Mono','Consolas',monospace;color:#fff;padding:2px 8px;letter-spacing:.3px;border-radius:4px;position:relative;z-index:1;background:rgba(0,0,0,.45)}
+.genre-badge{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.52);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;letter-spacing:.6px;text-transform:uppercase;z-index:2;pointer-events:none}
+.tv-cover-wrap{position:relative;margin-bottom:10px;flex-shrink:0;border-radius:6px;overflow:hidden}
+.tv-cover-wrap .genre-badge{top:10px;left:10px}
 .ex-body{padding:12px 14px;flex:1}
 .ex-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
 .ex-desc{font-size:12px;color:var(--muted2);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
@@ -1550,6 +1553,12 @@ function isoToFlag(iso) {
   return String.fromCodePoint(0x1F1E6+iso.toUpperCase().charCodeAt(0)-65, 0x1F1E6+iso.toUpperCase().charCodeAt(1)-65);
 }
 
+function parseCoverPhoto(cp) {
+  if (!cp) return { url: null, genre: false };
+  if (cp.startsWith('!genre[') && cp.endsWith(']')) return { url: cp.slice(7, -1), genre: true };
+  return { url: cp, genre: false };
+}
+
 function computeBorderCrossingsArray(days) {
   const all = [];
   (days||[]).forEach(day => {
@@ -1782,14 +1791,16 @@ function makeCard(t, colors) {
   const color = t.TripDomain && colors[t.TripDomain];
   const days = t.NumberOfDays>0 ? `${t.NumberOfDays} ${t.NumberOfDays===1?(T['overview.daysSingular']||'day'):(T['overview.daysPlural']||'days')}` : '';
   const footer = [t.TripYear, days].filter(Boolean).join(' · ');
-  // Cover image: IDB thumbnail (URL only, not genre keywords) → CoverPhoto field → none
+  // Cover image: IDB thumbnail → CoverPhoto field (parse !genre[path] if needed)
   const idbVal = coverPhotosCache && t.CoverPhoto && t.OuterId && coverPhotosCache[t.OuterId];
   const idbUrl = idbVal && (idbVal.startsWith('http') || idbVal.startsWith('/')) ? idbVal : null;
-  const coverUrl = idbUrl || t.CoverPhoto || null;
+  const {url: cpUrl, genre: isGenre} = parseCoverPhoto(t.CoverPhoto);
+  const coverUrl = idbUrl || cpUrl || null;
   const card = document.createElement('div');
   card.className = 'ex-card';
   card.innerHTML = `
     <div class="ex-cover" style="background-color:${color||'var(--navy)'}${coverUrl?`;background-image:url('${h(coverUrl)}'),none`:''}">
+      ${isGenre&&coverUrl?`<span class="genre-badge">genre</span>`:''}
       <span class="ex-outer-id">${h(t.OuterId||t.InnerId)}</span>
     </div>
     <div class="ex-body">
@@ -2824,22 +2835,39 @@ function renderTripView(innerId) {
   // Cover photo between header and body
   const idbCover=coverPhotosCache&&trip.CoverPhoto&&trip.OuterId&&coverPhotosCache[trip.OuterId];
   const idbCoverUrl=idbCover&&(idbCover.startsWith('http')||idbCover.startsWith('//'))?idbCover:null;
-  const coverUrl=idbCoverUrl||trip.CoverPhoto||null;
-  let coverImg=null;
+  const {url:cpUrl,genre:isGenreCover}=parseCoverPhoto(trip.CoverPhoto);
+  const coverUrl=idbCoverUrl||cpUrl||null;
+  let coverWrap=null;
   if(coverUrl){
-    coverImg=document.createElement('img');
-    coverImg.className='tv-cover-strip';
-    coverImg.alt='';
-    coverImg.src=coverUrl;
-    coverImg.onerror=()=>{coverImg.dataset.failed='1';coverImg.style.display='none';};
+    const img=document.createElement('img');
+    img.className='tv-cover-strip';
+    img.alt='';
+    img.style.display='none'; // hide until loaded to prevent flash
+    img.onload=()=>{img.style.display='';};
+    img.onerror=()=>{img.dataset.failed='1';img.style.display='none';};
+    img.src=coverUrl;
+    if(isGenreCover){
+      coverWrap=document.createElement('div');
+      coverWrap.className='tv-cover-wrap';
+      const badge=document.createElement('span');
+      badge.className='genre-badge';
+      badge.textContent='genre';
+      img.style.cssText='width:100%;height:180px;object-fit:cover;display:none';
+      coverWrap.appendChild(img);
+      coverWrap.appendChild(badge);
+      img.onload=()=>{img.style.display='';};
+    } else {
+      coverWrap=img;
+    }
   }
   sumBlock.appendChild(sumHdr);
   sumBlock.appendChild(sumBody);
-  if(coverImg)sumInfo.insertBefore(coverImg,sumInfo.firstChild);
+  if(coverWrap)sumInfo.insertBefore(coverWrap,sumInfo.firstChild);
+  const _coverEl=coverWrap instanceof HTMLImageElement?coverWrap:coverWrap?.querySelector('img');
   sumHdr.addEventListener('click',()=>{
     const hidden=sumBody.style.display==='none';
     sumBody.style.display=hidden?'':'none';
-    if(coverImg&&!coverImg.dataset.failed)coverImg.style.display=hidden?'':'none';
+    if(_coverEl&&!_coverEl.dataset.failed)coverWrap.style.display=hidden?'':'none';
     sumHdr.querySelector('.tv-sum-chev').textContent=hidden?'▾':'▸';
     if(hidden&&_tripMapInst)setTimeout(()=>_tripMapInst.resize(),50);
   });
