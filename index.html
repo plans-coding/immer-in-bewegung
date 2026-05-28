@@ -179,6 +179,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;
 #trip-search:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-g)}
 #trip-search::placeholder{color:var(--muted)}
 #trip-list{flex:1;overflow-y:auto}
+#url-mode-banner{display:none;align-items:center;gap:7px;padding:7px 12px;background:rgba(240,161,66,.13);border-bottom:1px solid rgba(240,161,66,.35);font-size:11.5px;color:var(--text);line-height:1.35;flex-shrink:0}
+#url-mode-banner.on{display:flex}
+#url-mode-banner .umb-icon{font-size:14px;flex-shrink:0}
+[data-theme="dark"] #url-mode-banner{background:rgba(240,161,66,.08);border-bottom-color:rgba(240,161,66,.25)}
 .trip-card{padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;border-left:3px solid transparent;transition:background .1s,border-color .1s}
 .trip-card:hover{background:var(--s3)}
 .trip-card.active{background:var(--accent-g);border-left-color:var(--accent)}
@@ -191,6 +195,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;
 
 /* Form cards */
 .card{background:var(--s2);border:1px solid var(--border);margin:0;border-top:none}
+.card-row{display:flex}
+.card-row .card{flex:1;min-width:0;border-top:1px solid var(--border)}
+.card-row .card+.card{border-left:none}
+@media(max-width:600px){.card-row{flex-direction:column}.card-row .card+.card{border-left:1px solid var(--border);border-top:none}}
 .card-title{padding:10px 18px 0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted)}
 .card-body{padding:10px 18px 16px}
 .meta-block{margin-bottom:16px}
@@ -224,10 +232,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;
 /* Event blocks */
 .ev-block{background:var(--s2);border:1px solid var(--border);border-radius:8px;margin-bottom:10px;overflow:hidden;box-shadow:var(--shadow)}
 .ev-block-hdr{display:flex;align-items:center;gap:10px;padding:9px 14px;background:var(--ev-hdr);border-bottom:2px solid var(--border)}
-.ev-date-inp{flex:1;border:none;background:transparent;font-size:14px;font-weight:700;color:var(--text);font-family:inherit;cursor:pointer;min-width:0}
-.ev-date-inp:focus{outline:none}
-.ev-date-inp::-webkit-calendar-picker-indicator{opacity:.5}
-[data-theme="dark"] .ev-date-inp::-webkit-calendar-picker-indicator{filter:invert(1);opacity:.5}
+.ev-date-inp{flex:1;font-size:14px;font-weight:700;color:var(--text);font-family:inherit}
 .ev-block-body{padding:12px 14px}
 .ev-block-body .fg{margin-bottom:10px}
 .ev-block-body .fg:last-child{margin-bottom:0}
@@ -297,6 +302,9 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 .ex-cover{height:120px;display:flex;align-items:flex-end;padding:10px 12px;background:var(--s3);position:relative;overflow:hidden;background-size:cover;background-position:center}
 .ex-cover::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55) 0%,transparent 60%)}
 .ex-outer-id{font-size:11px;font-weight:700;font-family:'SF Mono','Consolas',monospace;color:#fff;padding:2px 8px;letter-spacing:.3px;border-radius:4px;position:relative;z-index:1;background:rgba(0,0,0,.45)}
+.genre-badge{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.52);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;letter-spacing:.6px;text-transform:uppercase;z-index:2;pointer-events:none}
+.tv-cover-wrap{position:relative;margin-bottom:10px;flex-shrink:0;border-radius:6px;overflow:hidden}
+.tv-cover-wrap .genre-badge{top:10px;left:10px}
 .ex-body{padding:12px 14px;flex:1}
 .ex-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
 .ex-desc{font-size:12px;color:var(--muted2);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
@@ -348,15 +356,68 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 }
 [data-theme="dark"] .maplibregl-popup-tip { border-top-color: var(--s2); border-bottom-color: var(--s2); }
 [data-theme="dark"] .maplibregl-popup-close-button { color: var(--muted2); }
-#map-controls{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:20;display:flex;gap:8px;pointer-events:auto}
+[data-theme="dark"] .tv-summary-map .maplibregl-ctrl-group,
+[data-theme="dark"] #map-container .maplibregl-ctrl-group {
+  background: var(--s2);
+  box-shadow: 0 1px 4px rgba(0,0,0,.5);
+}
+[data-theme="dark"] .tv-summary-map .maplibregl-ctrl-group button,
+[data-theme="dark"] #map-container .maplibregl-ctrl-group button {
+  background-color: transparent;
+  border-bottom-color: var(--border) !important;
+}
+[data-theme="dark"] .tv-summary-map .maplibregl-ctrl-group button:hover,
+[data-theme="dark"] #map-container .maplibregl-ctrl-group button:hover {
+  background-color: var(--s3);
+}
+[data-theme="dark"] .tv-summary-map .maplibregl-ctrl-icon,
+[data-theme="dark"] #map-container .maplibregl-ctrl-icon {
+  filter: invert(1);
+}
+
+/* ── Pin Map Overlay ─────────────────────────────────────── */
+.pin-map-overlay{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;background:var(--bg)}
+.pin-map-header{display:flex;align-items:center;gap:10px;padding:0 14px;height:48px;background:var(--s2);border-bottom:1px solid var(--border);flex-shrink:0}
+.pin-map-title{font-weight:700;font-size:14px;flex:1}
+.pin-map-search-row{display:flex;gap:6px;flex:2;max-width:420px}
+.pin-map-search{flex:1;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--s1);color:var(--text);font-size:13px;font-family:inherit;outline:none;min-width:0}
+.pin-map-search:focus{border-color:var(--accent)}
+.pin-map-search-btn{padding:6px 12px;border:none;border-radius:6px;background:var(--accent);color:#fff;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.pin-map-search-btn:hover{background:var(--accent-d)}
+.pin-map-body{position:relative;flex:1;overflow:hidden}
+.pin-map-map{width:100%;height:100%}
+.pin-map-panel{position:absolute;bottom:12px;left:12px;right:60px;z-index:10;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;box-shadow:0 2px 16px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:8px}
+.pin-map-coords{font-size:12px;color:var(--muted2);font-family:monospace;min-height:16px}
+.pin-map-add-row{display:flex;gap:6px;align-items:center}
+.pin-map-name{flex:1;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--s1);color:var(--text);font-size:13px;font-family:inherit;outline:none;min-width:0}
+.pin-map-name:focus{border-color:var(--accent)}
+.pin-map-add-btn{padding:6px 14px;border:none;border-radius:6px;background:var(--accent);color:#fff;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.pin-map-add-btn:hover{background:var(--accent-d)}
+.pin-map-add-btn:disabled{opacity:.45;cursor:default}
+.pin-map-hint{font-size:11px;color:var(--muted);line-height:1.4}
+.pin-map-done{position:absolute;bottom:12px;right:12px;z-index:10;padding:8px 14px;border:none;border-radius:6px;background:var(--s2);color:var(--text);font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.pin-map-done:hover{background:var(--s3)}
+[data-theme="dark"] .pin-map-map .maplibregl-canvas{filter:invert(1) hue-rotate(180deg)}
+[data-theme="dark"] .pin-map-overlay .maplibregl-ctrl-group{background:var(--s2);box-shadow:0 1px 4px rgba(0,0,0,.5)}
+[data-theme="dark"] .pin-map-overlay .maplibregl-ctrl-group button{background-color:transparent;border-bottom-color:var(--border)!important}
+[data-theme="dark"] .pin-map-overlay .maplibregl-ctrl-group button:hover{background-color:var(--s3)}
+[data-theme="dark"] .pin-map-overlay .maplibregl-ctrl-icon{filter:invert(1)}
+[data-theme="dark"] .pin-map-overlay .maplibregl-popup-content{background:var(--s2);color:var(--text)}
+[data-theme="dark"] .pin-map-overlay .maplibregl-popup-tip{border-top-color:var(--s2);border-bottom-color:var(--s2)}
+
+#map-controls{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:20;display:flex;flex-wrap:wrap;justify-content:center;gap:8px;pointer-events:auto}
 .map-sel{padding:6px 14px;border:1px solid var(--border);border-radius:6px;background:var(--s2);color:var(--text);font-size:13px;font-family:inherit;cursor:pointer;box-shadow:var(--shadow);min-width:200px;outline:none;transition:border-color .12s}
 .map-sel:focus,.map-sel.active{border-color:var(--accent);color:var(--accent)}
-#map-mode-badge{position:absolute;top:54px;left:50%;transform:translateX(-50%);z-index:20;background:var(--accent);color:#fff;font-size:11px;font-weight:700;padding:2px 12px;border-radius:20px;pointer-events:none;letter-spacing:.4px;display:none}
+#map-mode-badge{width:100%;text-align:center;pointer-events:none;display:none}
 #map-mode-badge.on{display:block}
+#map-mode-badge span{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;padding:2px 12px;border-radius:20px;letter-spacing:.4px}
 .map-legend{position:absolute;bottom:30px;right:10px;background:var(--s2);padding:10px 14px;border-radius:8px;font-size:12px;box-shadow:var(--shadow);border:1px solid var(--border);color:var(--text);z-index:10;pointer-events:none}
 .map-legend-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted2);margin-bottom:8px}
 .map-legend-item{display:flex;align-items:center;gap:7px;margin-bottom:5px;font-size:12px;color:var(--text)}
 .map-legend-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;border:1.5px solid rgba(255,255,255,.3)}
+.map-photo-btn{padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--s2);color:var(--text);font-size:15px;line-height:1;cursor:pointer;box-shadow:var(--shadow);transition:background .12s,border-color .12s;flex-shrink:0}
+.map-photo-btn:hover{background:var(--s3)}
+.map-photo-btn.active{border-color:#e74c3c;box-shadow:0 0 0 2px rgba(231,76,60,.25)}
 
 /* About */
 #tab-about{flex-direction:column;overflow-y:auto;background:var(--bg)}
@@ -468,7 +529,7 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
   /* Quick-nav sidebar: larger touch target, shifted toward bottom */
   #tq-toggle{width:44px;height:44px;font-size:20px;top:72%;transform:translateY(-50%)}
   /* Map dropdowns wrap */
-  #map-controls{flex-wrap:wrap;justify-content:center;top:8px;width:90%;transform:translateX(-50%)}
+  #map-controls{top:8px;width:90%;transform:translateX(-50%)}
   .map-sel{min-width:0;width:100%;box-sizing:border-box}
   /* Trip ext buttons wrap under foot */
   .tv-day-foot{flex-wrap:wrap}
@@ -637,7 +698,7 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
     <div id="explore-inner">
       <div class="explore-hdr">
         <h2 data-i18n="explore.title">Discover</h2>
-        <span class="sub" data-i18n="explore.subtitle">6 random trips</span>
+        <span class="sub" data-i18n="explore.subtitle">8 random trips</span>
         <button class="shuffle-btn" id="shuffle-btn"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.6 9.6 0 0 0 7.556 8a9.6 9.6 0 0 0 1.318 1.918C9.827 10.99 11.202 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.6 10.6 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.6 9.6 0 0 0 6.444 8a9.6 9.6 0 0 0-1.318-1.918C4.173 5.01 2.798 4 1 4H.5a.5.5 0 0 1-.5-.5m13-1a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H14v.5a.5.5 0 0 1-1 0V3h-.5a.5.5 0 0 1-.5-.5m0 9a.5.5 0 0 1 .5-.5h.5v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1H14.5a.5.5 0 0 1-.5-.5"/></svg><span data-i18n="explore.shuffle">Shuffle</span></button>
       </div>
       <div class="cards-grid" id="explore-cards"></div>
@@ -661,8 +722,9 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
     <div id="map-controls">
       <select id="map-country-sel" class="map-sel"></select>
       <select id="map-theme-sel" class="map-sel" style="display:none"></select>
+      <button id="map-photo-btn" class="map-photo-btn" style="display:none" title="Toggle Immich photo locations">📷</button>
+      <div id="map-mode-badge"><span></span></div>
     </div>
-    <div id="map-mode-badge"></div>
     <div id="map-container"></div>
   </div>
 
@@ -699,6 +761,7 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
     <button id="ov-list-toggle" data-i18n="editor.tripsToggle">☰ Trips</button>
     <div id="ov-list">
       <button id="new-trip-btn" data-i18n="editor.newTrip">＋ New Trip</button>
+      <div id="url-mode-banner"><span class="umb-icon">⚠</span><span>URL mode — changes cannot be saved back to the source.</span></div>
       <div id="trip-search-wrap">
         <input type="search" id="trip-search" data-i18n-ph="editor.searchPlaceholder" placeholder="Search trips…" autocomplete="off" spellcheck="false">
       </div>
@@ -807,11 +870,15 @@ let mapInstance = null;
 let activeFilter = { domain: [], arranger: [], label: [] };
 let currentFileName = '';
 const APP_VERSION = 'v4';
-const APP_DATE    = '2026-05-25';
+const APP_DATE    = '2026-05-28';
 let mapMode = { type: 'all', value: '' }; // 'all' | 'country' | 'theme'
+let _mapPhotoVisible = false, _mapPhotoLoaded = false, _mapPhotoCountry = ''; // photo layer state
 let currentTab = 'explore';
 let coverPhotosCache = null; // OuterId → thumbnailUrl, loaded from IndexedDB
 let _navBarHidden = false;
+let _editorDirty = false;   // unsaved changes in Editor form
+let _settingsDirty = false;  // unsaved changes in Settings
+let _settingsSnapshot = null; // deep copy of data.Settings when tab was opened
 
 // ── Theme ─────────────────────────────────────────────────────────
 
@@ -984,7 +1051,7 @@ function wire() {
   dz.addEventListener('drop', async e => {
     e.preventDefault(); dz.classList.remove('over');
     if (e.dataTransfer.items?.[0] && 'getAsFileSystemHandle' in e.dataTransfer.items[0]) {
-      try { const hnd = await e.dataTransfer.items[0].getAsFileSystemHandle(); if (hnd.kind==='file') { fileHandle=hnd; await load(await hnd.getFile()); return; } } catch {}
+      try { const hnd = await e.dataTransfer.items[0].getAsFileSystemHandle(); if (hnd.kind==='file') { try { await hnd.requestPermission({mode:'readwrite'}); } catch {} fileHandle=hnd; await load(await hnd.getFile()); return; } } catch {}
     }
     const f = e.dataTransfer.files[0]; if (f) await load(f);
   });
@@ -1001,7 +1068,21 @@ function wire() {
   document.getElementById('trip-search').addEventListener('input', renderTrips);
   document.getElementById('shuffle-btn').addEventListener('click', () => { pickRandomTrips(); renderExplore(); });
   document.getElementById('report-gen-btn').addEventListener('click', generateReport);
-  document.addEventListener('keydown', e => { if ((e.ctrlKey||e.metaKey) && e.key==='s') { e.preventDefault(); saveFile(); } });
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey||e.metaKey) && e.key==='s') {
+      e.preventDefault();
+      if (currentTab==='overview') {
+        if (_editorDirty && selectedId) {
+          saveTrip(selectedId, false); // commits form → resets _editorDirty internally
+        } else {
+          _editorDirty = false; // clear any stale dirty flag (e.g. after Cancel)
+          saveFile();
+        }
+      } else {
+        saveFile();
+      }
+    }
+  });
   // Trip quick-nav drawer toggle
   const tqBtn=document.getElementById('tq-toggle'), tqDrw=document.getElementById('tq-drawer');
   tqBtn.addEventListener('click',()=>{
@@ -1305,7 +1386,7 @@ function wireNavSearch() {
 async function openFile() {
   if ('showOpenFilePicker' in window) {
     try {
-      [fileHandle] = await window.showOpenFilePicker({ types:[{description:'Chronik JSON',accept:{'application/json':['.json']}}] });
+      [fileHandle] = await window.showOpenFilePicker({ types:[{description:'Chronik JSON',accept:{'application/json':['.json']}}], mode:'readwrite' });
       await load(await fileHandle.getFile()); return;
     } catch(err) { if (err.name!=='AbortError') console.warn(err); }
   }
@@ -1377,6 +1458,7 @@ async function loadFromUrl(url) {
     await _initApp(parsed, fileName);
   } catch(err) {
     toast('Failed to load from URL: ' + err.message, 'err');
+  } finally {
     if (btn) { btn.disabled = false; btn.textContent = t('loadScreen.urlButton','Load'); }
   }
 }
@@ -1386,7 +1468,14 @@ async function loadFromUrl(url) {
 async function saveFile() {
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   if (fileHandle) {
-    try { const wr = await fileHandle.createWritable(); await wr.write(blob); await wr.close(); setMod(false); toast(t('toasts.saved','Saved'),'ok'); return; } catch(e) { console.warn(e); }
+    try {
+      // Ensure write permission is granted (handles restored from IDB may be in 'prompt' state)
+      if (fileHandle.queryPermission) {
+        const perm = await fileHandle.queryPermission({ mode:'readwrite' });
+        if (perm !== 'granted') await fileHandle.requestPermission({ mode:'readwrite' });
+      }
+      const wr = await fileHandle.createWritable(); await wr.write(blob); await wr.close(); setMod(false); toast(t('toasts.saved','Saved'),'ok'); return;
+    } catch(e) { console.warn(e); }
   }
   const fname = currentFileName || 'chronik.json';
   const url = URL.createObjectURL(blob);
@@ -1394,7 +1483,11 @@ async function saveFile() {
   URL.revokeObjectURL(url);
   setMod(false); toast('Downloaded as '+fname,'ok');
 }
-function setMod(v) { document.getElementById('mod-dot').classList.toggle('on', v); }
+function setMod(v) {
+  document.getElementById('mod-dot').classList.toggle('on', v);
+  if (v) { if (currentTab==='settings') _settingsDirty = true; }
+  else { _settingsDirty = false; if (currentTab==='settings' && data) _settingsSnapshot = JSON.parse(JSON.stringify(data.Settings)); }
+}
 
 // ── Helpers ───────────────────────────────────────────────────────
 
@@ -1460,6 +1553,12 @@ function isoToFlag(iso) {
   return String.fromCodePoint(0x1F1E6+iso.toUpperCase().charCodeAt(0)-65, 0x1F1E6+iso.toUpperCase().charCodeAt(1)-65);
 }
 
+function parseCoverPhoto(cp) {
+  if (!cp) return { url: null, genre: false };
+  if (cp.startsWith('!genre[') && cp.endsWith(']')) return { url: cp.slice(7, -1), genre: true };
+  return { url: cp, genre: false };
+}
+
 function computeBorderCrossingsArray(days) {
   const all = [];
   (days||[]).forEach(day => {
@@ -1474,7 +1573,7 @@ function computeOverallRoute(mapPins) {
   const names = mapPins.split('\n')
     .map(p => { const m=p.match(/\[([^\]]*)\]/); return m?m[1].trim():null; })
     .filter(n => n&&!n.startsWith('@')&&n!=='');
-  return names.length ? names.join(' > ') : null;
+  return names.length ? names.join(' › ') : null;
 }
 
 // ── Filter ────────────────────────────────────────────────────────
@@ -1615,6 +1714,16 @@ function setHash(hash) {
 }
 
 function switchTab(tab, {updateHash=true}={}) {
+  if (_editorDirty && currentTab==='overview' && tab!=='overview') {
+    if (!confirm('You have unsaved changes in the Editor. Discard them?')) return;
+    clearDetail(); setMod(false);
+  }
+  if (_settingsDirty && currentTab==='settings' && tab!=='settings') {
+    if (!confirm('Settings have unsaved changes. Discard them?')) return;
+    if (_settingsSnapshot) { data.Settings = JSON.parse(JSON.stringify(_settingsSnapshot)); renderSettings(); }
+    _settingsDirty = false; setMod(false);
+  }
+  if (tab==='settings' && data) { _settingsSnapshot = JSON.parse(JSON.stringify(data.Settings)); _settingsDirty = false; }
   currentTab = tab;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab===tab));
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.id===`tab-${tab}`));
@@ -1668,7 +1777,7 @@ window.addEventListener('hashchange', () => {
 
 function pickRandomTrips() {
   const all = filteredTrips();
-  explorePicks = [...all].sort(()=>Math.random()-.5).slice(0,6);
+  explorePicks = [...all].sort(()=>Math.random()-.5).slice(0,8);
 }
 
 function renderExplore() {
@@ -1682,14 +1791,16 @@ function makeCard(t, colors) {
   const color = t.TripDomain && colors[t.TripDomain];
   const days = t.NumberOfDays>0 ? `${t.NumberOfDays} ${t.NumberOfDays===1?(T['overview.daysSingular']||'day'):(T['overview.daysPlural']||'days')}` : '';
   const footer = [t.TripYear, days].filter(Boolean).join(' · ');
-  // Cover image: IDB thumbnail (URL only, not genre keywords) → CoverPhoto field → none
+  // Cover image: IDB thumbnail → CoverPhoto field (parse !genre[path] if needed)
   const idbVal = coverPhotosCache && t.CoverPhoto && t.OuterId && coverPhotosCache[t.OuterId];
   const idbUrl = idbVal && (idbVal.startsWith('http') || idbVal.startsWith('/')) ? idbVal : null;
-  const coverUrl = idbUrl || t.CoverPhoto || null;
+  const {url: cpUrl, genre: isGenre} = parseCoverPhoto(t.CoverPhoto);
+  const coverUrl = idbUrl || cpUrl || null;
   const card = document.createElement('div');
   card.className = 'ex-card';
   card.innerHTML = `
     <div class="ex-cover" style="background-color:${color||'var(--navy)'}${coverUrl?`;background-image:url('${h(coverUrl)}'),none`:''}">
+      ${isGenre&&coverUrl?`<span class="genre-badge">genre</span>`:''}
       <span class="ex-outer-id">${h(t.OuterId||t.InnerId)}</span>
     </div>
     <div class="ex-body">
@@ -1704,6 +1815,8 @@ function makeCard(t, colors) {
 // ── Overview: Trip List (Editor sidebar) ──────────────────────────
 
 function renderTrips() {
+  // Show URL-mode warning when no file handle (loaded from URL)
+  document.getElementById('url-mode-banner')?.classList.toggle('on', !fileHandle);
   const query = (document.getElementById('trip-search')?.value || '').toLowerCase().trim();
   const all = allTrips(), colors = domainColorMap();
   const trips = query ? all.filter(t =>
@@ -1719,16 +1832,16 @@ function renderTrips() {
     list.innerHTML = `<div style="padding:16px;text-align:center;font-size:12px;color:var(--muted)">${t('editor.noMatches','No matches')}</div>`;
     return;
   }
-  trips.forEach(t => {
+  trips.forEach(trip => {
     const el = document.createElement('div');
-    el.className = 'trip-card'+(t.InnerId===selectedId?' active':'');
-    el.dataset.id = t.InnerId;
-    const color = t.TripDomain && colors[t.TripDomain];
+    el.className = 'trip-card'+(trip.InnerId===selectedId?' active':'');
+    el.dataset.id = trip.InnerId;
+    const color = trip.TripDomain && colors[trip.TripDomain];
     el.innerHTML = `
-      <div class="tc-id-row">${t.OuterId?`<span class="tc-outer-id"${color?` style="background:${h(color)};color:${contrastColor(color)}"`:''} >${h(t.OuterId)}</span>`:''}<span class="tc-iid">${h(t.InnerId)}</span></div>
-      <div class="tc-dest">${h(t.OverallDestination||t('overview.noDestination','(no destination)'))}</div>
-      <div class="tc-date">${h(t.DepartureDate||'?')} → ${h(t.ReturnDate||'?')}</div>`;
-    el.addEventListener('click', () => selectTrip(t.InnerId));
+      <div class="tc-id-row">${trip.OuterId?`<span class="tc-outer-id"${color?` style="background:${h(color)};color:${contrastColor(color)}"`:''} >${h(trip.OuterId)}</span>`:''}<span class="tc-iid">${h(trip.InnerId)}</span></div>
+      <div class="tc-dest">${h(trip.OverallDestination||t('overview.noDestination','(no destination)'))}</div>
+      <div class="tc-date">${h(trip.DepartureDate||'?')} → ${h(trip.ReturnDate||'?')}</div>`;
+    el.addEventListener('click', () => selectTrip(trip.InnerId));
     list.appendChild(el);
   });
 }
@@ -1754,11 +1867,9 @@ function newTrip() {
 
 function getOvSections() {
   return [
-    { title:t('editor.sections.tripId','Trip ID'), fields:null },
-    { title:t('editor.sections.classification','Classification'), fields:[{key:'TripDomain',label:t('editor.fields.tripDomain','Trip Domain')},{key:'ArrangerGroup',label:t('editor.fields.arrangerGroup','Arranger Group')}] },
+    { title:t('editor.sections.tripId','Basic'), fields:null },
     { title:t('editor.sections.tripDetails','Trip Details'), fields:[
       {key:'OverallDestination',label:t('editor.fields.overallDestination','Overall Destination'),span:true},
-      {key:'DepartureDate',label:t('editor.fields.departureDate','Departure Date'),type:'date'},{key:'ReturnDate',label:t('editor.fields.returnDate','Return Date'),type:'date'},
       {key:'TripDescription',label:t('editor.fields.tripDescription','Trip Description'),ta:true,span:true},
       {key:'TripLabels',label:t('editor.fields.tripLabels','Trip Labels'),span:true,hint:t('editor.fields.tripLabelsHint','Comma-separated: Label1, Label2')},
     ]},
@@ -1767,8 +1878,6 @@ function getOvSections() {
       {key:'StartNode',label:t('editor.fields.startNode','Start Node')},{key:'EndNode',label:t('editor.fields.endNode','End Node')},
     ]},
     { title:t('editor.sections.photos','Photos'), fields:[
-      {key:'PhotoStarttime',label:t('editor.fields.photoStartTime','Photo Start Time'),type:'time',hint:t('editor.fields.photoStartTimeHint','HH:MM')},
-      {key:'PhotoEndtime',label:t('editor.fields.photoEndTime','Photo End Time'),type:'time',hint:'HH:MM'},
       {key:'PhotoAlbums',label:t('editor.fields.photoAlbums','Photo Albums'),span:true},{key:'CoverPhoto',label:t('editor.fields.coverPhoto','Cover Photo'),span:true},
     ]},
     { title:t('editor.sections.notes','Notes'), fields:[{key:'DocumentationNote',label:t('editor.fields.documentationNote','Documentation Note'),ta:true,span:true}] },
@@ -1776,7 +1885,10 @@ function getOvSections() {
 }
 
 function renderTripForm(tripData, isNew) {
-  const detail = document.getElementById('ov-detail');
+  // Replace with a fresh node to shed any accumulated input/change listeners
+  const _old = document.getElementById('ov-detail');
+  const detail = _old.cloneNode(false); // shallow — no children, no listeners
+  _old.parentNode.replaceChild(detail, _old);
   const domainOptions = parseTripDomains(), arrangerOptions = parseArrangerGroups();
   const colors = domainColorMap();
   const domColor = tripData.TripDomain && colors[tripData.TripDomain];
@@ -1794,9 +1906,13 @@ function renderTripForm(tripData, isNew) {
     else if (f.key==='ArrangerGroup') el=makeSelect('ArrangerGroup',arrangerOptions,val);
     else if (f.ta) el=`<textarea data-key="${f.key}">${h(val)}</textarea>`;
     else el=`<input type="${f.type||'text'}" data-key="${f.key}" value="${h(val)}">`;
+    if (f.key==='MapPins') {
+      return `<div class="fg"><label style="display:flex;align-items:center;gap:6px">${h(f.label)}<button type="button" class="pin-map-open-btn btn btn-g" style="font-size:11px;padding:2px 8px;margin-left:auto">🗺 Map</button></label>${el}${hint}</div>`;
+    }
     return `<div class="fg"><label>${h(f.label)}</label>${el}${hint}</div>`;
   }
-  function makeCard(title,bodyHtml) { return `<div class="card"><div class="card-title">${title}</div><div class="card-body">${bodyHtml}</div></div>`; }
+  const _cardBg = domColor ? `background:${domColor}15` : '';
+  function makeCard(title,bodyHtml,bg) { const _bg=bg!==undefined?bg:_cardBg; return `<div class="card" style="${_bg}">${title?`<div class="card-title">${title}</div>`:''}<div class="card-body"${title?'':' style="padding-top:4px"'}>${bodyHtml}</div></div>`; }
   function renderSecBody(fields) {
     const items=[]; let pair=[];
     fields.forEach(f => {
@@ -1808,15 +1924,34 @@ function renderTripForm(tripData, isNew) {
     return items.join('');
   }
 
-  const tripIdBody=`<div class="form-row"><div class="fg"><label>${t('editor.fields.innerId','Inner ID')}</label><input class="ro" type="text" value="${h(tripData.InnerId)}" readonly></div><div class="fg"><label>${t('editor.fields.outerId','Outer ID')}</label><input type="text" data-key="OuterId" value="${h(tripData.OuterId||'')}"></div></div>`;
+  const _4col = 'display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px';
+  const tripIdBody =
+    `<div style="${_4col};margin-bottom:12px">` +
+    `<div class="fg"><label>${t('editor.fields.innerId','Inner ID')}</label><input class="ro" type="text" value="${h(tripData.InnerId)}" readonly></div>` +
+    fg({key:'OuterId',label:t('editor.fields.outerId','Outer ID')}) +
+    fg({key:'DepartureDate',label:t('editor.fields.departureDate','Departure Date'),type:'date'}) +
+    fg({key:'ReturnDate',label:t('editor.fields.returnDate','Return Date'),type:'date'}) +
+    `</div>` +
+    `<div style="${_4col}">` +
+    fg({key:'TripDomain',label:t('editor.fields.tripDomain','Trip Domain')}) +
+    fg({key:'ArrangerGroup',label:t('editor.fields.arrangerGroup','Arranger Group')}) +
+    fg({key:'PhotoStarttime',label:t('editor.fields.photoStartTime','Photo Start Time'),type:'time'}) +
+    fg({key:'PhotoEndtime',label:t('editor.fields.photoEndTime','Photo End Time'),type:'time'}) +
+    `</div>`;
   const ovSections=getOvSections();
-  const tripIdTitle=t('editor.sections.tripId','Trip ID');
-  const sectionCards = ovSections.map(sec => sec.title===tripIdTitle?makeCard(tripIdTitle,tripIdBody):makeCard(sec.title,renderSecBody(sec.fields))).join('');
+  const tripIdTitle=t('editor.sections.tripId','Basic');
+  const tripDetailsTitle=t('editor.sections.tripDetails','Trip Details');
+  const _basicBg = domColor ? `background:${domColor}22` : 'background:var(--s3)';
+  const _allCards = ovSections.map(sec => {
+    if(sec.title===tripIdTitle) return makeCard(tripIdTitle,tripIdBody,_basicBg);
+    if(sec.title===tripDetailsTitle) return makeCard(null,renderSecBody(sec.fields),_basicBg);
+    return makeCard(sec.title,renderSecBody(sec.fields));
+  });
+  const sectionCards = _allCards.join('');
 
   const hdrStyle = domColor
     ? `background:${domColor};color:${domText};border-color:${domColor}`
     : '';
-  const bodyTint = domColor ? `background:${domColor}0d` : '';
 
   detail.innerHTML=`
     <div style="max-width:680px;padding-bottom:22px;">
@@ -1827,7 +1962,7 @@ function renderTripForm(tripData, isNew) {
       </div>
       <div class="meta-block">
         <div class="meta-hdr" style="${hdrStyle}"><span style="${domColor?`color:${domText}`:''}"> ${t('editor.tripInfo','Trip Information')}</span><span class="card-chev" style="${domColor?`color:${domText};opacity:.7`:''}">▾</span></div>
-        <div class="meta-body" style="${bodyTint}">${sectionCards}</div>
+        <div class="meta-body">${sectionCards}</div>
       </div>
       ${isNew?`<div style="background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:16px;color:var(--muted);font-size:13px;text-align:center;">${t('editor.saveDaysFirst','Save the trip first to manage days.')}</div>`:'<div id="inline-ev"></div>'}
       ${!isNew?`<div style="margin-top:32px;padding:16px 18px;border:1px solid var(--danger);border-radius:8px;background:rgba(218,54,51,0.05);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
@@ -1851,10 +1986,64 @@ function renderTripForm(tripData, isNew) {
       const obj = { InnerId: tripData.InnerId, ...trip };
       const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = `${trip.OuterId||tripData.InnerId}.json`; a.click(); URL.revokeObjectURL(url);
+      const a = document.createElement('a'); a.href = url; a.download = `${tripData.InnerId}.json`; a.click(); URL.revokeObjectURL(url);
     });
   }
   document.getElementById('f-cancel').addEventListener('click', clearDetail);
+
+  // Mark form dirty on any field change → show mod-dot
+  detail.addEventListener('input', () => { _editorDirty = true; setMod(true); });
+  detail.addEventListener('change', () => { _editorDirty = true; setMod(true); });
+
+  // Auto-sync days when departure/return dates change (existing trips only)
+  if (!isNew) {
+    const depInp = detail.querySelector('[data-key="DepartureDate"]');
+    const retInp = detail.querySelector('[data-key="ReturnDate"]');
+    function onDateChange() {
+      const dep = detail.querySelector('[data-key="DepartureDate"]')?.value;
+      const ret = detail.querySelector('[data-key="ReturnDate"]')?.value;
+      if (dep && ret && dep <= ret) {
+        syncDaysToDateRange(tripData.InnerId, dep, ret);
+        renderInlineEvents(tripData.InnerId);
+      }
+    }
+    if (depInp) depInp.addEventListener('change', onDateChange);
+    if (retInp) retInp.addEventListener('change', onDateChange);
+  }
+
+  // Auto-fill OuterId from TripDomain + ArrangerGroup
+  const outerIdInp = detail.querySelector('[data-key="OuterId"]');
+  const domainSel  = detail.querySelector('[data-key="TripDomain"]');
+  const groupSel   = detail.querySelector('[data-key="ArrangerGroup"]');
+  function tryAutoFillOuterId() {
+    if (!outerIdInp || !domainSel || !groupSel) return;
+    const cur = outerIdInp.value.trim();
+    // Only overwrite if empty or already an auto-generated id (XX-N)
+    if (cur && !/^[A-Z]{2}-\d+$/.test(cur)) return;
+    const dom = domainSel.value, grp = groupSel.value;
+    if (!dom || !grp) return;
+    const prefix = (dom[0] + grp[0]).toUpperCase();
+    const re = new RegExp(`^${prefix}-(\\d+)$`);
+    let maxN = 0;
+    Object.entries(data.Trips).forEach(([iid, tr]) => {
+      if (iid === tripData.InnerId) return; // skip self
+      const m = (tr.OuterId||'').match(re);
+      if (m) maxN = Math.max(maxN, parseInt(m[1], 10));
+    });
+    outerIdInp.value = `${prefix}-${maxN + 1}`;
+  }
+  if (domainSel) domainSel.addEventListener('change', tryAutoFillOuterId);
+  if (groupSel)  groupSel.addEventListener('change', tryAutoFillOuterId);
+
+  // Wire up Map Pin Tool button
+  const pinMapOpenBtn = detail.querySelector('.pin-map-open-btn');
+  if (pinMapOpenBtn) {
+    pinMapOpenBtn.addEventListener('click', () => {
+      const ta = detail.querySelector('[data-key="MapPins"]');
+      if (ta) openPinMapModal(ta);
+    });
+  }
+
   if (!isNew) renderInlineEvents(tripData.InnerId);
 }
 
@@ -1868,16 +2057,49 @@ function collectForm() {
   return out;
 }
 
-function saveTrip(innerId, isNew) {
+function syncDaysToDateRange(innerId, dep, ret) {
+  const trip = data.Trips[innerId];
+  if (!trip || !dep || !ret || dep > ret) return;
+  // Build target date list
+  const targets = [];
+  const cur = new Date(dep + 'T12:00:00');
+  const end = new Date(ret + 'T12:00:00');
+  while (cur <= end) { targets.push(cur.toISOString().slice(0,10)); cur.setDate(cur.getDate()+1); }
+  const targetSet = new Set(targets);
+  const existing = trip.Days || [];
+  const existingSet = new Set(existing.map(d => d.Date));
+  // Days to remove
+  const toRemove = existing.filter(d => !targetSet.has(d.Date));
+  function dayHasData(d) {
+    return !!(d.Events?.trim()||d.Accommodation?.trim()||d.AccommodationCoordinates?.trim()||d.AdditionalNotes?.trim()||(d.Countries&&d.Countries.length)||(d.CountriesDuringDay&&d.CountriesDuringDay.length));
+  }
+  const withData = toRemove.filter(dayHasData);
+  if (withData.length) {
+    const list = withData.map(d => d.Date).join('\n');
+    if (!confirm(`These days have data and will be removed:\n${list}\n\nContinue?`)) return false;
+  }
+  // Apply
+  trip.Days = existing.filter(d => targetSet.has(d.Date));
+  targets.forEach(date => { if (!existingSet.has(date)) trip.Days.push({ Date: date }); });
+  trip.Days.sort((a,b) => (a.Date||'').localeCompare(b.Date||''));
+  setMod(true);
+  return true;
+}
+
+async function saveTrip(innerId, isNew) {
   const formData = collectForm();
+  if (!formData.OverallDestination) { toast('Overall Destination is required before saving.', 'err'); return; }
   try {
-    if (isNew) data.Trips[innerId] = { ...formData, Days:[] };
-    else Object.assign(data.Trips[innerId], formData);
-    setMod(true); selectedId=innerId;
+    if (isNew) {
+      data.Trips[innerId] = { ...formData, Days:[] };
+      syncDaysToDateRange(innerId, formData.DepartureDate, formData.ReturnDate);
+    } else Object.assign(data.Trips[innerId], formData);
+    _editorDirty = false; setMod(true); selectedId=innerId;
     renderTrips();
     renderTripForm({ InnerId:innerId, ...data.Trips[innerId] }, false);
     document.querySelectorAll('.trip-card').forEach(el => el.classList.toggle('active', el.dataset.id===innerId));
     toast(isNew?t('toasts.tripCreated','Trip created'):t('toasts.tripSaved','Trip saved'),'ok');
+    if (fileHandle) await saveFile();
   } catch(err) { toast('Error: '+err.message,'err'); }
 }
 function deleteTrip(innerId) {
@@ -1886,7 +2108,7 @@ function deleteTrip(innerId) {
   catch(err) { toast('Error: '+err.message,'err'); }
 }
 function clearDetail() {
-  selectedId=null;
+  _editorDirty = false; selectedId=null;
   document.querySelectorAll('.trip-card').forEach(el=>el.classList.remove('active'));
   document.getElementById('ov-detail').innerHTML=`<div class="empty"><div class="ei">🗺️</div><h3>${t('editor.emptyTitle','No trip selected')}</h3><p>${t('editor.emptySubtitle','Pick one from the list or create a new trip')}</p></div>`;
   // On small screens the list was collapsed when a trip was selected — restore it
@@ -1907,8 +2129,11 @@ function renderInlineEvents(innerId) {
   const days = [...(trip?.Days||[])].sort((a,b)=>(a.Date||'').localeCompare(b.Date||''));
   container.innerHTML='';
   const addBar=document.createElement('div'); addBar.className='ev-add-bar';
-  const addBtn=document.createElement('button'); addBtn.className='btn btn-p'; addBtn.style.cssText='padding:5px 13px;font-size:12px;margin-bottom:8px;'; addBtn.textContent=t('editor.days.addDay','＋ Add Day');
-  addBtn.addEventListener('click',()=>addEvent(innerId)); addBar.appendChild(addBtn); container.appendChild(addBar);
+  if (!trip?.ReturnDate) {
+    const addBtn=document.createElement('button'); addBtn.className='btn btn-p'; addBtn.style.cssText='padding:5px 13px;font-size:12px;margin-bottom:8px;'; addBtn.textContent=t('editor.days.addDay','＋ Add Day');
+    addBtn.addEventListener('click',()=>addEvent(innerId)); addBar.appendChild(addBtn);
+  }
+  container.appendChild(addBar);
   if (!days.length) { const emp=document.createElement('div'); emp.className='ev-empty'; emp.textContent=t('editor.days.noDays','No days yet. Click "+ Add Day" to start.'); container.appendChild(emp); return; }
   days.forEach((day,idx) => container.appendChild(buildEventBlock(day,innerId,idx>0,days[idx-1]||null)));
 }
@@ -1916,7 +2141,7 @@ function renderInlineEvents(innerId) {
 function buildEventBlock(ev, innerId, showCopyBtn, prevEv) {
   const block=document.createElement('div'); block.className='ev-block'; block.dataset.iid=innerId; block.dataset.date=ev.Date||'';
   const hdr=document.createElement('div'); hdr.className='ev-block-hdr';
-  const dateInp=document.createElement('input'); dateInp.type='date'; dateInp.className='ev-date-inp'; dateInp.value=ev.Date||''; dateInp.dataset.col='Date'; dateInp.addEventListener('blur',onEvBlur); hdr.appendChild(dateInp);
+  const dateLbl=document.createElement('span'); dateLbl.className='ev-date-inp'; dateLbl.textContent=ev.Date||''; hdr.appendChild(dateLbl);
   const delBtn=document.createElement('button'); delBtn.className='del-btn'; delBtn.textContent='✕';
   delBtn.addEventListener('click',()=>{ if(confirm(`Delete day on ${block.dataset.date}?`)){const trip=data.Trips[innerId];if(trip){trip.Days=trip.Days.filter(d=>d.Date!==block.dataset.date);setMod(true);renderInlineEvents(innerId);toast(t('toasts.dayDeleted','Day deleted'),'ok');}} });
   hdr.appendChild(delBtn); block.appendChild(hdr);
@@ -1938,8 +2163,24 @@ function buildEventBlock(ev, innerId, showCopyBtn, prevEv) {
   coordRow.appendChild(coordFg);
   coordRow.appendChild(makeEvField(t('editor.days.accuracy','Acc. Accuracy'),'AccommodationCoordinatesAccuracy',ev));
   body.appendChild(coordRow);
-  body.appendChild(makeEvField(t('editor.days.participants','Participants'),'TravelParticipants',ev));
-  body.appendChild(makeEvField(t('editor.days.additionalNotes','Additional Notes'),'AdditionalNotes',ev,true));
+  const partFg=makeEvField(t('editor.days.participants','Participants'),'TravelParticipants',ev);
+  if (showCopyBtn && prevEv) {
+    const pCpBtn=document.createElement('button'); pCpBtn.className='copy-btn'; pCpBtn.textContent=t('editor.days.copyPrev','↑ Copy prev');
+    pCpBtn.addEventListener('click',()=>{
+      const trip=data.Trips[innerId]; const day=trip?.Days.find(d=>d.Date===block.dataset.date); if(!day)return;
+      const val=prevEv.TravelParticipants||null;
+      const inp=partFg.querySelector('[data-col="TravelParticipants"]'); if(inp) inp.value=val||'';
+      day.TravelParticipants=val; setMod(true); toast(t('toasts.accommodationCopied','Copied'),'ok');
+    });
+    partFg.querySelector('label').appendChild(pCpBtn);
+  }
+  body.appendChild(partFg);
+  const notesFg=makeEvField(t('editor.days.additionalNotes','Additional Notes'),'AdditionalNotes',ev,true);
+  const notesLbl=notesFg.querySelector('label'); notesLbl.style.cssText='display:flex;align-items:center;gap:6px';
+  const notesPinBtn=document.createElement('button'); notesPinBtn.type='button'; notesPinBtn.className='btn btn-g';
+  notesPinBtn.style.cssText='font-size:11px;padding:2px 8px;margin-left:auto'; notesPinBtn.textContent='🗺 Map';
+  notesPinBtn.addEventListener('click',()=>{const ta=notesFg.querySelector('textarea');if(ta)openNotesPinMapModal(ta);});
+  notesLbl.appendChild(notesPinBtn); body.appendChild(notesFg);
   body.appendChild(makeEvField(t('editor.days.countriesDuringDay','Countries During Day'),'CountriesDuringDay',ev));
   block.appendChild(body); return block;
 }
@@ -2070,16 +2311,17 @@ async function initTripMap(containerId, trip, domColor, _innerId) {
     container,
     style:{
       version:8,
-      sources:{osm:{type:'raster',tiles:['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],tileSize:256,attribution:'© OpenStreetMap'}},
+      sources:{osm:{type:'raster',tiles:['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],tileSize:256,maxzoom:19,attribution:'© OpenStreetMap'}},
       layers:[{id:'osm',type:'raster',source:'osm'}]
     },
     center: accCoords[0] || [pinData[0].lon, pinData[0].lat],
     zoom: 5,
+    maxZoom: 19,
     attributionControl: false
   });
 
   // ── Built-in controls ────────────────────────────────────────────
-  _tripMapInst.addControl(new maplibregl.NavigationControl({showCompass:false}), 'top-right');
+  _tripMapInst.addControl(new maplibregl.NavigationControl({showCompass:true}), 'top-right');
   _tripMapInst.addControl(new maplibregl.FullscreenControl(), 'top-right');
 
   // ── Photo toggle control ─────────────────────────────────────────
@@ -2200,7 +2442,7 @@ async function initTripMap(containerId, trip, domColor, _innerId) {
     // Fit to all initial features
     if (allInitCoords.length > 1) {
       const lons=allInitCoords.map(c=>c[0]),lats=allInitCoords.map(c=>c[1]);
-      try{_tripMapInst.fitBounds([[Math.min(...lons),Math.min(...lats)],[Math.max(...lons),Math.max(...lats)]],{padding:40,maxZoom:12});}catch{}
+      try{_tripMapInst.fitBounds([[Math.min(...lons),Math.min(...lats)],[Math.max(...lons),Math.max(...lats)]],{padding:40,maxZoom:12,duration:450});}catch{}
     }
   });
 }
@@ -2593,22 +2835,39 @@ function renderTripView(innerId) {
   // Cover photo between header and body
   const idbCover=coverPhotosCache&&trip.CoverPhoto&&trip.OuterId&&coverPhotosCache[trip.OuterId];
   const idbCoverUrl=idbCover&&(idbCover.startsWith('http')||idbCover.startsWith('//'))?idbCover:null;
-  const coverUrl=idbCoverUrl||trip.CoverPhoto||null;
-  let coverImg=null;
+  const {url:cpUrl,genre:isGenreCover}=parseCoverPhoto(trip.CoverPhoto);
+  const coverUrl=idbCoverUrl||cpUrl||null;
+  let coverWrap=null;
   if(coverUrl){
-    coverImg=document.createElement('img');
-    coverImg.className='tv-cover-strip';
-    coverImg.alt='';
-    coverImg.src=coverUrl;
-    coverImg.onerror=()=>{coverImg.dataset.failed='1';coverImg.style.display='none';};
+    const img=document.createElement('img');
+    img.className='tv-cover-strip';
+    img.alt='';
+    img.style.display='none'; // hide until loaded to prevent flash
+    img.onload=()=>{img.style.display='';};
+    img.onerror=()=>{img.dataset.failed='1';img.style.display='none';};
+    img.src=coverUrl;
+    if(isGenreCover){
+      coverWrap=document.createElement('div');
+      coverWrap.className='tv-cover-wrap';
+      const badge=document.createElement('span');
+      badge.className='genre-badge';
+      badge.textContent='genre';
+      img.style.cssText='width:100%;height:180px;object-fit:cover;display:none';
+      coverWrap.appendChild(img);
+      coverWrap.appendChild(badge);
+      img.onload=()=>{img.style.display='';};
+    } else {
+      coverWrap=img;
+    }
   }
   sumBlock.appendChild(sumHdr);
   sumBlock.appendChild(sumBody);
-  if(coverImg)sumInfo.insertBefore(coverImg,sumInfo.firstChild);
+  if(coverWrap)sumInfo.insertBefore(coverWrap,sumInfo.firstChild);
+  const _coverEl=coverWrap instanceof HTMLImageElement?coverWrap:coverWrap?.querySelector('img');
   sumHdr.addEventListener('click',()=>{
     const hidden=sumBody.style.display==='none';
     sumBody.style.display=hidden?'':'none';
-    if(coverImg&&!coverImg.dataset.failed)coverImg.style.display=hidden?'':'none';
+    if(_coverEl&&!_coverEl.dataset.failed)coverWrap.style.display=hidden?'':'none';
     sumHdr.querySelector('.tv-sum-chev').textContent=hidden?'▾':'▸';
     if(hidden&&_tripMapInst)setTimeout(()=>_tripMapInst.resize(),50);
   });
@@ -2875,6 +3134,322 @@ async function ensureMapLibre() {
   await new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/maplibre-gl@4/dist/maplibre-gl.min.js';s.onload=res;s.onerror=rej;document.body.appendChild(s);});
 }
 
+async function openPinMapModal(ta) {
+  await ensureMapLibre();
+
+  // Parse existing pins from textarea: [ Name ]( lat, lon )
+  function parsePins(text) {
+    const re = /\[\s*([^\]]*?)\s*\]\s*\(\s*([-\d.]+)\s*,\s*([-\d.]+)\s*\)/g;
+    const pins = []; let m;
+    while ((m = re.exec(text)) !== null) {
+      pins.push({ name: m[1], lat: parseFloat(m[2]), lon: parseFloat(m[3]) });
+    }
+    return pins;
+  }
+
+  // Build overlay DOM
+  const overlay = document.createElement('div');
+  overlay.className = 'pin-map-overlay';
+  overlay.innerHTML = `
+    <div class="pin-map-header">
+      <span class="pin-map-title">📍 Map Pins</span>
+      <div class="pin-map-search-row">
+        <input class="pin-map-search" type="text" placeholder="Search place…">
+        <button class="pin-map-search-btn">Search</button>
+      </div>
+      <button class="btn btn-g" id="pmo-done" style="margin-left:10px;flex-shrink:0">✓ Done</button>
+    </div>
+    <div class="pin-map-body">
+      <div class="pin-map-map" id="pmo-map"></div>
+      <div class="pin-map-panel">
+        <div class="pin-map-coords" id="pmo-coords">Click on map to place a pin</div>
+        <div class="pin-map-add-row">
+          <input class="pin-map-name" id="pmo-name" type="text" placeholder="Pin name…">
+          <button class="pin-map-add-btn" id="pmo-add" disabled>＋ Add</button>
+        </div>
+        <div class="pin-map-hint">Existing pins shown in yellow. Click map to place new pin (red), name it, then click ＋ Add.</div>
+      </div>
+      <button class="pin-map-done" id="pmo-done2">✓ Done</button>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  const mapEl = overlay.querySelector('#pmo-map');
+  const coordsEl = overlay.querySelector('#pmo-coords');
+  const nameEl = overlay.querySelector('#pmo-name');
+  const addBtn = overlay.querySelector('#pmo-add');
+  const searchInp = overlay.querySelector('.pin-map-search');
+  const searchBtn = overlay.querySelector('.pin-map-search-btn');
+
+  let pendingLng = null, pendingLat = null;
+  let tempMarker = null;
+  const permanentMarkers = [];
+
+  const mapStyle = {
+    version: 8,
+    glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf',
+    sources: { osm: { type:'raster', tiles:['https://tile.openstreetmap.org/{z}/{x}/{y}.png'], tileSize:256, maxzoom:19, attribution:'© OpenStreetMap contributors'} },
+    layers: [{ id:'osm', type:'raster', source:'osm' }]
+  };
+
+  const pmap = new maplibregl.Map({ container: mapEl, style: mapStyle, center: [10, 48], zoom: 3, maxZoom: 19 });
+  pmap.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'top-right');
+
+  // Add existing pins as yellow markers
+  function addPermMarker(pin) {
+    const el = document.createElement('div');
+    el.style.cssText = 'width:14px;height:14px;border-radius:50%;background:#f0a142;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.5);cursor:default';
+    const popup = new maplibregl.Popup({ offset:10, closeButton:false }).setHTML(`<span style="font-size:12px">${pin.name||''}</span>`);
+    const mk = new maplibregl.Marker({ element: el }).setLngLat([pin.lon, pin.lat]).setPopup(popup).addTo(pmap);
+    el.addEventListener('mouseenter', () => popup.addTo(pmap));
+    el.addEventListener('mouseleave', () => popup.remove());
+    permanentMarkers.push(mk);
+  }
+
+  const existingPins = parsePins(ta.value || '');
+  existingPins.forEach(addPermMarker);
+
+  // Fit map to existing pins
+  pmap.on('load', () => {
+    if (existingPins.length === 1) {
+      pmap.setCenter([existingPins[0].lon, existingPins[0].lat]);
+      pmap.setZoom(8);
+    } else if (existingPins.length > 1) {
+      const lngs = existingPins.map(p => p.lon), lats = existingPins.map(p => p.lat);
+      pmap.fitBounds([[Math.min(...lngs), Math.min(...lats)], [Math.max(...lngs), Math.max(...lats)]], { padding: 60, maxZoom: 12, duration: 450 });
+    }
+  });
+
+  // Click to place temp (red) marker
+  pmap.on('click', e => {
+    pendingLng = parseFloat(e.lngLat.lng.toFixed(6));
+    pendingLat = parseFloat(e.lngLat.lat.toFixed(6));
+    coordsEl.textContent = `${pendingLat}, ${pendingLng}`;
+    addBtn.disabled = false;
+    if (tempMarker) tempMarker.remove();
+    const el = document.createElement('div');
+    el.style.cssText = 'width:14px;height:14px;border-radius:50%;background:#e53935;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.5)';
+    tempMarker = new maplibregl.Marker({ element: el }).setLngLat([pendingLng, pendingLat]).addTo(pmap);
+    nameEl.focus();
+  });
+
+  // Add pin to textarea
+  function addPin() {
+    if (pendingLat === null || pendingLng === null) return;
+    const name = nameEl.value.trim() || 'Pin';
+    const line = `[ ${name} ]( ${pendingLat}, ${pendingLng} )`;
+    const cur = ta.value.trim();
+    ta.value = cur ? cur + '\n' + line : line;
+    ta.dispatchEvent(new Event('input', { bubbles: true }));
+
+    // Convert temp marker to yellow permanent
+    addPermMarker({ name, lat: pendingLat, lon: pendingLng });
+    if (tempMarker) { tempMarker.remove(); tempMarker = null; }
+    pendingLat = null; pendingLng = null;
+    nameEl.value = '';
+    coordsEl.textContent = 'Click on map to place a pin';
+    addBtn.disabled = true;
+  }
+
+  addBtn.addEventListener('click', addPin);
+  nameEl.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addPin(); } });
+
+  // Nominatim search
+  async function doSearch() {
+    const q = searchInp.value.trim();
+    if (!q) return;
+    searchBtn.disabled = true; searchBtn.textContent = '…';
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(q)}`, { headers: { 'Accept-Language': 'en' } });
+      const json = await res.json();
+      if (json && json.length) {
+        const r = json[0];
+        pmap.easeTo({ center: [parseFloat(r.lon), parseFloat(r.lat)], zoom: 12, duration: 450 });
+        searchInp.value = r.display_name.split(',')[0];
+      } else { toast('No results found', 'err'); }
+    } catch(e) { toast('Search failed', 'err'); }
+    finally { searchBtn.disabled = false; searchBtn.textContent = 'Search'; }
+  }
+  searchBtn.addEventListener('click', doSearch);
+  searchInp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); doSearch(); } });
+
+  // Close modal
+  function closeModal() {
+    pmap.remove();
+    overlay.remove();
+    document.removeEventListener('keydown', onKey);
+  }
+  function onKey(e) { if (e.key === 'Escape') closeModal(); }
+  document.addEventListener('keydown', onKey);
+  overlay.querySelector('#pmo-done').addEventListener('click', closeModal);
+  overlay.querySelector('#pmo-done2').addEventListener('click', closeModal);
+}
+
+async function openNotesPinMapModal(ta) {
+  await ensureMapLibre();
+
+  const themeExt = data.Settings?.Extension?.Theme;
+  const themesActive = !!(themeExt?.Enabled && themeExt.Items && Object.keys(themeExt.Items).length);
+  const themeItems = themesActive ? themeExt.Items : {}; // { key: label }
+
+  // Parse existing theme-pins from notes: [ Name ]( lat, lon ){ themekey }
+  // Also parse plain pins: [ Name ]( lat, lon )
+  function parsePins(text) {
+    const re = /\[\s*([^\]]*?)\s*\]\s*\(\s*([-\d.]+)\s*,\s*([-\d.]+)\s*\)(?:\s*\{([^}]*)\})?/g;
+    const pins = []; let m;
+    while ((m = re.exec(text)) !== null) {
+      pins.push({ name: m[1], lat: parseFloat(m[2]), lon: parseFloat(m[3]), theme: (m[4]||'').trim() });
+    }
+    return pins;
+  }
+
+  // Build overlay
+  const overlay = document.createElement('div');
+  overlay.className = 'pin-map-overlay';
+
+  const themeDropdownHtml = themesActive
+    ? `<select class="pin-map-search" id="pno-theme-sel" style="min-width:140px;flex:0 0 auto">
+        <option value="">(no theme)</option>
+        ${Object.entries(themeItems).map(([k,lbl])=>`<option value="${h(k)}">${h(lbl)}</option>`).join('')}
+       </select>`
+    : '';
+
+  overlay.innerHTML = `
+    <div class="pin-map-header">
+      <span class="pin-map-title">📍 Additional Notes Pins</span>
+      <div class="pin-map-search-row">
+        <input class="pin-map-search" type="text" id="pno-search" placeholder="Search place…">
+        <button class="pin-map-search-btn" id="pno-search-btn">Search</button>
+      </div>
+      <button class="btn btn-g" id="pno-done" style="margin-left:10px;flex-shrink:0">✓ Done</button>
+    </div>
+    <div class="pin-map-body">
+      <div class="pin-map-map" id="pno-map"></div>
+      <div class="pin-map-panel">
+        <div class="pin-map-coords" id="pno-coords">Click on map to place a pin</div>
+        <div class="pin-map-add-row">
+          <input class="pin-map-name" id="pno-name" type="text" placeholder="Pin name…">
+          ${themeDropdownHtml}
+          <button class="pin-map-add-btn" id="pno-add" disabled>＋ Add</button>
+        </div>
+        <div class="pin-map-hint">${themesActive?'Select a theme (optional) then click map to place pin.':'Click map to place a pin, name it, then click ＋ Add.'}</div>
+      </div>
+      <button class="pin-map-done" id="pno-done2">✓ Done</button>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  const mapEl   = overlay.querySelector('#pno-map');
+  const coordsEl= overlay.querySelector('#pno-coords');
+  const nameEl  = overlay.querySelector('#pno-name');
+  const themeSel= overlay.querySelector('#pno-theme-sel');
+  const addBtn  = overlay.querySelector('#pno-add');
+  const searchInp = overlay.querySelector('#pno-search');
+  const searchBtn = overlay.querySelector('#pno-search-btn');
+
+  let pendingLng = null, pendingLat = null;
+  let tempMarker = null;
+  const permanentMarkers = [];
+
+  const mapStyle = {
+    version: 8,
+    glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf',
+    sources: { osm: { type:'raster', tiles:['https://tile.openstreetmap.org/{z}/{x}/{y}.png'], tileSize:256, maxzoom:19, attribution:'© OpenStreetMap contributors'} },
+    layers: [{ id:'osm', type:'raster', source:'osm' }]
+  };
+
+  const pmap = new maplibregl.Map({ container: mapEl, style: mapStyle, center: [10, 48], zoom: 3, maxZoom: 19 });
+  pmap.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'top-right');
+
+  // Theme-aware pin color (yellow for no theme, colored accent per theme key)
+  const themeColors = ['#f0a142','#3eb8a8','#9b59b6','#e67e22','#2ecc71','#e74c3c','#3498db','#f39c12'];
+  const themeColorMap = {};
+  Object.keys(themeItems).forEach((k,i)=>{ themeColorMap[k]=themeColors[(i+1)%themeColors.length]; });
+
+  function pinColor(themeKey) {
+    if (!themeKey) return '#f0a142';
+    return themeColorMap[themeKey] || '#f0a142';
+  }
+
+  function addPermMarker(pin) {
+    const el = document.createElement('div');
+    const col = pinColor(pin.theme);
+    el.style.cssText = `width:14px;height:14px;border-radius:50%;background:${col};border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.5);cursor:default`;
+    const themeLbl = pin.theme && themeItems[pin.theme] ? ` <em style="opacity:.7">[${themeItems[pin.theme]}]</em>` : (pin.theme ? ` <em style="opacity:.7">[${pin.theme}]</em>` : '');
+    const popup = new maplibregl.Popup({ offset:10, closeButton:false }).setHTML(`<span style="font-size:12px">${pin.name||''}${themeLbl}</span>`);
+    const mk = new maplibregl.Marker({ element: el }).setLngLat([pin.lon, pin.lat]).setPopup(popup).addTo(pmap);
+    el.addEventListener('mouseenter', ()=>popup.addTo(pmap));
+    el.addEventListener('mouseleave', ()=>popup.remove());
+    permanentMarkers.push(mk);
+  }
+
+  const existingPins = parsePins(ta.value || '');
+  existingPins.forEach(addPermMarker);
+
+  pmap.on('load', () => {
+    if (existingPins.length === 1) {
+      pmap.setCenter([existingPins[0].lon, existingPins[0].lat]); pmap.setZoom(8);
+    } else if (existingPins.length > 1) {
+      const lngs=existingPins.map(p=>p.lon), lats=existingPins.map(p=>p.lat);
+      pmap.fitBounds([[Math.min(...lngs),Math.min(...lats)],[Math.max(...lngs),Math.max(...lats)]],{padding:60,maxZoom:12,duration:450});
+    }
+  });
+
+  pmap.on('click', e => {
+    pendingLng = parseFloat(e.lngLat.lng.toFixed(6));
+    pendingLat = parseFloat(e.lngLat.lat.toFixed(6));
+    coordsEl.textContent = `${pendingLat}, ${pendingLng}`;
+    addBtn.disabled = false;
+    if (tempMarker) tempMarker.remove();
+    const el = document.createElement('div');
+    el.style.cssText = 'width:14px;height:14px;border-radius:50%;background:#e53935;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.5)';
+    tempMarker = new maplibregl.Marker({ element: el }).setLngLat([pendingLng, pendingLat]).addTo(pmap);
+    nameEl.focus();
+  });
+
+  function addPin() {
+    if (pendingLat === null || pendingLng === null) return;
+    const name = nameEl.value.trim() || 'Pin';
+    const themeKey = themeSel ? themeSel.value : '';
+    const themedSuffix = themeKey ? ` { ${themeKey} }` : '';
+    const line = `[ ${name} ]( ${pendingLat}, ${pendingLng} )${themedSuffix}`;
+    const cur = ta.value.trim();
+    ta.value = cur ? cur + '\n' + line : line;
+    ta.dispatchEvent(new Event('input', { bubbles: true }));
+    ta.dispatchEvent(new Event('blur',  { bubbles: true }));
+
+    addPermMarker({ name, lat: pendingLat, lon: pendingLng, theme: themeKey });
+    if (tempMarker) { tempMarker.remove(); tempMarker = null; }
+    pendingLat = null; pendingLng = null;
+    nameEl.value = '';
+    coordsEl.textContent = 'Click on map to place a pin';
+    addBtn.disabled = true;
+  }
+
+  addBtn.addEventListener('click', addPin);
+  nameEl.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addPin(); } });
+
+  async function doSearch() {
+    const q = searchInp.value.trim(); if (!q) return;
+    searchBtn.disabled = true; searchBtn.textContent = '…';
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(q)}`, { headers: { 'Accept-Language': 'en' } });
+      const json = await res.json();
+      if (json && json.length) { const r=json[0]; pmap.easeTo({ center:[parseFloat(r.lon),parseFloat(r.lat)], zoom:12, duration:450 }); searchInp.value=r.display_name.split(',')[0]; }
+      else toast('No results found','err');
+    } catch(e) { toast('Search failed','err'); }
+    finally { searchBtn.disabled=false; searchBtn.textContent='Search'; }
+  }
+  searchBtn.addEventListener('click', doSearch);
+  searchInp.addEventListener('keydown', e => { if (e.key==='Enter') { e.preventDefault(); doSearch(); } });
+
+  function closeModal() {
+    pmap.remove(); overlay.remove(); document.removeEventListener('keydown', onKey);
+  }
+  function onKey(e) { if (e.key==='Escape') closeModal(); }
+  document.addEventListener('keydown', onKey);
+  overlay.querySelector('#pno-done').addEventListener('click', closeModal);
+  overlay.querySelector('#pno-done2').addEventListener('click', closeModal);
+}
+
 async function initMap() {
   try { await ensureMapLibre(); } catch(e) { document.getElementById('map-container').innerHTML=`<div class="empty"><div class="ei">🗺️</div><h3>${t('map.loadError','Could not load map')}</h3><p>${t('map.loadErrorHint','Check your internet connection')}</p></div>`; return; }
   const container=document.getElementById('map-container');
@@ -2890,15 +3465,18 @@ async function initMap() {
           type: 'raster',
           tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
           tileSize: 256,
+          maxzoom: 19,
           attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }
       },
       layers: [{ id: 'osm', type: 'raster', source: 'osm' }]
     },
     center: [10, 48],
-    zoom: 3
+    zoom: 3,
+    maxZoom: 19
   });
 
+  mapInstance.addControl(new maplibregl.NavigationControl({showCompass:true}), 'top-right');
   mapInstance.on('load', () => {
     renderMapControls();
     loadMapPins();
@@ -3021,13 +3599,18 @@ function fitMapToBounds(features) {
   });
   if(!coords.length)return;
   const lons=coords.map(c=>c[0]), lats=coords.map(c=>c[1]);
-  try{mapInstance.fitBounds([[Math.min(...lons),Math.min(...lats)],[Math.max(...lons),Math.max(...lats)]],{padding:40});}catch(e){}
+  try{mapInstance.fitBounds([[Math.min(...lons),Math.min(...lats)],[Math.max(...lons),Math.max(...lats)]],{padding:40,duration:450});}catch(e){}
 }
 
 function updateMapPins() {
   const features=buildMapFeatures();
   mapInstance.getSource('pins').setData({ type:'FeatureCollection', features });
   fitMapToBounds(features);
+  // Reset photo layer when mode/country changes
+  if(_mapPhotoVisible){try{mapInstance.setLayoutProperty('map-photo-dots','visibility','none');}catch{}}
+  _mapPhotoVisible=false; _mapPhotoLoaded=false;
+  const photoBtn=document.getElementById('map-photo-btn');
+  if(photoBtn)photoBtn.classList.remove('active');
 }
 
 function renderMapControls() {
@@ -3083,7 +3666,46 @@ function renderMapControls() {
     themeSel.style.display='none';
   }
 
+  // ── Photo button ─────────────────────────────────────────────────
+  const photoCfg=data.Settings?.Photos||{};
+  const immichEnabled=photoCfg.Immich==='Enabled'&&photoCfg.ImmichUrl;
+  const photoBtn=document.getElementById('map-photo-btn');
+  if(photoBtn){
+    photoBtn.style.display=(immichEnabled&&mapMode.type==='country')?'':'none';
+    if(!photoBtn.dataset.wired){
+      photoBtn.dataset.wired='1';
+      photoBtn.addEventListener('click',()=>toggleMapPhotos(photoBtn));
+    }
+  }
+
   updateMapControls();
+}
+
+async function toggleMapPhotos(btn) {
+  if(!mapInstance||!mapInstance.getSource('map-photos'))return;
+  if(_mapPhotoVisible){
+    mapInstance.setLayoutProperty('map-photo-dots','visibility','none');
+    _mapPhotoVisible=false; btn.classList.remove('active'); return;
+  }
+  const country=mapMode.type==='country'?mapMode.value:'';
+  if(!country)return;
+  // Reload if country changed
+  if(!_mapPhotoLoaded||_mapPhotoCountry!==country){
+    btn.disabled=true; btn.style.opacity='0.45';
+    try {
+      const trips=filteredTrips().filter(trip=>(trip.Days||[]).some(d=>d.AccommodationCountry===country));
+      const allDots=[];
+      for(const trip of trips){
+        const coords=await fetchTripImmichPhotoCoords(trip);
+        coords.forEach(p=>allDots.push({type:'Feature',geometry:{type:'Point',coordinates:[p.lon,p.lat]},properties:{id:p.id||''}}));
+      }
+      mapInstance.getSource('map-photos').setData({type:'FeatureCollection',features:allDots});
+      _mapPhotoLoaded=true; _mapPhotoCountry=country;
+    } catch(e){console.warn('Map photo fetch:',e);}
+    btn.disabled=false; btn.style.opacity='1';
+  }
+  mapInstance.setLayoutProperty('map-photo-dots','visibility','visible');
+  _mapPhotoVisible=true; btn.classList.add('active');
 }
 
 function updateMapControls() {
@@ -3091,13 +3713,23 @@ function updateMapControls() {
   const countrySel=document.getElementById('map-country-sel');
   const themeSel=document.getElementById('map-theme-sel');
   const badge=document.getElementById('map-mode-badge');
+  const photoBtn=document.getElementById('map-photo-btn');
   countrySel?.classList.toggle('active', mapMode.type==='country');
   themeSel?.classList.toggle('active', mapMode.type==='theme');
+  // Hide photo button when not in country mode, also hide photo layer
+  if(mapMode.type!=='country'){
+    if(_mapPhotoVisible&&mapInstance){try{mapInstance.setLayoutProperty('map-photo-dots','visibility','none');}catch{}}_mapPhotoVisible=false;_mapPhotoLoaded=false;
+    if(photoBtn){photoBtn.classList.remove('active');photoBtn.style.display='none';}
+  } else {
+    const photoCfg=data.Settings?.Photos||{};
+    const immichEnabled=photoCfg.Immich==='Enabled'&&photoCfg.ImmichUrl;
+    if(photoBtn)photoBtn.style.display=immichEnabled?'':'none';
+  }
   if(mapMode.type==='country'){
-    badge.textContent=`${t('map.showingPrefix','Showing:')} ${mapMode.value}`; badge.classList.add('on');
+    badge.querySelector('span').textContent=`${t('map.showingPrefix','Showing:')} ${mapMode.value}`; badge.classList.add('on');
   } else if(mapMode.type==='theme'){
     const lbl=data.Settings?.Extension?.Theme?.Items?.[mapMode.value]||mapMode.value;
-    badge.textContent=`${t('map.themePrefix','Theme:')} ${lbl}`; badge.classList.add('on');
+    badge.querySelector('span').textContent=`${t('map.themePrefix','Theme:')} ${lbl}`; badge.classList.add('on');
   } else {
     badge.classList.remove('on');
   }
@@ -3139,6 +3771,25 @@ function loadMapPins() {
       'circle-stroke-width':1.5,'circle-stroke-color':'rgba(255,255,255,0.6)','circle-opacity':0.85}});
 
   fitMapToBounds(features);
+
+  // ── Immich photo layer for country mode (empty until toggled) ──
+  mapInstance.addSource('map-photos',{type:'geojson',data:{type:'FeatureCollection',features:[]}});
+  mapInstance.addLayer({id:'map-photo-dots',type:'circle',source:'map-photos',layout:{visibility:'none'},
+    paint:{'circle-radius':4,'circle-color':'#e74c3c','circle-stroke-width':1,'circle-stroke-color':'rgba(255,255,255,0.7)','circle-opacity':0.9}});
+  // Photo dot click → thumbnail popup
+  const _mpImmichBase=(data.Settings?.Photos?.ImmichUrl||'').replace(/\/$/,'');
+  let _mpPhotoPopup=null;
+  mapInstance.on('click','map-photo-dots',e=>{
+    const feat=e.features&&e.features[0]; const assetId=feat?.properties?.id;
+    if(!assetId||!_mpImmichBase)return;
+    if(_mpPhotoPopup){_mpPhotoPopup.remove();_mpPhotoPopup=null;}
+    const thumbUrl=`${_mpImmichBase}/api/assets/${assetId}/thumbnail`;
+    const photoUrl=`${_mpImmichBase}/photos/${assetId}`;
+    const html=`<a href="${photoUrl}" target="_blank" rel="noopener" style="display:block;line-height:0"><img src="${thumbUrl}" style="max-width:180px;max-height:180px;border-radius:6px;display:block" onerror="this.style.display='none'"></a>`;
+    _mpPhotoPopup=new maplibregl.Popup({closeButton:true,closeOnClick:true,maxWidth:'200px'}).setLngLat(e.lngLat).setHTML(html).addTo(mapInstance);
+  });
+  mapInstance.on('mouseenter','map-photo-dots',()=>{mapInstance.getCanvas().style.cursor='pointer';});
+  mapInstance.on('mouseleave','map-photo-dots',()=>{mapInstance.getCanvas().style.cursor='';});
 
   // Legend overlay (only add once)
   if(!document.querySelector('.map-legend')){
@@ -3435,6 +4086,7 @@ function generateReport() {
     const movements=crossings.join(' › ')||'—';
     const numDays=dateDiff(trip.DepartureDate,trip.ReturnDate);
     const days=[...(trip.Days||[])].sort((a,b)=>(a.Date||'').localeCompare(b.Date||''));
+    const _houseIcon=`<svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 2 16 16" fill="currentColor" style="flex-shrink:0"><path d="M8 1 15 7.5V15h-5v-5H6v5H1V7.5Z"/></svg>`;
 
     const daysHtml=days.map((day,idx)=>{
       const wday=getWeekday(day.Date)||'';
@@ -3443,15 +4095,11 @@ function generateReport() {
       const accUrl=coords?`${extMap}${encodeURIComponent(coords)}`:'';
       const accParts=[day.Accommodation, [flag,day.AccommodationCountry].filter(Boolean).join(' '), coords, day.AccommodationCoordinatesAccuracy||''].filter(Boolean).map(v=>h(v)).join(' – ');
       return `<div class="rpt-day">
-        ${day.Events?`<div class="rpt-day-events">${eventsToHtml(day.Events,extMap)}</div>`:''}
-        <div class="rpt-day-foot">
-          <div class="rpt-day-label">
-            <span class="rpt-day-num" style="background:${c};color:${tx}">${idx}</span>
-            <span>${h(wday)}&nbsp;${h(day.Date||'')}</span>
-          </div>
-          ${accUrl?`<a class="rpt-acc-link" href="${h(accUrl)}" target="_blank">🏠 ${accParts}</a>`
-                  :(accParts?`<span class="rpt-acc-link">🏠 ${accParts}</span>`:'')}
+        <div class="rpt-day-hdr">
+          <span class="rpt-day-num" style="color:${c}">${idx}</span><span class="rpt-day-date-str">${h(wday)}&nbsp;${h(day.Date||'')}</span>
         </div>
+        ${day.Events?`<div class="rpt-day-events">${eventsToHtml(day.Events,extMap)}</div>`:''}
+        ${accParts?`<div class="rpt-day-foot">${accUrl?`<a class="rpt-acc-link" href="${h(accUrl)}" target="_blank">${_houseIcon} ${accParts}</a>`:`<span class="rpt-acc-link">${_houseIcon} ${accParts}</span>`}</div>`:''}
       </div>`;
     }).join('');
 
@@ -3552,7 +4200,7 @@ section{break-before:page;page-break-before:always}
 /* Trip section */
 .rpt-trip{display:flex;flex-direction:column}
 .rpt-cover{min-height:160pt;padding:20pt 28pt;display:flex;flex-direction:column;justify-content:flex-end;gap:4pt}
-.rpt-cover-id{display:inline-block;padding:2pt 8pt;border-radius:3pt;font-size:9pt;font-weight:700;font-family:monospace;letter-spacing:.3pt;margin-bottom:6pt;align-self:flex-start}
+.rpt-cover-id{display:inline-block;padding:2pt 8pt;border-radius:3pt;font-size:9pt;font-weight:700;font-family:monospace;letter-spacing:.3pt;margin-bottom:6pt;align-self:flex-start;border:1.5pt solid rgba(255,255,255,.7)}
 .rpt-cover-title{font-size:20pt;font-weight:800;line-height:1.1}
 .rpt-cover-sub{font-size:10.5pt;line-height:1.4;margin-top:3pt}
 
@@ -3568,11 +4216,13 @@ section{break-before:page;page-break-before:always}
 .rpt-days{padding:10pt 28pt;display:flex;flex-direction:column;gap:0}
 .rpt-day{padding:8pt 0;border-bottom:1pt solid #f3f3f3;break-inside:avoid;page-break-inside:avoid}
 .rpt-day:last-child{border-bottom:none}
-.rpt-day-events{font-size:9.5pt;line-height:1.65;white-space:pre-wrap;margin-bottom:5pt;color:#222}
-.rpt-day-foot{display:flex;align-items:flex-start;gap:10pt;font-size:8.5pt;color:#777;flex-wrap:wrap}
-.rpt-day-label{display:flex;align-items:center;gap:5pt;white-space:nowrap;flex-shrink:0}
-.rpt-day-num{display:inline-flex;align-items:center;justify-content:center;width:16pt;height:16pt;border-radius:3pt;font-size:7.5pt;font-weight:700;flex-shrink:0}
-.rpt-acc-link{color:#555;font-size:8.5pt;line-height:1.45}
+.rpt-day-hdr{display:flex;align-items:baseline;gap:12pt;margin-bottom:6pt}
+.rpt-day-num{font-size:9.5pt;font-weight:700}
+.rpt-day-date-str{font-size:9.5pt;font-weight:700;color:#111}
+.rpt-day-events{font-size:9.5pt;line-height:1.65;white-space:pre-wrap;margin-bottom:6pt;color:#222}
+.rpt-day-foot{font-size:9.5pt;color:#777}
+.rpt-acc-link{color:#555;font-size:9.5pt;line-height:1.45}
+.rpt-acc-link svg{width:1em;height:1em;vertical-align:middle;margin-right:2pt}
 
 /* Final page */
 .rpt-final{min-height:calc(100vh - 5cm);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;text-align:center;gap:14pt;padding:40pt}
@@ -3794,7 +4444,7 @@ function renderSettings() {
   const banner=document.createElement('div'); banner.className='st-file-banner';
   const fileInfo=document.createElement('div'); fileInfo.className='st-file-info';
   fileInfo.innerHTML=`<div class="st-file-lbl">${t('settings.currentFile','Current file')}</div><div class="st-file-name">${h(currentFileName||'—')}</div>`;
-  const bannerBtns=document.createElement('div'); bannerBtns.style.cssText='display:flex;gap:8px;align-items:center;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end';
+  const bannerBtns=document.createElement('div'); bannerBtns.style.cssText='display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end';
   // Order: Start screen · Download/Save · Reload from URL (if applicable)
   const closeBtn=document.createElement('button'); closeBtn.className='btn btn-g';
   closeBtn.style.cssText='font-size:12px;display:flex;align-items:center;gap:6px;white-space:nowrap;';
@@ -3829,6 +4479,15 @@ function renderSettings() {
     if(typeof value==='boolean'){inp=document.createElement('input');inp.type='checkbox';inp.checked=value;inp.style.cssText='width:18px;height:18px;accent-color:var(--accent);cursor:pointer;margin-top:8px;';inp.addEventListener('change',()=>{setVal(inp.checked);setMod(true);});}
     else{const serialized=serializeVal(value);const multi=serialized.includes('\n')||(typeof value==='object'&&value!==null);if(multi){inp=document.createElement('textarea');inp.rows=Math.min(Math.max(serialized.split('\n').length+1,3),15);}else{inp=document.createElement('input');inp.type='text';}inp.className='st-val';inp.value=serialized;const origVal=value;inp.addEventListener('blur',()=>{const parsed=parseVal(inp.value,origVal);setVal(parsed);setMod(true);});}
     rowEl.appendChild(inp);
+    (currentSubContainer||currentCard||content).appendChild(rowEl);
+  }
+  function addSelect(setVal,displayKey,value,options){
+    const rowEl=document.createElement('div'); rowEl.className='st-row';
+    const attr=document.createElement('span'); attr.className='st-attr'; attr.textContent=displayKey; rowEl.appendChild(attr);
+    const sel=document.createElement('select'); sel.className='st-val'; sel.style.cursor='pointer';
+    options.forEach(opt=>{const o=document.createElement('option');o.value=opt;o.textContent=opt;if(opt===String(value||''))o.selected=true;sel.appendChild(o);});
+    sel.addEventListener('change',()=>{setVal(sel.value);setMod(true);});
+    rowEl.appendChild(sel);
     (currentSubContainer||currentCard||content).appendChild(rowEl);
   }
   function makeHdr(text){
@@ -3869,7 +4528,7 @@ function renderSettings() {
   makeHdr(t('settings.sections.other','Other'));
   Object.entries(settings.Other||{}).forEach(([k,v])=>{if(_skipKeys.has(k))return;addRow(val=>settings.Other[k]=val,k,v);});
   makeHdr(t('settings.sections.photos','Photos'));
-  Object.entries(settings.Photos||{}).forEach(([k,v])=>{if(_skipKeys.has(k))return;addRow(val=>settings.Photos[k]=val,k,v);});
+  Object.entries(settings.Photos||{}).forEach(([k,v])=>{if(_skipKeys.has(k))return;if(k==='Immich')addSelect(val=>settings.Photos[k]=val,k,v,['Enabled','Disabled']);else addRow(val=>settings.Photos[k]=val,k,v);});
 
   // ── Language card ────────────────────────────────────────────────
   const langCard=document.createElement('div'); langCard.className='st-card';
@@ -3989,6 +4648,17 @@ function renderSettings() {
       toast(t('toasts.swRemoveFailed','Could not remove service worker'),'err');
     }
   });
+  const forceReloadBtn=document.createElement('button'); forceReloadBtn.className='btn btn-g';
+  forceReloadBtn.style.cssText='white-space:nowrap;font-size:13px;flex-shrink:0;padding:9px 20px;border-color:var(--border)';
+  forceReloadBtn.textContent=t('settings.offline.forceReload','⟳ Force reload');
+  forceReloadBtn.addEventListener('click', async () => {
+    forceReloadBtn.disabled=true; forceReloadBtn.textContent='…';
+    try {
+      if('serviceWorker' in navigator){const reg=await navigator.serviceWorker.getRegistration('./sw.js');if(reg)await reg.unregister();}
+      if('caches' in window){const keys=await caches.keys();await Promise.all(keys.map(k=>caches.delete(k)));}
+    } catch(e){console.warn('Force reload cleanup:',e);}
+    location.reload();
+  });
   // Show current status
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.getRegistration('./sw.js').then(reg => {
@@ -4007,7 +4677,9 @@ function renderSettings() {
     swStatus.style.color='var(--muted2)';
     swBtn.disabled=true;
   }
-  swBody.appendChild(swDesc); swBody.appendChild(swBtn);
+  const swBtnGroup=document.createElement('div'); swBtnGroup.style.cssText='display:flex;flex-direction:column;gap:8px;flex-shrink:0';
+  swBtnGroup.appendChild(swBtn); swBtnGroup.appendChild(forceReloadBtn);
+  swBody.appendChild(swDesc); swBody.appendChild(swBtnGroup);
   swCard.appendChild(swHdr); swCard.appendChild(swBody);
   content.appendChild(swCard);
 
