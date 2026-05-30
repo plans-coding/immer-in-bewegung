@@ -2,7 +2,7 @@
   "name": "Bewegung",
   "short_name": "Bewegung",
   "description": "Open source, lightweight travel documentation app.",
-  "start_url": "./bewegung.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "orientation": "any",
   "theme_color": "#1d655e",
