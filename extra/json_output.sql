@@ -87,18 +87,36 @@ WITH grouped_settings AS (
 	),
 	ext_val AS (
 	  SELECT json_group_object(
-		r.Attribute,
-		json_object(
-		  'Enabled',     json(CASE WHEN substr(r.first_line, 1, instr(r.first_line, ',') - 1) = 'Enabled'
-								  THEN 'true' ELSE 'false' END),
-		  'Translation', substr(
-						   substr(r.first_line, instr(r.first_line, ',') + 1), 1,
-						   instr(substr(r.first_line, instr(r.first_line, ',') + 1), ',') - 1),
-		  'Path',        substr(
-						   substr(r.first_line, instr(r.first_line, ',') + 1),
-						   instr(substr(r.first_line, instr(r.first_line, ',') + 1), ',') + 1),
-		  'Items',       json(i.items_val)
-		)
+	    r.Attribute,
+	    json_patch(
+	      json_object(
+	        'Enabled',
+	          json(CASE
+	            WHEN substr(r.first_line, 1, instr(r.first_line, ',') - 1) = 'Enabled'
+	            THEN 'true' ELSE 'false'
+	          END),
+	
+	        'Translation',
+	          substr(
+	            substr(r.first_line, instr(r.first_line, ',') + 1),
+	            1,
+	            instr(substr(r.first_line, instr(r.first_line, ',') + 1), ',') - 1
+	          ),
+	
+	        'Path',
+	          substr(
+	            substr(r.first_line, instr(r.first_line, ',') + 1),
+	            instr(substr(r.first_line, instr(r.first_line, ',') + 1), ',') + 1
+	          )
+	      ),
+	
+	      CASE
+	        WHEN r.Attribute = 'SnapshotUpload'
+	             OR r.rest = ''
+	        THEN json('{}')
+	        ELSE json_object('Items', json(i.items_val))
+	      END
+	    )
 	  ) AS val
 	  FROM ext_raw r
 	  JOIN ext_items i ON r.Attribute = i.Attribute
