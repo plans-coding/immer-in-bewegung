@@ -947,12 +947,25 @@ async function idbKvSet(key, value) {
 // Render Events text as HTML: links for [](){} tokens, plain-escaped text elsewhere, {} hidden
 function eventsToHtml(text, extMapProvider) {
   if (!text) return '';
-  const re = /\[\s*([^\]]*)\]\s*\(\s*([^)]*)\)\s*\{[^}]*\}/g;
+  // Match [name](content){...} (map coords) OR [name](url) (plain link, no trailing {})
+  // The optional {...} group only consumes preceding whitespace when a brace is actually present,
+  // so a plain []() doesn't eat the space that follows it.
+  const re = /\[\s*([^\]]*)\]\s*\(\s*([^)]*)\)(?:\s*(\{[^}]*\}))?/g;
   let out = '', last = 0, m;
   while ((m = re.exec(text)) !== null) {
     out += h(text.slice(last, m.index));
-    const name = m[1].trim(), coords = m[2].trim();
-    const url = (extMapProvider || 'https://www.openstreetmap.org/?mlat=') + encodeURIComponent(coords);
+    const name = m[1].trim(), content = m[2].trim(), hasBrace = !!m[3];
+    let url;
+    if (hasBrace) {
+      // Map-coords format: [name](coords){...} — prepend map provider
+      url = (extMapProvider || 'https://www.openstreetmap.org/?mlat=') + encodeURIComponent(content);
+    } else if (/^https?:\/\//i.test(content) || content.startsWith('/') || content.startsWith('#')) {
+      // Already a full URL/path — use as-is
+      url = content;
+    } else {
+      // Bare coords or place string — treat same as {}  variant, prepend map provider
+      url = (extMapProvider || 'https://www.openstreetmap.org/?mlat=') + encodeURIComponent(content);
+    }
     out += `<a href="${h(url)}" target="_blank" rel="noopener" class="tv-ev-link">${h(name)}</a>`;
     last = m.index + m[0].length;
   }
@@ -960,10 +973,10 @@ function eventsToHtml(text, extMapProvider) {
   return out;
 }
 
-// Strip [](){} tokens to plain text (name only), for snippets / search
+// Strip [](){} and []() tokens to plain text (name only), for snippets / search
 function eventsToPlain(text) {
   if (!text) return '';
-  return text.replace(/\[\s*([^\]]*)\]\s*\(\s*[^)]*\)\s*\{[^}]*\}/g, (_, name) => name.trim());
+  return text.replace(/\[\s*([^\]]*)\]\s*\(\s*[^)]*\)(?:\s*\{[^}]*\})?/g, (_, name) => name.trim());
 }
 
 // ── Boot ──────────────────────────────────────────────────────────
@@ -1817,6 +1830,9 @@ function makeCard(t, colors) {
 function renderTrips() {
   // Show URL-mode warning when no file handle (loaded from URL)
   document.getElementById('url-mode-banner')?.classList.toggle('on', !fileHandle);
+  // Hide New Trip button in URL mode (no write access)
+  const _newBtn = document.getElementById('new-trip-btn');
+  if (_newBtn) _newBtn.style.display = fileHandle ? '' : 'none';
   const query = (document.getElementById('trip-search')?.value || '').toLowerCase().trim();
   const all = allTrips(), colors = domainColorMap();
   const trips = query ? all.filter(t =>
@@ -1861,6 +1877,11 @@ function newTrip() {
   selectedId = null;
   document.querySelectorAll('.trip-card').forEach(el => el.classList.remove('active'));
   renderTripForm({ InnerId: Math.random().toString(16).slice(2,8) }, true);
+  // On small screens auto-collapse the list so the editor detail is visible
+  if(window.innerWidth<=600){
+    const ol=document.getElementById('ov-list'),ot=document.getElementById('ov-list-toggle');
+    if(ol&&!ol.classList.contains('list-hidden')){ol.classList.add('list-hidden');if(ot)ot.textContent=t('editor.tripsToggleCollapsed','☰ Trips ▸');}
+  }
 }
 
 // ── Overview: Trip Form ───────────────────────────────────────────
@@ -1956,8 +1977,8 @@ function renderTripForm(tripData, isNew) {
   detail.innerHTML=`
     <div style="max-width:680px;padding-bottom:22px;">
       <div class="btn-bar">
-        <button class="btn btn-p" id="f-save">${isNew?t('editor.buttons.create','Create Trip'):t('editor.buttons.save','Save Changes')}</button>
-        ${!isNew?`<button class="btn btn-g trip-nav-icon" id="f-dl" title="${t('tripView.downloadJson','Download as JSON')}">${'<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707zm-.5 1.5 3.707 3.707H9.5a.5.5 0 0 1-.5-.5zM7.5 12.5a.5.5 0 0 1-1 0V9.207l-.646.647a.5.5 0 0 1-.708-.708l1.5-1.5a.5.5 0 0 1 .708 0l1.5 1.5a.5.5 0 0 1-.708.708L7.5 9.207z"/></svg>'}</button>`:''}
+        ${fileHandle?`<button class="btn btn-p" id="f-save">${isNew?t('editor.buttons.create','Create Trip'):t('editor.buttons.save','Save Changes')}</button>`:''}
+        ${!isNew?`<button class="btn btn-g trip-nav-icon" id="f-dl" title="${t('tripView.downloadJson','Download as JSON')}">${'<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707zm-.5 1.5 3.707 3.707H9.5a.5.5 0 0 1-.5-.5zM7.5 12.5a.5.5 0 0 1-1 0V9.207l-.646.647a.5.5 0 0 1-.708-.708l1.5-1.5a.5.5 0 0 1 .708 0l1.5 1.5a.5.5 0 0 1-.708.708L7.5 9.207z"/></svg>'}</button><button class="btn btn-g trip-nav-icon" id="f-dl-sql" title="Download as SQL">${'<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zm-7.402 9.967c.084.11.213.166.387.166.184 0 .31-.057.376-.171.072-.114.072-.279.072-.495v-2.46h-.879v2.46c0 .157 0 .242-.03.276-.03.034-.099.034-.137.034-.04 0-.083 0-.108-.024-.024-.025-.024-.094-.024-.207v-.155h-.808v.179c0 .267.067.456.2.566.135.111.349.166.643.166.286 0 .495-.06.628-.181.134-.12.2-.32.2-.598v-2.516h-.92v.96zm-3.21-1.467c.087-.069.205-.103.353-.103q.124.001.218.043a.34.34 0 0 1 .145.122c.034.052.058.114.07.187q.02.108.02.244h.857q.001-.243-.072-.432a.9.9 0 0 0-.215-.323 1 1 0 0 0-.351-.205 1.4 1.4 0 0 0-.477-.073c-.252 0-.46.04-.625.122a1.1 1.1 0 0 0-.397.323 1.2 1.2 0 0 0-.205.456 2.4 2.4 0 0 0-.058.53v.386c0 .19.02.371.058.546.04.171.108.327.205.466.097.137.227.246.397.327.165.078.373.117.625.117q.275.001.477-.073a1 1 0 0 0 .351-.205.9.9 0 0 0 .215-.327q.073-.187.072-.43h-.858q.001.136-.019.244a.5.5 0 0 1-.07.187.34.34 0 0 1-.145.122c-.06.029-.13.043-.219.043-.148 0-.266-.034-.353-.103a.7.7 0 0 1-.196-.27 1.3 1.3 0 0 1-.083-.366 4 4 0 0 1-.018-.39v-.386q0-.19.018-.358c.012-.117.04-.224.083-.32.044-.097.111-.176.196-.245M0 11.5v3a.5.5 0 0 0 .5.5h.585v-1.293a.293.293 0 0 1 .293-.293h.293a.293.293 0 0 1 .293.293V15h.585a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5H.5a.5.5 0 0 0-.5.5"/></svg>'}</button>`:''}
         <button class="btn btn-g ml" id="f-cancel">${t('editor.buttons.cancel','Cancel')}</button>
       </div>
       <div class="meta-block">
@@ -1977,7 +1998,7 @@ function renderTripForm(tripData, isNew) {
     metaHdr.addEventListener('mouseleave', () => metaHdr.style.filter = '');
   }
   metaHdr.addEventListener('click', () => detail.querySelector('.meta-block').classList.toggle('collapsed'));
-  document.getElementById('f-save').addEventListener('click', () => saveTrip(tripData.InnerId, isNew));
+  document.getElementById('f-save')?.addEventListener('click', () => saveTrip(tripData.InnerId, isNew));
   if (!isNew) {
     document.getElementById('f-del').addEventListener('click', () => deleteTrip(tripData.InnerId));
     document.getElementById('f-dl').addEventListener('click', () => {
@@ -1987,6 +2008,97 @@ function renderTripForm(tripData, isNew) {
       const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href = url; a.download = `${tripData.InnerId}.json`; a.click(); URL.revokeObjectURL(url);
+    });
+    document.getElementById('f-dl-sql').addEventListener('click', () => {
+      const trip = data.Trips[tripData.InnerId];
+      if (!trip) return;
+      const obj = { InnerId: tripData.InnerId, ...trip };
+      const jsonStr = JSON.stringify(obj, null, 2);
+      const sqlContent = `-- =========================================================
+-- PASTE JSON HERE
+-- =========================================================
+CREATE TEMP TABLE _json(doc TEXT);
+INSERT INTO _json(doc)
+VALUES (
+'${jsonStr.replace(/'/g, "''")}'
+);
+-- =========================================================
+-- IMPORT: OVERVIEW
+-- =========================================================
+INSERT INTO bewa_Overview (
+    InnerId,
+    OuterId,
+    TripDomain,
+    ArrangerGroup,
+    OverallDestination,
+    DepartureDate,
+    ReturnDate,
+    TripDescription,
+    TripLabels,
+    MapPins,
+    StartNode,
+    EndNode,
+    PhotoStarttime,
+    PhotoEndtime,
+    PhotoAlbums,
+    CoverPhoto,
+    DocumentationNote
+)
+SELECT
+    json_extract(doc, '$.InnerId'),
+    json_extract(doc, '$.OuterId'),
+    json_extract(doc, '$.TripDomain'),
+    json_extract(doc, '$.ArrangerGroup'),
+    json_extract(doc, '$.OverallDestination'),
+    json_extract(doc, '$.DepartureDate'),
+    json_extract(doc, '$.ReturnDate'),
+    json_extract(doc, '$.TripDescription'),
+    json_extract(doc, '$.TripLabels'),
+    json_extract(doc, '$.MapPins'),
+    json_extract(doc, '$.StartNode'),
+    json_extract(doc, '$.EndNode'),
+    json_extract(doc, '$.PhotoStarttime'),
+    json_extract(doc, '$.PhotoEndtime'),
+    json_extract(doc, '$.PhotoAlbums'),
+    json_extract(doc, '$.CoverPhoto'),
+    json_extract(doc, '$.DocumentationNote')
+FROM _json;
+-- =========================================================
+-- IMPORT: EVENTS
+-- =========================================================
+INSERT INTO bewb_Events (
+    InnerId,
+    Date,
+    Events,
+    Accommodation,
+    AccommodationCountry,
+    AccommodationCoordinatesAccuracy,
+    AccommodationCoordinates,
+    TravelParticipants,
+    AdditionalNotes,
+    CountriesDuringDay
+)
+SELECT
+    json_extract(doc, '$.InnerId'),
+    json_extract(d.value, '$.Date'),
+    json_extract(d.value, '$.Events'),
+    json_extract(d.value, '$.Accommodation'),
+    json_extract(d.value, '$.AccommodationCountry'),
+    json_extract(d.value, '$.AccommodationCoordinatesAccuracy'),
+    json_extract(d.value, '$.AccommodationCoordinates'),
+    json_extract(d.value, '$.TravelParticipants'),
+    json_extract(d.value, '$.AdditionalNotes'),
+    json_extract(d.value, '$.CountriesDuringDay')
+FROM _json
+CROSS JOIN json_each(json_extract(doc, '$.Days')) AS d;
+-- =========================================================
+-- CLEANUP
+-- =========================================================
+DROP TABLE _json;
+`;
+      const blob = new Blob([sqlContent], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = `${tripData.InnerId}.sql`; a.click(); URL.revokeObjectURL(url);
     });
   }
   document.getElementById('f-cancel').addEventListener('click', clearDetail);
@@ -4456,7 +4568,42 @@ function renderSettings() {
   dlBtn.style.cssText='font-size:12px;display:flex;align-items:center;gap:6px;white-space:nowrap;';
   dlBtn.innerHTML=_ICON_SAVE+'<span>'+(fileHandle?t('settings.saveFile','Save file'):t('settings.downloadJson','Download JSON'))+'</span>';
   dlBtn.addEventListener('click',()=>{ saveFile(); });
-  bannerBtns.appendChild(closeBtn); bannerBtns.appendChild(dlBtn);
+  bannerBtns.appendChild(closeBtn);
+  // ── Snapshot Upload button (file mode only, if configured) ────────
+  const _snapCfg = settings?.Extension?.SnapshotUpload;
+  if (fileHandle && _snapCfg && _snapCfg.Path) {
+    const snapBtn=document.createElement('button'); snapBtn.className='btn btn-g';
+    snapBtn.style.cssText='font-size:12px;display:flex;align-items:center;gap:6px;white-space:nowrap;';
+    const _snapLabel = _snapCfg.Translation || 'Snapshot';
+    snapBtn.innerHTML='<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M6.502 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/><path d="M14 14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zM4 1a1 1 0 0 0-1 1v10l2.224-2.224a.5.5 0 0 1 .61-.076L8 11l2.157-3.02a.5.5 0 0 1 .76-.063L13 10V4.5h-2A1.5 1.5 0 0 1 9.5 3V1z"/></svg><span>'+h(_snapLabel)+'</span>';
+    const _snapStatus=document.createElement('span');
+    _snapStatus.style.cssText='font-size:11px;font-family:\'SF Mono\',\'Consolas\',monospace;color:var(--muted2);white-space:nowrap;max-width:220px;overflow:hidden;text-overflow:ellipsis;';
+    function _ts(){const d=new Date(),p=n=>String(n).padStart(2,'0');return d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+p(d.getHours())+p(d.getMinutes())+p(d.getSeconds());}
+    snapBtn.addEventListener('click', async () => {
+      snapBtn.disabled=true;
+      _snapStatus.textContent='Uploading…';
+      _snapStatus.style.color='var(--muted2)';
+      try {
+        const file=await fileHandle.getFile();
+        const base=file.name.replace(/\.json$/,'');
+        const name=`${base}_${_ts()}.json`;
+        const snapPath=(_snapCfg.Path||'./').replace(/\/?$/,'/');
+        const appBaseUrl=new URL('./',document.baseURI);
+        const uploadUrl=new URL(snapPath+encodeURIComponent(name),appBaseUrl);
+        const r=await fetch(uploadUrl.href,{method:'PUT',body:file,headers:{'Content-Type':'application/json'}});
+        if(!r.ok) throw new Error('HTTP '+r.status);
+        _snapStatus.textContent='✓ '+name;
+        _snapStatus.style.color='var(--success)';
+      } catch(e) {
+        _snapStatus.textContent='✗ '+e.message;
+        _snapStatus.style.color='var(--danger)';
+      }
+      snapBtn.disabled=false;
+    });
+    bannerBtns.appendChild(snapBtn);
+    bannerBtns.appendChild(_snapStatus);
+  }
+  bannerBtns.appendChild(dlBtn);
   const _reloadUrl = localStorage.getItem('chronik-last-url');
   if (_reloadUrl) {
     const reloadBtn=document.createElement('button'); reloadBtn.className='btn btn-p';
