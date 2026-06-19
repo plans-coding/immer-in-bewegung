@@ -260,6 +260,11 @@
             "Path": "",
             "Translation": ""
           },
+          "SnapshotUpload": {
+            "Enabled": false,
+            "Path": "",
+            "Translation": ""
+          },
           "Theme": {
             "Enabled": false,
             "Items": {},
