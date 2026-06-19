@@ -50,28 +50,39 @@ WITH grouped_settings AS (
 	  SELECT json_group_object(continent, json(countries_json)) AS val
 	  FROM cc_grouped
 	),
-
 	ext_raw AS (
 	  SELECT
-		Attribute,
-		substr(raw.val, 1, instr(raw.val, char(10)) - 1) AS first_line,
-		substr(raw.val, instr(raw.val, char(10)) + 1)     AS rest
+	    Attribute,
+	    CASE
+	      WHEN instr(raw.val, char(10)) > 0
+	        THEN substr(raw.val, 1, instr(raw.val, char(10)) - 1)
+	      ELSE raw.val
+	    END AS first_line,
+	    CASE
+	      WHEN instr(raw.val, char(10)) > 0
+	        THEN substr(raw.val, instr(raw.val, char(10)) + 1)
+	      ELSE ''
+	    END AS rest
 	  FROM raw
 	  WHERE AttributeGroup = 'Extension'
 	),
 	ext_items AS (
 	  SELECT
-		r.Attribute,
-		CASE
-		  WHEN r.Attribute IN ('Movie', 'Theme') THEN (
-			SELECT json_group_object(
-			  substr(e.value, 1, instr(e.value, ':') - 1),
-			  substr(e.value, instr(e.value, ':') + 1)
-			)
-			FROM json_each('["' || replace(r.rest, char(10), '","') || '"]') AS e
-		  )
-		  ELSE '["' || replace(r.rest, char(10), '","') || '"]'
-		END AS items_val
+	    r.Attribute,
+	    CASE
+	      WHEN r.rest = '' THEN '[]'
+	      WHEN r.Attribute IN ('Movie', 'Theme') THEN (
+	        SELECT json_group_object(
+	          substr(e.value, 1, instr(e.value, ':') - 1),
+	          substr(e.value, instr(e.value, ':') + 1)
+	        )
+	        FROM json_each('["' || replace(r.rest, char(10), '","') || '"]') AS e
+	      )
+	      ELSE (
+	        SELECT json_group_array(e.value)
+	        FROM json_each('["' || replace(r.rest, char(10), '","') || '"]') AS e
+	      )
+	    END AS items_val
 	  FROM ext_raw r
 	),
 	ext_val AS (
