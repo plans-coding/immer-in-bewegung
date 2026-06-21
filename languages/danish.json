@@ -166,7 +166,33 @@
       "accuracy": "Koordinatnøjagtighed",
       "participants": "Deltagere",
       "additionalNotes": "Yderligere noter",
-      "countriesDuringDay": "Lande i løbet af dagen"
+      "countriesDuringDay": "Lande i løbet af dagen",
+      "dayLabel": "Dag",
+      "mapButton": "🗺 Kort",
+      "pinMap": {
+        "mapPinsTitle": "📍 Kortnåle",
+        "notesTitle": "📍 Nåle for yderligere noter",
+        "eventsTitle": "📍 Nåle for begivenheder",
+        "searchPlaceholder": "Søg sted…",
+        "searchButton": "Søg",
+        "done": "✓ Færdig",
+        "clickHint": "Klik på kortet for at placere en nål",
+        "namePlaceholder": "Nålens navn…",
+        "add": "＋ Tilføj",
+        "defaultPinName": "Nål",
+        "noTheme": "(intet tema)",
+        "hintExisting": "Eksisterende nåle vises gule. Klik på kortet for at placere en ny nål (rød), giv den et navn, og klik derefter på ＋ Tilføj.",
+        "hintThemed": "Vælg et tema (valgfrit), og klik derefter på kortet for at placere en nål.",
+        "hintPlain": "Klik på kortet for at placere en nål, giv den et navn, og klik derefter på ＋ Tilføj.",
+        "noResults": "Ingen resultater fundet",
+        "searchFailed": "Søgning mislykkedes"
+      },
+      "coordPicker": {
+        "title": "📍 Angiv indkvarteringens placering",
+        "useLocation": "✓ Brug denne placering",
+        "cancel": "Annuller",
+        "hint": "Klik på kortet for at angive indkvarteringens koordinater."
+      }
     },
     "dangerZone": "Farlig zone",
     "deleteWarning": "Sletter permanent denne rejse og alle dens dage."

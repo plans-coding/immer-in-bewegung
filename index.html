@@ -901,7 +901,7 @@ let mapInstance = null;
 let activeFilter = { domain: [], arranger: [], label: [] };
 let currentFileName = '';
 const APP_VERSION = 'v4.1';
-const APP_DATE    = '2026-06-20';
+const APP_DATE    = '2026-06-21';
 let mapMode = { type: 'all', value: '' }; // 'all' | 'country' | 'theme'
 let _mapPhotoVisible = false, _mapPhotoLoaded = false, _mapPhotoCountry = ''; // photo layer state
 let currentTab = 'explore';
@@ -2027,6 +2027,8 @@ DROP TABLE _json;
 `;
 }
 
+const _metaCollapsed = new Set(); // innerIds whose "Trip Information" block the user has collapsed in the Editor
+
 function renderTripForm(tripData, isNew) {
   // Replace with a fresh node to shed any accumulated input/change listeners
   const _old = document.getElementById('ov-detail');
@@ -2101,7 +2103,7 @@ function renderTripForm(tripData, isNew) {
         ${!isNew?`<button class="btn btn-g btn-icon" id="f-dl" title="${t('tripView.downloadJson','Download as JSON')}">${'<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707zm-.5 1.5 3.707 3.707H9.5a.5.5 0 0 1-.5-.5zM7.5 12.5a.5.5 0 0 1-1 0V9.207l-.646.647a.5.5 0 0 1-.708-.708l1.5-1.5a.5.5 0 0 1 .708 0l1.5 1.5a.5.5 0 0 1-.708.708L7.5 9.207z"/></svg>'}</button><button class="btn btn-g btn-icon" id="f-dl-sql" title="${t('editor.buttons.downloadSql','Download as SQL')}">${'<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><line x1="1.5" y1="6" x2="14.5" y2="6"/><line x1="1.5" y1="9.7" x2="14.5" y2="9.7"/><line x1="6" y1="2.5" x2="6" y2="13.5"/><line x1="10.5" y1="2.5" x2="10.5" y2="13.5"/></svg>'}</button>${(fileHandle && data.Settings?.Extension?.SnapshotUpload?.Path)?`<button class="btn btn-g btn-icon" id="f-dl-sql-snap" title="${t('editor.buttons.uploadSqlSnapshot','Upload SQL to WebDAV')}">${'<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M4.406 1.342A5.53 5.53 0 0 1 8 0c2.69 0 4.923 2 5.166 4.579C14.758 4.804 16 6.137 16 7.773 16 9.569 14.502 11 12.687 11H10a.5.5 0 0 1 0-1h2.688C13.979 10 15 8.988 15 7.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 2.825 10.328 1 8 1a4.53 4.53 0 0 0-2.941 1.1c-.757.652-1.153 1.438-1.153 2.055v.448l-.445.049C2.064 4.805 1 5.952 1 7.318 1 8.785 2.23 10 3.781 10H6a.5.5 0 0 1 0 1H3.781C1.708 11 0 9.366 0 7.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383"/><path d="M7.646 4.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V14.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708z"/></svg>'}</button>`:''}`:''}
         ${fileHandle?`<button class="btn btn-p ml" id="f-save">${isNew?t('editor.buttons.create','Create Trip'):t('editor.buttons.save','Save Changes')}</button>`:''}
       </div>
-      <div class="meta-block">
+      <div class="meta-block${_metaCollapsed.has(tripData.InnerId)?' collapsed':''}">
         <div class="meta-hdr" style="${hdrStyle}"><span style="${domColor?`color:${domText}`:''}"> ${t('editor.tripInfo','Trip Information')}</span><span class="meta-hdr-iid" style="${domColor?`color:${domText}`:''}" title="${t('editor.fields.innerId','Inner ID')}">${h(tripData.InnerId)}</span><span class="card-chev" style="${domColor?`color:${domText};opacity:.7`:''}">▾</span></div>
         <div class="meta-body">${sectionCards}</div>
       </div>
@@ -2117,7 +2119,10 @@ function renderTripForm(tripData, isNew) {
     metaHdr.addEventListener('mouseenter', () => metaHdr.style.filter = 'brightness(0.92)');
     metaHdr.addEventListener('mouseleave', () => metaHdr.style.filter = '');
   }
-  metaHdr.addEventListener('click', () => detail.querySelector('.meta-block').classList.toggle('collapsed'));
+  metaHdr.addEventListener('click', () => {
+    const collapsedNow = detail.querySelector('.meta-block').classList.toggle('collapsed');
+    if (collapsedNow) _metaCollapsed.add(tripData.InnerId); else _metaCollapsed.delete(tripData.InnerId);
+  });
   document.getElementById('f-save')?.addEventListener('click', () => saveTrip(tripData.InnerId, isNew));
   if (!isNew) {
     document.getElementById('f-del').addEventListener('click', () => deleteTrip(tripData.InnerId));
@@ -2278,7 +2283,12 @@ async function saveTrip(innerId, isNew) {
 }
 function deleteTrip(innerId) {
   if (!confirm(`Delete trip ${innerId} and all its days?`)) return;
-  try { delete data.Trips[innerId]; setMod(true); selectedId=null; renderTrips(); clearDetail(); toast(t('toasts.tripDeleted','Trip deleted'),'ok'); }
+  try {
+    delete data.Trips[innerId]; setMod(true); selectedId=null; renderTrips(); clearDetail();
+    _metaCollapsed.delete(innerId);
+    [..._evCollapsed].forEach(k => { if (k.startsWith(innerId+'::')) _evCollapsed.delete(k); });
+    toast(t('toasts.tripDeleted','Trip deleted'),'ok');
+  }
   catch(err) { toast('Error: '+err.message,'err'); }
 }
 function clearDetail() {

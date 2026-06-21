@@ -166,7 +166,33 @@
       "accuracy": "Koordinatnoggrannhet",
       "participants": "Deltagare",
       "additionalNotes": "Ytterligare anteckningar",
-      "countriesDuringDay": "Länder under dagen"
+      "countriesDuringDay": "Länder under dagen",
+      "dayLabel": "Dag",
+      "mapButton": "🗺 Karta",
+      "pinMap": {
+        "mapPinsTitle": "📍 Kartnålar",
+        "notesTitle": "📍 Nålar för ytterligare anteckningar",
+        "eventsTitle": "📍 Nålar för händelser",
+        "searchPlaceholder": "Sök plats…",
+        "searchButton": "Sök",
+        "done": "✓ Klar",
+        "clickHint": "Klicka på kartan för att placera en nål",
+        "namePlaceholder": "Nålens namn…",
+        "add": "＋ Lägg till",
+        "defaultPinName": "Nål",
+        "noTheme": "(inget tema)",
+        "hintExisting": "Befintliga nålar visas i gult. Klicka på kartan för att placera en ny nål (röd), ge den ett namn och klicka sedan på ＋ Lägg till.",
+        "hintThemed": "Välj ett tema (valfritt) och klicka sedan på kartan för att placera en nål.",
+        "hintPlain": "Klicka på kartan för att placera en nål, ge den ett namn och klicka sedan på ＋ Lägg till.",
+        "noResults": "Inga resultat hittades",
+        "searchFailed": "Sökningen misslyckades"
+      },
+      "coordPicker": {
+        "title": "📍 Ange boendets plats",
+        "useLocation": "✓ Använd denna plats",
+        "cancel": "Avbryt",
+        "hint": "Klicka på kartan för att ange boendets koordinater."
+      }
     },
     "dangerZone": "Farlig zon",
     "deleteWarning": "Tar bort resan och alla dess dagar permanent."

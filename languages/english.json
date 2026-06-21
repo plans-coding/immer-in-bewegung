@@ -166,7 +166,33 @@
       "accuracy": "Acc. Accuracy",
       "participants": "Participants",
       "additionalNotes": "Additional Notes",
-      "countriesDuringDay": "Countries During Day"
+      "countriesDuringDay": "Countries During Day",
+      "dayLabel": "Day",
+      "mapButton": "🗺 Map",
+      "pinMap": {
+        "mapPinsTitle": "📍 Map Pins",
+        "notesTitle": "📍 Additional Notes Pins",
+        "eventsTitle": "📍 Events Pins",
+        "searchPlaceholder": "Search place…",
+        "searchButton": "Search",
+        "done": "✓ Done",
+        "clickHint": "Click on map to place a pin",
+        "namePlaceholder": "Pin name…",
+        "add": "＋ Add",
+        "defaultPinName": "Pin",
+        "noTheme": "(no theme)",
+        "hintExisting": "Existing pins shown in yellow. Click map to place new pin (red), name it, then click ＋ Add.",
+        "hintThemed": "Select a theme (optional) then click map to place pin.",
+        "hintPlain": "Click map to place a pin, name it, then click ＋ Add.",
+        "noResults": "No results found",
+        "searchFailed": "Search failed"
+      },
+      "coordPicker": {
+        "title": "📍 Set Accommodation Location",
+        "useLocation": "✓ Use this location",
+        "cancel": "Cancel",
+        "hint": "Click the map to set the accommodation's coordinates."
+      }
     },
     "dangerZone": "Danger zone",
     "deleteWarning": "Permanently deletes this trip and all its days."
