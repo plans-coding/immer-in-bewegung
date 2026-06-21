@@ -191,7 +191,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;
 .tc-iid{font-size:10px;color:var(--muted);font-family:'SF Mono','Consolas',monospace}
 .tc-dest{font-size:13px;font-weight:600;color:var(--text)}
 .tc-date{font-size:11px;color:var(--muted);margin-top:2px}
-#ov-detail{flex:1;overflow-y:auto;padding:20px;background:var(--bg)}
+#ov-detail{flex:1;overflow-y:auto;padding:0 20px 20px;background:var(--bg)}
 
 /* Form cards */
 .card{background:var(--s2);border:1px solid var(--border);margin:0;border-top:none}
@@ -205,11 +205,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;
 .meta-hdr{display:flex;align-items:center;gap:8px;padding:11px 18px;cursor:pointer;user-select:none;background:var(--s2);border:1px solid var(--border);border-radius:8px 8px 0 0;transition:background .12s;box-shadow:var(--shadow)}
 .meta-hdr:hover{background:var(--s3)}
 .meta-hdr span{flex:1;font-size:12px;font-weight:600;color:var(--text)}
+.meta-hdr .meta-hdr-iid{flex:0 0 auto;font-weight:600;font-size:10px;font-family:'SF Mono','Consolas',monospace;opacity:.7}
+.meta-hdr .card-chev{flex:0 0 auto}
 .meta-body{border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;overflow:hidden}
 .meta-block.collapsed .meta-hdr{border-radius:8px}
 .meta-block.collapsed .meta-body{display:none}
 .card-chev{font-size:12px;color:var(--muted);transition:transform .2s}
 .meta-block.collapsed .card-chev{transform:rotate(-90deg)}
+.ev-block.collapsed .card-chev{transform:rotate(-90deg)}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .fg{margin-bottom:12px}
 .fg:last-child{margin-bottom:0}
@@ -219,7 +222,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;
 .fg input.ro{background:var(--bg);color:var(--muted);font-family:'SF Mono','Consolas',monospace;cursor:default}
 .fg textarea{min-height:78px;resize:vertical}
 .fg .hint{font-size:11px;color:var(--muted);margin-top:4px}
-.btn-bar{display:flex;gap:8px;align-items:center;margin-bottom:16px}
+.btn-bar{display:flex;gap:8px;align-items:center;margin-bottom:16px;position:sticky;top:0;z-index:40;background:var(--bg);padding:14px 0 10px;box-shadow:0 4px 8px -4px rgba(0,0,0,.15)}
+.btn-bar .btn-icon{padding:8px 9px;display:inline-flex;align-items:center;justify-content:center}
+@media(max-width:480px){
+  .btn-bar{gap:5px}
+  .btn-bar .btn-icon{padding:7px}
+}
+.tripid-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.tripid-grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px}
+@media(max-width:680px){
+  .tripid-grid-3{grid-template-columns:1fr 1fr}
+  .tripid-grid-4{grid-template-columns:1fr 1fr}
+}
+@media(max-width:420px){
+  .tripid-grid-3{grid-template-columns:1fr}
+  .tripid-grid-4{grid-template-columns:1fr}
+}
 .btn{padding:8px 18px;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;transition:filter .12s,box-shadow .12s}
 .btn:hover{filter:brightness(.93)}
 .btn-p{background:var(--accent);color:#fff}
@@ -230,10 +248,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;
 .ml{margin-left:auto}
 
 /* Event blocks */
-.ev-block{background:var(--s2);border:1px solid var(--border);border-radius:8px;margin-bottom:10px;overflow:hidden;box-shadow:var(--shadow)}
-.ev-block-hdr{display:flex;align-items:center;gap:10px;padding:9px 14px;background:var(--ev-hdr);border-bottom:2px solid var(--border)}
+.ev-block{background:var(--s2);border:1px solid var(--border);border-radius:8px;margin-bottom:10px;box-shadow:var(--shadow)}
+.ev-block-hdr{display:flex;align-items:center;gap:10px;padding:9px 14px;background:var(--ev-hdr);border-bottom:2px solid var(--border);border-radius:8px 8px 0 0;cursor:pointer;user-select:none}
+.ev-day-num{flex-shrink:0;font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-g);border-radius:5px;padding:3px 7px;white-space:nowrap}
 .ev-date-inp{flex:1;font-size:14px;font-weight:700;color:var(--text);font-family:inherit}
+.ev-block.collapsed{margin-bottom:8px}
+.ev-block.collapsed .ev-block-hdr{border-bottom:none;border-radius:8px}
+.ev-block.collapsed .ev-block-body{display:none}
+.ev-block .card-chev{flex-shrink:0}
 .ev-block-body{padding:12px 14px}
+.cdd-auto-drop{display:none;position:absolute;top:100%;left:0;right:0;z-index:45;background:var(--s1);border:1px solid var(--border);border-radius:6px;margin-top:2px;max-height:160px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.18)}
+.cdd-auto-drop.open{display:block}
+.cdd-auto-item{padding:6px 10px;font-size:13px;cursor:pointer;color:var(--text)}
+.cdd-auto-item:hover,.cdd-auto-item.active{background:var(--accent-g);color:var(--accent-d)}
 .ev-block-body .fg{margin-bottom:10px}
 .ev-block-body .fg:last-child{margin-bottom:0}
 .ev-block-body .fg label{font-size:12px;font-weight:600;color:var(--muted2);display:flex;align-items:center;gap:8px}
@@ -244,8 +271,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;
 .ev-block-body textarea[data-col="AdditionalNotes"]{min-height:66px}
 .copy-btn{font-size:11px;padding:3px 9px;border:1px solid var(--border);background:var(--s2);color:var(--muted2);border-radius:5px;cursor:pointer;font-weight:600;white-space:nowrap;flex-shrink:0;transition:all .12s}
 .copy-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-g)}
-.ev-block-hdr .del-btn{padding:3px 8px;font-size:11px;border:1px solid var(--border);border-radius:5px;background:transparent;color:var(--muted);cursor:pointer;font-weight:600;flex-shrink:0;transition:all .12s}
-.ev-block-hdr .del-btn:hover{border-color:var(--danger);color:var(--danger);background:rgba(218,54,51,.06)}
 .ev-add-bar{display:flex;justify-content:flex-end;margin-bottom:8px}
 .ev-empty{background:var(--s2);border:2px dashed var(--border);border-radius:8px;padding:28px;text-align:center;color:var(--muted);font-size:13px}
 
@@ -404,6 +429,12 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 [data-theme="dark"] .pin-map-overlay .maplibregl-ctrl-icon{filter:invert(1)}
 [data-theme="dark"] .pin-map-overlay .maplibregl-popup-content{background:var(--s2);color:var(--text)}
 [data-theme="dark"] .pin-map-overlay .maplibregl-popup-tip{border-top-color:var(--s2);border-bottom-color:var(--s2)}
+@media(max-width:640px){
+  .pin-map-header{flex-wrap:wrap;height:auto;padding:10px 12px;gap:8px 10px}
+  .pin-map-title{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;order:1}
+  .pin-map-header .btn{order:2;flex-shrink:0}
+  .pin-map-search-row{order:3;flex:1 1 100%;max-width:none}
+}
 
 #map-controls{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:20;display:flex;flex-wrap:wrap;justify-content:center;gap:8px;pointer-events:auto}
 .map-sel{padding:6px 14px;border:1px solid var(--border);border-radius:6px;background:var(--s2);color:var(--text);font-size:13px;font-family:inherit;cursor:pointer;box-shadow:var(--shadow);min-width:200px;outline:none;transition:border-color .12s}
@@ -1905,116 +1936,14 @@ function getOvSections() {
   ];
 }
 
-function renderTripForm(tripData, isNew) {
-  // Replace with a fresh node to shed any accumulated input/change listeners
-  const _old = document.getElementById('ov-detail');
-  const detail = _old.cloneNode(false); // shallow — no children, no listeners
-  _old.parentNode.replaceChild(detail, _old);
-  const domainOptions = parseTripDomains(), arrangerOptions = parseArrangerGroups();
-  const colors = domainColorMap();
-  const domColor = tripData.TripDomain && colors[tripData.TripDomain];
-  const domText  = domColor ? contrastColor(domColor) : null;
-
-  function makeSelect(key,options,val) {
-    const opts = options.map(o=>`<option value="${h(o)}"${o===val?' selected':''}>${h(o)}</option>`).join('');
-    return `<select data-key="${key}"><option value=""${options.includes(val)?'':' selected'}></option>${opts}</select>`;
-  }
-  function fg(f) {
-    const val = tripData[f.key]!=null ? tripData[f.key] : '';
-    const hint = f.hint?`<div class="hint">${h(f.hint)}</div>`:'';
-    let el;
-    if (f.key==='TripDomain') el=makeSelect('TripDomain',domainOptions,val);
-    else if (f.key==='ArrangerGroup') el=makeSelect('ArrangerGroup',arrangerOptions,val);
-    else if (f.ta) el=`<textarea data-key="${f.key}">${h(val)}</textarea>`;
-    else el=`<input type="${f.type||'text'}" data-key="${f.key}" value="${h(val)}">`;
-    if (f.key==='MapPins') {
-      return `<div class="fg"><label style="display:flex;align-items:center;gap:6px">${h(f.label)}<button type="button" class="pin-map-open-btn btn btn-g" style="font-size:11px;padding:2px 8px;margin-left:auto">🗺 Map</button></label>${el}${hint}</div>`;
-    }
-    return `<div class="fg"><label>${h(f.label)}</label>${el}${hint}</div>`;
-  }
-  const _cardBg = domColor ? `background:${domColor}15` : '';
-  function makeCard(title,bodyHtml,bg) { const _bg=bg!==undefined?bg:_cardBg; return `<div class="card" style="${_bg}">${title?`<div class="card-title">${title}</div>`:''}<div class="card-body"${title?'':' style="padding-top:4px"'}>${bodyHtml}</div></div>`; }
-  function renderSecBody(fields) {
-    const items=[]; let pair=[];
-    fields.forEach(f => {
-      if (f.span) { if(pair.length){items.push(`<div class="form-row">${pair.map(fg).join('')}</div>`);pair=[];} items.push(fg(f)); }
-      else { pair.push(f); if(pair.length===2){items.push(`<div class="form-row">${pair.map(fg).join('')}</div>`);pair=[];} }
-    });
-    if(pair.length===1)items.push(fg(pair[0]));
-    if(pair.length===2)items.push(`<div class="form-row">${pair.map(fg).join('')}</div>`);
-    return items.join('');
-  }
-
-  const _4col = 'display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px';
-  const tripIdBody =
-    `<div style="${_4col};margin-bottom:12px">` +
-    `<div class="fg"><label>${t('editor.fields.innerId','Inner ID')}</label><input class="ro" type="text" value="${h(tripData.InnerId)}" readonly></div>` +
-    fg({key:'OuterId',label:t('editor.fields.outerId','Outer ID')}) +
-    fg({key:'DepartureDate',label:t('editor.fields.departureDate','Departure Date'),type:'date'}) +
-    fg({key:'ReturnDate',label:t('editor.fields.returnDate','Return Date'),type:'date'}) +
-    `</div>` +
-    `<div style="${_4col}">` +
-    fg({key:'TripDomain',label:t('editor.fields.tripDomain','Trip Domain')}) +
-    fg({key:'ArrangerGroup',label:t('editor.fields.arrangerGroup','Arranger Group')}) +
-    fg({key:'PhotoStarttime',label:t('editor.fields.photoStartTime','Photo Start Time'),type:'time'}) +
-    fg({key:'PhotoEndtime',label:t('editor.fields.photoEndTime','Photo End Time'),type:'time'}) +
-    `</div>`;
-  const ovSections=getOvSections();
-  const tripIdTitle=t('editor.sections.tripId','Basic');
-  const tripDetailsTitle=t('editor.sections.tripDetails','Trip Details');
-  const _basicBg = domColor ? `background:${domColor}22` : 'background:var(--s3)';
-  const _allCards = ovSections.map(sec => {
-    if(sec.title===tripIdTitle) return makeCard(tripIdTitle,tripIdBody,_basicBg);
-    if(sec.title===tripDetailsTitle) return makeCard(null,renderSecBody(sec.fields),_basicBg);
-    return makeCard(sec.title,renderSecBody(sec.fields));
-  });
-  const sectionCards = _allCards.join('');
-
-  const hdrStyle = domColor
-    ? `background:${domColor};color:${domText};border-color:${domColor}`
-    : '';
-
-  detail.innerHTML=`
-    <div style="max-width:680px;padding-bottom:22px;">
-      <div class="btn-bar">
-        ${fileHandle?`<button class="btn btn-p" id="f-save">${isNew?t('editor.buttons.create','Create Trip'):t('editor.buttons.save','Save Changes')}</button>`:''}
-        ${!isNew?`<button class="btn btn-g trip-nav-icon" id="f-dl" title="${t('tripView.downloadJson','Download as JSON')}">${'<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707zm-.5 1.5 3.707 3.707H9.5a.5.5 0 0 1-.5-.5zM7.5 12.5a.5.5 0 0 1-1 0V9.207l-.646.647a.5.5 0 0 1-.708-.708l1.5-1.5a.5.5 0 0 1 .708 0l1.5 1.5a.5.5 0 0 1-.708.708L7.5 9.207z"/></svg>'}</button><button class="btn btn-g trip-nav-icon" id="f-dl-sql" title="Download as SQL">${'<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zm-7.402 9.967c.084.11.213.166.387.166.184 0 .31-.057.376-.171.072-.114.072-.279.072-.495v-2.46h-.879v2.46c0 .157 0 .242-.03.276-.03.034-.099.034-.137.034-.04 0-.083 0-.108-.024-.024-.025-.024-.094-.024-.207v-.155h-.808v.179c0 .267.067.456.2.566.135.111.349.166.643.166.286 0 .495-.06.628-.181.134-.12.2-.32.2-.598v-2.516h-.92v.96zm-3.21-1.467c.087-.069.205-.103.353-.103q.124.001.218.043a.34.34 0 0 1 .145.122c.034.052.058.114.07.187q.02.108.02.244h.857q.001-.243-.072-.432a.9.9 0 0 0-.215-.323 1 1 0 0 0-.351-.205 1.4 1.4 0 0 0-.477-.073c-.252 0-.46.04-.625.122a1.1 1.1 0 0 0-.397.323 1.2 1.2 0 0 0-.205.456 2.4 2.4 0 0 0-.058.53v.386c0 .19.02.371.058.546.04.171.108.327.205.466.097.137.227.246.397.327.165.078.373.117.625.117q.275.001.477-.073a1 1 0 0 0 .351-.205.9.9 0 0 0 .215-.327q.073-.187.072-.43h-.858q.001.136-.019.244a.5.5 0 0 1-.07.187.34.34 0 0 1-.145.122c-.06.029-.13.043-.219.043-.148 0-.266-.034-.353-.103a.7.7 0 0 1-.196-.27 1.3 1.3 0 0 1-.083-.366 4 4 0 0 1-.018-.39v-.386q0-.19.018-.358c.012-.117.04-.224.083-.32.044-.097.111-.176.196-.245M0 11.5v3a.5.5 0 0 0 .5.5h.585v-1.293a.293.293 0 0 1 .293-.293h.293a.293.293 0 0 1 .293.293V15h.585a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5H.5a.5.5 0 0 0-.5.5"/></svg>'}</button>`:''}
-        <button class="btn btn-g ml" id="f-cancel">${t('editor.buttons.cancel','Cancel')}</button>
-      </div>
-      <div class="meta-block">
-        <div class="meta-hdr" style="${hdrStyle}"><span style="${domColor?`color:${domText}`:''}"> ${t('editor.tripInfo','Trip Information')}</span><span class="card-chev" style="${domColor?`color:${domText};opacity:.7`:''}">▾</span></div>
-        <div class="meta-body">${sectionCards}</div>
-      </div>
-      ${isNew?`<div style="background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:16px;color:var(--muted);font-size:13px;text-align:center;">${t('editor.saveDaysFirst','Save the trip first to manage days.')}</div>`:'<div id="inline-ev"></div>'}
-      ${!isNew?`<div style="margin-top:32px;padding:16px 18px;border:1px solid var(--danger);border-radius:8px;background:rgba(218,54,51,0.05);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
-        <div style="font-size:13px;color:var(--muted2);line-height:1.5"><strong style="color:var(--danger)">${t('editor.dangerZone','Danger zone')}</strong><br>${t('editor.deleteWarning','Permanently deletes this trip and all its days.')}</div>
-        <button class="btn btn-d" id="f-del" style="flex-shrink:0">${t('editor.buttons.delete','Delete Trip')}</button>
-      </div>`:''}
-    </div>`;
-
-  const metaHdr = detail.querySelector('.meta-hdr');
-  if (domColor) {
-    metaHdr.addEventListener('mouseenter', () => metaHdr.style.filter = 'brightness(0.92)');
-    metaHdr.addEventListener('mouseleave', () => metaHdr.style.filter = '');
-  }
-  metaHdr.addEventListener('click', () => detail.querySelector('.meta-block').classList.toggle('collapsed'));
-  document.getElementById('f-save')?.addEventListener('click', () => saveTrip(tripData.InnerId, isNew));
-  if (!isNew) {
-    document.getElementById('f-del').addEventListener('click', () => deleteTrip(tripData.InnerId));
-    document.getElementById('f-dl').addEventListener('click', () => {
-      const trip = data.Trips[tripData.InnerId];
-      if (!trip) return;
-      const obj = { InnerId: tripData.InnerId, ...trip };
-      const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = `${tripData.InnerId}.json`; a.click(); URL.revokeObjectURL(url);
-    });
-    document.getElementById('f-dl-sql').addEventListener('click', () => {
-      const trip = data.Trips[tripData.InnerId];
-      if (!trip) return;
-      const obj = { InnerId: tripData.InnerId, ...trip };
-      const jsonStr = JSON.stringify(obj, null, 2);
-      const sqlContent = `-- =========================================================
+// Builds the "paste into SQLite" export script for a single trip (used by both the
+// Download-as-SQL button and the WebDAV snapshot-upload button). Returns null if the trip doesn't exist.
+function buildTripSqlExport(innerId) {
+  const trip = data.Trips[innerId];
+  if (!trip) return null;
+  const obj = { InnerId: innerId, ...trip };
+  const jsonStr = JSON.stringify(obj, null, 2);
+  return `-- =========================================================
 -- PASTE JSON HERE
 -- =========================================================
 CREATE TEMP TABLE _json(doc TEXT);
@@ -2096,10 +2025,143 @@ CROSS JOIN json_each(json_extract(doc, '$.Days')) AS d;
 -- =========================================================
 DROP TABLE _json;
 `;
+}
+
+function renderTripForm(tripData, isNew) {
+  // Replace with a fresh node to shed any accumulated input/change listeners
+  const _old = document.getElementById('ov-detail');
+  const detail = _old.cloneNode(false); // shallow — no children, no listeners
+  _old.parentNode.replaceChild(detail, _old);
+  const domainOptions = parseTripDomains(), arrangerOptions = parseArrangerGroups();
+  const colors = domainColorMap();
+  const domColor = tripData.TripDomain && colors[tripData.TripDomain];
+  const domText  = domColor ? contrastColor(domColor) : null;
+
+  function makeSelect(key,options,val) {
+    const opts = options.map(o=>`<option value="${h(o)}"${o===val?' selected':''}>${h(o)}</option>`).join('');
+    return `<select data-key="${key}"><option value=""${options.includes(val)?'':' selected'}></option>${opts}</select>`;
+  }
+  function fg(f) {
+    const val = tripData[f.key]!=null ? tripData[f.key] : '';
+    const hint = f.hint?`<div class="hint">${h(f.hint)}</div>`:'';
+    let el;
+    if (f.key==='TripDomain') el=makeSelect('TripDomain',domainOptions,val);
+    else if (f.key==='ArrangerGroup') el=makeSelect('ArrangerGroup',arrangerOptions,val);
+    else if (f.ta) el=`<textarea data-key="${f.key}">${h(val)}</textarea>`;
+    else el=`<input type="${f.type||'text'}" data-key="${f.key}" value="${h(val)}">`;
+    if (f.key==='MapPins') {
+      return `<div class="fg"><label style="display:flex;align-items:center;gap:6px">${h(f.label)}<button type="button" class="pin-map-open-btn btn btn-g" style="font-size:11px;padding:2px 8px;margin-left:auto">${t('editor.days.mapButton','🗺 Map')}</button></label>${el}${hint}</div>`;
+    }
+    return `<div class="fg"><label>${h(f.label)}</label>${el}${hint}</div>`;
+  }
+  const _cardBg = domColor ? `background:${domColor}15` : '';
+  function makeCard(title,bodyHtml,bg) { const _bg=bg!==undefined?bg:_cardBg; return `<div class="card" style="${_bg}">${title?`<div class="card-title">${title}</div>`:''}<div class="card-body"${title?'':' style="padding-top:4px"'}>${bodyHtml}</div></div>`; }
+  function renderSecBody(fields) {
+    const items=[]; let pair=[];
+    fields.forEach(f => {
+      if (f.span) { if(pair.length){items.push(`<div class="form-row">${pair.map(fg).join('')}</div>`);pair=[];} items.push(fg(f)); }
+      else { pair.push(f); if(pair.length===2){items.push(`<div class="form-row">${pair.map(fg).join('')}</div>`);pair=[];} }
+    });
+    if(pair.length===1)items.push(fg(pair[0]));
+    if(pair.length===2)items.push(`<div class="form-row">${pair.map(fg).join('')}</div>`);
+    return items.join('');
+  }
+
+  const tripIdBody =
+    `<div class="tripid-grid-3" style="margin-bottom:12px">` +
+    fg({key:'OuterId',label:t('editor.fields.outerId','Outer ID')}) +
+    fg({key:'DepartureDate',label:t('editor.fields.departureDate','Departure Date'),type:'date'}) +
+    fg({key:'ReturnDate',label:t('editor.fields.returnDate','Return Date'),type:'date'}) +
+    `</div>` +
+    `<div class="tripid-grid-4">` +
+    fg({key:'TripDomain',label:t('editor.fields.tripDomain','Trip Domain')}) +
+    fg({key:'ArrangerGroup',label:t('editor.fields.arrangerGroup','Arranger Group')}) +
+    fg({key:'PhotoStarttime',label:t('editor.fields.photoStartTime','Photo Start Time'),type:'time'}) +
+    fg({key:'PhotoEndtime',label:t('editor.fields.photoEndTime','Photo End Time'),type:'time'}) +
+    `</div>`;
+  const ovSections=getOvSections();
+  const tripIdTitle=t('editor.sections.tripId','Basic');
+  const tripDetailsTitle=t('editor.sections.tripDetails','Trip Details');
+  const _basicBg = domColor ? `background:${domColor}22` : 'background:var(--s3)';
+  const _allCards = ovSections.map(sec => {
+    if(sec.title===tripIdTitle) return makeCard(tripIdTitle,tripIdBody,_basicBg);
+    if(sec.title===tripDetailsTitle) return makeCard(null,renderSecBody(sec.fields),_basicBg);
+    return makeCard(sec.title,renderSecBody(sec.fields));
+  });
+  const sectionCards = _allCards.join('');
+
+  const hdrStyle = domColor
+    ? `background:${domColor};color:${domText};border-color:${domColor}`
+    : '';
+
+  detail.innerHTML=`
+    <div style="max-width:680px;padding-bottom:22px;">
+      <div class="btn-bar">
+        <button class="btn btn-g" id="f-cancel">${t('editor.buttons.cancel','Cancel')}</button>
+        ${!isNew?`<button class="btn btn-g btn-icon" id="f-dl" title="${t('tripView.downloadJson','Download as JSON')}">${'<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707zm-.5 1.5 3.707 3.707H9.5a.5.5 0 0 1-.5-.5zM7.5 12.5a.5.5 0 0 1-1 0V9.207l-.646.647a.5.5 0 0 1-.708-.708l1.5-1.5a.5.5 0 0 1 .708 0l1.5 1.5a.5.5 0 0 1-.708.708L7.5 9.207z"/></svg>'}</button><button class="btn btn-g btn-icon" id="f-dl-sql" title="${t('editor.buttons.downloadSql','Download as SQL')}">${'<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><line x1="1.5" y1="6" x2="14.5" y2="6"/><line x1="1.5" y1="9.7" x2="14.5" y2="9.7"/><line x1="6" y1="2.5" x2="6" y2="13.5"/><line x1="10.5" y1="2.5" x2="10.5" y2="13.5"/></svg>'}</button>${(fileHandle && data.Settings?.Extension?.SnapshotUpload?.Path)?`<button class="btn btn-g btn-icon" id="f-dl-sql-snap" title="${t('editor.buttons.uploadSqlSnapshot','Upload SQL to WebDAV')}">${'<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M4.406 1.342A5.53 5.53 0 0 1 8 0c2.69 0 4.923 2 5.166 4.579C14.758 4.804 16 6.137 16 7.773 16 9.569 14.502 11 12.687 11H10a.5.5 0 0 1 0-1h2.688C13.979 10 15 8.988 15 7.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 2.825 10.328 1 8 1a4.53 4.53 0 0 0-2.941 1.1c-.757.652-1.153 1.438-1.153 2.055v.448l-.445.049C2.064 4.805 1 5.952 1 7.318 1 8.785 2.23 10 3.781 10H6a.5.5 0 0 1 0 1H3.781C1.708 11 0 9.366 0 7.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383"/><path d="M7.646 4.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V14.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708z"/></svg>'}</button>`:''}`:''}
+        ${fileHandle?`<button class="btn btn-p ml" id="f-save">${isNew?t('editor.buttons.create','Create Trip'):t('editor.buttons.save','Save Changes')}</button>`:''}
+      </div>
+      <div class="meta-block">
+        <div class="meta-hdr" style="${hdrStyle}"><span style="${domColor?`color:${domText}`:''}"> ${t('editor.tripInfo','Trip Information')}</span><span class="meta-hdr-iid" style="${domColor?`color:${domText}`:''}" title="${t('editor.fields.innerId','Inner ID')}">${h(tripData.InnerId)}</span><span class="card-chev" style="${domColor?`color:${domText};opacity:.7`:''}">▾</span></div>
+        <div class="meta-body">${sectionCards}</div>
+      </div>
+      ${isNew?`<div style="background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:16px;color:var(--muted);font-size:13px;text-align:center;">${t('editor.saveDaysFirst','Save the trip first to manage days.')}</div>`:'<div id="inline-ev"></div>'}
+      ${!isNew?`<div style="margin-top:32px;padding:16px 18px;border:1px solid var(--danger);border-radius:8px;background:rgba(218,54,51,0.05);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+        <div style="font-size:13px;color:var(--muted2);line-height:1.5"><strong style="color:var(--danger)">${t('editor.dangerZone','Danger zone')}</strong><br>${t('editor.deleteWarning','Permanently deletes this trip and all its days.')}</div>
+        <button class="btn btn-d" id="f-del" style="flex-shrink:0">${t('editor.buttons.delete','Delete Trip')}</button>
+      </div>`:''}
+    </div>`;
+
+  const metaHdr = detail.querySelector('.meta-hdr');
+  if (domColor) {
+    metaHdr.addEventListener('mouseenter', () => metaHdr.style.filter = 'brightness(0.92)');
+    metaHdr.addEventListener('mouseleave', () => metaHdr.style.filter = '');
+  }
+  metaHdr.addEventListener('click', () => detail.querySelector('.meta-block').classList.toggle('collapsed'));
+  document.getElementById('f-save')?.addEventListener('click', () => saveTrip(tripData.InnerId, isNew));
+  if (!isNew) {
+    document.getElementById('f-del').addEventListener('click', () => deleteTrip(tripData.InnerId));
+    document.getElementById('f-dl').addEventListener('click', () => {
+      const trip = data.Trips[tripData.InnerId];
+      if (!trip) return;
+      const obj = { InnerId: tripData.InnerId, ...trip };
+      const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = `${tripData.InnerId}.json`; a.click(); URL.revokeObjectURL(url);
+    });
+    document.getElementById('f-dl-sql').addEventListener('click', () => {
+      const sqlContent = buildTripSqlExport(tripData.InnerId);
+      if (sqlContent === null) return;
       const blob = new Blob([sqlContent], { type: 'text/plain' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href = url; a.download = `${tripData.InnerId}.sql`; a.click(); URL.revokeObjectURL(url);
     });
+    const _snapSqlCfg = data.Settings?.Extension?.SnapshotUpload;
+    if (fileHandle && _snapSqlCfg && _snapSqlCfg.Path) {
+      const snapSqlBtn = document.getElementById('f-dl-sql-snap');
+      const snapSqlStatus = document.getElementById('f-dl-sql-snap-status');
+      function _sqlTs(){const d=new Date(),p=n=>String(n).padStart(2,'0');return d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+p(d.getHours())+p(d.getMinutes())+p(d.getSeconds());}
+      snapSqlBtn?.addEventListener('click', async () => {
+        const sqlContent = buildTripSqlExport(tripData.InnerId);
+        if (sqlContent === null) return;
+        snapSqlBtn.disabled = true;
+        if (snapSqlStatus) { snapSqlStatus.textContent = t('editor.buttons.uploading','Uploading…'); snapSqlStatus.style.color = 'var(--muted2)'; }
+        try {
+          const name = `${tripData.InnerId}_${_sqlTs()}.sql`;
+          const snapPath = (_snapSqlCfg.Path || './').replace(/\/?$/, '/');
+          const appBaseUrl = new URL('./', document.baseURI);
+          const uploadUrl = new URL(snapPath + encodeURIComponent(name), appBaseUrl);
+          const r = await fetch(uploadUrl.href, { method: 'PUT', body: sqlContent, headers: { 'Content-Type': 'text/plain' } });
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          if (snapSqlStatus) { snapSqlStatus.textContent = '✓ ' + name; snapSqlStatus.style.color = 'var(--success)'; }
+          toast(t('toasts.sqlSnapshotUploaded','SQL snapshot uploaded'), 'ok');
+        } catch(e) {
+          if (snapSqlStatus) { snapSqlStatus.textContent = '✗ ' + e.message; snapSqlStatus.style.color = 'var(--danger)'; }
+          toast(t('toasts.sqlSnapshotFailed','SQL snapshot upload failed'), 'err');
+        }
+        snapSqlBtn.disabled = false;
+      });
+    }
   }
   document.getElementById('f-cancel').addEventListener('click', clearDetail);
 
@@ -2233,6 +2295,13 @@ function clearDetail() {
 // ── Events (Days) ─────────────────────────────────────────────────
 
 const ACC_FIELDS = ['Accommodation','AccommodationCountry','AccommodationCoordinatesAccuracy','AccommodationCoordinates'];
+const _evCollapsed = new Set(); // keys `${innerId}::${date}` of day blocks the user has collapsed in the Editor
+
+// Distinct country names from Settings.Definition.ContinentCountries (the app's master country list),
+// used as autocomplete suggestions for AccommodationCountry / CountriesDuringDay.
+function collectKnownCountries() {
+  return Object.keys(buildISOMap()).sort((a,b)=>a.localeCompare(b));
+}
 
 function renderInlineEvents(innerId) {
   const container = document.getElementById('inline-ev');
@@ -2246,19 +2315,33 @@ function renderInlineEvents(innerId) {
     addBtn.addEventListener('click',()=>addEvent(innerId)); addBar.appendChild(addBtn);
   }
   container.appendChild(addBar);
+  const countryList=document.createElement('datalist'); countryList.id='ev-countries-list';
+  collectKnownCountries().forEach(c => { const opt=document.createElement('option'); opt.value=c; countryList.appendChild(opt); });
+  container.appendChild(countryList);
   if (!days.length) { const emp=document.createElement('div'); emp.className='ev-empty'; emp.textContent=t('editor.days.noDays','No days yet. Click "+ Add Day" to start.'); container.appendChild(emp); return; }
-  days.forEach((day,idx) => container.appendChild(buildEventBlock(day,innerId,idx>0,days[idx-1]||null)));
+  days.forEach((day,idx) => container.appendChild(buildEventBlock(day,innerId,idx,idx>0,days[idx-1]||null)));
 }
 
-function buildEventBlock(ev, innerId, showCopyBtn, prevEv) {
+function buildEventBlock(ev, innerId, idx, showCopyBtn, prevEv) {
   const block=document.createElement('div'); block.className='ev-block'; block.dataset.iid=innerId; block.dataset.date=ev.Date||'';
+  const collKey = `${innerId}::${ev.Date||''}`;
+  if (_evCollapsed.has(collKey)) block.classList.add('collapsed');
   const hdr=document.createElement('div'); hdr.className='ev-block-hdr';
+  const dayNum=document.createElement('span'); dayNum.className='ev-day-num'; dayNum.textContent=`${t('editor.days.dayLabel','Day')} ${idx}`; hdr.appendChild(dayNum);
   const dateLbl=document.createElement('span'); dateLbl.className='ev-date-inp'; dateLbl.textContent=ev.Date||''; hdr.appendChild(dateLbl);
-  const delBtn=document.createElement('button'); delBtn.className='del-btn'; delBtn.textContent='✕';
-  delBtn.addEventListener('click',()=>{ if(confirm(`Delete day on ${block.dataset.date}?`)){const trip=data.Trips[innerId];if(trip){trip.Days=trip.Days.filter(d=>d.Date!==block.dataset.date);setMod(true);renderInlineEvents(innerId);toast(t('toasts.dayDeleted','Day deleted'),'ok');}} });
-  hdr.appendChild(delBtn); block.appendChild(hdr);
+  const chev=document.createElement('span'); chev.className='card-chev'; chev.textContent='▾'; hdr.appendChild(chev);
+  hdr.addEventListener('click',()=>{
+    block.classList.toggle('collapsed');
+    if (block.classList.contains('collapsed')) _evCollapsed.add(collKey); else _evCollapsed.delete(collKey);
+  });
+  block.appendChild(hdr);
   const body=document.createElement('div'); body.className='ev-block-body';
-  body.appendChild(makeEvField(t('editor.days.events','Events'),'Events',ev,true));
+  const eventsFg=makeEvField(t('editor.days.events','Events'),'Events',ev,true);
+  const eventsLbl=eventsFg.querySelector('label'); eventsLbl.style.cssText='display:flex;align-items:center;gap:6px';
+  const eventsPinBtn=document.createElement('button'); eventsPinBtn.type='button'; eventsPinBtn.className='btn btn-g';
+  eventsPinBtn.style.cssText='font-size:11px;padding:2px 8px;margin-left:auto'; eventsPinBtn.textContent=t('editor.days.mapButton','🗺 Map');
+  eventsPinBtn.addEventListener('click',()=>{const ta=eventsFg.querySelector('textarea');if(ta)openNotesPinMapModal(ta,t('editor.days.pinMap.eventsTitle','📍 Events Pins'));});
+  eventsLbl.appendChild(eventsPinBtn); body.appendChild(eventsFg);
   // ── Accommodation + Country on same row ──────────────────────────
   const accCountryRow=document.createElement('div'); accCountryRow.className='form-row';
   const accDiv=document.createElement('div'); accDiv.className='fg';
@@ -2267,11 +2350,18 @@ function buildEventBlock(ev, innerId, showCopyBtn, prevEv) {
   const accInp=document.createElement('input'); accInp.type='text'; accInp.value=ev.Accommodation||''; accInp.dataset.col='Accommodation'; accInp.addEventListener('blur',onEvBlur);
   accDiv.appendChild(accLbl); accDiv.appendChild(accInp);
   accCountryRow.appendChild(accDiv);
-  accCountryRow.appendChild(makeEvField(t('editor.days.country','Country'),'AccommodationCountry',ev));
+  const countryFg=makeEvField(t('editor.days.country','Country'),'AccommodationCountry',ev);
+  countryFg.querySelector('input,textarea').setAttribute('list','ev-countries-list');
+  accCountryRow.appendChild(countryFg);
   body.appendChild(accCountryRow);
   // ── Coordinates + Accuracy on same row ──────────────────────────
   const coordRow=document.createElement('div'); coordRow.className='form-row';
   const coordFg=makeEvField(t('editor.days.coordinates','Coordinates'),'AccommodationCoordinates',ev); coordFg.querySelector('input,textarea').placeholder=t('editor.days.coordsPlaceholder','lat, lon');
+  const coordLbl=coordFg.querySelector('label'); coordLbl.style.cssText='display:flex;align-items:center;gap:6px';
+  const coordMapBtn=document.createElement('button'); coordMapBtn.type='button'; coordMapBtn.className='btn btn-g';
+  coordMapBtn.style.cssText='font-size:11px;padding:2px 8px;margin-left:auto'; coordMapBtn.textContent=t('editor.days.mapButton','🗺 Map');
+  coordMapBtn.addEventListener('click',()=>{const inp=coordFg.querySelector('input,textarea');if(inp)openCoordPickerModal(inp);});
+  coordLbl.appendChild(coordMapBtn);
   coordRow.appendChild(coordFg);
   coordRow.appendChild(makeEvField(t('editor.days.accuracy','Acc. Accuracy'),'AccommodationCoordinatesAccuracy',ev));
   body.appendChild(coordRow);
@@ -2290,11 +2380,85 @@ function buildEventBlock(ev, innerId, showCopyBtn, prevEv) {
   const notesFg=makeEvField(t('editor.days.additionalNotes','Additional Notes'),'AdditionalNotes',ev,true);
   const notesLbl=notesFg.querySelector('label'); notesLbl.style.cssText='display:flex;align-items:center;gap:6px';
   const notesPinBtn=document.createElement('button'); notesPinBtn.type='button'; notesPinBtn.className='btn btn-g';
-  notesPinBtn.style.cssText='font-size:11px;padding:2px 8px;margin-left:auto'; notesPinBtn.textContent='🗺 Map';
-  notesPinBtn.addEventListener('click',()=>{const ta=notesFg.querySelector('textarea');if(ta)openNotesPinMapModal(ta);});
+  notesPinBtn.style.cssText='font-size:11px;padding:2px 8px;margin-left:auto'; notesPinBtn.textContent=t('editor.days.mapButton','🗺 Map');
+  notesPinBtn.addEventListener('click',()=>{const ta=notesFg.querySelector('textarea');if(ta)openNotesPinMapModal(ta,t('editor.days.pinMap.notesTitle','📍 Additional Notes Pins'));});
   notesLbl.appendChild(notesPinBtn); body.appendChild(notesFg);
-  body.appendChild(makeEvField(t('editor.days.countriesDuringDay','Countries During Day'),'CountriesDuringDay',ev));
+  const cddFg=makeEvField(t('editor.days.countriesDuringDay','Countries During Day'),'CountriesDuringDay',ev);
+  attachMultiCountryAutocomplete(cddFg.querySelector('input,textarea'));
+  body.appendChild(cddFg);
   block.appendChild(body); return block;
+}
+
+// Comma-aware country autocomplete: suggests from collectKnownCountries() based on the
+// segment the caret is currently in, so multiple countries can be typed as "A, B, C".
+function attachMultiCountryAutocomplete(input) {
+  if (!input) return;
+  input.setAttribute('autocomplete','off');
+  const wrap = input.parentElement;
+  wrap.style.position = 'relative';
+  const drop = document.createElement('div');
+  drop.className = 'cdd-auto-drop';
+  wrap.appendChild(drop);
+  let items = [], activeIdx = -1;
+
+  function closeDrop() { drop.classList.remove('open'); drop.innerHTML=''; items=[]; activeIdx=-1; }
+
+  function updateActive() {
+    [...drop.children].forEach((el,i) => el.classList.toggle('active', i===activeIdx));
+  }
+
+  function openDropFor(query) {
+    const q = query.trim().toLowerCase();
+    if (!q) { closeDrop(); return; }
+    items = collectKnownCountries().filter(c => c.toLowerCase().includes(q)).slice(0, 8);
+    if (!items.length) { closeDrop(); return; }
+    drop.innerHTML = '';
+    items.forEach(c => {
+      const it = document.createElement('div');
+      it.className = 'cdd-auto-item';
+      it.textContent = c;
+      it.addEventListener('mousedown', e => { e.preventDefault(); selectItem(c); });
+      drop.appendChild(it);
+    });
+    activeIdx = -1;
+    drop.classList.add('open');
+  }
+
+  function selectItem(country) {
+    const val = input.value;
+    const pos = input.selectionStart ?? val.length;
+    const before = val.slice(0, pos);
+    const segIdx = (before.match(/,/g) || []).length;
+    let segments = val.split(',').map(s => s.trim());
+    if (segIdx >= segments.length) segments.push('');
+    const isLast = segIdx === segments.length - 1;
+    segments[segIdx] = country;
+    while (segments.length > 1 && segments[segments.length-1] === '' && segIdx !== segments.length-1) segments.pop();
+    let cursorPos = 0;
+    for (let i = 0; i <= segIdx; i++) { cursorPos += segments[i].length; if (i < segIdx) cursorPos += 2; }
+    let newVal = segments.join(', ');
+    if (isLast) { newVal += ', '; cursorPos = newVal.length; }
+    input.value = newVal;
+    closeDrop();
+    input.focus();
+    input.setSelectionRange(cursorPos, cursorPos);
+  }
+
+  input.addEventListener('input', () => {
+    const val = input.value;
+    const pos = input.selectionStart ?? val.length;
+    const before = val.slice(0, pos);
+    const lastComma = before.lastIndexOf(',');
+    openDropFor(before.slice(lastComma+1));
+  });
+  input.addEventListener('keydown', e => {
+    if (!drop.classList.contains('open')) return;
+    if (e.key === 'ArrowDown') { e.preventDefault(); activeIdx = Math.min(activeIdx+1, items.length-1); updateActive(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); activeIdx = Math.max(activeIdx-1, 0); updateActive(); }
+    else if (e.key === 'Enter') { if (activeIdx>=0) { e.preventDefault(); selectItem(items[activeIdx]); } }
+    else if (e.key === 'Escape') { closeDrop(); }
+  });
+  input.addEventListener('blur', closeDrop);
 }
 
 function makeEvField(label,col,ev,ta=false) {
@@ -3264,24 +3428,24 @@ async function openPinMapModal(ta) {
   overlay.className = 'pin-map-overlay';
   overlay.innerHTML = `
     <div class="pin-map-header">
-      <span class="pin-map-title">📍 Map Pins</span>
+      <span class="pin-map-title">${t('editor.days.pinMap.mapPinsTitle','📍 Map Pins')}</span>
       <div class="pin-map-search-row">
-        <input class="pin-map-search" type="text" placeholder="Search place…">
-        <button class="pin-map-search-btn">Search</button>
+        <input class="pin-map-search" type="text" placeholder="${t('editor.days.pinMap.searchPlaceholder','Search place…')}">
+        <button class="pin-map-search-btn">${t('editor.days.pinMap.searchButton','Search')}</button>
       </div>
-      <button class="btn btn-g" id="pmo-done" style="margin-left:10px;flex-shrink:0">✓ Done</button>
+      <button class="btn btn-g" id="pmo-done" style="margin-left:10px;flex-shrink:0">${t('editor.days.pinMap.done','✓ Done')}</button>
     </div>
     <div class="pin-map-body">
       <div class="pin-map-map" id="pmo-map"></div>
       <div class="pin-map-panel">
-        <div class="pin-map-coords" id="pmo-coords">Click on map to place a pin</div>
+        <div class="pin-map-coords" id="pmo-coords">${t('editor.days.pinMap.clickHint','Click on map to place a pin')}</div>
         <div class="pin-map-add-row">
-          <input class="pin-map-name" id="pmo-name" type="text" placeholder="Pin name…">
-          <button class="pin-map-add-btn" id="pmo-add" disabled>＋ Add</button>
+          <input class="pin-map-name" id="pmo-name" type="text" placeholder="${t('editor.days.pinMap.namePlaceholder','Pin name…')}">
+          <button class="pin-map-add-btn" id="pmo-add" disabled>${t('editor.days.pinMap.add','＋ Add')}</button>
         </div>
-        <div class="pin-map-hint">Existing pins shown in yellow. Click map to place new pin (red), name it, then click ＋ Add.</div>
+        <div class="pin-map-hint">${t('editor.days.pinMap.hintExisting','Existing pins shown in yellow. Click map to place new pin (red), name it, then click ＋ Add.')}</div>
       </div>
-      <button class="pin-map-done" id="pmo-done2">✓ Done</button>
+      <button class="pin-map-done" id="pmo-done2">${t('editor.days.pinMap.done','✓ Done')}</button>
     </div>`;
   document.body.appendChild(overlay);
 
@@ -3331,23 +3495,27 @@ async function openPinMapModal(ta) {
     }
   });
 
-  // Click to place temp (red) marker
-  pmap.on('click', e => {
-    pendingLng = parseFloat(e.lngLat.lng.toFixed(6));
-    pendingLat = parseFloat(e.lngLat.lat.toFixed(6));
+  // Place/replace the pending (red) marker and arm the Add button
+  function placeTempPin(lat, lng) {
+    pendingLat = lat; pendingLng = lng;
     coordsEl.textContent = `${pendingLat}, ${pendingLng}`;
     addBtn.disabled = false;
     if (tempMarker) tempMarker.remove();
     const el = document.createElement('div');
     el.style.cssText = 'width:14px;height:14px;border-radius:50%;background:#e53935;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.5)';
     tempMarker = new maplibregl.Marker({ element: el }).setLngLat([pendingLng, pendingLat]).addTo(pmap);
+  }
+
+  // Click to place temp (red) marker
+  pmap.on('click', e => {
+    placeTempPin(parseFloat(e.lngLat.lat.toFixed(6)), parseFloat(e.lngLat.lng.toFixed(6)));
     nameEl.focus();
   });
 
   // Add pin to textarea
   function addPin() {
     if (pendingLat === null || pendingLng === null) return;
-    const name = nameEl.value.trim() || 'Pin';
+    const name = nameEl.value.trim() || t('editor.days.pinMap.defaultPinName','Pin');
     const line = `[ ${name} ]( ${pendingLat}, ${pendingLng} )`;
     const cur = ta.value.trim();
     ta.value = cur ? cur + '\n' + line : line;
@@ -3358,7 +3526,7 @@ async function openPinMapModal(ta) {
     if (tempMarker) { tempMarker.remove(); tempMarker = null; }
     pendingLat = null; pendingLng = null;
     nameEl.value = '';
-    coordsEl.textContent = 'Click on map to place a pin';
+    coordsEl.textContent = t('editor.days.pinMap.clickHint','Click on map to place a pin');
     addBtn.disabled = true;
   }
 
@@ -3375,11 +3543,14 @@ async function openPinMapModal(ta) {
       const json = await res.json();
       if (json && json.length) {
         const r = json[0];
-        pmap.easeTo({ center: [parseFloat(r.lon), parseFloat(r.lat)], zoom: 12, duration: 450 });
+        const lat = parseFloat(r.lat), lon = parseFloat(r.lon);
+        pmap.easeTo({ center: [lon, lat], zoom: 12, duration: 450 });
         searchInp.value = r.display_name.split(',')[0];
-      } else { toast('No results found', 'err'); }
-    } catch(e) { toast('Search failed', 'err'); }
-    finally { searchBtn.disabled = false; searchBtn.textContent = 'Search'; }
+        placeTempPin(lat, lon);
+        nameEl.focus();
+      } else { toast(t('editor.days.pinMap.noResults','No results found'), 'err'); }
+    } catch(e) { toast(t('editor.days.pinMap.searchFailed','Search failed'), 'err'); }
+    finally { searchBtn.disabled = false; searchBtn.textContent = t('editor.days.pinMap.searchButton','Search'); }
   }
   searchBtn.addEventListener('click', doSearch);
   searchInp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); doSearch(); } });
@@ -3396,7 +3567,7 @@ async function openPinMapModal(ta) {
   overlay.querySelector('#pmo-done2').addEventListener('click', closeModal);
 }
 
-async function openNotesPinMapModal(ta) {
+async function openNotesPinMapModal(ta, titleText) {
   await ensureMapLibre();
 
   const themeExt = data.Settings?.Extension?.Theme;
@@ -3420,32 +3591,32 @@ async function openNotesPinMapModal(ta) {
 
   const themeDropdownHtml = themesActive
     ? `<select class="pin-map-search" id="pno-theme-sel" style="min-width:140px;flex:0 0 auto">
-        <option value="">(no theme)</option>
+        <option value="">${t('editor.days.pinMap.noTheme','(no theme)')}</option>
         ${Object.entries(themeItems).map(([k,lbl])=>`<option value="${h(k)}">${h(lbl)}</option>`).join('')}
        </select>`
     : '';
 
   overlay.innerHTML = `
     <div class="pin-map-header">
-      <span class="pin-map-title">📍 Additional Notes Pins</span>
+      <span class="pin-map-title">${h(titleText || t('editor.days.pinMap.notesTitle','📍 Additional Notes Pins'))}</span>
       <div class="pin-map-search-row">
-        <input class="pin-map-search" type="text" id="pno-search" placeholder="Search place…">
-        <button class="pin-map-search-btn" id="pno-search-btn">Search</button>
+        <input class="pin-map-search" type="text" id="pno-search" placeholder="${t('editor.days.pinMap.searchPlaceholder','Search place…')}">
+        <button class="pin-map-search-btn" id="pno-search-btn">${t('editor.days.pinMap.searchButton','Search')}</button>
       </div>
-      <button class="btn btn-g" id="pno-done" style="margin-left:10px;flex-shrink:0">✓ Done</button>
+      <button class="btn btn-g" id="pno-done" style="margin-left:10px;flex-shrink:0">${t('editor.days.pinMap.done','✓ Done')}</button>
     </div>
     <div class="pin-map-body">
       <div class="pin-map-map" id="pno-map"></div>
       <div class="pin-map-panel">
-        <div class="pin-map-coords" id="pno-coords">Click on map to place a pin</div>
+        <div class="pin-map-coords" id="pno-coords">${t('editor.days.pinMap.clickHint','Click on map to place a pin')}</div>
         <div class="pin-map-add-row">
-          <input class="pin-map-name" id="pno-name" type="text" placeholder="Pin name…">
+          <input class="pin-map-name" id="pno-name" type="text" placeholder="${t('editor.days.pinMap.namePlaceholder','Pin name…')}">
           ${themeDropdownHtml}
-          <button class="pin-map-add-btn" id="pno-add" disabled>＋ Add</button>
+          <button class="pin-map-add-btn" id="pno-add" disabled>${t('editor.days.pinMap.add','＋ Add')}</button>
         </div>
-        <div class="pin-map-hint">${themesActive?'Select a theme (optional) then click map to place pin.':'Click map to place a pin, name it, then click ＋ Add.'}</div>
+        <div class="pin-map-hint">${themesActive?t('editor.days.pinMap.hintThemed','Select a theme (optional) then click map to place pin.'):t('editor.days.pinMap.hintPlain','Click map to place a pin, name it, then click ＋ Add.')}</div>
       </div>
-      <button class="pin-map-done" id="pno-done2">✓ Done</button>
+      <button class="pin-map-done" id="pno-done2">${t('editor.days.pinMap.done','✓ Done')}</button>
     </div>`;
   document.body.appendChild(overlay);
 
@@ -3505,21 +3676,24 @@ async function openNotesPinMapModal(ta) {
     }
   });
 
-  pmap.on('click', e => {
-    pendingLng = parseFloat(e.lngLat.lng.toFixed(6));
-    pendingLat = parseFloat(e.lngLat.lat.toFixed(6));
+  function placeTempPin(lat, lng) {
+    pendingLat = lat; pendingLng = lng;
     coordsEl.textContent = `${pendingLat}, ${pendingLng}`;
     addBtn.disabled = false;
     if (tempMarker) tempMarker.remove();
     const el = document.createElement('div');
     el.style.cssText = 'width:14px;height:14px;border-radius:50%;background:#e53935;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.5)';
     tempMarker = new maplibregl.Marker({ element: el }).setLngLat([pendingLng, pendingLat]).addTo(pmap);
+  }
+
+  pmap.on('click', e => {
+    placeTempPin(parseFloat(e.lngLat.lat.toFixed(6)), parseFloat(e.lngLat.lng.toFixed(6)));
     nameEl.focus();
   });
 
   function addPin() {
     if (pendingLat === null || pendingLng === null) return;
-    const name = nameEl.value.trim() || 'Pin';
+    const name = nameEl.value.trim() || t('editor.days.pinMap.defaultPinName','Pin');
     const themeKey = themeSel ? themeSel.value : '';
     const themedSuffix = themeKey ? ` { ${themeKey} }` : '';
     const line = `[ ${name} ]( ${pendingLat}, ${pendingLng} )${themedSuffix}`;
@@ -3532,7 +3706,7 @@ async function openNotesPinMapModal(ta) {
     if (tempMarker) { tempMarker.remove(); tempMarker = null; }
     pendingLat = null; pendingLng = null;
     nameEl.value = '';
-    coordsEl.textContent = 'Click on map to place a pin';
+    coordsEl.textContent = t('editor.days.pinMap.clickHint','Click on map to place a pin');
     addBtn.disabled = true;
   }
 
@@ -3545,10 +3719,16 @@ async function openNotesPinMapModal(ta) {
     try {
       const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(q)}`, { headers: { 'Accept-Language': 'en' } });
       const json = await res.json();
-      if (json && json.length) { const r=json[0]; pmap.easeTo({ center:[parseFloat(r.lon),parseFloat(r.lat)], zoom:12, duration:450 }); searchInp.value=r.display_name.split(',')[0]; }
-      else toast('No results found','err');
-    } catch(e) { toast('Search failed','err'); }
-    finally { searchBtn.disabled=false; searchBtn.textContent='Search'; }
+      if (json && json.length) {
+        const r=json[0]; const lat=parseFloat(r.lat), lon=parseFloat(r.lon);
+        pmap.easeTo({ center:[lon,lat], zoom:12, duration:450 });
+        searchInp.value=r.display_name.split(',')[0];
+        placeTempPin(lat, lon);
+        nameEl.focus();
+      }
+      else toast(t('editor.days.pinMap.noResults','No results found'),'err');
+    } catch(e) { toast(t('editor.days.pinMap.searchFailed','Search failed'),'err'); }
+    finally { searchBtn.disabled=false; searchBtn.textContent=t('editor.days.pinMap.searchButton','Search'); }
   }
   searchBtn.addEventListener('click', doSearch);
   searchInp.addEventListener('keydown', e => { if (e.key==='Enter') { e.preventDefault(); doSearch(); } });
@@ -3560,6 +3740,118 @@ async function openNotesPinMapModal(ta) {
   document.addEventListener('keydown', onKey);
   overlay.querySelector('#pno-done').addEventListener('click', closeModal);
   overlay.querySelector('#pno-done2').addEventListener('click', closeModal);
+}
+
+// Single-point picker for an "Accommodation Coordinates" input (stores "lat, lon", not a pin list)
+async function openCoordPickerModal(input) {
+  await ensureMapLibre();
+
+  const overlay = document.createElement('div');
+  overlay.className = 'pin-map-overlay';
+  overlay.innerHTML = `
+    <div class="pin-map-header">
+      <span class="pin-map-title">${t('editor.days.coordPicker.title','📍 Set Accommodation Location')}</span>
+      <div class="pin-map-search-row">
+        <input class="pin-map-search" type="text" id="pco-search" placeholder="${t('editor.days.pinMap.searchPlaceholder','Search place…')}">
+        <button class="pin-map-search-btn" id="pco-search-btn">${t('editor.days.pinMap.searchButton','Search')}</button>
+      </div>
+      <button class="btn btn-g" id="pco-cancel" style="margin-left:10px;flex-shrink:0">${t('editor.days.coordPicker.cancel','Cancel')}</button>
+    </div>
+    <div class="pin-map-body">
+      <div class="pin-map-map" id="pco-map"></div>
+      <div class="pin-map-panel">
+        <div class="pin-map-coords" id="pco-coords">${t('editor.days.pinMap.clickHint','Click on map to place a pin')}</div>
+        <div class="pin-map-add-row">
+          <button class="pin-map-add-btn" id="pco-use" disabled>${t('editor.days.coordPicker.useLocation','✓ Use this location')}</button>
+        </div>
+        <div class="pin-map-hint">${t('editor.days.coordPicker.hint',"Click the map to set the accommodation's coordinates.")}</div>
+      </div>
+      <button class="pin-map-done" id="pco-cancel2">${t('editor.days.coordPicker.cancel','Cancel')}</button>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  const mapEl    = overlay.querySelector('#pco-map');
+  const coordsEl = overlay.querySelector('#pco-coords');
+  const useBtn   = overlay.querySelector('#pco-use');
+  const searchInp= overlay.querySelector('#pco-search');
+  const searchBtn= overlay.querySelector('#pco-search-btn');
+
+  // Parse an existing "lat, lon" value, if any
+  const existing = (input.value || '').split(',').map(s => parseFloat(s.trim()));
+  let curLat = existing.length === 2 && !isNaN(existing[0]) ? existing[0] : null;
+  let curLon = existing.length === 2 && !isNaN(existing[1]) ? existing[1] : null;
+
+  const mapStyle = {
+    version: 8,
+    glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf',
+    sources: { osm: { type:'raster', tiles:['https://tile.openstreetmap.org/{z}/{x}/{y}.png'], tileSize:256, maxzoom:19, attribution:'© OpenStreetMap contributors'} },
+    layers: [{ id:'osm', type:'raster', source:'osm' }]
+  };
+
+  const pmap = new maplibregl.Map({
+    container: mapEl, style: mapStyle,
+    center: curLat!=null ? [curLon, curLat] : [10, 48],
+    zoom: curLat!=null ? 10 : 3, maxZoom: 19
+  });
+  pmap.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'top-right');
+
+  let marker = null;
+  function placeMarker(lat, lon) {
+    if (marker) marker.remove();
+    const el = document.createElement('div');
+    el.style.cssText = 'width:14px;height:14px;border-radius:50%;background:#e53935;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.5)';
+    marker = new maplibregl.Marker({ element: el }).setLngLat([lon, lat]).addTo(pmap);
+  }
+  if (curLat != null) {
+    placeMarker(curLat, curLon);
+    coordsEl.textContent = `${curLat}, ${curLon}`;
+    useBtn.disabled = false;
+  }
+
+  pmap.on('click', e => {
+    curLat = parseFloat(e.lngLat.lat.toFixed(6));
+    curLon = parseFloat(e.lngLat.lng.toFixed(6));
+    coordsEl.textContent = `${curLat}, ${curLon}`;
+    useBtn.disabled = false;
+    placeMarker(curLat, curLon);
+  });
+
+  useBtn.addEventListener('click', () => {
+    if (curLat == null || curLon == null) return;
+    input.value = `${curLat}, ${curLon}`;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    input.dispatchEvent(new Event('blur',  { bubbles: true }));
+    closeModal();
+  });
+
+  async function doSearch() {
+    const q = searchInp.value.trim(); if (!q) return;
+    searchBtn.disabled = true; searchBtn.textContent = '…';
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(q)}`, { headers: { 'Accept-Language': 'en' } });
+      const json = await res.json();
+      if (json && json.length) {
+        const r=json[0]; curLat=parseFloat(r.lat); curLon=parseFloat(r.lon);
+        pmap.easeTo({ center:[curLon,curLat], zoom:12, duration:450 });
+        searchInp.value=r.display_name.split(',')[0];
+        coordsEl.textContent = `${curLat}, ${curLon}`;
+        useBtn.disabled = false;
+        placeMarker(curLat, curLon);
+      }
+      else toast(t('editor.days.pinMap.noResults','No results found'),'err');
+    } catch(e) { toast(t('editor.days.pinMap.searchFailed','Search failed'),'err'); }
+    finally { searchBtn.disabled=false; searchBtn.textContent=t('editor.days.pinMap.searchButton','Search'); }
+  }
+  searchBtn.addEventListener('click', doSearch);
+  searchInp.addEventListener('keydown', e => { if (e.key==='Enter') { e.preventDefault(); doSearch(); } });
+
+  function closeModal() {
+    pmap.remove(); overlay.remove(); document.removeEventListener('keydown', onKey);
+  }
+  function onKey(e) { if (e.key==='Escape') closeModal(); }
+  document.addEventListener('keydown', onKey);
+  overlay.querySelector('#pco-cancel').addEventListener('click', closeModal);
+  overlay.querySelector('#pco-cancel2').addEventListener('click', closeModal);
 }
 
 async function initMap() {
