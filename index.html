@@ -593,10 +593,17 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 .tv-field{position:relative}
 .tv-field label{display:block;font-size:10px;font-weight:500;color:var(--muted2);text-transform:uppercase;letter-spacing:.5px;position:absolute;top:6px;left:12px;line-height:1;pointer-events:none;z-index:1}
 .tv-field-val{width:100%;font-size:14px;color:var(--text);padding:22px 12px 9px 12px;border-radius:6px;box-sizing:border-box;line-height:1.4}
-.tv-days{display:flex;flex-direction:column;gap:8px}
-.tv-day{background:var(--s2);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:var(--shadow);transition:box-shadow .12s}
-.tv-day:hover{box-shadow:var(--shadow-h)}
-.tv-day-hdr{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--border);background:var(--s3)}
+/* ── Trip-view timeline ───────────────────────────────────────────── */
+.tv-days{position:relative;display:flex;flex-direction:column;padding-left:52px;margin-left:8px}
+.tv-days::before{content:'';position:absolute;left:15px;top:14px;bottom:14px;width:2px;background:var(--border);border-radius:2px}
+.tv-day{position:relative;margin-bottom:18px}
+.tv-day:last-child{margin-bottom:0}
+.tv-day::before{content:'';position:absolute;left:-43px;top:12px;width:12px;height:12px;border-radius:50%;background:var(--s1);border:2px solid var(--border);box-shadow:0 0 0 3px var(--bg);transition:border-color .15s,box-shadow .15s;z-index:1}
+.tv-day:hover::before{border-color:var(--tv-dot,var(--accent));box-shadow:0 0 0 3px var(--accent-g)}
+.tv-day-card{background:var(--s2);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:var(--shadow);transition:box-shadow .12s}
+.tv-day:hover .tv-day-card{box-shadow:var(--shadow-h)}
+.tv-day-hdr{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--border);background:var(--s3);border-radius:8px 8px 0 0}
+.tv-day-hdr.no-body{border-bottom:none;border-radius:8px}
 .tv-day-num{font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;background:var(--accent-g);color:var(--accent);flex-shrink:0;border:1px solid rgba(29,101,94,.25)}
 .tv-day-date{font-size:13px;font-weight:600;color:var(--text)}
 .tv-day-weekday{font-size:12px;color:var(--muted)}
@@ -616,6 +623,11 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 .tv-photo-links{display:flex;flex-wrap:wrap;gap:6px;padding:10px 0 2px}
 .tv-ext-photos{border-color:var(--muted2);color:var(--muted2);background:transparent;cursor:pointer}
 .tv-ext-photos:hover{background:var(--muted2);color:#fff;border-color:var(--muted2)}
+@media(max-width:500px){
+  .tv-days{padding-left:38px;margin-left:4px}
+  .tv-days::before{left:11px}
+  .tv-day::before{left:-30px;width:10px;height:10px;top:13px}
+}
 /* Photo overlay */
 #photo-overlay{position:fixed;inset:0;z-index:9000;display:none;flex-direction:column;background:#111}
 #photo-overlay.open{display:flex}
@@ -730,6 +742,7 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
       <div class="explore-hdr">
         <h2 data-i18n="explore.title">Discover</h2>
         <span class="sub" data-i18n="explore.subtitle">8 random trips</span>
+        <button class="shuffle-btn" id="explore-date-search-btn" title="Show trips and days on this date"></button>
         <button class="shuffle-btn" id="shuffle-btn"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.6 9.6 0 0 0 7.556 8a9.6 9.6 0 0 0 1.318 1.918C9.827 10.99 11.202 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.6 10.6 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.6 9.6 0 0 0 6.444 8a9.6 9.6 0 0 0-1.318-1.918C4.173 5.01 2.798 4 1 4H.5a.5.5 0 0 1-.5-.5m13-1a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H14v.5a.5.5 0 0 1-1 0V3h-.5a.5.5 0 0 1-.5-.5m0 9a.5.5 0 0 1 .5-.5h.5v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1H14.5a.5.5 0 0 1-.5-.5"/></svg><span data-i18n="explore.shuffle">Shuffle</span></button>
       </div>
       <div class="cards-grid" id="explore-cards"></div>
@@ -1163,7 +1176,20 @@ function wireNavSearch() {
   document.getElementById('ns-full-back').addEventListener('click', () => fullEl.classList.remove('open'));
   document.addEventListener('keydown', e => { if (e.key === 'Escape') fullEl.classList.remove('open'); });
 
+  function latestTripDate(trip) {
+    return [trip.DepartureDate, trip.ReturnDate, ...(trip.Days || []).map(day => day.Date)]
+      .filter(Boolean).sort().at(-1) || '';
+  }
+  function sortSearchResults(trips, days) {
+    trips.sort((a, b) => latestTripDate(b).localeCompare(latestTripDate(a)));
+    days.sort((a, b) => (b.day.Date || latestTripDate(b.trip)).localeCompare(a.day.Date || latestTripDate(a.trip)));
+  }
+
   function showFullResults(q, tripResults, dayResults) {
+    // This also covers callers outside the search dropdown, such as Explore's
+    // calendar-date shortcut.
+    tripResults = [...tripResults]; dayResults = [...dayResults];
+    sortSearchResults(tripResults, dayResults);
     const body = document.getElementById('ns-full-body');
     const colors = domainColorMap();
     const isoMap = buildISOMap();
@@ -1235,6 +1261,26 @@ function wireNavSearch() {
     fullEl.classList.add('open');
   }
 
+  // Explorer's date shortcut uses a suffix so it finds this calendar date in
+  // every recorded year, across both trip boundaries and individual days.
+  const dateSearchBtn = document.getElementById('explore-date-search-btn');
+  const today = new Date();
+  const monthDay = `-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  dateSearchBtn.textContent = monthDay;
+  dateSearchBtn.title = `Show all trips and days on ${monthDay.slice(1)}`;
+  dateSearchBtn.addEventListener('click', () => {
+    if (!data?.Trips) return;
+    const all = Object.entries(data.Trips).map(([id, trip]) => ({ InnerId: id, ...trip }));
+    const tripResults = all.filter(trip =>
+      (trip.DepartureDate || '').endsWith(monthDay) || (trip.ReturnDate || '').endsWith(monthDay));
+    const dayResults = [];
+    all.forEach(trip => (trip.Days || []).forEach(day => {
+      if ((day.Date || '').endsWith(monthDay)) dayResults.push({ trip, day });
+    }));
+    closeSearch();
+    showFullResults(monthDay, tripResults, dayResults);
+  });
+
   function positionDrop() {
     const r = wrap.getBoundingClientRect();
     const dropW = Math.min(360, window.innerWidth - 16);
@@ -1303,6 +1349,7 @@ function wireNavSearch() {
         });
       });
     }
+    sortSearchResults(tripResults, dayResults);
 
     if (!tripResults.length && !dayResults.length) {
       drop.innerHTML = `<div id="ns-empty">${t('nav.search.noResults','No results found')}</div>`;
@@ -1459,7 +1506,7 @@ async function _initApp(parsed, fileName) {
   activeFilter = { domain:[], arranger:[], label:[] };
   // Load cover photo cache, filtered to only OuterIds present in the current dataset.
   // This prevents stale entries from a previously loaded file bleeding through.
-  const _rawCovers = await idbKvGet('cover_photos');
+  const { map: _rawCovers } = await loadImmichThumbnailCache();
   if (_rawCovers) {
     const _validIds = new Set(Object.values(data.Trips).map(tr => tr.OuterId).filter(Boolean));
     const _filtered = Object.fromEntries(Object.entries(_rawCovers).filter(([k]) => _validIds.has(k)));
@@ -2517,7 +2564,7 @@ let _tripMapPinMarkers = [];
 // Fetch GPS-tagged photos from Immich for a trip's full date range
 async function fetchTripImmichPhotoCoords(trip) {
   const photoCfg = data.Settings?.Photos || {};
-  const base = (photoCfg.ImmichUrl || '').replace(/\/$/, '');
+  const base = immichBaseUrl(photoCfg.ImmichUrl);
   if (!base) return [];
   const dep = trip.DepartureDate, ret = trip.ReturnDate;
   if (!dep || !ret) return [];
@@ -2688,7 +2735,7 @@ async function initTripMap(containerId, trip, domColor, _innerId) {
     _tripMapInst.addLayer({id:'tph-dots',type:'circle',source:'trip-photos',filter:['==',['geometry-type'],'Point'],layout:{visibility:'none'},paint:{'circle-radius':4,'circle-color':'#e74c3c','circle-stroke-width':1,'circle-stroke-color':'rgba(255,255,255,0.7)','circle-opacity':0.9}});
 
     // Photo dot click → thumbnail popup
-    const _immichBase = (photoCfg.ImmichUrl||'').replace(/\/$/,'');
+    const _immichBase = immichBaseUrl(photoCfg.ImmichUrl);
     let _tphPopup = null;
     _tripMapInst.on('click','tph-dots', e => {
       const feat = e.features && e.features[0];
@@ -2834,7 +2881,7 @@ function buildImmichUrl(base, date, trip) {
 function openPhotoOverlay(innerId, selectedDate) {
   const trip=data.Trips[innerId]; if(!trip)return;
   const photoCfg=data.Settings?.Photos||{};
-  const immichBase=(photoCfg.ImmichUrl||'').replace(/\/$/,'');
+  const immichBase=immichBaseUrl(photoCfg.ImmichUrl);
   const dates=[...(trip.Days||[])].sort((a,b)=>(a.Date||'').localeCompare(b.Date||'')).map(d=>d.Date).filter(Boolean);
   if(!dates.length)return;
 
@@ -3071,7 +3118,7 @@ function renderTripView(innerId) {
   }
 
   // Immich buttons from PhotoAlbums field
-  const _immichBase=(data.Settings?.Photos?.ImmichUrl||'').replace(/\/$/,'');
+  const _immichBase=immichBaseUrl(data.Settings?.Photos?.ImmichUrl);
   if(_immichBase){
     const _allText=trip.PhotoAlbums||'';
     const _descSet=new Set(), _albumSet=new Set();
@@ -3181,7 +3228,7 @@ function renderTripView(innerId) {
     // Photos (Immich) — check enabled and trip not excluded
     const photoCfg=data.Settings?.Photos||{};
     const immichEnabled=photoCfg.Immich==='Enabled'&&photoCfg.ImmichUrl;
-    const immichBase=(photoCfg.ImmichUrl||'').replace(/\/$/,'');
+    const immichBase=immichBaseUrl(photoCfg.ImmichUrl);
     const showPhotos=immichEnabled&&!isTripPhotoExcluded(trip,innerId);
     // External map provider for accommodation links
     const extMapProvider=data.Settings?.Other?.ExternalMapProvider||'https://www.openstreetmap.org/?mlat=';
@@ -3197,6 +3244,7 @@ function renderTripView(innerId) {
       if(ymd.length===8&&passMap[ymd])passItems.push({date:ev.Date,label:passMap[ymd],href:passPath+passMap[ymd]});
     });
     const dl=document.createElement('div');dl.className='tv-days';
+    if(domColor) dl.style.setProperty('--tv-dot', domColor);
     enrichedDays.forEach(ev=>{
       const day=document.createElement('div');day.className='tv-day';if(ev.Date)day.dataset.date=ev.Date;
       const ns=domColor?`background:${domColor};color:${domText}`:'';
@@ -3206,7 +3254,9 @@ function renderTripView(innerId) {
       const accHtml=accMapUrl
         ?`<a href="${h(accMapUrl)}" target="_blank" rel="noopener" class="tv-acc-link">${accParts}</a>`
         :`<span>${accParts}</span>`;
-      day.innerHTML=`<div class="tv-day-hdr"><span class="tv-day-num" style="${ns}">${ev.DayNumber}</span><span class="tv-day-weekday">${h(ev.Weekday||'')}</span><span class="tv-day-date">${h(ev.Date||'')}</span></div>${ev.Events?`<div class="tv-day-body">${eventsToHtml(ev.Events,extMapProvider)}</div>`:''}<div class="tv-day-foot"><span class="tv-acc-flag">${ev.AccommodationCountryFlag||'🌍'}</span>${accHtml}</div>`;
+      const hasBody=!!ev.Events;
+      const hdrClass=`tv-day-hdr${hasBody?'':' no-body'}`;
+      day.innerHTML=`<div class="tv-day-card"><div class="${hdrClass}"><span class="tv-day-num" style="${ns}">${ev.DayNumber}</span><span class="tv-day-weekday">${h(ev.Weekday||'')}</span><span class="tv-day-date">${h(ev.Date||'')}</span></div>${hasBody?`<div class="tv-day-body">${eventsToHtml(ev.Events,extMapProvider)}</div>`:''}<div class="tv-day-foot"><span class="tv-acc-flag">${ev.AccommodationCountryFlag||'🌍'}</span>${accHtml}</div></div>`;
       // Extension + Photos buttons
       const btns=[];
       if(ev.Date){
@@ -3223,7 +3273,7 @@ function renderTripView(innerId) {
         }
       }
       if(btns.length){
-        const foot=day.querySelector('.tv-day-foot');
+        const foot=day.querySelector('.tv-day-card .tv-day-foot');
         const wrap=document.createElement('div');wrap.className='tv-ext-btns';
         btns.forEach(b=>{
           const el=document.createElement('a');
@@ -4191,7 +4241,7 @@ function loadMapPins() {
   mapInstance.addLayer({id:'map-photo-dots',type:'circle',source:'map-photos',layout:{visibility:'none'},
     paint:{'circle-radius':4,'circle-color':'#e74c3c','circle-stroke-width':1,'circle-stroke-color':'rgba(255,255,255,0.7)','circle-opacity':0.9}});
   // Photo dot click → thumbnail popup
-  const _mpImmichBase=(data.Settings?.Photos?.ImmichUrl||'').replace(/\/$/,'');
+  const _mpImmichBase=immichBaseUrl(data.Settings?.Photos?.ImmichUrl);
   let _mpPhotoPopup=null;
   mapInstance.on('click','map-photo-dots',e=>{
     const feat=e.features&&e.features[0]; const assetId=feat?.properties?.id;
@@ -4751,6 +4801,11 @@ async function restoreLoadScreen() {
 
 // ── Immich sync helpers ───────────────────────────────────────────
 
+// Accept either the web-server URL or the /api URL documented for the CLI.
+function immichBaseUrl(value) {
+  return String(value || '').trim().replace(/\/+$/, '').replace(/\/api$/i, '');
+}
+
 function immichHeaders(extra={}) {
   const key = data?.Settings?.Photos?.ImmichApiKey || '';
   const h = { 'Content-Type': 'application/json', ...extra };
@@ -4766,91 +4821,232 @@ async function immichFetch(url, opts={}) {
 // Build the cover photo list from all trips: [{OuterId, CoverPhoto}, ...]
 function buildCoverPhotoList() {
   return Object.values(data.Trips)
-    .filter(t => t.CoverPhoto && t.OuterId)
+    .filter(t => typeof t.CoverPhoto === 'string' && t.CoverPhoto && t.OuterId)
     .map(t => ({ OuterId: t.OuterId, CoverPhoto: t.CoverPhoto }));
 }
 
-// Step 1 — add cover photos that are missing from the Immich album
-async function syncImmichAlbum(setStatus) {
-  const photos = data.Settings?.Photos || {};
-  const base = (photos.ImmichUrl || '').replace(/\/$/, '');
-  const albumId = photos.ImmichCoverAlbumId;
-  if (!base || !albumId) { setStatus('err', 'ImmichUrl or ImmichCoverAlbumId not configured'); return; }
-
-  const coverList = buildCoverPhotoList()
-    .filter(item => !item.CoverPhoto.startsWith('!genre[') && !item.CoverPhoto.startsWith('data:'));
-
-  setStatus('', `Fetching album… (${coverList.length} trips with cover photos)`);
-  const albumRes = await immichFetch(`${base}/api/albums/${albumId}`);
-  if (!albumRes.ok) { setStatus('err', `Album fetch failed: ${albumRes.status} ${albumRes.statusText}`); return; }
-  const album = await albumRes.json();
-  const existingPaths = new Set((album.assets||[]).map(a => a.originalPath));
-
-  const missing = coverList.filter(item => !existingPaths.has(item.CoverPhoto));
-  setStatus('', `${missing.length} missing from album. Searching in Immich…`);
-
-  const assetIds = [];
-  for (const item of missing) {
-    try {
-      const r = await immichFetch(`${base}/api/search/metadata`, {
-        method: 'POST',
-        body: JSON.stringify({ originalPath: item.CoverPhoto.normalize('NFC') })
-      });
-      const result = await r.json();
-      const id = result?.assets?.items?.[0]?.id;
-      if (id) assetIds.push(id);
-    } catch (e) { console.warn('Search failed for', item.CoverPhoto, e); }
-  }
-
-  if (assetIds.length) {
-    const addRes = await immichFetch(`${base}/api/albums/${albumId}/assets`, {
-      method: 'PUT',
-      body: JSON.stringify({ ids: assetIds })
-    });
-    if (!addRes.ok) { setStatus('err', `Failed to add assets: ${addRes.status}`); return; }
-  }
-
-  setStatus('ok', `✓ Added ${assetIds.length} of ${missing.length} missing photos to album`);
+function immichPathKey(path) {
+  return typeof path === 'string' ? path.normalize('NFC') : '';
 }
 
-// Step 2 — fetch the album and save OuterId→thumbnailUrl map to IndexedDB
-async function saveImmichThumbnails(setStatus) {
-  const photos = data.Settings?.Photos || {};
-  const base = (photos.ImmichUrl || '').replace(/\/$/, '');
-  const albumId = photos.ImmichCoverAlbumId;
-  if (!base || !albumId) { setStatus('err', 'ImmichUrl or ImmichCoverAlbumId not configured'); return; }
+function isImmichAssetCover(coverPhoto) {
+  return typeof coverPhoto === 'string'
+    && !coverPhoto.startsWith('!genre[')
+    && !coverPhoto.startsWith('data:');
+}
 
-  const coverList = buildCoverPhotoList();
-  setStatus('', `Fetching album assets…`);
+function immichParentPath(path) {
+  const slash = path.lastIndexOf('/');
+  return slash > 0 ? path.slice(0, slash) : '';
+}
 
-  const albumRes = await immichFetch(`${base}/api/albums/${albumId}`);
-  if (!albumRes.ok) { setStatus('err', `Album fetch failed: ${albumRes.status} ${albumRes.statusText}`); return; }
-  const album = await albumRes.json();
-
-  const pathToAsset = Object.fromEntries((album.assets||[]).map(a => [a.originalPath, a]));
-
-  let matched = 0;
+function cacheImmichThumbnails(base, coverList, assetsByPath) {
   const map = {};
+  let matched = 0;
   for (const item of coverList) {
     const cp = item.CoverPhoto;
     if (cp.startsWith('!genre[') && cp.endsWith(']')) {
-      map[item.OuterId] = cp.slice(7, -1); // genre keyword, not a URL
+      map[item.OuterId] = cp.slice(7, -1);
       matched++;
     } else if (cp.startsWith('data:')) {
-      map[item.OuterId] = cp; // inline data URL — use directly, skip Immich
+      map[item.OuterId] = cp;
       matched++;
     } else {
-      const asset = pathToAsset[cp];
-      if (asset) {
+      const asset = assetsByPath.get(immichPathKey(cp));
+      if (asset?.id) {
         map[item.OuterId] = `${base}/api/assets/${asset.id}/thumbnail`;
         matched++;
       }
     }
   }
+  return { map, matched };
+}
 
-  await idbKvSet('cover_photos', map);
-  coverPhotosCache = map; // update in-memory cache so cards refresh immediately
-  setStatus('ok', `✓ Saved ${matched} of ${coverList.length} cover thumbnails to IndexedDB`);
+const IMMICH_THUMBNAIL_CACHE_FILE = 'immich-cover-thumbnails.json';
+
+async function readOpfsJson(filename) {
+  if (!navigator.storage?.getDirectory) return null;
+  try {
+    const root = await navigator.storage.getDirectory();
+    const handle = await root.getFileHandle(filename);
+    const value = JSON.parse(await (await handle.getFile()).text());
+    return value && typeof value === 'object' && !Array.isArray(value) ? value : null;
+  } catch { return null; }
+}
+
+async function writeOpfsJson(filename, value) {
+  if (!navigator.storage?.getDirectory) throw new Error('OPFS is not supported by this browser');
+  const root = await navigator.storage.getDirectory();
+  const handle = await root.getFileHandle(filename, { create: true });
+  const writable = await handle.createWritable();
+  try {
+    await writable.write(JSON.stringify(value));
+    await writable.close();
+  } catch (error) {
+    try { await writable.abort(); } catch {}
+    throw error;
+  }
+}
+
+async function loadImmichThumbnailCache() {
+  const opfsMap = await readOpfsJson(IMMICH_THUMBNAIL_CACHE_FILE);
+  if (opfsMap) return { map: opfsMap, storage: 'OPFS' };
+  const idbMap = await idbKvGet('cover_photos');
+  return { map: idbMap, storage: idbMap ? 'IndexedDB' : null };
+}
+
+async function saveImmichThumbnailCache(base, coverList, assetsByPath) {
+  const { map, matched } = cacheImmichThumbnails(base, coverList, assetsByPath);
+  let storage = 'OPFS';
+  try {
+    await writeOpfsJson(IMMICH_THUMBNAIL_CACHE_FILE, map);
+  } catch (error) {
+    // Keep the app working in browsers without OPFS and for existing installations.
+    await idbKvSet('cover_photos', map);
+    storage = 'IndexedDB fallback';
+  }
+  coverPhotosCache = map;
+  return { matched, total: coverList.length, storage };
+}
+
+// Uses Immich's paginated searchAssets endpoint instead of embedding every
+// album asset in the album response. `size` is the API's documented maximum.
+async function listImmichAlbumAssets(base, albumId) {
+  const PAGE_SIZE = 1000;
+  const assets = [];
+  for (let page = 1; ; page++) {
+    const response = await immichFetch(`${base}/api/search/metadata`, {
+      method: 'POST',
+      body: JSON.stringify({ albumIds: [albumId], page, size: PAGE_SIZE })
+    });
+    if (!response.ok) throw new Error(`Album asset search failed: ${response.status} ${response.statusText}`);
+    const result = await response.json();
+    const items = result?.assets?.items;
+    if (!Array.isArray(items) || !items.length) break;
+    assets.push(...items);
+    if (items.length < PAGE_SIZE) break;
+  }
+  return assets;
+}
+
+// Add only cover assets absent from the configured Immich album, then refresh cache.
+async function syncImmichAlbum(setStatus) {
+  const photos = data.Settings?.Photos || {};
+  const base = immichBaseUrl(photos.ImmichUrl);
+  const albumId = photos.ImmichCoverAlbumId;
+  if (photos.Immich !== 'Enabled') { setStatus('err', 'Set Photos.Immich to Enabled before syncing'); return; }
+  if (!base || !albumId || !photos.ImmichApiKey) { setStatus('err', 'ImmichUrl, ImmichCoverAlbumId, or ImmichApiKey not configured'); return; }
+
+  const coverList = buildCoverPhotoList();
+  const assetCovers = coverList.filter(item => isImmichAssetCover(item.CoverPhoto));
+
+  setStatus('', `Fetching album… (${assetCovers.length} asset-backed covers)`);
+  let albumAssets;
+  try { albumAssets = await listImmichAlbumAssets(base, albumId); }
+  catch (error) { setStatus('err', error.message); return; }
+
+  // NFC eliminates false misses caused by different Unicode filesystem forms.
+  const assetsByPath = new Map(albumAssets
+    .filter(a => a?.id && a.originalPath)
+    .map(a => [immichPathKey(a.originalPath), a]));
+
+  // Multiple trips can use the same cover; resolve each distinct path just once.
+  const missingByPath = new Map();
+  for (const item of assetCovers) {
+    const key = immichPathKey(item.CoverPhoto);
+    if (key && !assetsByPath.has(key)) missingByPath.set(key, item);
+  }
+  const missing = [...missingByPath.values()];
+  if (!missing.length) {
+    const cache = await saveImmichThumbnailCache(base, coverList, assetsByPath);
+    setStatus('ok', `✓ Album is up to date; refreshed ${cache.matched} cover thumbnails in ${cache.storage}`);
+    return;
+  }
+
+  // The folder endpoint returns all children in one response. Grouping paths by
+  // parent directory replaces one metadata-search request per cover with one
+  // request per distinct folder, then we retain exact path matches only.
+  const missingPaths = new Set(missing.map(item => immichPathKey(item.CoverPhoto)));
+  const folders = new Map();
+  for (const item of missing) {
+    const folder = immichParentPath(item.CoverPhoto);
+    if (!folder) continue;
+    folders.set(immichPathKey(folder), folder);
+  }
+  if (!folders.size) { setStatus('err', 'Missing cover paths do not contain a parent folder'); return; }
+
+  setStatus('', `Loading ${missing.length} missing photo(s) from ${folders.size} folder(s)… (0 / ${folders.size})`);
+  const CONCURRENCY = 4;
+  const foundAssets = [];
+  let searched = 0, searchErrors = 0;
+
+  async function searchFolder(folder) {
+    try {
+      const r = await immichFetch(`${base}/api/view/folder?path=${encodeURIComponent(folder)}`);
+      if (!r.ok) { searchErrors++; console.warn(`Folder lookup HTTP ${r.status} for`, folder); return; }
+      const assets = await r.json();
+      for (const asset of Array.isArray(assets) ? assets : []) {
+        if (asset?.id && missingPaths.has(immichPathKey(asset.originalPath))) foundAssets.push(asset);
+      }
+    } catch (e) { searchErrors++; console.warn('Folder lookup failed for', folder, e); }
+    finally {
+      searched++;
+      setStatus('', `Loading Immich folders… (${searched} / ${folders.size})`);
+    }
+  }
+
+  const queue = [...folders.values()];
+  const workers = Array.from({ length: CONCURRENCY }, async () => {
+    while (queue.length) await searchFolder(queue.shift());
+  });
+  await Promise.all(workers);
+
+  if (!foundAssets.length) {
+    const msg = searchErrors ? `No assets found (${searchErrors} folder lookup error(s) — ensure the API key has folder.read permission)` : 'No matching assets found in Immich for the missing covers';
+    setStatus(searchErrors ? 'err' : '', msg);
+    return;
+  }
+
+  const uniqueAssets = [...new Map(foundAssets.map(a => [a.id, a])).values()];
+  let added = 0;
+  // Small batches keep the request body and server-side transaction bounded.
+  const BATCH_SIZE = 100;
+  for (let start = 0; start < uniqueAssets.length; start += BATCH_SIZE) {
+    const batch = uniqueAssets.slice(start, start + BATCH_SIZE);
+    setStatus('', `Adding assets to album… (${Math.min(start + batch.length, uniqueAssets.length)} / ${uniqueAssets.length})`);
+    const addRes = await immichFetch(`${base}/api/albums/${albumId}/assets`, {
+      method: 'PUT',
+      body: JSON.stringify({ ids: batch.map(a => a.id) })
+    });
+    if (!addRes.ok) { setStatus('err', `Failed to add assets: ${addRes.status} ${addRes.statusText}`); return; }
+    const addResult = await addRes.json();
+    added += Array.isArray(addResult) ? addResult.filter(r => r.success).length : batch.length;
+    batch.forEach(a => assetsByPath.set(immichPathKey(a.originalPath), a));
+  }
+  const cache = await saveImmichThumbnailCache(base, coverList, assetsByPath);
+  const suffix = searchErrors ? ` (${searchErrors} folder lookup error(s) — see console)` : '';
+  setStatus('ok', `✓ Added ${added} of ${missing.length} missing photo(s); refreshed ${cache.matched} thumbnails in ${cache.storage}${suffix}`);
+}
+
+// Step 2 — fetch the album and save OuterId→thumbnailUrl map to IndexedDB
+async function saveImmichThumbnails(setStatus) {
+  const photos = data.Settings?.Photos || {};
+  const base = immichBaseUrl(photos.ImmichUrl);
+  const albumId = photos.ImmichCoverAlbumId;
+  if (!base || !albumId || !photos.ImmichApiKey) { setStatus('err', 'ImmichUrl, ImmichCoverAlbumId, or ImmichApiKey not configured'); return; }
+
+  const coverList = buildCoverPhotoList();
+  setStatus('', `Fetching album assets…`);
+
+  let albumAssets;
+  try { albumAssets = await listImmichAlbumAssets(base, albumId); }
+  catch (error) { setStatus('err', error.message); return; }
+
+  const assetsByPath = new Map(albumAssets
+    .filter(a => a?.id && a.originalPath)
+    .map(a => [immichPathKey(a.originalPath), a]));
+  const cache = await saveImmichThumbnailCache(base, coverList, assetsByPath);
+  setStatus('ok', `✓ Saved ${cache.matched} of ${cache.total} cover-thumbnail URLs to ${cache.storage}`);
 }
 
 function renderSettings() {
@@ -5038,10 +5234,11 @@ function renderSettings() {
   const connBtn=document.createElement('button'); connBtn.className='btn btn-g'; connBtn.style.cssText='font-size:12px;padding:5px 13px;';
   connBtn.textContent=t('settings.immich.checkConnection','Check Immich connection');
   connBtn.addEventListener('click', async()=>{
-    const base=(settings.Photos?.ImmichUrl||'').replace(/\/$/,'');
-    if(!base){setStatus1('err','ImmichUrl not set');return;}
+    const base=immichBaseUrl(settings.Photos?.ImmichUrl);
+    const albumId=settings.Photos?.ImmichCoverAlbumId;
+    if(!base||!albumId||!settings.Photos?.ImmichApiKey){setStatus1('err','ImmichUrl, ImmichCoverAlbumId, or ImmichApiKey not configured');return;}
     connBtn.disabled=true; setStatus1('',t('settings.immich.connecting','Connecting…'));
-    try{const r=await immichFetch(`${base}/api/auth/status`);if(r.ok)setStatus1('ok',t('settings.immich.connected','✓ Connected — Immich is reachable'));else setStatus1('err',`HTTP ${r.status} — check URL and API key`);}
+    try{const r=await immichFetch(`${base}/api/albums/${albumId}?withoutAssets=true`);if(r.ok)setStatus1('ok',t('settings.immich.connected','✓ Connected — album and API key are valid'));else setStatus1('err',`HTTP ${r.status} — check URL, album ID, and API key`);}
     catch(e){setStatus1('err',`Connection failed: ${e.message}`);}
     finally{connBtn.disabled=false;}
   });
@@ -5054,14 +5251,14 @@ function renderSettings() {
   });
 
   const saveBtn=document.createElement('button'); saveBtn.className='btn btn-p'; saveBtn.style.cssText='font-size:12px;padding:5px 13px;';
-  saveBtn.textContent=t('settings.immich.saveThumbnails','Save cover thumbnails → IndexedDB');
+  saveBtn.textContent=t('settings.immich.saveThumbnails','Save cover thumbnails → IndexedDB').replace('IndexedDB','OPFS');
   saveBtn.addEventListener('click', async()=>{
     saveBtn.disabled=true; setStatus2('',t('settings.immich.working','Working…'));
     try{await saveImmichThumbnails(setStatus2);}catch(e){setStatus2('err',e.message);}finally{saveBtn.disabled=false;}
   });
 
-  idbKvGet('cover_photos').then(stored=>{
-    if(stored) setStatus2('ok',`IndexedDB: ${Object.keys(stored).length} cover thumbnails stored`);
+  loadImmichThumbnailCache().then(({map,storage})=>{
+    if(map) setStatus2('ok',`${storage}: ${Object.keys(map).length} cover-thumbnail URLs stored`);
   });
 
   const lbl1=document.createElement('div'); lbl1.className='st-sub-hdr'; lbl1.style.cssText='border-top:none;padding-top:0;';lbl1.textContent=t('settings.immich.albumSync','Album sync');
