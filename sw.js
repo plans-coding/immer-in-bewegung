@@ -1,4 +1,4 @@
-const CACHE = 'chronik-v3';
+const CACHE = 'chronik-v5';
 
 // Resolve absolute URLs relative to the SW's own location so the SW works
 // correctly no matter what path the app is served from.
@@ -43,6 +43,21 @@ self.addEventListener('fetch', e => {
     url.pathname.endsWith('.json') &&
     !url.pathname.endsWith('manifest.json')
   ) return;
+
+  // Keep the install metadata current so Android standalone apps receive
+  // updated theme and background colors.
+  if (url.pathname.endsWith('manifest.json')) {
+    e.respondWith(
+      fetch(e.request).then(res => {
+        if (res && res.status === 200) {
+          const clone = res.clone();
+          caches.open(CACHE).then(c => c.put(e.request, clone));
+        }
+        return res;
+      }).catch(() => caches.match(e.request))
+    );
+    return;
+  }
 
   const isSameOrigin = url.origin === self.location.origin;
 

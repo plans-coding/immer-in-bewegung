@@ -27,7 +27,17 @@
       "sectionDays": "Days",
       "showAll": "Show complete results →",
       "allTrips": "All trips",
-      "closeTitle": "Close"
+      "closeTitle": "Close",
+      "yearsAgo": "{years} years ago",
+      "yearsFromNow": "{years} years from now"
+    },
+    "menu": {
+      "title": "Open navigation menu",
+      "explore": "Explore",
+      "edit": "Edit",
+      "settings": "Settings",
+      "report": "Report",
+      "about": "About"
     }
   },
   "loadScreen": {
@@ -313,6 +323,7 @@
       "swLabel": "Service Worker",
       "swDesc": "Caches the app shell for offline use.",
       "removeWorker": "Remove service worker",
+      "remove": "Remove",
       "notSupported": "Not supported in this browser",
       "notRegistered": "Not registered",
       "removed": "✕ Removed — reload to complete",

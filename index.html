@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;900&family=Righteous&display=swap" rel="stylesheet">
-<meta name="theme-color" content="#1d655e">
+<meta name="theme-color" content="#0d1f1c">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -91,10 +91,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;
 /* App Shell */
 #app{display:none;flex-direction:column;height:100vh;height:-webkit-fill-available;height:100dvh}
 /* Unified nav bar — brand · tabs · actions all in one row */
-#app-nav{display:flex;align-items:center;background:var(--s1);border-bottom:1px solid var(--border);flex-shrink:0;box-shadow:var(--shadow);height:48px;overflow:hidden}
-#nav-brand{display:flex;align-items:center;gap:8px;padding:0 12px;border-right:1px solid var(--border);height:100%;flex-shrink:0}
-#nav-logo{width:28px;height:28px;cursor:pointer;display:block;flex-shrink:0;opacity:.9;transition:opacity .15s,transform .15s}
+#app-nav{display:flex;align-items:center;background:var(--s1);border-bottom:1px solid var(--border);flex-shrink:0;box-shadow:var(--shadow);height:48px;position:relative;z-index:100;overflow:visible}
+#nav-brand{display:flex;align-items:center;gap:8px;padding:0 12px;border-left:1px solid var(--border);height:100%;flex-shrink:0;position:relative}
+#nav-logo{width:28px;height:28px;padding:0;border:0;background:none;color:inherit;cursor:pointer;display:block;flex-shrink:0;opacity:.9;transition:opacity .15s,transform .15s}
+#nav-logo img{width:100%;height:100%;display:block}
 #nav-logo:hover{opacity:1;transform:scale(1.1)}
+#nav-menu{position:absolute;top:calc(100% + 4px);right:8px;min-width:150px;padding:5px;background:var(--s1);border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-h);display:none}
+#nav-menu.open{display:block}
+.nav-menu-item{display:block;width:100%;padding:8px 11px;border:0;border-radius:5px;background:transparent;color:var(--text);font:inherit;font-size:13px;text-align:left;cursor:pointer;white-space:nowrap}
+.nav-menu-item:hover,.nav-menu-item:focus-visible{background:var(--s2);outline:none}
 #mod-dot{width:6px;height:6px;border-radius:50%;background:#f0a142;display:none;flex-shrink:0}
 #mod-dot.on{display:block}
 #nav-tabs{display:flex;flex:1;overflow-x:auto;height:100%;scrollbar-width:none}
@@ -136,9 +141,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;
 .ns-full-card-dest{font-size:14px;font-weight:500;flex:1}
 .ns-full-card-date{font-size:12px;color:var(--muted2)}
 .ns-full-card-snippet{font-size:12px;color:var(--muted2);white-space:pre-wrap}
-.tab-btn{padding:0 12px;height:100%;border:none;background:transparent;color:var(--muted2);cursor:pointer;font-size:13px;font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .12s,border-color .12s;white-space:nowrap;flex-shrink:0}
+.tab-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 12px;height:100%;border:none;background:transparent;color:var(--muted2);cursor:pointer;font-size:13px;font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .12s,border-color .12s;white-space:nowrap;flex-shrink:0}
+.tab-icon{width:15px;height:15px;display:block;flex-shrink:0}
 .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
 .tab-btn:hover:not(.active){color:var(--text)}
+@media(max-width:600px){
+  #app{padding-bottom:calc(48px + env(safe-area-inset-bottom))}
+  #app-nav{position:fixed;left:0;right:0;bottom:0;top:auto;height:48px;padding-bottom:env(safe-area-inset-bottom)}
+  #nav-menu{top:auto;bottom:calc(100% + 4px)}
+  .tab-btn{flex:1 1 0;padding:0 10px;min-width:0}
+  .tab-label{display:none}
+}
 .tab{display:none;flex:1;overflow:hidden}
 .tab.active{display:flex}
 
@@ -279,10 +292,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;
 #tab-settings{flex-direction:column;overflow-y:auto;padding:28px 24px;background:var(--bg);align-items:center}
 .st-outer{max-width:760px;width:100%}
 /* File banner */
-.st-file-banner{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;box-shadow:var(--shadow);flex-wrap:wrap}
+.st-file-banner{background:var(--accent);color:#fff;border:1px solid var(--accent);border-radius:10px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;box-shadow:var(--shadow);flex-wrap:wrap}
 .st-file-info{display:flex;flex-direction:column;gap:2px}
-.st-file-lbl{font-size:10px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.8px}
-.st-file-name{font-family:'SF Mono','Consolas',monospace;font-size:13px;color:var(--text);font-weight:600}
+.st-file-lbl{font-size:10px;font-weight:700;color:rgba(255,255,255,.72);text-transform:uppercase;letter-spacing:.8px}
+.st-file-name{font-family:'SF Mono','Consolas',monospace;font-size:13px;color:#fff;font-weight:600}
 /* Section cards */
 .st-card{background:var(--s2);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:16px;box-shadow:var(--shadow)}
 .st-group-hdr{font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;padding:10px 16px;background:var(--s3);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;margin:0}
@@ -311,7 +324,7 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 #tab-explore{flex-direction:column;overflow-y:auto;background:var(--bg)}
 #explore-inner{max-width:1100px;width:100%;margin:0 auto;padding:24px 20px}
 .explore-hdr{display:flex;align-items:center;gap:14px;margin-bottom:24px}
-.explore-hdr h2{font-size:20px;font-weight:700;color:var(--text);letter-spacing:-.3px}
+.explore-hdr h2{font-size:20px;font-weight:700;color:var(--text);letter-spacing:-.3px;margin-right:auto}
 .explore-hdr .sub{font-size:12px;color:var(--muted);flex:1}
 .shuffle-btn{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border:1px solid var(--border);border-radius:6px;background:var(--s2);color:var(--muted2);cursor:pointer;font-size:13px;font-weight:500;box-shadow:var(--shadow);transition:all .12s}
 .shuffle-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-g)}
@@ -699,19 +712,11 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 <!-- App -->
 <div id="app">
   <nav id="app-nav">
-    <div id="nav-brand">
-      <img id="nav-logo" src="favicon.svg" alt="Immer in Bewegung" title="Go to Explore">
-      <div id="mod-dot"></div>
-    </div>
     <div id="nav-tabs">
-      <button class="tab-btn" data-tab="ovbrowse" data-i18n="nav.tabs.overview">Overview</button>
-      <button class="tab-btn" data-tab="map" data-i18n="nav.tabs.map">Map</button>
-      <button class="tab-btn" data-tab="stats" data-i18n="nav.tabs.statistics">Statistics</button>
-      <button class="tab-btn" data-tab="trip" data-i18n="nav.tabs.trip">Trip</button>
-      <button class="tab-btn" data-tab="overview" data-i18n="nav.tabs.editor">Editor</button>
-      <button class="tab-btn" data-tab="settings" data-i18n="nav.tabs.settings">Settings</button>
-      <button class="tab-btn" data-tab="report" data-i18n="nav.tabs.report">Report</button>
-      <button class="tab-btn" data-tab="about" data-i18n="nav.tabs.about">About</button>
+      <button class="tab-btn" data-tab="ovbrowse" data-i18n-title="nav.tabs.overview" aria-label="Overview" title="Overview"><svg class="tab-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="1.5" y="1.5" width="5" height="5" rx=".7"/><rect x="9.5" y="1.5" width="5" height="5" rx=".7"/><rect x="1.5" y="9.5" width="5" height="5" rx=".7"/><rect x="9.5" y="9.5" width="5" height="5" rx=".7"/></svg><span class="tab-label" data-i18n="nav.tabs.overview">Overview</span></button>
+      <button class="tab-btn" data-tab="map" data-i18n-title="nav.tabs.map" aria-label="Map" title="Map"><svg class="tab-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="m1.5 3.5 4.3-2 4.4 2 4.3-2v11l-4.3 2-4.4-2-4.3 2z"/><path d="M5.8 1.5v11M10.2 3.5v11"/></svg><span class="tab-label" data-i18n="nav.tabs.map">Map</span></button>
+      <button class="tab-btn" data-tab="stats" data-i18n-title="nav.tabs.statistics" aria-label="Statistics" title="Statistics"><svg class="tab-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="1.5" y="8" width="2.5" height="6.5" rx=".5"/><rect x="6.75" y="4.5" width="2.5" height="10" rx=".5"/><rect x="12" y="1.5" width="2.5" height="13" rx=".5"/></svg><span class="tab-label" data-i18n="nav.tabs.statistics">Statistics</span></button>
+      <button class="tab-btn" data-tab="trip" data-i18n-title="nav.tabs.trip" aria-label="Trip" title="Trip"><svg class="tab-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4.5" width="12" height="9" rx="1.2"/><path d="M5.5 4.5V3.2c0-.7.5-1.2 1.2-1.2h2.6c.7 0 1.2.5 1.2 1.2v1.3M2 8.2h12M6.2 8.2v1.3h3.6V8.2"/></svg><span class="tab-label" data-i18n="nav.tabs.trip">Trip</span></button>
     </div>
     <div id="nav-actions">
       <div id="nav-search">
@@ -722,6 +727,17 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
         <div id="nav-search-drop"></div>
       </div>
       <button id="theme-btn" onclick="toggleTheme()" title="Toggle theme"></button>
+    </div>
+    <div id="nav-brand">
+      <button id="nav-logo" type="button" aria-haspopup="menu" aria-expanded="false" data-i18n-title="nav.menu.title" title="Open navigation menu"><img src="favicon.svg" alt="Immer in Bewegung"></button>
+      <div id="nav-menu" role="menu">
+        <button class="nav-menu-item" data-tab="explore" data-i18n="nav.menu.explore" role="menuitem">Explore</button>
+        <button class="nav-menu-item" data-tab="overview" data-i18n="nav.menu.edit" role="menuitem">Edit</button>
+        <button class="nav-menu-item" data-tab="settings" data-i18n="nav.menu.settings" role="menuitem">Settings</button>
+        <button class="nav-menu-item" data-tab="report" data-i18n="nav.menu.report" role="menuitem">Report</button>
+        <button class="nav-menu-item" data-tab="about" data-i18n="nav.menu.about" role="menuitem">About</button>
+      </div>
+      <div id="mod-dot"></div>
     </div>
   </nav>
 
@@ -741,7 +757,6 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
     <div id="explore-inner">
       <div class="explore-hdr">
         <h2 data-i18n="explore.title">Discover</h2>
-        <span class="sub" data-i18n="explore.subtitle">8 random trips</span>
         <button class="shuffle-btn" id="explore-date-search-btn" title="Show trips and days on this date"></button>
         <button class="shuffle-btn" id="shuffle-btn"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.6 9.6 0 0 0 7.556 8a9.6 9.6 0 0 0 1.318 1.918C9.827 10.99 11.202 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.6 10.6 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.6 9.6 0 0 0 6.444 8a9.6 9.6 0 0 0-1.318-1.918C4.173 5.01 2.798 4 1 4H.5a.5.5 0 0 1-.5-.5m13-1a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H14v.5a.5.5 0 0 1-1 0V3h-.5a.5.5 0 0 1-.5-.5m0 9a.5.5 0 0 1 .5-.5h.5v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1H14.5a.5.5 0 0 1-.5-.5"/></svg><span data-i18n="explore.shuffle">Shuffle</span></button>
       </div>
@@ -913,8 +928,8 @@ let explorePicks = [];
 let mapInstance = null;
 let activeFilter = { domain: [], arranger: [], label: [] };
 let currentFileName = '';
-const APP_VERSION = 'v4.1';
-const APP_DATE    = '2026-06-21';
+const APP_VERSION = 'v4.2';
+const APP_DATE    = '2026-09-04';
 let mapMode = { type: 'all', value: '' }; // 'all' | 'country' | 'theme'
 let _mapPhotoVisible = false, _mapPhotoLoaded = false, _mapPhotoCountry = ''; // photo layer state
 let currentTab = 'explore';
@@ -929,6 +944,8 @@ let _settingsSnapshot = null; // deep copy of data.Settings when tab was opened
 const _ICON_MOON   = `<svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278"/></svg>`;
 // Bootstrap Icons: floppy-disk (save) and eject (return/start screen)
 const _ICON_SAVE   = `<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M11 2H9v3h2z"/><path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v3.5A1.5 1.5 0 0 1 11.5 6h-7A1.5 1.5 0 0 1 3 4.5V1H1.5a.5.5 0 0 0-.5.5m3 0v3.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1zm3 9h2v4h-2v-4a.5.5 0 0 0 0 0"/></svg>`;
+const _ICON_DOWNLOAD = `<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1v9m-3-3 3 3 3-3M2 12.5v1A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5v-1"/></svg>`;
+const _ICON_RELOAD = `<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 5.5A6 6 0 1 0 14 9"/><path d="M13.5 2.5v3h-3"/></svg>`;
 const _ICON_EJECT  = `<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 13a.5.5 0 0 1 0 1h-11a.5.5 0 0 1 0-1zm-8.803-5.43L8 2.227l3.303 5.342A.5.5 0 0 1 10.874 8H5.125a.5.5 0 0 1-.428-.43zM8 .787a.5.5 0 0 0-.428.243L3.569 7.37A1.5 1.5 0 0 0 4.874 9.5h6.252a1.5 1.5 0 0 0 1.305-2.13L9.428 1.03A.5.5 0 0 0 8 .787"/></svg>`;
 const _ICON_SUN  = `<svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6m0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/></svg>`;
 function applyTheme(theme) {
@@ -938,7 +955,7 @@ function applyTheme(theme) {
   localStorage.setItem('chronik-theme', theme);
   // Keep the browser/Android top bar in sync with the nav background
   const metaTheme = document.querySelector('meta[name="theme-color"]');
-  if (metaTheme) metaTheme.content = theme === 'dark' ? '#091a15' : '#1d655e';
+  if (metaTheme) metaTheme.content = theme === 'dark' ? '#0d1f1c' : '#f5f5f5';
 }
 function toggleTheme() {
   applyTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
@@ -1120,7 +1137,17 @@ function wire() {
   urlBtn.addEventListener('click', () => loadFromUrl(urlInp.value.trim() || 'bewegung.json'));
   urlInp.addEventListener('keydown', e => { if (e.key === 'Enter') loadFromUrl(urlInp.value.trim() || 'bewegung.json'); });
   document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
-  document.getElementById('nav-logo').addEventListener('click', () => switchTab('explore'));
+  const navLogo = document.getElementById('nav-logo');
+  const navMenu = document.getElementById('nav-menu');
+  const closeNavMenu = () => { navMenu.classList.remove('open'); navLogo.setAttribute('aria-expanded', 'false'); };
+  navLogo.addEventListener('click', e => {
+    e.stopPropagation();
+    const isOpen = navMenu.classList.toggle('open');
+    navLogo.setAttribute('aria-expanded', String(isOpen));
+  });
+  navLogo.addEventListener('keydown', e => { if (e.key === 'Escape') closeNavMenu(); });
+  navMenu.querySelectorAll('.nav-menu-item').forEach(b => b.addEventListener('click', () => { closeNavMenu(); switchTab(b.dataset.tab); }));
+  document.addEventListener('click', e => { if (!document.getElementById('nav-brand').contains(e.target)) closeNavMenu(); });
   document.getElementById('new-trip-btn').addEventListener('click', newTrip);
   document.getElementById('trip-search').addEventListener('input', renderTrips);
   document.getElementById('shuffle-btn').addEventListener('click', () => { pickRandomTrips(); renderExplore(); });
@@ -1180,6 +1207,19 @@ function wireNavSearch() {
     return [trip.DepartureDate, trip.ReturnDate, ...(trip.Days || []).map(day => day.Date)]
       .filter(Boolean).sort().at(-1) || '';
   }
+  function formatSearchDate(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(`${dateStr.slice(0, 10)}T00:00:00`);
+    if (Number.isNaN(date.getTime())) return dateStr;
+    const years = (Date.now() - date.getTime()) / (365.2425 * 24 * 60 * 60 * 1000);
+    const age = Math.abs(years).toFixed(1);
+    const ageLabel = t(years >= 0 ? 'nav.search.yearsAgo' : 'nav.search.yearsFromNow',
+      years >= 0 ? '{years} years ago' : '{years} years from now').replace('{years}', age);
+    return `${dateStr} (${ageLabel})`;
+  }
+  function formatSearchDateRange(start, end) {
+    return [start, end].filter(Boolean).map(formatSearchDate).join(' → ');
+  }
   function sortSearchResults(trips, days) {
     trips.sort((a, b) => latestTripDate(b).localeCompare(latestTripDate(a)));
     days.sort((a, b) => (b.day.Date || latestTripDate(b.trip)).localeCompare(a.day.Date || latestTripDate(a.trip)));
@@ -1214,7 +1254,7 @@ function wireNavSearch() {
         card.className = 'ns-full-card';
         const top = document.createElement('div'); top.className = 'ns-full-card-top';
         const dest = document.createElement('span'); dest.className = 'ns-full-card-dest'; dest.textContent = t.OverallDestination || '—';
-        const date = document.createElement('span'); date.className = 'ns-full-card-date'; date.textContent = [t.DepartureDate, t.ReturnDate].filter(Boolean).join(' → ');
+        const date = document.createElement('span'); date.className = 'ns-full-card-date'; date.textContent = formatSearchDateRange(t.DepartureDate, t.ReturnDate);
         top.appendChild(makeBadge(t)); top.appendChild(dest); top.appendChild(date);
         card.appendChild(top);
         if (t.TripDescription) {
@@ -1235,7 +1275,7 @@ function wireNavSearch() {
         const card = document.createElement('div');
         card.className = 'ns-full-card';
         const top = document.createElement('div'); top.className = 'ns-full-card-top';
-        const dest = document.createElement('span'); dest.className = 'ns-full-card-dest'; dest.textContent = d.Date || '—';
+        const dest = document.createElement('span'); dest.className = 'ns-full-card-dest'; dest.textContent = formatSearchDate(d.Date) || '—';
         const date = document.createElement('span'); date.className = 'ns-full-card-date'; date.textContent = t.OverallDestination || '';
         top.appendChild(makeBadge(t)); top.appendChild(dest); top.appendChild(date);
         card.appendChild(top);
@@ -1284,8 +1324,14 @@ function wireNavSearch() {
   function positionDrop() {
     const r = wrap.getBoundingClientRect();
     const dropW = Math.min(360, window.innerWidth - 16);
-    drop.style.top = (r.bottom + 6) + 'px';
     drop.style.width = dropW + 'px';
+    if (window.matchMedia('(max-width: 600px)').matches) {
+      drop.style.top = 'auto';
+      drop.style.bottom = (window.innerHeight - r.top + 6) + 'px';
+    } else {
+      drop.style.bottom = 'auto';
+      drop.style.top = (r.bottom + 6) + 'px';
+    }
     // Anchor right edge of dropdown to right edge of search bar.
     // Only clamp leftward if the dropdown would overflow the left side of the viewport.
     const naturalRight = window.innerWidth - r.right;  // CSS right: value that aligns edges
@@ -3015,6 +3061,7 @@ function renderTripView(innerId) {
   // Markdown download
   const mdBtn=document.createElement('button');mdBtn.className='trip-nav-btn trip-nav-icon';mdBtn.title=t('tripView.downloadMd','Download as Markdown');
   mdBtn.innerHTML='<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M14 3H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm.5 4.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0V7H3a.5.5 0 0 1-.5-.5m3.5 0a.5.5 0 0 1 .447-.494l1.553 2.33 1.553-2.33A.5.5 0 0 1 10 6.5v3a.5.5 0 0 1-1 0V7.886l-1.053 1.58a.5.5 0 0 1-.832 0L6.06 7.886V9.5a.5.5 0 0 1-1 0zm5.5 3a.5.5 0 0 1-.5-.5v-2h-.5a.5.5 0 0 1 0-1h2a.5.5 0 0 1 0 1h-.5V9a.5.5 0 0 1-.5.5"/></svg>';
+  mdBtn.innerHTML='<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><path d="M4 10V6l2 2 2-2v4M11 6v4m-1.5-1.5L11 10l1.5-1.5"/></svg>';
   mdBtn.addEventListener('click',()=>{
     const sortedDays=[...(trip.Days||[])].sort((a,b)=>(a.Date||'').localeCompare(b.Date||''));
     const fm=[
@@ -3069,13 +3116,16 @@ function renderTripView(innerId) {
   fsBtn.dataset.role='fs';
   const fsEnterSvg='<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M1.5 1h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 1m9 0a.5.5 0 0 1 0-1h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5zm-9 14a1.5 1.5 0 0 1-1.5-1.5v-4a.5.5 0 0 1 1 0v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1zm10 0a.5.5 0 0 1 0 1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1-1 0v4a.5.5 0 0 1-.5.5z"/></svg>';
   const fsExitSvg='<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M5.5 0a.5.5 0 0 1 .5.5v4A1.5 1.5 0 0 1 4.5 6h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5m5 0a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 10 4.5v-4a.5.5 0 0 1 .5-.5M0 10.5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 6 11.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5m10 1a1.5 1.5 0 0 1 1.5-1.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0z"/></svg>';
-  function updateFsBtn(){const inFs=!!document.fullscreenElement;fsBtn.innerHTML=inFs?fsExitSvg:fsEnterSvg;fsBtn.title=inFs?'Exit fullscreen':'Fullscreen';}
+  const fsEnterSvgFixed='<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 1H1v5M10 1h5v5M1 10v5h5M15 10v5h-5"/></svg>';
+  const fsExitSvgFixed='<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6H1V1M10 6h5V1M6 10H1v5M10 10h5v5"/></svg>';
+  function updateFsBtn(){const inFs=!!document.fullscreenElement;fsBtn.innerHTML=inFs?fsExitSvgFixed:fsEnterSvgFixed;fsBtn.title=inFs?t('tripView.exitFullscreen','Exit fullscreen'):t('tripView.fullscreen','Fullscreen');}
   updateFsBtn();
   fsBtn.addEventListener('click',()=>{
     if(!document.fullscreenElement) document.documentElement.requestFullscreen().catch(()=>{});
     else document.exitFullscreen().catch(()=>{});
   });
   if(!window._fscListenerAdded){window._fscListenerAdded=true;document.addEventListener('fullscreenchange',()=>{const inFs=!!document.fullscreenElement;document.querySelectorAll('.trip-nav-icon[data-role="fs"]').forEach(b=>{b.innerHTML=inFs?'<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M5.5 0a.5.5 0 0 1 .5.5v4A1.5 1.5 0 0 1 4.5 6h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5m5 0a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 10 4.5v-4a.5.5 0 0 1 .5-.5M0 10.5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 6 11.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5m10 1a1.5 1.5 0 0 1 1.5-1.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0z"/></svg>':'<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M1.5 1h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 1m9 0a.5.5 0 0 1 0-1h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5zm-9 14a1.5 1.5 0 0 1-1.5-1.5v-4a.5.5 0 0 1 1 0v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1zm10 0a.5.5 0 0 1 0 1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1-1 0v4a.5.5 0 0 1-.5.5z"/></svg>';b.title=inFs?t('tripView.exitFullscreen','Exit fullscreen'):t('tripView.fullscreen','Fullscreen');});});}
+  if(!window._fsFixedListenerAdded){window._fsFixedListenerAdded=true;document.addEventListener('fullscreenchange',()=>{const inFs=!!document.fullscreenElement;document.querySelectorAll('.trip-nav-icon[data-role="fs"]').forEach(b=>{b.innerHTML=inFs?fsExitSvgFixed:fsEnterSvgFixed;b.title=inFs?t('tripView.exitFullscreen','Exit fullscreen'):t('tripView.fullscreen','Fullscreen');});});}
   nav.appendChild(fsBtn);
   // Prev/Next at the far right
   if(prev){const pb=document.createElement('button');pb.className='trip-nav-btn';pb.textContent=`‹ ${prev.OuterId||prev.InnerId}`;pb.addEventListener('click',()=>openTripView(prev.InnerId));nav.appendChild(pb);}
@@ -5058,13 +5108,16 @@ function renderSettings() {
   const fileInfo=document.createElement('div'); fileInfo.className='st-file-info';
   fileInfo.innerHTML=`<div class="st-file-lbl">${t('settings.currentFile','Current file')}</div><div class="st-file-name">${h(currentFileName||'—')}</div>`;
   const bannerBtns=document.createElement('div'); bannerBtns.style.cssText='display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end';
+  const compactFileBtns=document.createElement('div'); compactFileBtns.style.cssText='display:flex;gap:8px;align-items:center;flex-wrap:nowrap';
   // Order: Start screen · Download/Save · Reload from URL (if applicable)
   const closeBtn=document.createElement('button'); closeBtn.className='btn btn-g';
   closeBtn.style.cssText='font-size:12px;display:flex;align-items:center;gap:6px;white-space:nowrap;';
   closeBtn.innerHTML=_ICON_EJECT+'<span>'+t('settings.startScreen','Start screen')+'</span>'; closeBtn.addEventListener('click',closeFile);
   const dlBtn=document.createElement('button'); dlBtn.className='btn btn-p';
-  dlBtn.style.cssText='font-size:12px;display:flex;align-items:center;gap:6px;white-space:nowrap;';
-  dlBtn.innerHTML=_ICON_SAVE+'<span>'+(fileHandle?t('settings.saveFile','Save file'):t('settings.downloadJson','Download JSON'))+'</span>';
+  dlBtn.style.cssText='font-size:12px;padding:8px 11px;display:flex;align-items:center;justify-content:center;white-space:nowrap;';
+  dlBtn.title=fileHandle?t('settings.saveFile','Save file'):t('settings.downloadJson','Download JSON');
+  dlBtn.setAttribute('aria-label',dlBtn.title);
+  dlBtn.innerHTML=_ICON_DOWNLOAD;
   dlBtn.addEventListener('click',()=>{ saveFile(); });
   bannerBtns.appendChild(closeBtn);
   // ── Snapshot Upload button (file mode only, if configured) ────────
@@ -5101,19 +5154,22 @@ function renderSettings() {
     bannerBtns.appendChild(snapBtn);
     bannerBtns.appendChild(_snapStatus);
   }
-  bannerBtns.appendChild(dlBtn);
+  compactFileBtns.appendChild(dlBtn);
   const _reloadUrl = localStorage.getItem('chronik-last-url');
   if (_reloadUrl) {
     const reloadBtn=document.createElement('button'); reloadBtn.className='btn btn-p';
-    reloadBtn.style.cssText='font-size:12px;white-space:nowrap;background:var(--accent);color:#fff;border-color:var(--accent);';
-    reloadBtn.textContent='↺ '+t('settings.reloadFromUrl','Reload from URL');
+    reloadBtn.style.cssText='font-size:12px;padding:8px 11px;display:flex;align-items:center;justify-content:center;white-space:nowrap;background:var(--accent);color:#fff;border-color:var(--accent);';
+    reloadBtn.title=t('settings.reloadFromUrl','Reload from URL');
+    reloadBtn.setAttribute('aria-label',reloadBtn.title);
+    reloadBtn.innerHTML=_ICON_RELOAD;
     reloadBtn.addEventListener('click', async () => {
-      reloadBtn.disabled=true; reloadBtn.textContent=t('tripView.loading','Loading…');
+      reloadBtn.disabled=true; reloadBtn.textContent='…';
       await loadFromUrl(_reloadUrl);
-      reloadBtn.disabled=false; reloadBtn.textContent='↺ '+t('settings.reloadFromUrl','Reload from URL');
+      reloadBtn.disabled=false; reloadBtn.innerHTML=_ICON_RELOAD;
     });
-    bannerBtns.appendChild(reloadBtn);
+    compactFileBtns.appendChild(reloadBtn);
   }
+  bannerBtns.appendChild(compactFileBtns);
   banner.appendChild(fileInfo); banner.appendChild(bannerBtns); content.appendChild(banner);
 
   // ── Card helpers ─────────────────────────────────────────────────
@@ -5224,6 +5280,7 @@ function renderSettings() {
 
   // ── Immich tools ─────────────────────────────────────────────────
   const immichCard=makeHdr(t('settings.sections.tools','Tools'));
+  content.insertBefore(immichCard, content.children[1] || null);
   const tools=document.createElement('div'); tools.className='immich-tools';
 
   const status1=document.createElement('div'); status1.className='immich-status'; status1.textContent='—';
@@ -5280,7 +5337,7 @@ function renderSettings() {
   swDesc.appendChild(swStatus);
   const swBtn=document.createElement('button'); swBtn.className='btn btn-g';
   swBtn.style.cssText='white-space:nowrap;font-size:13px;flex-shrink:0;padding:9px 20px;border-color:var(--border)';
-  swBtn.textContent=t('settings.offline.removeWorker','Remove service worker');
+  swBtn.textContent=t('settings.offline.remove','Remove');
   swBtn.addEventListener('click', async () => {
     if (!('serviceWorker' in navigator)) { toast(t('toasts.swNotSupported','Service workers not supported'),'err'); return; }
     const reg = await navigator.serviceWorker.getRegistration('./sw.js');
@@ -5326,11 +5383,11 @@ function renderSettings() {
     swStatus.style.color='var(--muted2)';
     swBtn.disabled=true;
   }
-  const swBtnGroup=document.createElement('div'); swBtnGroup.style.cssText='display:flex;flex-direction:column;gap:8px;flex-shrink:0';
+  const swBtnGroup=document.createElement('div'); swBtnGroup.style.cssText='display:flex;flex-direction:row;gap:8px;flex-shrink:0';
   swBtnGroup.appendChild(swBtn); swBtnGroup.appendChild(forceReloadBtn);
   swBody.appendChild(swDesc); swBody.appendChild(swBtnGroup);
   swCard.appendChild(swHdr); swCard.appendChild(swBody);
-  content.appendChild(swCard);
+  content.insertBefore(swCard, content.children[2] || null);
 
   // ── Export ───────────────────────────────────────────────────────
   const expCard=document.createElement('div'); expCard.className='st-card';

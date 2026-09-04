@@ -27,7 +27,17 @@
       "sectionDays": "Dagar",
       "showAll": "Visa alla resultat →",
       "allTrips": "Alla resor",
-      "closeTitle": "Stäng"
+      "closeTitle": "Stäng",
+      "yearsAgo": "för {years} år sedan",
+      "yearsFromNow": "om {years} år"
+    },
+    "menu": {
+      "title": "Öppna navigeringsmenyn",
+      "explore": "Utforska",
+      "edit": "Redigera",
+      "settings": "Inställningar",
+      "report": "Rapport",
+      "about": "Om"
     }
   },
   "loadScreen": {
@@ -313,6 +323,7 @@
       "swLabel": "Service Worker",
       "swDesc": "Cachelagrar appen för offlineanvändning.",
       "removeWorker": "Ta bort service worker",
+      "remove": "Ta bort",
       "notSupported": "Stöds inte i den här webbläsaren",
       "notRegistered": "Inte registrerad",
       "removed": "✕ Borttagen — ladda om för att slutföra",

@@ -27,7 +27,17 @@
       "sectionDays": "Dage",
       "showAll": "Vis alle resultater →",
       "allTrips": "Alle rejser",
-      "closeTitle": "Luk"
+      "closeTitle": "Luk",
+      "yearsAgo": "{years} år siden",
+      "yearsFromNow": "om {years} år"
+    },
+    "menu": {
+      "title": "Åbn navigationsmenu",
+      "explore": "Udforsk",
+      "edit": "Rediger",
+      "settings": "Indstillinger",
+      "report": "Rapport",
+      "about": "Om"
     }
   },
   "loadScreen": {
@@ -313,6 +323,7 @@
       "swLabel": "Service Worker",
       "swDesc": "Gemmer appen til offline brug.",
       "removeWorker": "Fjern service worker",
+      "remove": "Fjern",
       "notSupported": "Ikke understøttet i denne browser",
       "notRegistered": "Ikke registreret",
       "removed": "✕ Fjernet — genindlæs for at fuldføre",
