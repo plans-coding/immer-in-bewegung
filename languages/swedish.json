@@ -29,7 +29,8 @@
       "allTrips": "Alla resor",
       "closeTitle": "Stäng",
       "yearsAgo": "för {years} år sedan",
-      "yearsFromNow": "om {years} år"
+      "yearsFromNow": "om {years} år",
+      "decimalSeparator": ","
     },
     "menu": {
       "title": "Öppna navigeringsmenyn",
@@ -316,6 +317,22 @@
       "albumSync": "Albumsynkronisering",
       "thumbnailCache": "Miniatyrbildcache",
       "working": "Arbetar…",
+      "enableBeforeSync": "Ställ in Photos.Immich till Enabled före synkronisering",
+      "notConfigured": "ImmichUrl, ImmichCoverAlbumId eller ImmichApiKey är inte konfigurerad",
+      "fetchingAlbum": "Hämtar album… ({count} omslagsfoton från tillgångar)",
+      "upToDate": "✓ Albumet är uppdaterat; {matched} omslagsminiatyrer uppdaterades i {storage}",
+      "noParentFolder": "Saknade omslagssökvägar innehåller ingen överordnad mapp",
+      "loadingMissing": "Hämtar {missing} saknade foto(n) från {folders} mapp(ar)… (0 / {folders})",
+      "loadingFolders": "Hämtar Immich-mappar… ({searched} / {folders})",
+      "noAssetsErrors": "Inga tillgångar hittades ({errors} mappsökningsfel — kontrollera API-nyckelns folder.read-behörighet)",
+      "noAssets": "Inga matchande tillgångar hittades i Immich för de saknade omslagen",
+      "addingAssets": "Lägger till tillgångar i albumet… ({current} / {total})",
+      "folderErrorsSuffix": " ({errors} mappsökningsfel — se konsolen)",
+      "addedSummary": "✓ Lade till {added} av {missing} saknade foto(n); uppdaterade {matched} miniatyrer i {storage}{suffix}",
+      "fetchingAssets": "Hämtar albumtillgångar…",
+      "savedSummary": "✓ Sparade {matched} av {total} URL:er för omslagsminiatyrer i {storage}",
+      "httpCheck": "HTTP {status} — kontrollera URL, album-ID och API-nyckel",
+      "connectionFailed": "Anslutningen misslyckades: {error}",
       "photoToggleTitle": "Växla Immich-fotoplatser"
     },
     "offline": {
@@ -343,7 +360,7 @@
       "language": "Språk",
       "languageDesc": "Sökväg till en språkfil relativt appen (t.ex. languages/swedish.json). Lämna tomt för engelska.",
       "languageApply": "Verkställ",
-      "tools": "Verktyg"
+      "tools": "Immich-integration"
     },
     "export": {
       "title": "Exportera",

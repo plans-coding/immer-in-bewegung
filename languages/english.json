@@ -316,6 +316,22 @@
       "albumSync": "Album sync",
       "thumbnailCache": "Thumbnail cache",
       "working": "Working…",
+      "enableBeforeSync": "Set Photos.Immich to Enabled before syncing",
+      "notConfigured": "ImmichUrl, ImmichCoverAlbumId, or ImmichApiKey not configured",
+      "fetchingAlbum": "Fetching album… ({count} asset-backed covers)",
+      "upToDate": "✓ Album is up to date; refreshed {matched} cover thumbnails in {storage}",
+      "noParentFolder": "Missing cover paths do not contain a parent folder",
+      "loadingMissing": "Loading {missing} missing photo(s) from {folders} folder(s)… (0 / {folders})",
+      "loadingFolders": "Loading Immich folders… ({searched} / {folders})",
+      "noAssetsErrors": "No assets found ({errors} folder lookup error(s) — ensure the API key has folder.read permission)",
+      "noAssets": "No matching assets found in Immich for the missing covers",
+      "addingAssets": "Adding assets to album… ({current} / {total})",
+      "folderErrorsSuffix": " ({errors} folder lookup error(s) — see console)",
+      "addedSummary": "✓ Added {added} of {missing} missing photo(s); refreshed {matched} thumbnails in {storage}{suffix}",
+      "fetchingAssets": "Fetching album assets…",
+      "savedSummary": "✓ Saved {matched} of {total} cover-thumbnail URLs to {storage}",
+      "httpCheck": "HTTP {status} — check URL, album ID, and API key",
+      "connectionFailed": "Connection failed: {error}",
       "photoToggleTitle": "Toggle Immich photo locations"
     },
     "offline": {
@@ -343,7 +359,7 @@
       "language": "Language",
       "languageDesc": "Path to a language JSON file relative to the app (e.g. languages/swedish.json). Leave empty for English.",
       "languageApply": "Apply",
-      "tools": "Tools"
+      "tools": "Immich integration"
     },
     "export": {
       "title": "Export",

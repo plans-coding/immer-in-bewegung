@@ -316,6 +316,22 @@
       "albumSync": "Albumsynkronisering",
       "thumbnailCache": "Miniaturecache",
       "working": "Arbejder…",
+      "enableBeforeSync": "Sæt Photos.Immich til Enabled før synkronisering",
+      "notConfigured": "ImmichUrl, ImmichCoverAlbumId eller ImmichApiKey er ikke konfigureret",
+      "fetchingAlbum": "Henter album… ({count} covere fra aktiver)",
+      "upToDate": "✓ Albummet er opdateret; {matched} coverminiaturer blev opdateret i {storage}",
+      "noParentFolder": "De manglende coverstier indeholder ingen overordnet mappe",
+      "loadingMissing": "Henter {missing} manglende foto(er) fra {folders} mappe(r)… (0 / {folders})",
+      "loadingFolders": "Henter Immich-mapper… ({searched} / {folders})",
+      "noAssetsErrors": "Ingen aktiver fundet ({errors} mappesøgningsfejl — kontrollér API-nøglens folder.read-tilladelse)",
+      "noAssets": "Ingen matchende aktiver fundet i Immich for de manglende covers",
+      "addingAssets": "Tilføjer aktiver til album… ({current} / {total})",
+      "folderErrorsSuffix": " ({errors} mappesøgningsfejl — se konsollen)",
+      "addedSummary": "✓ Tilføjede {added} af {missing} manglende foto(er); opdaterede {matched} miniaturer i {storage}{suffix}",
+      "fetchingAssets": "Henter albumaktiver…",
+      "savedSummary": "✓ Gemte {matched} af {total} cover-miniature-URL'er i {storage}",
+      "httpCheck": "HTTP {status} — kontrollér URL, album-id og API-nøgle",
+      "connectionFailed": "Forbindelsen mislykkedes: {error}",
       "photoToggleTitle": "Skift Immich fotoplaceringer"
     },
     "offline": {
@@ -343,7 +359,7 @@
       "language": "Sprog",
       "languageDesc": "Sti til en sprog-JSON-fil relativt til appen (f.eks. languages/danish.json). Lad stå tomt for engelsk.",
       "languageApply": "Anvend",
-      "tools": "Værktøjer"
+      "tools": "Immich-integration"
     },
     "export": {
       "title": "Eksport",

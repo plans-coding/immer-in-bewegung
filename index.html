@@ -314,9 +314,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;
 .st-val:hover{border-color:var(--muted2)}
 .st-val:focus{outline:none;border-color:var(--accent);background:var(--s1);box-shadow:0 0 0 3px var(--accent-g)}
 textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
+/* Material 3-inspired Settings surfaces */
+#st-content .st-card{background:var(--s1);border-color:var(--border);border-radius:12px;margin-top:12px;box-shadow:none}
+#st-content .st-group-hdr{padding:14px 16px;background:var(--s3);font-size:13px;font-weight:600;text-transform:none;letter-spacing:.2px;color:var(--text)}
+#st-content .st-group-hdr::before{display:none}
+#st-content .st-sub-hdr{padding:10px 16px 6px;background:var(--s3);font-size:11px;text-transform:none;letter-spacing:.3px}
+#st-content .st-sub-hdr.collapsible{padding:11px 16px}
+#st-content .st-row{padding:11px 16px;gap:16px}
+#st-content .st-row:hover{background:var(--s3)}
+#st-content .st-attr{padding-top:9px;font-size:11px}
+#st-content .st-val{padding:8px 12px;border-radius:8px}
 /* Immich tools */
 .immich-tools{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
-.immich-btns{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.immich-btns{display:flex;width:100%;gap:8px;flex-wrap:wrap;align-items:center}
+.immich-btns .btn{flex:1;width:100%}
 .immich-status{font-size:12px;font-family:'SF Mono','Consolas',monospace;padding:7px 12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--muted2);min-height:34px;display:flex;align-items:center;white-space:pre-wrap;word-break:break-all}
 .immich-status.ok{color:var(--accent);border-color:rgba(29,101,94,.3)}
 .immich-status.err{color:#dc3545;border-color:rgba(220,53,69,.3)}
@@ -5021,13 +5032,14 @@ async function syncImmichAlbum(setStatus) {
   const photos = data.Settings?.Photos || {};
   const base = immichBaseUrl(photos.ImmichUrl);
   const albumId = photos.ImmichCoverAlbumId;
-  if (photos.Immich !== 'Enabled') { setStatus('err', 'Set Photos.Immich to Enabled before syncing'); return; }
-  if (!base || !albumId || !photos.ImmichApiKey) { setStatus('err', 'ImmichUrl, ImmichCoverAlbumId, or ImmichApiKey not configured'); return; }
+  const msg=(key,fallback,vars={})=>Object.entries(vars).reduce((s,[k,v])=>s.replaceAll(`{${k}}`,v),t(`settings.immich.${key}`,fallback));
+  if (photos.Immich !== 'Enabled') { setStatus('err', msg('enableBeforeSync','Set Photos.Immich to Enabled before syncing')); return; }
+  if (!base || !albumId || !photos.ImmichApiKey) { setStatus('err', msg('notConfigured','ImmichUrl, ImmichCoverAlbumId, or ImmichApiKey not configured')); return; }
 
   const coverList = buildCoverPhotoList();
   const assetCovers = coverList.filter(item => isImmichAssetCover(item.CoverPhoto));
 
-  setStatus('', `Fetching album… (${assetCovers.length} asset-backed covers)`);
+  setStatus('', msg('fetchingAlbum','Fetching album… ({count} asset-backed covers)',{count:assetCovers.length}));
   let albumAssets;
   try { albumAssets = await listImmichAlbumAssets(base, albumId); }
   catch (error) { setStatus('err', error.message); return; }
@@ -5046,7 +5058,7 @@ async function syncImmichAlbum(setStatus) {
   const missing = [...missingByPath.values()];
   if (!missing.length) {
     const cache = await saveImmichThumbnailCache(base, coverList, assetsByPath);
-    setStatus('ok', `✓ Album is up to date; refreshed ${cache.matched} cover thumbnails in ${cache.storage}`);
+    setStatus('ok', msg('upToDate','✓ Album is up to date; refreshed {matched} cover thumbnails in {storage}',{matched:cache.matched,storage:cache.storage}));
     return;
   }
 
@@ -5060,9 +5072,9 @@ async function syncImmichAlbum(setStatus) {
     if (!folder) continue;
     folders.set(immichPathKey(folder), folder);
   }
-  if (!folders.size) { setStatus('err', 'Missing cover paths do not contain a parent folder'); return; }
+  if (!folders.size) { setStatus('err', msg('noParentFolder','Missing cover paths do not contain a parent folder')); return; }
 
-  setStatus('', `Loading ${missing.length} missing photo(s) from ${folders.size} folder(s)… (0 / ${folders.size})`);
+  setStatus('', msg('loadingMissing','Loading {missing} missing photo(s) from {folders} folder(s)… (0 / {folders})',{missing:missing.length,folders:folders.size}));
   const CONCURRENCY = 4;
   const foundAssets = [];
   let searched = 0, searchErrors = 0;
@@ -5078,7 +5090,7 @@ async function syncImmichAlbum(setStatus) {
     } catch (e) { searchErrors++; console.warn('Folder lookup failed for', folder, e); }
     finally {
       searched++;
-      setStatus('', `Loading Immich folders… (${searched} / ${folders.size})`);
+      setStatus('', msg('loadingFolders','Loading Immich folders… ({searched} / {folders})',{searched,folders:folders.size}));
     }
   }
 
@@ -5089,8 +5101,8 @@ async function syncImmichAlbum(setStatus) {
   await Promise.all(workers);
 
   if (!foundAssets.length) {
-    const msg = searchErrors ? `No assets found (${searchErrors} folder lookup error(s) — ensure the API key has folder.read permission)` : 'No matching assets found in Immich for the missing covers';
-    setStatus(searchErrors ? 'err' : '', msg);
+    const message = searchErrors ? msg('noAssetsErrors','No assets found ({errors} folder lookup error(s) — ensure the API key has folder.read permission)',{errors:searchErrors}) : msg('noAssets','No matching assets found in Immich for the missing covers');
+    setStatus(searchErrors ? 'err' : '', message);
     return;
   }
 
@@ -5100,7 +5112,7 @@ async function syncImmichAlbum(setStatus) {
   const BATCH_SIZE = 100;
   for (let start = 0; start < uniqueAssets.length; start += BATCH_SIZE) {
     const batch = uniqueAssets.slice(start, start + BATCH_SIZE);
-    setStatus('', `Adding assets to album… (${Math.min(start + batch.length, uniqueAssets.length)} / ${uniqueAssets.length})`);
+    setStatus('', msg('addingAssets','Adding assets to album… ({current} / {total})',{current:Math.min(start + batch.length, uniqueAssets.length),total:uniqueAssets.length}));
     const addRes = await immichFetch(`${base}/api/albums/${albumId}/assets`, {
       method: 'PUT',
       body: JSON.stringify({ ids: batch.map(a => a.id) })
@@ -5111,8 +5123,8 @@ async function syncImmichAlbum(setStatus) {
     batch.forEach(a => assetsByPath.set(immichPathKey(a.originalPath), a));
   }
   const cache = await saveImmichThumbnailCache(base, coverList, assetsByPath);
-  const suffix = searchErrors ? ` (${searchErrors} folder lookup error(s) — see console)` : '';
-  setStatus('ok', `✓ Added ${added} of ${missing.length} missing photo(s); refreshed ${cache.matched} thumbnails in ${cache.storage}${suffix}`);
+  const suffix = searchErrors ? msg('folderErrorsSuffix',' ({errors} folder lookup error(s) — see console)',{errors:searchErrors}) : '';
+  setStatus('ok', msg('addedSummary','✓ Added {added} of {missing} missing photo(s); refreshed {matched} thumbnails in {storage}{suffix}',{added,missing:missing.length,matched:cache.matched,storage:cache.storage,suffix}));
 }
 
 // Step 2 — fetch the album and save OuterId→thumbnailUrl map to IndexedDB
@@ -5120,10 +5132,11 @@ async function saveImmichThumbnails(setStatus) {
   const photos = data.Settings?.Photos || {};
   const base = immichBaseUrl(photos.ImmichUrl);
   const albumId = photos.ImmichCoverAlbumId;
-  if (!base || !albumId || !photos.ImmichApiKey) { setStatus('err', 'ImmichUrl, ImmichCoverAlbumId, or ImmichApiKey not configured'); return; }
+  const msg=(key,fallback,vars={})=>Object.entries(vars).reduce((s,[k,v])=>s.replaceAll(`{${k}}`,v),t(`settings.immich.${key}`,fallback));
+  if (!base || !albumId || !photos.ImmichApiKey) { setStatus('err', msg('notConfigured','ImmichUrl, ImmichCoverAlbumId, or ImmichApiKey not configured')); return; }
 
   const coverList = buildCoverPhotoList();
-  setStatus('', `Fetching album assets…`);
+  setStatus('', msg('fetchingAssets','Fetching album assets…'));
 
   let albumAssets;
   try { albumAssets = await listImmichAlbumAssets(base, albumId); }
@@ -5133,7 +5146,7 @@ async function saveImmichThumbnails(setStatus) {
     .filter(a => a?.id && a.originalPath)
     .map(a => [immichPathKey(a.originalPath), a]));
   const cache = await saveImmichThumbnailCache(base, coverList, assetsByPath);
-  setStatus('ok', `✓ Saved ${cache.matched} of ${cache.total} cover-thumbnail URLs to ${cache.storage}`);
+  setStatus('ok', msg('savedSummary','✓ Saved {matched} of {total} cover-thumbnail URLs to {storage}',{matched:cache.matched,total:cache.total,storage:cache.storage}));
 }
 
 function renderSettings() {
@@ -5316,7 +5329,16 @@ function renderSettings() {
   content.appendChild(langCard);
 
   // ── Immich tools ─────────────────────────────────────────────────
-  const immichCard=makeHdr(t('settings.sections.tools','Tools'));
+  const immichCard=makeHdr(t('settings.sections.tools','Immich integration'));
+  const immichHdr=immichCard.querySelector('.st-group-hdr');
+  if(immichHdr){
+    immichHdr.textContent='';
+    const immichIcon=document.createElement('img');
+    immichIcon.src='immich.svg'; immichIcon.alt=''; immichIcon.setAttribute('aria-hidden','true');
+    immichIcon.style.cssText='width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:8px';
+    immichHdr.appendChild(immichIcon);
+    immichHdr.appendChild(document.createTextNode(t('settings.sections.tools','Immich integration')));
+  }
   content.insertBefore(immichCard, content.children[1] || null);
   const tools=document.createElement('div'); tools.className='immich-tools';
 
@@ -5330,10 +5352,10 @@ function renderSettings() {
   connBtn.addEventListener('click', async()=>{
     const base=immichBaseUrl(settings.Photos?.ImmichUrl);
     const albumId=settings.Photos?.ImmichCoverAlbumId;
-    if(!base||!albumId||!settings.Photos?.ImmichApiKey){setStatus1('err','ImmichUrl, ImmichCoverAlbumId, or ImmichApiKey not configured');return;}
+    if(!base||!albumId||!settings.Photos?.ImmichApiKey){setStatus1('err',t('settings.immich.notConfigured','ImmichUrl, ImmichCoverAlbumId, or ImmichApiKey not configured'));return;}
     connBtn.disabled=true; setStatus1('',t('settings.immich.connecting','Connecting…'));
-    try{const r=await immichFetch(`${base}/api/albums/${albumId}?withoutAssets=true`);if(r.ok)setStatus1('ok',t('settings.immich.connected','✓ Connected — album and API key are valid'));else setStatus1('err',`HTTP ${r.status} — check URL, album ID, and API key`);}
-    catch(e){setStatus1('err',`Connection failed: ${e.message}`);}
+    try{const r=await immichFetch(`${base}/api/albums/${albumId}?withoutAssets=true`);if(r.ok)setStatus1('ok',t('settings.immich.connected','✓ Connected — album and API key are valid'));else setStatus1('err',t('settings.immich.httpCheck','HTTP {status} — check URL, album ID, and API key').replace('{status}',r.status));}
+    catch(e){setStatus1('err',t('settings.immich.connectionFailed','Connection failed: {error}').replace('{error}',e.message));}
     finally{connBtn.disabled=false;}
   });
 
@@ -5344,7 +5366,7 @@ function renderSettings() {
     try{await syncImmichAlbum(setStatus1);}catch(e){setStatus1('err',e.message);}finally{syncBtn.disabled=false;}
   });
 
-  const saveBtn=document.createElement('button'); saveBtn.className='btn btn-p'; saveBtn.style.cssText='font-size:12px;padding:5px 13px;';
+  const saveBtn=document.createElement('button'); saveBtn.className='btn btn-p'; saveBtn.style.cssText='font-size:12px;padding:5px 13px;min-height:32px;';
   saveBtn.textContent=t('settings.immich.saveThumbnails','Save cover thumbnails → IndexedDB').replace('IndexedDB','OPFS');
   saveBtn.addEventListener('click', async()=>{
     saveBtn.disabled=true; setStatus2('',t('settings.immich.working','Working…'));
@@ -5355,13 +5377,11 @@ function renderSettings() {
     if(map) setStatus2('ok',`${storage}: ${Object.keys(map).length} cover-thumbnail URLs stored`);
   });
 
-  const lbl1=document.createElement('div'); lbl1.className='st-sub-hdr'; lbl1.style.cssText='border-top:none;padding-top:0;';lbl1.textContent=t('settings.immich.albumSync','Album sync');
-  const lbl2=document.createElement('div'); lbl2.className='st-sub-hdr'; lbl2.textContent=t('settings.immich.thumbnailCache','Thumbnail cache');
   const btns1=document.createElement('div'); btns1.className='immich-btns'; btns1.appendChild(connBtn); btns1.appendChild(syncBtn);
   const btns2=document.createElement('div'); btns2.className='immich-btns'; btns2.appendChild(saveBtn);
 
-  tools.appendChild(lbl1); tools.appendChild(btns1); tools.appendChild(status1);
-  tools.appendChild(lbl2); tools.appendChild(btns2); tools.appendChild(status2);
+  tools.appendChild(btns1); tools.appendChild(status1);
+  tools.appendChild(btns2); tools.appendChild(status2);
   immichCard.appendChild(tools);
 
   // ── Offline / Service Worker card ────────────────────────────────
