@@ -141,8 +141,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;
 .ns-full-card-dest{font-size:14px;font-weight:500;flex:1}
 .ns-full-card-date{font-size:12px;color:var(--muted2)}
 .ns-full-card-snippet{font-size:12px;color:var(--muted2);white-space:pre-wrap}
-.tab-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 12px;height:100%;border:none;background:transparent;color:var(--muted2);cursor:pointer;font-size:13px;font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .12s,border-color .12s;white-space:nowrap;flex-shrink:0}
-.tab-icon{width:15px;height:15px;display:block;flex-shrink:0}
+.tab-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 12px;height:100%;border:none;background:transparent;color:var(--muted2);cursor:pointer;font-size:13px;font-weight:500;letter-spacing:1px;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .12s,border-color .12s;white-space:nowrap;flex-shrink:0}
+.tab-icon{width:15px;height:15px;display:none;flex-shrink:0}
 .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
 .tab-btn:hover:not(.active){color:var(--text)}
 @media(max-width:600px){
@@ -150,6 +150,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;
   #app-nav{position:fixed;left:0;right:0;bottom:0;top:auto;height:48px;padding-bottom:env(safe-area-inset-bottom)}
   #nav-menu{top:auto;bottom:calc(100% + 4px)}
   .tab-btn{flex:1 1 0;padding:0 10px;min-width:0}
+  .tab-icon{display:block}
   .tab-label{display:none}
 }
 .tab{display:none;flex:1;overflow:hidden}
@@ -521,6 +522,16 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 .stats-table tr:hover td{background:var(--s3)}
 .stat-mini-bar{height:8px;border-radius:4px;background:var(--accent);min-width:2px}
 
+/* Overview and Statistics use flat cards without drop shadows */
+#tab-ovbrowse .ex-card,
+#tab-ovbrowse .ex-card:hover,
+#tab-ovbrowse details summary,
+#tab-ovbrowse #ovb-plain-table,
+#tab-ovbrowse .day-icon,
+#tab-ovbrowse .day-icon:hover,
+#tab-stats .kpi-card,
+#tab-stats .stats-table{box-shadow:none}
+
 /* Trip View */
 #tab-trip{flex-direction:row;overflow:hidden;background:var(--bg);position:relative}
 #trip-scroll{flex:1;overflow-y:auto;background:var(--bg)}
@@ -538,20 +549,20 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 #tq-toggle.open{left:270px}
 #tq-toggle:hover{background:var(--s3);color:var(--text)}
 #trip-nav{display:flex;gap:8px;align-items:center;margin-bottom:20px}
-#trip-nav .trip-nav-btn{padding:7px 14px;border:1px solid var(--border);border-radius:6px;background:var(--s2);cursor:pointer;font-size:13px;font-weight:500;color:var(--muted2);box-shadow:var(--shadow);transition:all .12s}
+#trip-nav .trip-nav-btn{padding:7px 14px;border:1px solid var(--border);border-radius:6px;background:var(--s2);cursor:pointer;font-size:13px;font-weight:500;color:var(--muted2);box-shadow:none;transition:all .12s}
 #trip-nav .trip-nav-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-g)}
 /* prev/next pushed to right; spacer pushes them away from left-side buttons */
 #trip-nav .trip-nav-spacer{flex:1}
 #trip-nav .trip-nav-edit{display:flex;align-items:center;gap:5px}
 #trip-nav .trip-nav-icon{padding:7px 10px;display:flex;align-items:center;justify-content:center}
-.tv-summary{background:var(--s2);border:1px solid var(--border);border-radius:8px;margin-bottom:20px;overflow:hidden;box-shadow:var(--shadow)}
+.tv-summary{background:var(--s2);border:1px solid var(--border);border-radius:8px;margin-bottom:20px;overflow:hidden;box-shadow:none}
 .tv-summary-hdr{padding:16px 20px;cursor:pointer;user-select:none;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:12px;transition:background .12s}
 .tv-summary-hdr:hover{background:var(--s3)}
 .tv-summary-hdr-text{flex:1}
 .tv-summary-hdr h2{font-size:17px;font-weight:700;color:var(--text);margin-bottom:4px}
 .tv-summary-hdr p{font-size:13px;color:var(--muted2);line-height:1.5}
 .tv-summary-body{display:flex;gap:0}
-.tv-summary-info{flex:1;padding:10px 14px;min-width:0;overflow:hidden}
+.tv-summary-info{flex:1;padding:14px 16px;min-width:0;overflow:hidden}
 .tv-summary-map{width:400px;flex-shrink:0;position:relative;min-height:260px;margin:8px 8px 8px 0;border-radius:8px;overflow:hidden;border:1px solid var(--border)}
 .tv-cover-strip{width:100%;height:180px;object-fit:cover;display:block;border-radius:6px;margin-bottom:10px;flex-shrink:0}
 @media(max-width:800px){.tv-summary-map{width:300px}}
@@ -564,6 +575,8 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
   #tab-settings{padding:16px 10px;overflow-y:auto}
   #about-inner{padding:24px 10px}
   .tv-details-grid{grid-template-columns:repeat(2,1fr)}
+  .tv-summary-info > .tv-details-grid:first-child{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .tv-summary-info > .tv-details-grid:first-child .tv-field:nth-child(3){grid-column:1;width:max-content;min-width:86px}
   .tv-details-grid.wide{grid-template-columns:1fr}
   .st-content-inner{padding:0}
   #trip-nav{gap:5px}
@@ -573,7 +586,7 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
   /* Quick-nav sidebar: larger touch target, shifted toward bottom */
   #tq-toggle{width:44px;height:44px;font-size:20px;top:72%;transform:translateY(-50%)}
   /* Map dropdowns wrap */
-  #map-controls{top:8px;width:90%;transform:translateX(-50%)}
+  #map-controls{top:8px;left:8px;right:56px;width:auto;transform:none}
   .map-sel{min-width:0;width:100%;box-sizing:border-box}
   /* Trip ext buttons wrap under foot */
   .tv-day-foot{flex-wrap:wrap}
@@ -601,11 +614,20 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 .tmap-photo-btn{font-size:15px!important;display:flex!important;align-items:center;justify-content:center;transition:filter .15s}
 .tmap-photo-active{filter:drop-shadow(0 0 5px #e74c3c) brightness(1.1)!important}
 @media(max-width:560px){.nav-btn-text{display:none}}
-.tv-details-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
+.tv-details-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:10px}
+.tv-summary-dates,.tv-summary-meta{grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(100px,1fr)}
 .tv-details-grid.wide{grid-template-columns:1fr}
+.tv-summary-dates .tv-field-val{white-space:nowrap}
+@media(max-width:600px){
+  .tv-summary-dates,.tv-summary-meta{grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(76px,auto)}
+  .tv-summary-dates .tv-field:nth-child(3),.tv-summary-meta .tv-field:nth-child(3){grid-column:auto;width:auto;min-width:0}
+  .tv-summary-dates .tv-field-val,.tv-summary-meta .tv-field-val{padding-left:8px;padding-right:8px}
+}
 .tv-field{position:relative}
-.tv-field label{display:block;font-size:10px;font-weight:500;color:var(--muted2);text-transform:uppercase;letter-spacing:.5px;position:absolute;top:6px;left:12px;line-height:1;pointer-events:none;z-index:1}
-.tv-field-val{width:100%;font-size:14px;color:var(--text);padding:22px 12px 9px 12px;border-radius:6px;box-sizing:border-box;line-height:1.4}
+.tv-field label{display:block;font-size:10px;font-weight:600;color:var(--muted2);text-transform:uppercase;letter-spacing:.5px;position:absolute;top:6px;left:12px;line-height:1.2;pointer-events:none;z-index:1}
+.tv-field-val{width:100%;font-size:14px;color:var(--text);padding:22px 12px 9px;border-radius:6px;box-sizing:border-box;line-height:1.4;min-height:34px}
+.tv-country-stop-short{text-decoration-line:underline;text-decoration-style:solid;text-decoration-thickness:1px;text-underline-offset:2px}
+.tv-country-stop-very-short{text-decoration-line:underline;text-decoration-style:dashed;text-decoration-thickness:1px;text-underline-offset:2px}
 /* ── Trip-view timeline ───────────────────────────────────────────── */
 .tv-days{position:relative;display:flex;flex-direction:column;padding-left:52px;margin-left:8px}
 .tv-days::before{content:'';position:absolute;left:15px;top:14px;bottom:14px;width:2px;background:var(--border);border-radius:2px}
@@ -613,8 +635,8 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 .tv-day:last-child{margin-bottom:0}
 .tv-day::before{content:'';position:absolute;left:-43px;top:12px;width:12px;height:12px;border-radius:50%;background:var(--s1);border:2px solid var(--border);box-shadow:0 0 0 3px var(--bg);transition:border-color .15s,box-shadow .15s;z-index:1}
 .tv-day:hover::before{border-color:var(--tv-dot,var(--accent));box-shadow:0 0 0 3px var(--accent-g)}
-.tv-day-card{background:var(--s2);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:var(--shadow);transition:box-shadow .12s}
-.tv-day:hover .tv-day-card{box-shadow:var(--shadow-h)}
+.tv-day-card{background:var(--s2);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:none}
+.tv-day:hover .tv-day-card{box-shadow:none}
 .tv-day-hdr{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--border);background:var(--s3);border-radius:8px 8px 0 0}
 .tv-day-hdr.no-body{border-bottom:none;border-radius:8px}
 .tv-day-num{font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;background:var(--accent-g);color:var(--accent);flex-shrink:0;border:1px solid rgba(29,101,94,.25)}
@@ -624,6 +646,7 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 .tv-ev-link{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(29,101,94,.35)}
 .tv-ev-link:hover{border-bottom-color:var(--accent);opacity:.85}
 .tv-day-foot{padding:8px 14px;border-top:1px solid var(--border);font-size:12px;color:var(--muted2);display:flex;align-items:center;gap:8px;background:var(--s3)}
+.tv-acc-info{display:flex;align-items:center;gap:8px;min-width:0;flex:1}
 .tv-acc-flag{font-size:15px}
 .tv-ext-btns{display:flex;gap:6px;margin-left:auto;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
 .tv-acc-link{color:inherit;text-decoration:none}
@@ -1212,7 +1235,7 @@ function wireNavSearch() {
     const date = new Date(`${dateStr.slice(0, 10)}T00:00:00`);
     if (Number.isNaN(date.getTime())) return dateStr;
     const years = (Date.now() - date.getTime()) / (365.2425 * 24 * 60 * 60 * 1000);
-    const age = Math.abs(years).toFixed(1);
+    const age = Math.abs(years).toFixed(1).replace('.', t('nav.search.decimalSeparator', '.'));
     const ageLabel = t(years >= 0 ? 'nav.search.yearsAgo' : 'nav.search.yearsFromNow',
       years >= 0 ? '{years} years ago' : '{years} years from now').replace('{years}', age);
     return `${dateStr} (${ageLabel})`;
@@ -3140,17 +3163,31 @@ function renderTripView(innerId) {
   }
   sumHdr.innerHTML=`<div class="tv-summary-hdr-text"><h2 style="${domColor?`color:${domText}`:''}"><span style="opacity:.75">${h(trip.OuterId||'')}</span>${trip.OuterId&&trip.OverallDestination?`<span style="font-weight:300;opacity:.5;padding:0 .45em;font-size:.82em">${T['tripView.toConnector']||'to'}</span>`:''}${h(trip.OverallDestination||'')}</h2>${trip.TripDescription?`<p style="color:${domColor?domText:'inherit'};opacity:${domColor?'0.8':'1'};margin-top:5px">${h(trip.TripDescription)}</p>`:''}</div><span class="tv-sum-chev" style="font-size:18px;user-select:none;flex-shrink:0;${domColor?`color:${domText};opacity:0.7`:'color:var(--muted)'}">▾</span>`;
   const sumBody=document.createElement('div');sumBody.className='tv-summary-body';
-  if(domColor)sumBody.style.background=`${domColor}18`;
+  sumBody.style.background=domColor
+    ?`linear-gradient(to bottom, ${domColor} 0%, ${domColor}18 90px, ${domColor}18 100%)`
+    :'linear-gradient(to bottom, var(--accent) 0%, var(--accent-g) 90px, var(--accent-g) 100%)';
   // Left: info grids
   const sumInfo=document.createElement('div');sumInfo.className='tv-summary-info';
-  const g1=document.createElement('div');g1.className='tv-details-grid';
+  const g1=document.createElement('div');g1.className='tv-details-grid tv-summary-dates';
   [[trip.DepartureDate,t('tripView.fields.departure','Departure')],[trip.ReturnDate,t('tripView.fields.return','Return')],[numDays!=null?numDays:'—',t('tripView.fields.days','Days')]].forEach(([v,l])=>g1.innerHTML+=`<div class="tv-field"><label style="${labelClr}">${l}</label><div class="tv-field-val" style="background:${fieldBg}">${h(String(v??'—'))}</div></div>`);
   sumInfo.appendChild(g1);
-  const g2=document.createElement('div');g2.className='tv-details-grid';
+  const g2=document.createElement('div');g2.className='tv-details-grid tv-summary-meta';
   [[trip.ArrangerGroup||'—',t('tripView.fields.arranger','Arranger')],[trip.OuterId||'—',`${t('tripView.fields.id','ID')} (${innerId})`],[uniqueCountries.length||'—',t('tripView.fields.countries','Countries')]].forEach(([v,l])=>g2.innerHTML+=`<div class="tv-field"><label style="${labelClr}">${l}</label><div class="tv-field-val" style="background:${fieldBg}">${h(String(v))}</div></div>`);
   sumInfo.appendChild(g2);
   const g3=document.createElement('div');g3.className='tv-details-grid wide';
-  [[uniqueCountries.map(c=>`${c.Flag} ${c.Country}`).join(', ')||'—',t('tripView.fields.uniqueCountries','Unique Countries')],[computeOverallRoute(trip.MapPins)||'—',t('tripView.fields.overallRoute','Overall Route')],[crossingsArr.join(' > ')||'—',t('tripView.fields.countryMovements','Country Trip Movements')]].forEach(([v,l])=>g3.innerHTML+=`<div class="tv-field"><label style="${labelClr}">${l}</label><div class="tv-field-val" style="background:${fieldBg}">${h(v)}</div></div>`);
+  const movementHtml=crossingsArr.map(orig=>{
+    const raw=orig.trim();
+    const isPlus=raw.startsWith('+');
+    const marker=raw.replace(/^\+/,'').match(/^(\*\*|\*)/);
+    const country=raw.replace(/^\+/,'').replace(/^\*+/,'').trim();
+    const cls=marker?(marker[1]==='**'?'tv-country-stop-very-short':'tv-country-stop-short'):'';
+    if(isPlus&&!marker&&country){
+      const chars=[...country];
+      return `<span class="${cls}"><span class="tv-country-stop-short">${h(chars.shift())}</span>${h(chars.join(''))}</span>`;
+    }
+    return `<span class="${cls}">${h(country)}</span>`;
+  }).join(' › ')||'—';
+  [[uniqueCountries.map(c=>`${c.Flag} ${c.Country}`).join(' · ')||'—',t('tripView.fields.uniqueCountries','Unique Countries'),false],[computeOverallRoute(trip.MapPins)||'—',t('tripView.fields.overallRoute','Overall Route'),false],[movementHtml,t('tripView.fields.countryMovements','Country Trip Movements'),true]].forEach(([v,l,isHtml])=>g3.innerHTML+=`<div class="tv-field"><label style="${labelClr}">${l}</label><div class="tv-field-val" style="background:${fieldBg}">${isHtml?v:h(v)}</div></div>`);
   sumInfo.appendChild(g3);
 
   // ── Summary action buttons (Movie + Immich) ───────────────────────
@@ -3306,7 +3343,7 @@ function renderTripView(innerId) {
         :`<span>${accParts}</span>`;
       const hasBody=!!ev.Events;
       const hdrClass=`tv-day-hdr${hasBody?'':' no-body'}`;
-      day.innerHTML=`<div class="tv-day-card"><div class="${hdrClass}"><span class="tv-day-num" style="${ns}">${ev.DayNumber}</span><span class="tv-day-weekday">${h(ev.Weekday||'')}</span><span class="tv-day-date">${h(ev.Date||'')}</span></div>${hasBody?`<div class="tv-day-body">${eventsToHtml(ev.Events,extMapProvider)}</div>`:''}<div class="tv-day-foot"><span class="tv-acc-flag">${ev.AccommodationCountryFlag||'🌍'}</span>${accHtml}</div></div>`;
+      day.innerHTML=`<div class="tv-day-card"><div class="${hdrClass}"><span class="tv-day-num" style="${ns}">${ev.DayNumber}</span><span class="tv-day-weekday">${h(ev.Weekday||'')}</span><span class="tv-day-date">${h(ev.Date||'')}</span></div>${hasBody?`<div class="tv-day-body">${eventsToHtml(ev.Events,extMapProvider)}</div>`:''}<div class="tv-day-foot"><div class="tv-acc-info"><span class="tv-acc-flag">${ev.AccommodationCountryFlag||'🌍'}</span>${accHtml}</div></div></div>`;
       // Extension + Photos buttons
       const btns=[];
       if(ev.Date){
