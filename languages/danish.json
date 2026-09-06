@@ -71,7 +71,7 @@
       "plain": "Liste",
       "days": "Dage"
     },
-    "searchPlaceholder": "Søg rejser…",
+    "searchPlaceholder": "Filtrer rejser…",
     "noTrips": "Ingen rejser fundet",
     "noDestination": "(ingen destination)",
     "daysSingular": "dag",

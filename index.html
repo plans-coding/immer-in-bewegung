@@ -97,7 +97,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;
 #nav-logo img{width:100%;height:100%;display:block}
 #nav-logo:hover{opacity:1;transform:scale(1.1)}
 #nav-menu{position:absolute;top:calc(100% + 4px);right:8px;min-width:150px;padding:5px;background:var(--s1);border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-h);display:none}
-#nav-menu.open{display:block}
+#nav-menu.open{display:block;z-index:200}
 .nav-menu-item{display:block;width:100%;padding:8px 11px;border:0;border-radius:5px;background:transparent;color:var(--text);font:inherit;font-size:13px;text-align:left;cursor:pointer;white-space:nowrap}
 .nav-menu-item:hover,.nav-menu-item:focus-visible{background:var(--s2);outline:none}
 #mod-dot{width:6px;height:6px;border-radius:50%;background:#f0a142;display:none;flex-shrink:0}
@@ -124,7 +124,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;
 .ns-result-date{font-size:11px;color:var(--muted2);flex-shrink:0;white-space:nowrap}
 #ns-empty{padding:20px;text-align:center;color:var(--muted2);font-size:13px}
 #ns-hint{padding:10px 14px;font-size:11px;color:var(--muted2);text-align:center;border-bottom:1px solid var(--border)}
-#ns-show-all{text-align:center;padding:10px 12px;font-size:12px;color:var(--accent);cursor:pointer;border-top:1px solid var(--border)}
+#ns-show-all{position:sticky;bottom:0;text-align:center;padding:10px 12px;font-size:12px;color:var(--accent);cursor:pointer;background:var(--s1);border-top:1px solid var(--border);z-index:1}
 #ns-show-all:hover{text-decoration:underline}
 #ns-full{position:fixed;inset:0;z-index:490;background:var(--bg);display:none;flex-direction:column}
 #ns-full.open{display:flex}
@@ -152,6 +152,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;
   .tab-btn{flex:1 1 0;padding:0 10px;min-width:0}
   .tab-icon{display:block}
   .tab-label{display:none}
+}
+@media(min-width:601px){
+  /* Keep the full-width content flow, while turning the main nav into a left rail. */
+  #app{padding-left:48px}
+  #app-nav{position:fixed;top:0;left:0;bottom:0;width:48px;height:auto;flex-direction:column;border-bottom:none;border-right:1px solid var(--border)}
+  #nav-brand{order:3;width:100%;height:48px;justify-content:center;padding:0;border-left:none;border-top:1px solid var(--border)}
+  #nav-tabs{order:1;width:100%;height:auto;flex-direction:column;align-items:stretch;overflow-x:hidden;overflow-y:auto}
+  .tab-btn{height:48px;flex:0 0 48px;padding:0;gap:0;letter-spacing:0}
+  .tab-icon{display:block}
+  .tab-label{display:none}
+  #nav-actions{order:2;width:100%;height:auto;flex-direction:column;padding:8px 0;gap:8px;border-left:none;border-top:1px solid var(--border)}
+  #nav-search.open{position:fixed;left:54px;bottom:8px;width:min(360px,calc(100vw - 62px));padding:4px;background:var(--s1);border:1px solid var(--border);border-radius:7px;box-shadow:var(--shadow-h);z-index:201}
+  #nav-search.open #nav-search-inp{width:auto;flex:1;min-width:0}
+  #nav-menu{top:auto;right:auto;bottom:8px;left:calc(100% + 4px)}
 }
 .tab{display:none;flex:1;overflow:hidden}
 .tab.active{display:flex}
@@ -550,15 +564,19 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 /* Trip quick-nav drawer */
 #tq-drawer{position:absolute;top:0;left:0;bottom:0;width:270px;background:var(--s1);border-right:1px solid var(--border);overflow-y:auto;z-index:20;transform:translateX(-270px);transition:transform .22s cubic-bezier(.4,0,.2,1);box-shadow:4px 0 20px rgba(0,0,0,.13)}
 #tq-drawer.open{transform:translateX(0)}
-#tq-hdr{padding:10px 10px 8px;font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.7px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--s1);z-index:5}
+#tq-hdr{width:100%;box-sizing:border-box;padding:10px 10px 8px;font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.7px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--s1);z-index:5}
 #tq-filter{display:block;width:100%;margin-top:7px;padding:5px 8px;border:1px solid var(--border);border-radius:5px;font-size:12px;background:var(--s2);color:var(--text);font-family:inherit;outline:none;box-sizing:border-box}
 #tq-filter:focus{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-g)}
 #tq-filter::placeholder{color:var(--muted)}
-#tq-cards{padding:8px;display:flex;flex-direction:column;gap:8px}
+#tq-cards{width:100%;box-sizing:border-box;padding:8px 10px;display:flex;flex-direction:column;gap:8px}
 #tq-cards .ex-card.tq-active{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-g),var(--shadow)}
-#tq-toggle{position:absolute;left:0;top:50%;transform:translateY(-50%);z-index:21;width:18px;height:56px;background:var(--s2);border:1px solid var(--border);border-left:none;border-radius:0 8px 8px 0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--muted2);transition:left .22s cubic-bezier(.4,0,.2,1),background .12s,color .12s;padding:0;box-shadow:2px 0 8px rgba(0,0,0,.1);line-height:1}
-#tq-toggle.open{left:270px}
+#tq-toggle{position:absolute;left:0;top:50%;transform:translateY(-50%);z-index:101;width:18px;height:56px;background:var(--s2);border:1px solid var(--border);border-left:none;border-radius:0 8px 8px 0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--text);transition:left .22s cubic-bezier(.4,0,.2,1),background .12s,color .12s;padding:0;box-shadow:2px 0 8px rgba(0,0,0,.1);line-height:1}
+#tq-toggle.open{left:269px;z-index:101}
 #tq-toggle:hover{background:var(--s3);color:var(--text)}
+@media(min-width:601px){
+  #tq-toggle{position:fixed;left:48px;z-index:1000}
+  #tq-toggle.open{left:317px}
+}
 #trip-nav{display:flex;gap:8px;align-items:center;margin-bottom:20px}
 #trip-nav .trip-nav-btn{padding:7px 14px;border:1px solid var(--border);border-radius:6px;background:var(--s2);cursor:pointer;font-size:13px;font-weight:500;color:var(--muted2);box-shadow:none;transition:all .12s}
 #trip-nav .trip-nav-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-g)}
@@ -632,7 +650,7 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 @media(max-width:600px){
   .tv-summary-dates,.tv-summary-meta{grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(76px,auto)}
   .tv-summary-dates .tv-field:nth-child(3),.tv-summary-meta .tv-field:nth-child(3){grid-column:auto;width:auto;min-width:0}
-  .tv-summary-dates .tv-field-val,.tv-summary-meta .tv-field-val{padding-left:8px;padding-right:8px}
+  .tv-summary-dates .tv-field-val,.tv-summary-meta .tv-field-val{padding-left:12px;padding-right:12px}
 }
 .tv-field{position:relative}
 .tv-field label{display:block;font-size:10px;font-weight:600;color:var(--muted2);text-transform:uppercase;letter-spacing:.5px;position:absolute;top:6px;left:12px;line-height:1.2;pointer-events:none;z-index:1}
@@ -1176,6 +1194,10 @@ function wire() {
   const closeNavMenu = () => { navMenu.classList.remove('open'); navLogo.setAttribute('aria-expanded', 'false'); };
   navLogo.addEventListener('click', e => {
     e.stopPropagation();
+    // The frog button also acts as the menu launcher on the desktop rail.
+    // Close the expanded search first so the two views never overlap.
+    const navSearch = document.getElementById('nav-search');
+    if (navSearch?.classList.contains('open')) document.getElementById('nav-search-icon')?.click();
     const isOpen = navMenu.classList.toggle('open');
     navLogo.setAttribute('aria-expanded', String(isOpen));
   });
@@ -1362,16 +1384,21 @@ function wireNavSearch() {
     if (window.matchMedia('(max-width: 600px)').matches) {
       drop.style.top = 'auto';
       drop.style.bottom = (window.innerHeight - r.top + 6) + 'px';
+      drop.style.left = 'auto';
+      // Anchor the right edge to the search control on the bottom bar.
+      const naturalRight = window.innerWidth - r.right;
+      const dropLeftEdge = r.right - dropW;
+      drop.style.right = (dropLeftEdge < 8 ? window.innerWidth - dropW - 8 : Math.max(8, naturalRight)) + 'px';
     } else {
+      // On the desktop left rail, keep the results directly above the
+      // horizontal search bar.
       drop.style.bottom = 'auto';
-      drop.style.top = (r.bottom + 6) + 'px';
+      drop.style.top = 'auto';
+      drop.style.bottom = (window.innerHeight - r.top + 6) + 'px';
+      drop.style.left = r.left + 'px';
+      drop.style.right = 'auto';
+      return;
     }
-    // Anchor right edge of dropdown to right edge of search bar.
-    // Only clamp leftward if the dropdown would overflow the left side of the viewport.
-    const naturalRight = window.innerWidth - r.right;  // CSS right: value that aligns edges
-    const dropLeftEdge = r.right - dropW;              // viewport-x of dropdown's left edge
-    drop.style.right = (dropLeftEdge < 8 ? window.innerWidth - dropW - 8 : Math.max(8, naturalRight)) + 'px';
-    drop.style.left  = 'auto';
   }
 
   function openSearch() {
@@ -1437,18 +1464,6 @@ function wireNavSearch() {
       return;
     }
 
-    // "Show all results" always at the top when there are results
-    if (tripResults.length || dayResults.length) {
-      const showAllTop = document.createElement('div');
-      showAllTop.id = 'ns-show-all';
-      showAllTop.style.borderTop = 'none';
-      showAllTop.style.borderBottom = '1px solid var(--border)';
-      showAllTop.textContent = t('nav.search.showAll','Show complete results →');
-      showAllTop.addEventListener('mousedown', e => e.preventDefault());
-      showAllTop.addEventListener('click', () => { closeSearch(); showFullResults(q, tripResults, dayResults); });
-      drop.appendChild(showAllTop);
-    }
-
     if (!term) {
       const hint = document.createElement('div');
       hint.id = 'ns-hint';
@@ -1512,6 +1527,17 @@ function wireNavSearch() {
         row.addEventListener('click', () => { closeSearch(); openTripView(t.InnerId, {scrollToDate: d.Date}); });
         drop.appendChild(row);
       });
+    }
+
+    // Keep the full-results command at the end of the result list.
+    if (tripResults.length || dayResults.length) {
+      const showAll = document.createElement('div');
+      showAll.id = 'ns-show-all';
+      showAll.style.borderTop = '1px solid var(--border)';
+      showAll.textContent = t('nav.search.showAll','Show complete results →');
+      showAll.addEventListener('mousedown', e => e.preventDefault());
+      showAll.addEventListener('click', () => { closeSearch(); showFullResults(q, tripResults, dayResults); });
+      drop.appendChild(showAll);
     }
 
 
@@ -1858,6 +1884,8 @@ function updateFilterCount() {
 
 function onFilterChange() {
   updateFilterCount();
+  // Keep the open Trip navigator in sync with the global filter immediately.
+  if (document.getElementById('tq-drawer')?.classList.contains('open')) renderTripQuickNav();
   // Re-render active tab
   if (currentTab==='explore') { pickRandomTrips(); renderExplore(); }
   else if (currentTab==='ovbrowse') { const a=document.querySelector('#ovb-subnav .sub-btn.active'); renderOvBrowse(a?.dataset.mode||'cards'); }

@@ -71,7 +71,7 @@
       "plain": "Plain",
       "days": "Days"
     },
-    "searchPlaceholder": "Search trips…",
+    "searchPlaceholder": "Filter trips…",
     "noTrips": "No trips found",
     "noDestination": "(no destination)",
     "daysSingular": "day",
