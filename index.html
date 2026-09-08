@@ -9,7 +9,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;900&family=Google+Sans:wght@400;500;600;700&family=Righteous&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;900&family=Righteous&family=Scoutie+Sans:wght@200..800&display=swap" rel="stylesheet">
 <meta name="theme-color" content="#0d1f1c">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -49,14 +49,13 @@
 /* Brighten domain-color inline text/borders so they're readable on dark backgrounds */
 [data-theme="dark"] #app-nav{background:#091a15;border-bottom-color:#0f2a22}
 [data-theme="dark"] .tv-field label{filter:brightness(2) saturate(.8)}
-[data-theme="dark"] .ex-footer{filter:brightness(1.9) saturate(.75)}
 [data-theme="dark"] .tc-outer-id{filter:brightness(1.6) saturate(.8)}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:rgba(0,0,0,.12);border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,.22)}
-body{font-family:'Google Sans',-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;font-size:14px;background:var(--bg);color:var(--text);height:100vh;height:-webkit-fill-available;height:100dvh;overflow:hidden;-webkit-font-smoothing:antialiased}
+body{font-family:'Scoutie Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;background:var(--bg);color:var(--text);height:100vh;height:-webkit-fill-available;height:100dvh;overflow:hidden;-webkit-font-smoothing:antialiased}
 
 /* Load Screen */
 /* ── Load / Start screen ─────────────────────────────────────────── */
@@ -99,7 +98,8 @@ body{font-family:'Google Sans',-apple-system,BlinkMacSystemFont,'Inter','Segoe U
 #nav-menu{position:absolute;top:calc(100% + 4px);right:8px;min-width:150px;padding:5px;background:var(--s1);border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-h);display:none}
 #nav-menu.open{display:block;z-index:200}
 .nav-menu-item{display:block;width:100%;padding:8px 11px;border:0;border-radius:5px;background:transparent;color:var(--text);font:inherit;font-size:13px;text-align:left;cursor:pointer;white-space:nowrap}
-.nav-menu-item:hover,.nav-menu-item:focus-visible{background:var(--s2);outline:none}
+.nav-menu-item:hover,.nav-menu-item:focus-visible{background:var(--accent-g);outline:none}
+.mobile-menu-item{display:none}
 #mod-dot{width:6px;height:6px;border-radius:50%;background:#f0a142;display:none;flex-shrink:0}
 #mod-dot.on{display:block}
 #nav-tabs{display:flex;flex:1;overflow-x:auto;height:100%;scrollbar-width:none}
@@ -141,16 +141,30 @@ body{font-family:'Google Sans',-apple-system,BlinkMacSystemFont,'Inter','Segoe U
 .ns-full-card-dest{font-size:14px;font-weight:500;flex:1}
 .ns-full-card-date{font-size:12px;color:var(--muted2)}
 .ns-full-card-snippet{font-size:12px;color:var(--muted2);white-space:pre-wrap}
-.tab-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 12px;height:100%;border:none;background:transparent;color:var(--muted2);cursor:pointer;font-size:13px;font-weight:500;letter-spacing:1px;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .12s,border-color .12s;white-space:nowrap;flex-shrink:0}
+.tab-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 12px;height:calc(100% - 8px);border:none;background:transparent;color:var(--muted2);cursor:pointer;font-size:13px;font-weight:500;letter-spacing:1px;border-radius:12px;margin:4px 3px;transition:color .12s,background .12s;white-space:nowrap;flex-shrink:0}
 .tab-icon{width:15px;height:15px;display:none;flex-shrink:0}
-.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.tab-btn.active{color:var(--accent);background:var(--accent-g);font-weight:600}
 .tab-btn:hover:not(.active){color:var(--text)}
 @media(max-width:600px){
   #app{padding-bottom:calc(48px + env(safe-area-inset-bottom))}
-  #app-nav{position:fixed;left:0;right:0;bottom:0;top:auto;height:48px;padding-bottom:env(safe-area-inset-bottom)}
+  #app-nav{position:fixed;left:0;right:0;bottom:0;top:auto;height:48px;padding-bottom:env(safe-area-inset-bottom);border-top:1px solid var(--border);border-bottom:0}
   #nav-menu{top:auto;bottom:calc(100% + 4px)}
-  .tab-btn{flex:1 1 0;padding:0 10px;min-width:0}
-  .tab-icon{display:block}
+  #nav-actions{position:fixed;left:0;bottom:0;width:0;height:0;padding:0;border:0;overflow:visible;pointer-events:none}
+  #nav-actions > *{display:none}
+  #nav-search.open{display:flex;position:fixed;left:12px;right:12px;bottom:calc(52px + env(safe-area-inset-bottom));padding:6px;background:var(--s1);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-h);z-index:201;pointer-events:auto}
+  #nav-search.open #nav-search-inp{width:auto;flex:1;min-width:0}
+  #nav-menu{min-width:210px}
+  #nav-menu > .nav-menu-item{min-height:44px;padding:12px 14px;font-size:15px}
+  .mobile-menu-item{display:flex;align-items:center;gap:9px}
+  .mobile-menu-item svg{width:16px;height:16px;flex:0 0 16px;color:var(--muted2)}
+  #theme-btn-mobile{padding:3px;border:0;background:none;color:var(--muted2);display:flex;align-items:center;justify-content:center;flex:0 0 16px}
+  .mobile-tools-row{display:flex;gap:4px}
+  .mobile-tools-row .mobile-menu-item{flex:1;justify-content:center;padding:8px 11px}
+  .mobile-tools-row .mobile-menu-item > span[data-i18n]{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  .mobile-tools-row .mobile-menu-item svg{width:20px;height:20px;flex:0 0 20px}
+  .mobile-tools-row #theme-btn-mobile{width:20px;height:20px;flex:0 0 20px;padding:0}
+  .tab-btn{flex:1 1 0;height:44px;margin:2px 3px;padding:0 10px;min-width:0}
+  .tab-icon{display:block;width:20px;height:20px}
   .tab-label{display:none}
 }
 @media(min-width:601px){
@@ -159,7 +173,7 @@ body{font-family:'Google Sans',-apple-system,BlinkMacSystemFont,'Inter','Segoe U
   #app-nav{position:fixed;top:0;left:0;bottom:0;width:48px;height:auto;flex-direction:column;border-bottom:none;border-right:1px solid var(--border)}
   #nav-brand{order:3;width:100%;height:48px;justify-content:center;padding:0;border-left:none;border-top:1px solid var(--border)}
   #nav-tabs{order:1;width:100%;height:auto;flex-direction:column;align-items:stretch;overflow-x:hidden;overflow-y:auto}
-  .tab-btn{height:48px;flex:0 0 48px;padding:0;gap:0;letter-spacing:0}
+  .tab-btn{height:40px;flex:0 0 40px;padding:0;gap:0;letter-spacing:0;margin:4px}
   .tab-icon{display:block}
   .tab-label{display:none}
   #nav-actions{order:2;width:100%;height:auto;flex-direction:column;padding:8px 0;gap:8px;border-left:none;border-top:1px solid var(--border)}
@@ -169,6 +183,7 @@ body{font-family:'Google Sans',-apple-system,BlinkMacSystemFont,'Inter','Segoe U
 }
 .tab{display:none;flex:1;overflow:hidden}
 .tab.active{display:flex}
+#app.nav-bar-hidden{padding-left:0;padding-bottom:0}
 
 /* Filter bar */
 #filter-bar{display:none;align-items:center;gap:6px;padding:0 14px;height:36px;flex-shrink:0;background:var(--s3);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
@@ -194,7 +209,7 @@ body{font-family:'Google Sans',-apple-system,BlinkMacSystemFont,'Inter','Segoe U
 .sub-nav{display:flex;background:var(--s1);border-bottom:1px solid var(--border);flex-shrink:0;padding:0 20px;gap:2px;overflow-x:auto;scrollbar-width:none}
 .sub-nav::-webkit-scrollbar{display:none}
 .sub-btn{padding:0 14px;height:40px;border:none;background:transparent;color:var(--muted2);cursor:pointer;font-size:13px;font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .12s,border-color .12s;white-space:nowrap}
-.sub-btn.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.sub-btn.active{color:var(--accent);border-bottom:3px solid var(--accent);font-weight:600;position:relative;z-index:1}
 .sub-btn:hover:not(.active){color:var(--text)}
 
 /* Editor (Overview tab) */
@@ -211,6 +226,7 @@ body{font-family:'Google Sans',-apple-system,BlinkMacSystemFont,'Inter','Segoe U
 #url-mode-banner.on{display:flex}
 #url-mode-banner .umb-icon{font-size:14px;flex-shrink:0}
 [data-theme="dark"] #url-mode-banner{background:rgba(240,161,66,.08);border-bottom-color:rgba(240,161,66,.25)}
+.st-url-warning{margin-top:5px;font-size:11px;line-height:1.35;color:var(--muted2)}
 .trip-card{padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;border-left:3px solid transparent;transition:background .1s,border-color .1s}
 .trip-card:hover{background:var(--s3)}
 .trip-card.active{background:var(--accent-g);border-left-color:var(--accent)}
@@ -308,6 +324,15 @@ body{font-family:'Google Sans',-apple-system,BlinkMacSystemFont,'Inter','Segoe U
 .st-outer{max-width:760px;width:100%}
 /* File banner */
 .st-file-banner{background:var(--accent);color:#fff;border:1px solid var(--accent);border-radius:10px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;box-shadow:var(--shadow);flex-wrap:wrap}
+.st-current-file{margin-bottom:16px}
+.st-current-file .st-file-banner{margin-bottom:0;border-radius:10px 10px 0 0}
+.st-file-export{background:var(--accent-g);border:1px solid var(--border);border-top:0;border-radius:0 0 10px 10px;overflow:hidden}
+.st-file-export summary{padding:10px 16px;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;list-style:none}
+.st-file-export summary::-webkit-details-marker{display:none}
+.st-file-export summary::before{content:'▸';display:inline-block;width:18px;color:var(--muted2)}
+.st-file-export[open] summary{border-bottom:1px solid var(--border)}
+.st-file-export[open] summary::before{content:'▾'}
+.st-url-warning-panel{margin-bottom:10px;padding:9px 12px;background:rgba(240,161,66,.13);border:1px solid rgba(240,161,66,.35);border-radius:8px;color:var(--text);font-size:12px;line-height:1.4}
 .st-file-info{display:flex;flex-direction:column;gap:2px}
 .st-file-lbl{font-size:10px;font-weight:700;color:rgba(255,255,255,.72);text-transform:uppercase;letter-spacing:.8px}
 .st-file-name{font-family:'SF Mono','Consolas',monospace;font-size:13px;color:#fff;font-weight:600}
@@ -491,6 +516,17 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 
 /* About */
 #tab-about{flex-direction:column;overflow-y:auto;background:var(--bg)}
+#tab-video{flex-direction:column;overflow-y:auto;background:var(--bg)}
+#video-page{width:100%;max-width:1100px;margin:0 auto;padding:24px 20px;box-sizing:border-box}
+#video-page h2{margin:0;font-size:20px;color:var(--text)}
+#video-container{margin-top:18px;background:var(--s1);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:var(--shadow)}
+#video{display:block;width:100%;max-height:75vh;background:#000}
+#subtitle-box{min-height:24px;padding:12px 16px;color:var(--text);font-size:13px;line-height:1.55;white-space:pre-wrap}
+#subtitle-box:empty{display:none}
+#subtitle-box a{color:var(--accent);text-decoration:underline}
+#video-empty{padding:40px 20px;text-align:center;color:var(--muted2)}
+#tab-webframe{flex-direction:column;background:var(--bg)}
+#webframe-frame{display:block;width:100%;height:100%;min-height:0;border:0;background:var(--s1)}
 #about-inner{max-width:680px;margin:0 auto;padding:40px 20px}
 .about-hero{text-align:center;padding:32px 0 40px;border-bottom:1px solid var(--border);margin-bottom:32px}
 .about-logo{margin-bottom:16px;line-height:1}
@@ -576,6 +612,8 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 @media(min-width:601px){
   #tq-toggle{position:fixed;left:48px;z-index:1000}
   #tq-toggle.open{left:317px}
+  #app.nav-bar-hidden #tq-toggle{left:0}
+  #app.nav-bar-hidden #tq-toggle.open{left:269px}
 }
 #trip-nav{display:flex;gap:8px;align-items:center;margin-bottom:20px}
 #trip-nav .trip-nav-btn{padding:7px 14px;border:1px solid var(--border);border-radius:6px;background:var(--s2);cursor:pointer;font-size:13px;font-weight:500;color:var(--muted2);box-shadow:none;transition:all .12s}
@@ -659,16 +697,16 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 .tv-country-stop-very-short{text-decoration-line:underline;text-decoration-style:dashed;text-decoration-thickness:1px;text-underline-offset:2px}
 /* ── Trip-view timeline ───────────────────────────────────────────── */
 .tv-days{position:relative;display:flex;flex-direction:column;padding-left:52px;margin-left:8px}
-.tv-days::before{content:'';position:absolute;left:15px;top:14px;bottom:14px;width:2px;background:var(--border);border-radius:2px}
+.tv-days::before{content:'';position:absolute;left:15px;top:14px;bottom:14px;width:2px;background:var(--tv-line,var(--border));border-radius:2px}
+.tv-days::after{content:'';position:absolute;left:9px;bottom:14px;width:14px;height:2px;background:var(--tv-line,var(--border));border-radius:2px}
 .tv-day{position:relative;margin-bottom:18px}
 .tv-day:last-child{margin-bottom:0}
-.tv-day::before{content:'';position:absolute;left:-43px;top:12px;width:12px;height:12px;border-radius:50%;background:var(--s1);border:2px solid var(--border);box-shadow:0 0 0 3px var(--bg);transition:border-color .15s,box-shadow .15s;z-index:1}
-.tv-day:hover::before{border-color:var(--tv-dot,var(--accent));box-shadow:0 0 0 3px var(--accent-g)}
+.tv-day::before{display:none}
 .tv-day-card{background:var(--s2);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:none}
 .tv-day:hover .tv-day-card{box-shadow:none}
 .tv-day-hdr{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--border);background:var(--s3);border-radius:8px 8px 0 0}
 .tv-day-hdr.no-body{border-bottom:none;border-radius:8px}
-.tv-day-num{font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;background:var(--accent-g);color:var(--accent);flex-shrink:0;border:1px solid rgba(29,101,94,.25)}
+.tv-day-num{position:absolute;left:-48px;top:6px;width:24px;height:24px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;padding:0;border-radius:50%;background:var(--accent-g);color:var(--accent);border:2px solid var(--tv-line,var(--border));z-index:2}
 .tv-day-date{font-size:13px;font-weight:600;color:var(--text)}
 .tv-day-weekday{font-size:12px;color:var(--muted)}
 .tv-day-body{padding:12px 14px;font-size:13px;line-height:1.65;white-space:pre-wrap}
@@ -691,7 +729,8 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 @media(max-width:500px){
   .tv-days{padding-left:38px;margin-left:4px}
   .tv-days::before{left:11px}
-  .tv-day::before{left:-30px;width:10px;height:10px;top:13px}
+  .tv-days::after{left:5px}
+  .tv-day-num{left:-38px}
 }
 /* Photo overlay */
 #photo-overlay{position:fixed;inset:0;z-index:9000;display:none;flex-direction:column;background:#111}
@@ -783,10 +822,21 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
     <div id="nav-brand">
       <button id="nav-logo" type="button" aria-haspopup="menu" aria-expanded="false" data-i18n-title="nav.menu.title" title="Open navigation menu"><img src="favicon.svg" alt="Immer in Bewegung"></button>
       <div id="nav-menu" role="menu">
+        <div class="mobile-tools-row">
+          <button id="mobile-search-btn" class="nav-menu-item mobile-menu-item" type="button" role="menuitem" data-i18n-title="nav.search.title" title="Search trips">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6.5" cy="6.5" r="4.5"/><line x1="10.5" y1="10.5" x2="14" y2="14"/></svg>
+            <span data-i18n="nav.search.title">Search trips</span>
+          </button>
+          <button id="mobile-theme-btn" class="nav-menu-item mobile-menu-item" type="button" role="menuitem" data-i18n-title="nav.theme" title="Toggle theme" onclick="toggleTheme()">
+            <span id="theme-btn-mobile" aria-hidden="true"></span>
+            <span data-i18n="nav.theme">Toggle theme</span>
+          </button>
+        </div>
         <button class="nav-menu-item" data-tab="explore" data-i18n="nav.menu.explore" role="menuitem">Explore</button>
         <button class="nav-menu-item" data-tab="overview" data-i18n="nav.menu.edit" role="menuitem">Edit</button>
-        <button class="nav-menu-item" data-tab="settings" data-i18n="nav.menu.settings" role="menuitem">Settings</button>
         <button class="nav-menu-item" data-tab="report" data-i18n="nav.menu.report" role="menuitem">Report</button>
+        <button id="webframe-nav-item" class="nav-menu-item" data-tab="webframe" data-i18n="nav.menu.webframe" role="menuitem" style="display:none">Webframe</button>
+        <button class="nav-menu-item" data-tab="settings" data-i18n="nav.menu.settings" role="menuitem">Settings</button>
         <button class="nav-menu-item" data-tab="about" data-i18n="nav.menu.about" role="menuitem">About</button>
       </div>
       <div id="mod-dot"></div>
@@ -888,6 +938,22 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
     <div class="st-outer"><div id="st-content"></div></div>
   </div>
 
+  <!-- Video -->
+  <div id="tab-video" class="tab">
+    <div id="video-page">
+      <h2 id="video-title">Video</h2>
+      <div id="video-container">
+        <video id="video" controls></video>
+        <div id="subtitle-box"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Webframe -->
+  <div id="tab-webframe" class="tab">
+    <iframe id="webframe-frame" title="Webframe"></iframe>
+  </div>
+
   <!-- Report -->
   <div id="tab-report" class="tab">
     <div id="report-inner">
@@ -987,6 +1053,7 @@ let _mapPhotoVisible = false, _mapPhotoLoaded = false, _mapPhotoCountry = ''; //
 let currentTab = 'explore';
 let coverPhotosCache = null; // OuterId → thumbnailUrl, loaded from IndexedDB
 let _navBarHidden = false;
+let _tripSummaryCollapsed = false;
 let _editorDirty = false;   // unsaved changes in Editor form
 let _settingsDirty = false;  // unsaved changes in Settings
 let _settingsSnapshot = null; // deep copy of data.Settings when tab was opened
@@ -1003,7 +1070,7 @@ const _ICON_SUN  = `<svg width="15" height="15" viewBox="0 0 16 16" fill="curren
 function applyTheme(theme) {
   document.documentElement.dataset.theme = theme;
   const icon = theme === 'light' ? _ICON_MOON : _ICON_SUN;
-  document.querySelectorAll('#theme-btn,#ls-theme-btn').forEach(b => b.innerHTML = icon);
+  document.querySelectorAll('#theme-btn,#ls-theme-btn,#theme-btn-mobile').forEach(b => b.innerHTML = icon);
   localStorage.setItem('chronik-theme', theme);
   // Keep the browser/Android top bar in sync with the nav background
   const metaTheme = document.querySelector('meta[name="theme-color"]');
@@ -1202,7 +1269,13 @@ function wire() {
     navLogo.setAttribute('aria-expanded', String(isOpen));
   });
   navLogo.addEventListener('keydown', e => { if (e.key === 'Escape') closeNavMenu(); });
-  navMenu.querySelectorAll('.nav-menu-item').forEach(b => b.addEventListener('click', () => { closeNavMenu(); switchTab(b.dataset.tab); }));
+  navMenu.querySelectorAll('.nav-menu-item:not(.mobile-menu-item)').forEach(b => b.addEventListener('click', () => { closeNavMenu(); switchTab(b.dataset.tab); }));
+  document.getElementById('mobile-search-btn').addEventListener('click', e => {
+    e.stopPropagation();
+    closeNavMenu();
+    document.getElementById('nav-search-icon')?.click();
+  });
+  document.getElementById('mobile-theme-btn').addEventListener('click', closeNavMenu);
   document.addEventListener('click', e => { if (!document.getElementById('nav-brand').contains(e.target)) closeNavMenu(); });
   document.getElementById('new-trip-btn').addEventListener('click', newTrip);
   document.getElementById('trip-search').addEventListener('input', renderTrips);
@@ -1624,6 +1697,7 @@ async function _initApp(parsed, fileName) {
   pickRandomTrips();
   renderTrips();
   renderSettings();
+  updateWebframeMenu();
   if (location.hash && location.hash !== '#') resolveHash(location.hash);
   else renderExplore();
 }
@@ -1675,10 +1749,15 @@ async function saveFile() {
     } catch(e) { console.warn(e); }
   }
   const fname = currentFileName || 'chronik.json';
+  downloadCurrentFile();
+  setMod(false); toast('Downloaded as '+fname,'ok');
+}
+function downloadCurrentFile() {
+  const fname = currentFileName || 'chronik.json';
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   Object.assign(document.createElement('a'), { href:url, download:fname }).click();
   URL.revokeObjectURL(url);
-  setMod(false); toast('Downloaded as '+fname,'ok');
 }
 function setMod(v) {
   document.getElementById('mod-dot').classList.toggle('on', v);
@@ -1929,6 +2008,8 @@ function switchTab(tab, {updateHash=true}={}) {
   // Highlight frog logo when Explore is active
   const logo = document.getElementById('nav-logo');
   if (logo) logo.style.filter = tab==='explore' ? 'drop-shadow(0 0 4px var(--accent))' : '';
+  const filterBar = document.getElementById('filter-bar');
+  if (filterBar) filterBar.classList.toggle('on', tab !== 'webframe' && !!data);
   if (tab==='explore') { if(updateHash) setHash('#explore'); renderExplore(); }
   if (tab==='ovbrowse') { const a=document.querySelector('#ovb-subnav .sub-btn.active'); const mode=a?.dataset.mode||'cards'; if(updateHash) setHash(`#overview/${mode}`); renderOvBrowse(mode); }
   if (tab==='map') { if(updateHash) setHash('#map'); initMap(); }
@@ -1938,6 +2019,78 @@ function switchTab(tab, {updateHash=true}={}) {
   if (tab==='overview' && updateHash) setHash('#editor');
   if (tab==='settings' && updateHash) setHash('#settings');
   if (tab==='trip' && updateHash) setHash('#trip');
+  if (tab==='video' && updateHash) setHash('#video');
+  if (tab==='webframe') { if(updateHash) setHash('#webframe'); renderWebframe(); }
+}
+
+function openVideo(videoId, {updateHash=true}={}) {
+  if (updateHash) setHash(`#video/${encodeURIComponent(videoId)}`);
+  switchTab('video', {updateHash:false});
+  renderVideo(videoId);
+}
+
+function renderVideo(videoId) {
+  const video=document.getElementById('video');
+  const subtitleBox=document.getElementById('subtitle-box');
+  const title=document.getElementById('video-title');
+  if (!video||!subtitleBox||!title) return;
+  video.pause();
+  video.replaceChildren();
+  subtitleBox.innerHTML='';
+  const movieExt=data?.Settings?.Extension?.Movie;
+  const id=String(videoId||'').trim();
+  title.textContent=id||t('video.title','Video');
+  if (!movieExt?.Enabled || !id) {
+    video.style.display='none';
+    subtitleBox.style.display='block';
+    subtitleBox.innerHTML=`<div id="video-empty">${t('video.notFound','Video not found')}</div>`;
+    return;
+  }
+  video.style.display='block';
+  const base=(movieExt.Path||'../video/').replace(/\/?$/,'/');
+  const asset=name=>base+encodeURIComponent(name);
+  const source=document.createElement('source');
+  source.src=asset(`${id} (konverterad).mp4`); source.type='video/mp4'; video.appendChild(source);
+  const subtitles=document.createElement('track');
+  subtitles.src=asset(`${id}.vtt`); subtitles.kind='subtitles'; subtitles.srclang='sv';
+  subtitles.label=t('video.swedish','Svenska'); subtitles.default=true; video.appendChild(subtitles);
+  const metadata=document.createElement('track');
+  metadata.id='divTrack'; metadata.src=asset(`${id}-all-metadata.vtt`); metadata.kind='metadata'; video.appendChild(metadata);
+  video.addEventListener('loadedmetadata',()=>{
+    const track=metadata.track||video.textTracks[1];
+    if(!track)return;
+    track.mode='hidden';
+    track.addEventListener('cuechange',()=>{
+      const cues=track.activeCues;
+      if(!cues||!cues.length){subtitleBox.innerHTML='';return;}
+      const gpsRegex=/([+-]?\d{1,3}\.\d+)[,\s]+([+-]?\d{1,3}\.\d+)/g;
+      subtitleBox.innerHTML=String(cues[0].text||'').replace(gpsRegex,(match,lat,lng)=>{
+        const url=`https://www.google.com/maps?q=${lat},${lng}`;
+        return `<a href="${url}" target="_blank" rel="noopener">${lat}, ${lng}</a>`;
+      });
+    });
+  },{once:true});
+}
+
+function webframeConfig() {
+  return data?.Settings?.Extension?.Webframe || null;
+}
+function updateWebframeMenu() {
+  const btn=document.getElementById('webframe-nav-item');
+  const cfg=webframeConfig();
+  if(!btn)return;
+  const enabled=!!(cfg?.Enabled && cfg?.Path);
+  btn.style.display=enabled?'':'none';
+  if(enabled){
+    const label=cfg.Translation||t('nav.menu.webframe','Webframe');
+    btn.textContent=label; btn.title=label;
+  }
+}
+function renderWebframe() {
+  const frame=document.getElementById('webframe-frame');
+  const cfg=webframeConfig();
+  if(!frame)return;
+  frame.src=cfg?.Enabled&&cfg?.Path?cfg.Path:'about:blank';
 }
 
 function resolveHash(hash) {
@@ -1947,8 +2100,12 @@ function resolveHash(hash) {
   const [seg1, seg2] = raw.split('/');
   // #editor opens the Editor tab; #overview (and legacy #ovbrowse) opens the Overview/Browse tab
   const tabAlias = { editor:'overview' };
-  const tabs = ['explore','ovbrowse','map','stats','trip','settings','report','about'];
-  if (seg1 === 'trip' && seg2) {
+  const tabs = ['explore','ovbrowse','map','stats','trip','settings','video','webframe','report','about'];
+  if (seg1 === 'video') {
+    openVideo(seg2 ? decodeURIComponent(seg2) : '', {updateHash:false});
+  } else if (seg1 === 'webframe') {
+    switchTab('webframe', {updateHash:false});
+  } else if (seg1 === 'trip' && seg2) {
     // Accept OuterId or InnerId
     const iid = resolveToInnerId(seg2);
     if (iid) openTripView(iid, {updateHash: false});
@@ -2006,7 +2163,7 @@ function makeCard(t, colors) {
       <div class="ex-title">${h(t.OverallDestination||t('explore.noDestination','(no destination)'))}</div>
       ${t.TripDescription?`<div class="ex-desc">${h(t.TripDescription)}</div>`:''}
     </div>
-    <div class="ex-footer" style="${color?`border-top-color:${color};color:${color}`:''}">${h(footer)}</div>`;
+    <div class="ex-footer" style="${color?`background:color-mix(in srgb, ${color} 18%, var(--s1));color:${color}`:''}">${h(footer)}</div>`;
   card.addEventListener('click', () => openTripView(t.InnerId));
   return card;
 }
@@ -3161,8 +3318,10 @@ function renderTripView(innerId) {
   navToggleBtn.addEventListener('click',()=>{
     _navBarHidden=!_navBarHidden;
     const appNav=document.getElementById('app-nav');
+    const app=document.getElementById('app');
     const filterBar=document.getElementById('filter-bar');
     appNav.style.display=_navBarHidden?'none':'';
+    app.classList.toggle('nav-bar-hidden', _navBarHidden);
     if(filterBar&&!_navBarHidden) filterBar.style.display=''; // restore only — let normal logic control when hidden→shown
     if(_navBarHidden&&filterBar) filterBar.style.display='none';
     // update icon/title in-place
@@ -3236,10 +3395,10 @@ function renderTripView(innerId) {
   const _movieExt=data.Settings?.Extension?.Movie;
   const _movieFile=_movieExt?.Enabled&&trip.OuterId&&_movieExt?.Items?.[trip.OuterId];
   if(_movieFile){
-    const _moviePath=(_movieExt.Path||'')+_movieFile;
     const _movieA=document.createElement('a');_movieA.className='tv-ext-btn';
-    _movieA.href=_moviePath;_movieA.target='_blank';_movieA.rel='noopener noreferrer';
-    _movieA.textContent=_movieExt.Translation||'Movie';_movieA.title=_moviePath;
+    _movieA.href=`#video/${encodeURIComponent(trip.OuterId)}`;
+    _movieA.textContent=_movieExt.Translation||'Movie';_movieA.title=_movieExt.Translation||'Movie';
+    _movieA.addEventListener('click',e=>{e.preventDefault();openVideo(trip.OuterId);});
     _sumBtns.appendChild(_movieA);
   }
 
@@ -3323,8 +3482,14 @@ function renderTripView(innerId) {
   sumBlock.appendChild(sumBody);
   if(coverWrap)sumInfo.insertBefore(coverWrap,sumInfo.firstChild);
   const _coverEl=coverWrap instanceof HTMLImageElement?coverWrap:coverWrap?.querySelector('img');
+  if(_tripSummaryCollapsed){
+    sumBody.style.display='none';
+    if(_coverEl&&!_coverEl.dataset.failed)coverWrap.style.display='none';
+    sumHdr.querySelector('.tv-sum-chev').textContent='▸';
+  }
   sumHdr.addEventListener('click',()=>{
     const hidden=sumBody.style.display==='none';
+    _tripSummaryCollapsed=!hidden;
     sumBody.style.display=hidden?'':'none';
     if(_coverEl&&!_coverEl.dataset.failed)coverWrap.style.display=hidden?'':'none';
     sumHdr.querySelector('.tv-sum-chev').textContent=hidden?'▾':'▸';
@@ -3370,7 +3535,7 @@ function renderTripView(innerId) {
       if(ymd.length===8&&passMap[ymd])passItems.push({date:ev.Date,label:passMap[ymd],href:passPath+passMap[ymd]});
     });
     const dl=document.createElement('div');dl.className='tv-days';
-    if(domColor) dl.style.setProperty('--tv-dot', domColor);
+    if(domColor){ dl.style.setProperty('--tv-dot', domColor); dl.style.setProperty('--tv-line', domColor); }
     enrichedDays.forEach(ev=>{
       const day=document.createElement('div');day.className='tv-day';if(ev.Date)day.dataset.date=ev.Date;
       const ns=domColor?`background:${domColor};color:${domText}`:'';
@@ -4043,7 +4208,12 @@ async function openCoordPickerModal(input) {
 async function initMap() {
   try { await ensureMapLibre(); } catch(e) { document.getElementById('map-container').innerHTML=`<div class="empty"><div class="ei">🗺️</div><h3>${t('map.loadError','Could not load map')}</h3><p>${t('map.loadErrorHint','Check your internet connection')}</p></div>`; return; }
   const container=document.getElementById('map-container');
-  if (mapInstance) { setTimeout(()=>mapInstance.resize(),50); renderMapControls(); return; }
+  if (mapInstance) {
+    setTimeout(()=>mapInstance.resize(),50);
+    renderMapControls();
+    if (mapInstance.getSource('pins')) updateMapPins();
+    return;
+  }
 
   mapInstance = new maplibregl.Map({
     container,
@@ -4744,10 +4914,10 @@ function generateReport() {
 <title>${h(title)}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;900&family=Righteous&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;900&family=Righteous&family=Scoutie+Sans:wght@200..800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:11pt;color:#212529;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:'Scoutie Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:11pt;color:#212529;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 a{color:inherit;text-decoration:none}
 
 /* Print controls */
@@ -5182,6 +5352,12 @@ function renderSettings() {
   const settings=data.Settings;
 
   // ── File banner ──────────────────────────────────────────────────
+  const fileBlock=document.createElement('div'); fileBlock.className='st-current-file';
+  if(!fileHandle){
+    const urlWarning=document.createElement('div'); urlWarning.className='st-url-warning-panel';
+    urlWarning.textContent=t('settings.urlModeWarning','URL mode — changes can be downloaded but cannot be saved back to the source.');
+    content.appendChild(urlWarning);
+  }
   const banner=document.createElement('div'); banner.className='st-file-banner';
   const fileInfo=document.createElement('div'); fileInfo.className='st-file-info';
   fileInfo.innerHTML=`<div class="st-file-lbl">${t('settings.currentFile','Current file')}</div><div class="st-file-name">${h(currentFileName||'—')}</div>`;
@@ -5191,13 +5367,22 @@ function renderSettings() {
   const closeBtn=document.createElement('button'); closeBtn.className='btn btn-g';
   closeBtn.style.cssText='font-size:12px;display:flex;align-items:center;gap:6px;white-space:nowrap;';
   closeBtn.innerHTML=_ICON_EJECT+'<span>'+t('settings.startScreen','Start screen')+'</span>'; closeBtn.addEventListener('click',closeFile);
-  const dlBtn=document.createElement('button'); dlBtn.className='btn btn-p';
-  dlBtn.style.cssText='font-size:12px;padding:8px 11px;display:flex;align-items:center;justify-content:center;white-space:nowrap;';
-  dlBtn.title=fileHandle?t('settings.saveFile','Save file'):t('settings.downloadJson','Download JSON');
-  dlBtn.setAttribute('aria-label',dlBtn.title);
-  dlBtn.innerHTML=_ICON_DOWNLOAD;
-  dlBtn.addEventListener('click',()=>{ saveFile(); });
+  const fileBtnStyle='font-size:12px;padding:8px 11px;display:flex;align-items:center;justify-content:center;white-space:nowrap;';
+  const downloadBtn=document.createElement('button'); downloadBtn.className='btn btn-p';
+  downloadBtn.style.cssText=fileBtnStyle;
+  downloadBtn.title=t('settings.downloadJson','Download JSON');
+  downloadBtn.setAttribute('aria-label',downloadBtn.title);
+  downloadBtn.innerHTML=_ICON_DOWNLOAD;
+  downloadBtn.addEventListener('click',()=>{ downloadCurrentFile(); });
+  const fileSaveBtn=document.createElement('button'); fileSaveBtn.className='btn btn-g';
+  fileSaveBtn.style.cssText=fileBtnStyle;
+  fileSaveBtn.title=t('settings.saveFile','Save file');
+  fileSaveBtn.setAttribute('aria-label',fileSaveBtn.title);
+  fileSaveBtn.innerHTML=_ICON_SAVE;
+  fileSaveBtn.addEventListener('click',()=>{ saveFile(); });
   bannerBtns.appendChild(closeBtn);
+  bannerBtns.appendChild(downloadBtn);
+  if (fileHandle) bannerBtns.appendChild(fileSaveBtn);
   // ── Snapshot Upload button (file mode only, if configured) ────────
   const _snapCfg = settings?.Extension?.SnapshotUpload;
   if (fileHandle && _snapCfg && _snapCfg.Path) {
@@ -5232,7 +5417,6 @@ function renderSettings() {
     bannerBtns.appendChild(snapBtn);
     bannerBtns.appendChild(_snapStatus);
   }
-  compactFileBtns.appendChild(dlBtn);
   const _reloadUrl = localStorage.getItem('chronik-last-url');
   if (_reloadUrl) {
     const reloadBtn=document.createElement('button'); reloadBtn.className='btn btn-p';
@@ -5248,7 +5432,7 @@ function renderSettings() {
     compactFileBtns.appendChild(reloadBtn);
   }
   bannerBtns.appendChild(compactFileBtns);
-  banner.appendChild(fileInfo); banner.appendChild(bannerBtns); content.appendChild(banner);
+  banner.appendChild(fileInfo); banner.appendChild(bannerBtns); fileBlock.appendChild(banner); content.appendChild(fileBlock);
 
   // ── Card helpers ─────────────────────────────────────────────────
   let currentCard=null, currentSubContainer=null;
@@ -5301,17 +5485,14 @@ function renderSettings() {
   // ── Settings sections ────────────────────────────────────────────
   // Keys that have dedicated UI cards — skip them from the generic auto-rendered rows
   const _skipKeys = new Set(['LanguageFile']);
-  makeHdr(t('settings.sections.base','Base'));
+  const baseCard=makeHdr(t('settings.sections.base','Base'));
   Object.entries(settings.Base||{}).forEach(([k,v])=>{if(_skipKeys.has(k))return;addRow(val=>settings.Base[k]=val,k,v);});
   makeHdr(t('settings.sections.definition','Definition'));
   Object.entries(settings.Definition||{}).forEach(([k,v])=>addRow(val=>settings.Definition[k]=val,k,v));
-  makeHdr(t('settings.sections.extension','Extension'));
+  const extensionCard=makeHdr(t('settings.sections.extension','Extension'));
   Object.entries(settings.Extension||{}).forEach(([extName,extVal])=>{makeSubHdr(extName,true);Object.entries(extVal||{}).forEach(([k,v])=>addRow(val=>settings.Extension[extName][k]=val,k,v));});
   makeHdr(t('settings.sections.other','Other'));
   Object.entries(settings.Other||{}).forEach(([k,v])=>{if(_skipKeys.has(k))return;addRow(val=>settings.Other[k]=val,k,v);});
-  makeHdr(t('settings.sections.photos','Photos'));
-  Object.entries(settings.Photos||{}).forEach(([k,v])=>{if(_skipKeys.has(k))return;if(k==='Immich')addSelect(val=>settings.Photos[k]=val,k,v,['Enabled','Disabled']);else addRow(val=>settings.Photos[k]=val,k,v);});
-
   // ── Language card ────────────────────────────────────────────────
   const langCard=document.createElement('div'); langCard.className='st-card';
   const langHdr=document.createElement('div'); langHdr.className='st-group-hdr'; langHdr.textContent=t('settings.sections.language','Language');
@@ -5367,7 +5548,15 @@ function renderSettings() {
     immichHdr.appendChild(immichIcon);
     immichHdr.appendChild(document.createTextNode(t('settings.sections.tools','Immich integration')));
   }
-  content.insertBefore(immichCard, content.children[1] || null);
+  content.insertBefore(immichCard, baseCard);
+  // Merge photo settings into the Immich integration card.
+  currentCard=immichCard; currentSubContainer=null;
+  makeSubHdr(t('settings.sections.photos','Photos'));
+  Object.entries(settings.Photos||{}).forEach(([k,v])=>{
+    if(_skipKeys.has(k))return;
+    if(k==='Immich') addSelect(val=>settings.Photos[k]=val,k,v,['Enabled','Disabled']);
+    else addRow(val=>settings.Photos[k]=val,k,v);
+  });
   const tools=document.createElement('div'); tools.className='immich-tools';
 
   const status1=document.createElement('div'); status1.className='immich-status'; status1.textContent='—';
@@ -5472,11 +5661,12 @@ function renderSettings() {
   swBtnGroup.appendChild(swBtn); swBtnGroup.appendChild(forceReloadBtn);
   swBody.appendChild(swDesc); swBody.appendChild(swBtnGroup);
   swCard.appendChild(swHdr); swCard.appendChild(swBody);
-  content.insertBefore(swCard, content.children[2] || null);
+  content.insertBefore(swCard, immichCard);
 
   // ── Export ───────────────────────────────────────────────────────
-  const expCard=document.createElement('div'); expCard.className='st-card';
-  const expHdr=document.createElement('div'); expHdr.className='st-group-hdr'; expHdr.textContent=t('settings.export.title','Export');
+  const expDetails=document.createElement('details'); expDetails.className='st-file-export';
+  const expSummary=document.createElement('summary'); expSummary.textContent=t('settings.export.title','Export');
+  expDetails.appendChild(expSummary);
   const expBody=document.createElement('div'); expBody.style.cssText='padding:14px 18px;display:flex;flex-direction:column;gap:12px';
   const expStatus=document.createElement('div'); expStatus.className='immich-status';
   const _expCount=filteredTrips().length;
@@ -5541,8 +5731,11 @@ function renderSettings() {
   const expBtns=document.createElement('div'); expBtns.className='immich-btns';
   expBtns.appendChild(filtBtn); expBtns.appendChild(embedBtn);
   expBody.appendChild(expBtns); expBody.appendChild(expStatus);
-  expCard.appendChild(expHdr); expCard.appendChild(expBody);
-  content.appendChild(expCard);
+  expDetails.appendChild(expBody);
+  fileBlock.appendChild(expDetails);
+  // Keep the advanced extension settings at the end of the Settings page.
+  content.appendChild(extensionCard);
+  updateWebframeMenu();
 
 }
 

@@ -17,6 +17,7 @@
       "editor": "Rediger",
       "settings": "Indstillinger",
       "report": "Rapport",
+      "webframe": "Webramme",
       "about": "Om"
     },
     "search": {
@@ -31,6 +32,7 @@
       "yearsAgo": "{years} år siden",
       "yearsFromNow": "om {years} år"
     },
+    "theme": "Skift tema",
     "menu": {
       "title": "Åbn navigationsmenu",
       "explore": "Udforsk",
@@ -297,6 +299,11 @@
     },
     "generatedOn": "Genereret"
   },
+  "video": {
+    "title": "Video",
+    "notFound": "Video ikke fundet",
+    "swedish": "Svensk"
+  },
   "about": {
     "tagline": "Din åbne kildekode, letvægts og fremtidssikrede rejsedokumentationsapp.",
     "sourceLabel": "Kilde"
@@ -305,6 +312,7 @@
     "currentFile": "Aktuel fil",
     "saveFile": "Gem fil",
     "downloadJson": "Download JSON",
+    "urlModeWarning": "URL-tilstand — ændringer kan downloades, men kan ikke gemmes tilbage til kilden.",
     "startScreen": "Startskærm",
     "reloadFromUrl": "Genindlæs fra URL",
     "immich": {

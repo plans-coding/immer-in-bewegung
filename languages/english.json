@@ -17,6 +17,7 @@
       "editor": "Editor",
       "settings": "Settings",
       "report": "Report",
+      "webframe": "Webframe",
       "about": "About"
     },
     "search": {
@@ -31,6 +32,7 @@
       "yearsAgo": "{years} years ago",
       "yearsFromNow": "{years} years from now"
     },
+    "theme": "Toggle theme",
     "menu": {
       "title": "Open navigation menu",
       "explore": "Explore",
@@ -297,6 +299,11 @@
     },
     "generatedOn": "Generated"
   },
+  "video": {
+    "title": "Video",
+    "notFound": "Video not found",
+    "swedish": "Svenska"
+  },
   "about": {
     "tagline": "Your open source, lightweight, and future proof travel documentation app.",
     "sourceLabel": "Source"
@@ -305,6 +312,7 @@
     "currentFile": "Current file",
     "saveFile": "Save file",
     "downloadJson": "Download JSON",
+    "urlModeWarning": "URL mode — changes can be downloaded but cannot be saved back to the source.",
     "startScreen": "Start screen",
     "reloadFromUrl": "Reload from URL",
     "immich": {

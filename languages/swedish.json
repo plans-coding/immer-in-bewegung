@@ -17,6 +17,7 @@
       "editor": "Redigera",
       "settings": "Inställningar",
       "report": "Rapport",
+      "webframe": "Webbpanel",
       "about": "Om"
     },
     "search": {
@@ -32,9 +33,10 @@
       "yearsFromNow": "om {years} år",
       "decimalSeparator": ","
     },
+    "theme": "Växla tema",
     "menu": {
       "title": "Öppna navigeringsmenyn",
-      "explore": "Utforska",
+      "explore": "Upptäck",
       "edit": "Redigera",
       "settings": "Inställningar",
       "report": "Rapport",
@@ -298,6 +300,11 @@
     },
     "generatedOn": "Genererad"
   },
+  "video": {
+    "title": "Video",
+    "notFound": "Videon hittades inte",
+    "swedish": "Svenska"
+  },
   "about": {
     "tagline": "Ett resurssnålt och framtidssäkert resebokföringsverktyg byggt med öppen källkod.",
     "sourceLabel": "Källkod"
@@ -306,6 +313,7 @@
     "currentFile": "Aktuell fil",
     "saveFile": "Spara fil",
     "downloadJson": "Ladda ner JSON",
+    "urlModeWarning": "URL-läge — ändringar kan laddas ner men kan inte sparas tillbaka till källan.",
     "startScreen": "Startskärm",
     "reloadFromUrl": "Ladda om från URL",
     "immich": {
