@@ -524,6 +524,10 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 #subtitle-box{min-height:24px;padding:12px 16px;color:var(--text);font-size:13px;line-height:1.55;white-space:pre-wrap}
 #subtitle-box:empty{display:none}
 #subtitle-box a{color:var(--accent);text-decoration:underline}
+#video-timestamps{display:flex;flex-wrap:wrap;gap:5px;padding:0 16px 12px}
+#video-timestamps:empty{display:none}
+.video-timestamp{border:1px solid var(--border);border-radius:5px;background:var(--s3);color:var(--accent);padding:3px 7px;font-size:11px;cursor:pointer;text-align:left}
+.video-timestamp:hover{background:var(--accent-g);border-color:var(--accent)}
 #video-empty{padding:40px 20px;text-align:center;color:var(--muted2)}
 #tab-webframe{flex-direction:column;background:var(--bg)}
 #webframe-frame{display:block;width:100%;height:100%;min-height:0;border:0;background:var(--s1)}
@@ -723,6 +727,8 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 #ov-list-toggle:hover{background:var(--accent-g)}
 .tv-ext-btn{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;text-decoration:none;border:1.5px solid var(--accent);color:var(--accent);background:var(--accent-g);transition:background .15s,color .15s;white-space:nowrap}
 .tv-ext-btn:hover{background:var(--accent);color:#fff}
+.tv-ext-movie{background:var(--accent);color:#fff;border-color:var(--accent)}
+.tv-ext-movie:hover{background:var(--accent-d);border-color:var(--accent-d);color:#fff}
 .tv-photo-links{display:flex;flex-wrap:wrap;gap:6px;padding:10px 0 2px}
 .tv-ext-photos{border-color:var(--muted2);color:var(--muted2);background:transparent;cursor:pointer}
 .tv-ext-photos:hover{background:var(--muted2);color:#fff;border-color:var(--muted2)}
@@ -945,6 +951,7 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
       <div id="video-container">
         <video id="video" controls></video>
         <div id="subtitle-box"></div>
+        <div id="video-timestamps" aria-label="Video timestamps"></div>
       </div>
     </div>
   </div>
@@ -2023,20 +2030,23 @@ function switchTab(tab, {updateHash=true}={}) {
   if (tab==='webframe') { if(updateHash) setHash('#webframe'); renderWebframe(); }
 }
 
-function openVideo(videoId, {updateHash=true}={}) {
+function openVideo(videoId, {updateHash=true,startTime=null}={}) {
   if (updateHash) setHash(`#video/${encodeURIComponent(videoId)}`);
   switchTab('video', {updateHash:false});
-  renderVideo(videoId);
+  renderVideo(videoId,startTime);
 }
 
-function renderVideo(videoId) {
+function renderVideo(videoId,startTime=null) {
   const video=document.getElementById('video');
   const subtitleBox=document.getElementById('subtitle-box');
+  const timestampBox=document.getElementById('video-timestamps');
   const title=document.getElementById('video-title');
-  if (!video||!subtitleBox||!title) return;
+  if (!video||!subtitleBox||!timestampBox||!title) return;
   video.pause();
+  video.muted=true;
   video.replaceChildren();
   subtitleBox.innerHTML='';
+  timestampBox.innerHTML='';
   const movieExt=data?.Settings?.Extension?.Movie;
   const id=String(videoId||'').trim();
   title.textContent=id||t('video.title','Video');
@@ -2056,7 +2066,22 @@ function renderVideo(videoId) {
   subtitles.label=t('video.swedish','Svenska'); subtitles.default=true; video.appendChild(subtitles);
   const metadata=document.createElement('track');
   metadata.id='divTrack'; metadata.src=asset(`${id}-all-metadata.vtt`); metadata.kind='metadata'; video.appendChild(metadata);
+  const formatTimestamp=seconds=>{const total=Math.max(0,Math.floor(seconds));return `${String(Math.floor(total/3600)).padStart(2,'0')}:${String(Math.floor(total/60)%60).padStart(2,'0')}:${String(total%60).padStart(2,'0')}`;};
+  const renderTimestamps=()=>{
+    const cues=subtitles.track?.cues;
+    if(!cues||!cues.length)return;
+    timestampBox.replaceChildren();
+    [...cues].forEach(cue=>{
+      const btn=document.createElement('button');btn.type='button';btn.className='video-timestamp';
+      const stamp=formatTimestamp(cue.startTime);btn.textContent=`${stamp} — ${String(cue.text||'').replace(/\s+/g,' ').trim()}`;btn.title=`Seek to ${stamp}`;
+      btn.addEventListener('click',()=>{video.currentTime=cue.startTime;setHash(`#video/${encodeURIComponent(id)}/${stamp}`);});
+      timestampBox.appendChild(btn);
+    });
+  };
+  subtitles.addEventListener('load',renderTimestamps,{once:true});
   video.addEventListener('loadedmetadata',()=>{
+    if(Number.isFinite(startTime)&&startTime>=0) video.currentTime=Math.min(startTime,video.duration||startTime);
+    renderTimestamps();
     const track=metadata.track||video.textTracks[1];
     if(!track)return;
     track.mode='hidden';
@@ -2097,12 +2122,16 @@ function resolveHash(hash) {
   if (!data) return; // can't navigate without data
   const raw = (hash || '').replace(/^#/, '');
   if (!raw) return;
-  const [seg1, seg2] = raw.split('/');
+  const [seg1, seg2, seg3] = raw.split('/');
   // #editor opens the Editor tab; #overview (and legacy #ovbrowse) opens the Overview/Browse tab
   const tabAlias = { editor:'overview' };
   const tabs = ['explore','ovbrowse','map','stats','trip','settings','video','webframe','report','about'];
   if (seg1 === 'video') {
-    openVideo(seg2 ? decodeURIComponent(seg2) : '', {updateHash:false});
+    const videoId=seg2 ? decodeURIComponent(seg2) : '';
+    const timeMatch=seg3&&/^(\d{1,3}):(\d{2}):(\d{2})$/.exec(decodeURIComponent(seg3));
+    const startTime=timeMatch&&+timeMatch[2]<60&&+timeMatch[3]<60
+      ? (+timeMatch[1]*3600)+(+timeMatch[2]*60)+(+timeMatch[3]) : null;
+    openVideo(videoId, {updateHash:false,startTime});
   } else if (seg1 === 'webframe') {
     switchTab('webframe', {updateHash:false});
   } else if (seg1 === 'trip' && seg2) {
@@ -3395,10 +3424,12 @@ function renderTripView(innerId) {
   const _movieExt=data.Settings?.Extension?.Movie;
   const _movieFile=_movieExt?.Enabled&&trip.OuterId&&_movieExt?.Items?.[trip.OuterId];
   if(_movieFile){
-    const _movieA=document.createElement('a');_movieA.className='tv-ext-btn';
-    _movieA.href=`#video/${encodeURIComponent(trip.OuterId)}`;
-    _movieA.textContent=_movieExt.Translation||'Movie';_movieA.title=_movieExt.Translation||'Movie';
-    _movieA.addEventListener('click',e=>{e.preventDefault();openVideo(trip.OuterId);});
+    const _movieA=document.createElement('a');_movieA.className='tv-ext-btn tv-ext-movie';
+    _movieA.href=`#video/${encodeURIComponent(_movieFile)}`;
+    const _movieLabel=_movieExt.Translation||'Movie';
+    _movieA.textContent=`${_movieLabel}: ${_movieFile}`;_movieA.title=_movieA.textContent;
+    if(domColor){_movieA.style.background=domColor;_movieA.style.borderColor=domColor;_movieA.style.color=domText;}
+    _movieA.addEventListener('click',e=>{e.preventDefault();openVideo(_movieFile);});
     _sumBtns.appendChild(_movieA);
   }
 
@@ -3415,7 +3446,10 @@ function renderTripView(innerId) {
     _descSet.forEach(desc=>{
       const url=`${_immichBase}/search?query=%7B"description"%3A"(${desc})"%7D`;
       const a=document.createElement('a');a.className='tv-ext-btn';a.target='_blank';a.rel='noopener';
-      a.href=url;a.title=`Search Immich: description = (${desc})`;a.textContent='🔍 '+desc;
+      a.href=url;a.title=`Search Immich: description = (${desc})`;
+      const icon=document.createElement('img');icon.src='immich.svg';icon.alt='';icon.setAttribute('aria-hidden','true');icon.style.cssText='width:13px;height:13px;object-fit:contain';
+      a.appendChild(icon);a.appendChild(document.createTextNode(' '+desc));
+      if(domColor){a.style.background=domColor;a.style.borderColor=domColor;a.style.color=domText;}
       _sumBtns.appendChild(a);
     });
     _albumSet.forEach(albumName=>{
