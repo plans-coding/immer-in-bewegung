@@ -529,8 +529,29 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 .video-timestamp{border:1px solid var(--border);border-radius:5px;background:var(--s3);color:var(--accent);padding:3px 7px;font-size:11px;cursor:pointer;text-align:left}
 .video-timestamp:hover{background:var(--accent-g);border-color:var(--accent)}
 #video-empty{padding:40px 20px;text-align:center;color:var(--muted2)}
-#tab-webframe{flex-direction:column;background:var(--bg)}
-#webframe-frame{display:block;width:100%;height:100%;min-height:0;border:0;background:var(--s1)}
+#tab-external-documents{flex-direction:column;background:var(--bg)}
+#external-documents-tabs{display:flex;gap:4px;align-items:center;overflow-x:auto;flex:0 0 auto;padding:8px 10px;background:var(--s2);border-bottom:1px solid var(--border)}
+.external-document-tab{flex:0 0 auto;padding:7px 13px;border:1px solid var(--border);border-radius:6px;background:var(--s3);color:var(--text);font:inherit;font-size:13px;cursor:pointer;white-space:nowrap}
+.external-document-tab:hover{border-color:var(--accent);color:var(--accent)}
+.external-document-tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.external-document-link{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;width:28px;height:28px;border:1px solid var(--border);border-radius:6px;color:var(--muted2);font-size:16px;text-decoration:none}
+.external-document-link:hover,.external-document-link:focus-visible{border-color:var(--accent);color:var(--accent);outline:none}
+#tab-complementary-lists{flex-direction:column;background:var(--bg)}
+#complementary-lists-tabs{display:flex;gap:4px;align-items:center;overflow-x:auto;flex:0 0 auto;padding:8px 10px;background:var(--s2);border-bottom:1px solid var(--border)}
+.complementary-list-tab{flex:0 0 auto;padding:7px 13px;border:1px solid var(--border);border-radius:6px;background:var(--s3);color:var(--text);font:inherit;font-size:13px;cursor:pointer;white-space:nowrap}
+.complementary-list-tab:hover{border-color:var(--accent);color:var(--accent)}
+.complementary-list-tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+#complementary-lists-content{flex:1;overflow:auto;padding:18px}
+.complementary-list-table{width:100%;border-collapse:collapse;background:var(--s1);font-size:13px}
+.complementary-list-table th,.complementary-list-table td{padding:8px 10px;border:1px solid var(--border);text-align:left;vertical-align:top}
+.complementary-list-table th{background:var(--s2);color:var(--muted2);font-weight:600;white-space:nowrap}
+.complementary-list-sort{display:flex;align-items:center;gap:5px;width:100%;padding:0;border:0;background:none;color:inherit;font:inherit;font-weight:600;text-align:left;cursor:pointer}
+.complementary-list-sort:hover,.complementary-list-sort:focus-visible{color:var(--accent);outline:none}
+.complementary-list-filter{box-sizing:border-box;width:100%;margin-top:6px;padding:4px 6px;border:1px solid var(--border);border-radius:4px;background:var(--s1);color:var(--text);font:inherit;font-size:12px;font-weight:400}
+.complementary-list-filter:focus{border-color:var(--accent);outline:none}
+.complementary-list-status{padding:40px 20px;color:var(--muted2);text-align:center}
+#external-documents-empty{padding:40px 20px;text-align:center;color:var(--muted2)}
+#external-documents-frame{display:block;flex:1 1 auto;width:100%;height:auto;min-height:0;border:0;background:var(--s1)}
 #about-inner{max-width:680px;margin:0 auto;padding:40px 20px}
 .about-hero{text-align:center;padding:32px 0 40px;border-bottom:1px solid var(--border);margin-bottom:32px}
 .about-logo{margin-bottom:16px;line-height:1}
@@ -841,7 +862,8 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
         <button class="nav-menu-item" data-tab="explore" data-i18n="nav.menu.explore" role="menuitem">Explore</button>
         <button class="nav-menu-item" data-tab="overview" data-i18n="nav.menu.edit" role="menuitem">Edit</button>
         <button class="nav-menu-item" data-tab="report" data-i18n="nav.menu.report" role="menuitem">Report</button>
-        <button id="webframe-nav-item" class="nav-menu-item" data-tab="webframe" data-i18n="nav.menu.webframe" role="menuitem" style="display:none">Webframe</button>
+        <button id="external-documents-nav-item" class="nav-menu-item" data-tab="external-documents" role="menuitem" style="display:none">External documents</button>
+        <button id="complementary-lists-nav-item" class="nav-menu-item" data-tab="complementary-lists" role="menuitem" style="display:none">Complementary lists</button>
         <button class="nav-menu-item" data-tab="settings" data-i18n="nav.menu.settings" role="menuitem">Settings</button>
         <button class="nav-menu-item" data-tab="about" data-i18n="nav.menu.about" role="menuitem">About</button>
       </div>
@@ -956,9 +978,16 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
     </div>
   </div>
 
-  <!-- Webframe -->
-  <div id="tab-webframe" class="tab">
-    <iframe id="webframe-frame" title="Webframe"></iframe>
+  <!-- External documents -->
+  <div id="tab-external-documents" class="tab">
+    <div id="external-documents-tabs" role="tablist" aria-label="External documents"></div>
+    <iframe id="external-documents-frame" title="External documents"></iframe>
+  </div>
+
+  <!-- Complementary lists -->
+  <div id="tab-complementary-lists" class="tab">
+    <div id="complementary-lists-tabs" role="tablist" aria-label="Complementary lists"></div>
+    <div id="complementary-lists-content"></div>
   </div>
 
   <!-- Report -->
@@ -1283,7 +1312,12 @@ function wire() {
     document.getElementById('nav-search-icon')?.click();
   });
   document.getElementById('mobile-theme-btn').addEventListener('click', closeNavMenu);
-  document.addEventListener('click', e => { if (!document.getElementById('nav-brand').contains(e.target)) closeNavMenu(); });
+  // Close on any pointer interaction outside the frog button or its menu.
+  // Check those two elements directly so clicks on the surrounding brand
+  // padding also count as outside clicks.
+  document.addEventListener('pointerdown', e => {
+    if (!navMenu.contains(e.target) && !navLogo.contains(e.target)) closeNavMenu();
+  });
   document.getElementById('new-trip-btn').addEventListener('click', newTrip);
   document.getElementById('trip-search').addEventListener('input', renderTrips);
   document.getElementById('shuffle-btn').addEventListener('click', () => { pickRandomTrips(); renderExplore(); });
@@ -1704,7 +1738,8 @@ async function _initApp(parsed, fileName) {
   pickRandomTrips();
   renderTrips();
   renderSettings();
-  updateWebframeMenu();
+  updateExternalDocumentsMenu();
+  updateComplementaryListsMenu();
   if (location.hash && location.hash !== '#') resolveHash(location.hash);
   else renderExplore();
 }
@@ -2016,7 +2051,7 @@ function switchTab(tab, {updateHash=true}={}) {
   const logo = document.getElementById('nav-logo');
   if (logo) logo.style.filter = tab==='explore' ? 'drop-shadow(0 0 4px var(--accent))' : '';
   const filterBar = document.getElementById('filter-bar');
-  if (filterBar) filterBar.classList.toggle('on', tab !== 'webframe' && !!data);
+  if (filterBar) filterBar.classList.toggle('on', tab !== 'external-documents' && tab !== 'complementary-lists' && !!data);
   if (tab==='explore') { if(updateHash) setHash('#explore'); renderExplore(); }
   if (tab==='ovbrowse') { const a=document.querySelector('#ovb-subnav .sub-btn.active'); const mode=a?.dataset.mode||'cards'; if(updateHash) setHash(`#overview/${mode}`); renderOvBrowse(mode); }
   if (tab==='map') { if(updateHash) setHash('#map'); initMap(); }
@@ -2027,7 +2062,8 @@ function switchTab(tab, {updateHash=true}={}) {
   if (tab==='settings' && updateHash) setHash('#settings');
   if (tab==='trip' && updateHash) setHash('#trip');
   if (tab==='video' && updateHash) setHash('#video');
-  if (tab==='webframe') { if(updateHash) setHash('#webframe'); renderWebframe(); }
+  if (tab==='external-documents') { if(updateHash) setHash('#ed'); renderExternalDocuments(); }
+  if (tab==='complementary-lists') { if(updateHash) setHash('#cl'); renderComplementaryLists(); }
 }
 
 function openVideo(videoId, {updateHash=true,startTime=null}={}) {
@@ -2097,25 +2133,213 @@ function renderVideo(videoId,startTime=null) {
   },{once:true});
 }
 
-function webframeConfig() {
-  return data?.Settings?.Extension?.Webframe || null;
+function externalDocumentsConfig() {
+  const settings=data?.Settings||{};
+  const locate=(value,externalBranch=false)=>{
+    if(value===undefined||value===null)return undefined;
+    if(Array.isArray(value)){
+      const row=value.find(item=>String(item?.Attribute??item?.attribute??'').toLowerCase()==='externaldocuments');
+      if(row)return locate(row.Value??row.value??'',true);
+      if(externalBranch){
+        const text=value.find(item=>typeof item==='string');
+        if(text!==undefined)return text;
+      }
+      return undefined;
+    }
+    if(typeof value!=='object')return externalBranch?value:undefined;
+    if(Object.prototype.hasOwnProperty.call(value,'ExternalDocuments')) return value.ExternalDocuments;
+    const attr=String(value.Attribute??value.attribute??'').toLowerCase();
+    if(attr==='externaldocuments')return value.Value??value.value??'';
+    if(externalBranch){
+      if(value.Translation!==undefined)return value.Translation;
+      if(value.translation!==undefined)return value.translation;
+      if(value.Path!==undefined)return value.Path;
+      if(value.path!==undefined)return value.path;
+    }
+    for(const child of Object.values(value)){
+      if(!child||typeof child!=='object')continue;
+      const found=locate(child,false);
+      if(found!==undefined)return found;
+    }
+    return undefined;
+  };
+  const value=settings?.Extension?.ExternalDocuments
+    ?? settings?.ExternalDocuments
+    ?? locate(settings)
+    ?? data?.ExternalDocuments
+    ?? '';
+  return value;
 }
-function updateWebframeMenu() {
-  const btn=document.getElementById('webframe-nav-item');
-  const cfg=webframeConfig();
-  if(!btn)return;
-  const enabled=!!(cfg?.Enabled && cfg?.Path);
-  btn.style.display=enabled?'':'none';
-  if(enabled){
-    const label=cfg.Translation||t('nav.menu.webframe','Webframe');
-    btn.textContent=label; btn.title=label;
+function externalDocumentsData() {
+  let value=externalDocumentsConfig();
+  // Current format: {Enabled:true, Translation:'...', Items:{Title:'URL'}}.
+  // Keep this branch separate from the legacy line-based format below so
+  // boolean Enabled values and object-shaped Items are not stringified.
+  if(value&&typeof value==='object'&&!Array.isArray(value)
+    &&(Object.prototype.hasOwnProperty.call(value,'Enabled')
+      || Object.prototype.hasOwnProperty.call(value,'enabled')
+      || Object.prototype.hasOwnProperty.call(value,'Items')
+      || Object.prototype.hasOwnProperty.call(value,'items'))){
+    const enabledValue=value.Enabled??value.enabled;
+    const enabled=enabledValue===true||String(enabledValue??'').trim().toLowerCase()==='true';
+    const label=String(value.Translation??value.translation??'').trim();
+    const items=value.Items??value.items;
+    const docs=items&&typeof items==='object'&&!Array.isArray(items)
+      ? Object.entries(items).map(([title,href])=>({title:String(title).trim(),href:String(href??'').trim()}))
+          .filter(doc=>doc.title&&doc.href)
+      : [];
+    return {enabled,label,docs};
   }
+  if(value&&typeof value==='object'&&!Array.isArray(value)){
+    const translation=String(value.Translation??value.translation??'').trim();
+    const items=String(value.Items??value.items??'').trim();
+    const enabled=String(value.Enabled??value.enabled??'').trim();
+    if(/^enabled\s*,/i.test(translation)) value=translation+(items?'\n'+items:'');
+    else if(/^enabled\s*,/i.test(items)) value=items+(translation?'\n'+translation:'');
+    else if(translation&&items) value=`Enabled,${translation}\n${items}`;
+    else if(/^enabled\s*,/i.test(enabled)) value=enabled+(items?'\n'+items:'');
+    else value=translation||items||value.Path||value.path||'';
+  }
+  const lines=String(value||'').split(/\r?\n/).map(line=>line.trim()).filter(Boolean);
+  const first=/^enabled\s*,\s*(.+)$/i.exec(lines.shift()||'');
+  const docs=(first?lines:[]).map(line=>{
+    const separator=line.indexOf(':');
+    if(separator<1)return null;
+    const title=line.slice(0,separator).trim();
+    const href=line.slice(separator+1).trim();
+    return title&&href?{title,href}:null;
+  }).filter(Boolean);
+  return {enabled:!!first,label:first?.[1]?.trim()||'',docs};
 }
-function renderWebframe() {
-  const frame=document.getElementById('webframe-frame');
-  const cfg=webframeConfig();
-  if(!frame)return;
-  frame.src=cfg?.Enabled&&cfg?.Path?cfg.Path:'about:blank';
+function updateExternalDocumentsMenu() {
+  const btn=document.getElementById('external-documents-nav-item');
+  if(!btn)return;
+  const cfg=externalDocumentsData();
+  btn.style.display=cfg.enabled&&cfg.docs.length?'':'none';
+  if(cfg.enabled&&cfg.docs.length){btn.textContent=cfg.label;btn.title=cfg.label;}
+}
+function renderExternalDocuments() {
+  const frame=document.getElementById('external-documents-frame');
+  const tabs=document.getElementById('external-documents-tabs');
+  if(!frame||!tabs)return;
+  const cfg=externalDocumentsData();
+  tabs.replaceChildren(); frame.src='about:blank';
+  if(!cfg.docs.length)return;
+  cfg.docs.forEach((doc,index)=>{
+    const tab=document.createElement('button');
+    tab.type='button';tab.className='external-document-tab';tab.setAttribute('role','tab');
+    tab.textContent=doc.title;tab.title=doc.href;
+    tab.addEventListener('click',()=>{
+      tabs.querySelectorAll('.external-document-tab').forEach((el,i)=>{
+        const active=i===index;el.classList.toggle('active',active);el.setAttribute('aria-selected',String(active));
+      });
+      frame.title=doc.title;frame.src=doc.href;setHash(`#ed/${index}`);
+    });
+    tabs.appendChild(tab);
+    const link=document.createElement('a');
+    link.className='external-document-link';link.href=doc.href;link.target='_blank';
+    link.rel='noopener noreferrer';link.textContent='↗';
+    link.title=`Open ${doc.title} directly`;link.setAttribute('aria-label',`Open ${doc.title} directly`);
+    tabs.appendChild(link);
+  });
+  const selected=Number.parseInt(location.hash.replace(/^#/,'').split('/')[1],10);
+  const tabButtons=tabs.querySelectorAll('.external-document-tab');
+  tabButtons[Number.isInteger(selected)&&selected>=0&&selected<cfg.docs.length?selected:0].click();
+}
+
+function complementaryListsConfig() {
+  return data?.Settings?.Extension?.ComplementaryLists
+    ?? data?.Settings?.ComplementaryLists
+    ?? data?.ComplementaryLists
+    ?? {};
+}
+function updateComplementaryListsMenu() {
+  const btn=document.getElementById('complementary-lists-nav-item');
+  if(!btn)return;
+  const cfg=complementaryListsConfig();
+  const enabled=cfg.Enabled===true||String(cfg.Enabled??'').trim().toLowerCase()==='true';
+  const label=String(cfg.Translation??'').trim();
+  btn.style.display=enabled&&cfg.Path?'':'none';
+  if(enabled&&cfg.Path){btn.textContent=label||'Complementary lists';btn.title=label||'Complementary lists';}
+}
+async function renderComplementaryLists() {
+  const tabs=document.getElementById('complementary-lists-tabs');
+  const content=document.getElementById('complementary-lists-content');
+  if(!tabs||!content)return;
+  tabs.replaceChildren();content.replaceChildren();
+  const cfg=complementaryListsConfig();
+  const enabled=cfg.Enabled===true||String(cfg.Enabled??'').trim().toLowerCase()==='true';
+  const path=String(cfg.Path??'').trim();
+  if(!enabled||!path){content.innerHTML='<div class="complementary-list-status">No complementary lists configured.</div>';return;}
+  content.innerHTML='<div class="complementary-list-status">Loading complementary lists…</div>';
+  try {
+    const response=await fetch(new URL(path,document.baseURI).href);
+    if(!response.ok)throw new Error(`HTTP ${response.status}`);
+    const source=await response.json();
+    const tables=Object.entries(source||{}).filter(([,rows])=>Array.isArray(rows));
+    content.replaceChildren();
+    if(!tables.length){content.innerHTML='<div class="complementary-list-status">No tables found.</div>';return;}
+    const renderTable=(rows)=>{
+      content.replaceChildren();
+      const normalized=rows.map(row=>row&&typeof row==='object'&&!Array.isArray(row)?row:{Value:row});
+      const columns=[...new Set(normalized.flatMap(row=>Object.keys(row)))];
+      if(!columns.length){content.innerHTML='<div class="complementary-list-status">This table is empty.</div>';return;}
+      const filters=Object.fromEntries(columns.map(column=>[column,'']));
+      let sortColumn=null,sortDirection=1;
+      const table=document.createElement('table');table.className='complementary-list-table';
+      const thead=document.createElement('thead');const headRow=document.createElement('tr');
+      const cellText=(value)=>value&&typeof value==='object'?JSON.stringify(value):String(value??'');
+      const sortButtons=new Map();
+      const renderBody=()=>{
+        const visible=normalized.filter(row=>columns.every(column=>cellText(row[column]).toLocaleLowerCase().includes(filters[column].toLocaleLowerCase())));
+        if(sortColumn){
+          visible.sort((a,b)=>cellText(a[sortColumn]).localeCompare(cellText(b[sortColumn]),undefined,{numeric:true,sensitivity:'base'})*sortDirection);
+        }
+        tbody.replaceChildren();
+        visible.forEach(row=>{
+          const tr=document.createElement('tr');
+          columns.forEach(column=>{
+            const td=document.createElement('td');td.textContent=cellText(row[column]);tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
+        });
+      };
+      columns.forEach(column=>{
+        const th=document.createElement('th');
+        const sortButton=document.createElement('button');sortButton.type='button';sortButton.className='complementary-list-sort';
+        sortButton.addEventListener('click',()=>{
+          if(sortColumn===column)sortDirection*=-1;else{sortColumn=column;sortDirection=1;}
+          sortButtons.forEach((button,name)=>{button.textContent=`${name}${name===sortColumn?(sortDirection===1?' ↑':' ↓'):''}`;});
+          renderBody();
+        });
+        sortButton.textContent=column;sortButtons.set(column,sortButton);th.appendChild(sortButton);
+        const filter=document.createElement('input');filter.type='search';filter.className='complementary-list-filter';
+        filter.placeholder='Filter…';filter.setAttribute('aria-label',`Filter ${column}`);
+        filter.addEventListener('input',()=>{filters[column]=filter.value;renderBody();});
+        th.appendChild(filter);headRow.appendChild(th);
+      });
+      thead.appendChild(headRow);table.appendChild(thead);
+      const tbody=document.createElement('tbody');
+      table.appendChild(tbody);content.appendChild(table);
+      renderBody();
+    };
+    tables.forEach(([name,rows],index)=>{
+      const tab=document.createElement('button');tab.type='button';tab.className='complementary-list-tab';
+      tab.setAttribute('role','tab');tab.textContent=name;tab.title=name;
+      tab.addEventListener('click',()=>{
+        tabs.querySelectorAll('.complementary-list-tab').forEach((el,i)=>{
+          const active=i===index;el.classList.toggle('active',active);el.setAttribute('aria-selected',String(active));
+        });
+        renderTable(rows);setHash(`#cl/${encodeURIComponent(name)}`);
+      });
+      tabs.appendChild(tab);
+    });
+    const selected=decodeURIComponent(location.hash.replace(/^#/,'').split('/')[1]||'');
+    const selectedIndex=tables.findIndex(([name])=>name===selected);
+    tabs.children[selectedIndex>=0?selectedIndex:0].click();
+  } catch(error) {
+    content.innerHTML=`<div class="complementary-list-status">Could not load complementary lists: ${String(error.message||error)}</div>`;
+  }
 }
 
 function resolveHash(hash) {
@@ -2125,15 +2349,17 @@ function resolveHash(hash) {
   const [seg1, seg2, seg3] = raw.split('/');
   // #editor opens the Editor tab; #overview (and legacy #ovbrowse) opens the Overview/Browse tab
   const tabAlias = { editor:'overview' };
-  const tabs = ['explore','ovbrowse','map','stats','trip','settings','video','webframe','report','about'];
+  const tabs = ['explore','ovbrowse','map','stats','trip','settings','video','external-documents','ed','complementary-lists','cl','report','about'];
   if (seg1 === 'video') {
     const videoId=seg2 ? decodeURIComponent(seg2) : '';
     const timeMatch=seg3&&/^(\d{1,3}):(\d{2}):(\d{2})$/.exec(decodeURIComponent(seg3));
     const startTime=timeMatch&&+timeMatch[2]<60&&+timeMatch[3]<60
       ? (+timeMatch[1]*3600)+(+timeMatch[2]*60)+(+timeMatch[3]) : null;
     openVideo(videoId, {updateHash:false,startTime});
-  } else if (seg1 === 'webframe') {
-    switchTab('webframe', {updateHash:false});
+  } else if (seg1 === 'ed') {
+    switchTab('external-documents', {updateHash:false});
+  } else if (seg1 === 'cl') {
+    switchTab('complementary-lists', {updateHash:false});
   } else if (seg1 === 'trip' && seg2) {
     // Accept OuterId or InnerId
     const iid = resolveToInnerId(seg2);
@@ -5524,7 +5750,19 @@ function renderSettings() {
   makeHdr(t('settings.sections.definition','Definition'));
   Object.entries(settings.Definition||{}).forEach(([k,v])=>addRow(val=>settings.Definition[k]=val,k,v));
   const extensionCard=makeHdr(t('settings.sections.extension','Extension'));
-  Object.entries(settings.Extension||{}).forEach(([extName,extVal])=>{makeSubHdr(extName,true);Object.entries(extVal||{}).forEach(([k,v])=>addRow(val=>settings.Extension[extName][k]=val,k,v));});
+  Object.entries(settings.Extension||{}).forEach(([extName,extVal])=>{
+    makeSubHdr(extName,true);
+    if(extName==='ExternalDocuments'){
+      // Path is not part of ExternalDocuments. Keep the normal Translation
+      // and Items fields visible; the parser combines them when necessary.
+      Object.entries(extVal||{}).forEach(([k,v])=>{
+        if(k==='Path'||k==='path')return;
+        addRow(val=>settings.Extension[extName][k]=val,k,v);
+      });
+      return;
+    }
+    Object.entries(extVal||{}).forEach(([k,v])=>addRow(val=>settings.Extension[extName][k]=val,k,v));
+  });
   makeHdr(t('settings.sections.other','Other'));
   Object.entries(settings.Other||{}).forEach(([k,v])=>{if(_skipKeys.has(k))return;addRow(val=>settings.Other[k]=val,k,v);});
   // ── Language card ────────────────────────────────────────────────
@@ -5769,7 +6007,7 @@ function renderSettings() {
   fileBlock.appendChild(expDetails);
   // Keep the advanced extension settings at the end of the Settings page.
   content.appendChild(extensionCard);
-  updateWebframeMenu();
+  updateExternalDocumentsMenu();
 
 }
 
