@@ -549,6 +549,8 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 .complementary-list-sort:hover,.complementary-list-sort:focus-visible{color:var(--accent);outline:none}
 .complementary-list-filter{box-sizing:border-box;width:100%;margin-top:6px;padding:4px 6px;border:1px solid var(--border);border-radius:4px;background:var(--s1);color:var(--text);font:inherit;font-size:12px;font-weight:400}
 .complementary-list-filter:focus{border-color:var(--accent);outline:none}
+.complementary-list-link{color:var(--accent);white-space:nowrap;text-decoration:none}
+.complementary-list-link:hover{text-decoration:underline}
 .complementary-list-status{padding:40px 20px;color:var(--muted2);text-align:center}
 #external-documents-empty{padding:40px 20px;text-align:center;color:var(--muted2)}
 #external-documents-frame{display:block;flex:1 1 auto;width:100%;height:auto;min-height:0;border:0;background:var(--s1)}
@@ -1029,6 +1031,8 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 let data = null;
 let fileHandle = null;
 let selectedId = null;
+let _complementaryListsCache = null;
+let _complementaryListsRequest = 0;
 
 // ── i18n ──────────────────────────────────────────────────────────
 let T = {}; // populated from languages/english.json (or any other language file)
@@ -1707,6 +1711,7 @@ async function openFile() {
 async function _initApp(parsed, fileName) {
   data = parsed;
   currentFileName = fileName;
+  _complementaryListsCache = null;
 
   // ── Language: reload from file specified in settings ──────────────
   // LanguageFile may sit at Settings.LanguageFile (top-level) or inside any
@@ -2043,6 +2048,7 @@ function switchTab(tab, {updateHash=true}={}) {
     if (_settingsSnapshot) { data.Settings = JSON.parse(JSON.stringify(_settingsSnapshot)); renderSettings(); }
     _settingsDirty = false; setMod(false);
   }
+  if (currentTab==='video' && tab!=='video') stopVideoPlayback();
   if (tab==='settings' && data) { _settingsSnapshot = JSON.parse(JSON.stringify(data.Settings)); _settingsDirty = false; }
   currentTab = tab;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab===tab));
@@ -2065,6 +2071,18 @@ function switchTab(tab, {updateHash=true}={}) {
   if (tab==='external-documents') { if(updateHash) setHash('#ed'); renderExternalDocuments(); }
   if (tab==='complementary-lists') { if(updateHash) setHash('#cl'); renderComplementaryLists(); }
 }
+
+function stopVideoPlayback() {
+  const video=document.getElementById('video');
+  if (!video) return;
+  video.pause();
+  // Detach the source as well as pausing so navigating away aborts the
+  // download and no longer keeps the media pipeline alive in the background.
+  video.removeAttribute('src');
+  video.replaceChildren();
+  video.load();
+}
+window.addEventListener('pagehide', stopVideoPlayback);
 
 function openVideo(videoId, {updateHash=true,startTime=null}={}) {
   if (updateHash) setHash(`#video/${encodeURIComponent(videoId)}`);
@@ -2103,18 +2121,45 @@ function renderVideo(videoId,startTime=null) {
   const metadata=document.createElement('track');
   metadata.id='divTrack'; metadata.src=asset(`${id}-all-metadata.vtt`); metadata.kind='metadata'; video.appendChild(metadata);
   const formatTimestamp=seconds=>{const total=Math.max(0,Math.floor(seconds));return `${String(Math.floor(total/3600)).padStart(2,'0')}:${String(Math.floor(total/60)%60).padStart(2,'0')}:${String(total%60).padStart(2,'0')}`;};
+  const metadataFields=cue=>{
+    if(!cue)return {};
+    const raw=String(cue.text||'').replace(/<[^>]*>/g,'').trim();
+    if(!raw)return {};
+    try{
+      const value=JSON.parse(raw);
+      if(value&&typeof value==='object'&&!Array.isArray(value))return value;
+    }catch(_){/* Metadata may also be written as key/value lines. */}
+    return raw.split(/\r?\n/).reduce((fields,line)=>{
+      const match=line.match(/^\s*(Description|TripReference)\s*:\s*(.*?)\s*$/i);
+      if(match)fields[match[1].toLowerCase()]=match[2];
+      return fields;
+    },{});
+  };
+  const fieldValue=(fields,name)=>{
+    const key=Object.keys(fields).find(key=>key.toLowerCase()===name.toLowerCase());
+    return key===undefined?'':String(fields[key]??'').replace(/\s+/g,' ').trim();
+  };
   const renderTimestamps=()=>{
     const cues=subtitles.track?.cues;
     if(!cues||!cues.length)return;
+    const metadataCues=metadata.track?.cues||[];
     timestampBox.replaceChildren();
     [...cues].forEach(cue=>{
       const btn=document.createElement('button');btn.type='button';btn.className='video-timestamp';
-      const stamp=formatTimestamp(cue.startTime);btn.textContent=`${stamp} — ${String(cue.text||'').replace(/\s+/g,' ').trim()}`;btn.title=`Seek to ${stamp}`;
+      const stamp=formatTimestamp(cue.startTime);
+      const metadataCue=[...metadataCues].find(candidate=>candidate.startTime<=cue.startTime&&candidate.endTime>cue.startTime)||[...metadataCues].find(candidate=>Math.abs(candidate.startTime-cue.startTime)<.1);
+      const fields=metadataFields(metadataCue);
+      const description=fieldValue(fields,'Description');
+      const tripReference=fieldValue(fields,'TripReference');
+      const subtitleText=String(cue.text||'').replace(/\s+/g,' ').trim();
+      const details=[description&&`Description: ${description}`,tripReference&&`TripReference: ${tripReference}`].filter(Boolean);
+      btn.textContent=`${stamp} — ${details.length?details.join(' · '):subtitleText}`;btn.title=`Seek to ${stamp}`;
       btn.addEventListener('click',()=>{video.currentTime=cue.startTime;setHash(`#video/${encodeURIComponent(id)}/${stamp}`);});
       timestampBox.appendChild(btn);
     });
   };
   subtitles.addEventListener('load',renderTimestamps,{once:true});
+  metadata.addEventListener('load',renderTimestamps,{once:true});
   video.addEventListener('loadedmetadata',()=>{
     if(Number.isFinite(startTime)&&startTime>=0) video.currentTime=Math.min(startTime,video.duration||startTime);
     renderTimestamps();
@@ -2248,10 +2293,21 @@ function renderExternalDocuments() {
 }
 
 function complementaryListsConfig() {
-  return data?.Settings?.Extension?.ComplementaryLists
+  let config=data?.Settings?.Extension?.ComplementaryLists
     ?? data?.Settings?.ComplementaryLists
     ?? data?.ComplementaryLists
     ?? {};
+  // Some exports wrap the actual extension config in another
+  // `ComplementaryLists` property:
+  // {ComplementaryLists:{Enabled,Translation,Path,ExtraColumns}}.
+  // Accept both shapes so the menu and the list view use the same config.
+  for(let depth=0;depth<3;depth++){
+    if(!config||typeof config!=='object'||Array.isArray(config))break;
+    const nested=config.ComplementaryLists;
+    if(!nested||typeof nested!=='object'||Array.isArray(nested))break;
+    config=nested;
+  }
+  return config;
 }
 function updateComplementaryListsMenu() {
   const btn=document.getElementById('complementary-lists-nav-item');
@@ -2262,6 +2318,45 @@ function updateComplementaryListsMenu() {
   btn.style.display=enabled&&cfg.Path?'':'none';
   if(enabled&&cfg.Path){btn.textContent=label||'Complementary lists';btn.title=label||'Complementary lists';}
 }
+
+function complementaryListTemplateValue(value,row) {
+  const source=String(value??'');
+  const fieldValue=name=>{
+    const key=Object.keys(row||{}).find(candidate=>candidate.toLowerCase()===name.toLowerCase());
+    return key===undefined?'':row[key];
+  };
+  const resolveToken=token=>{
+    const expression=String(token||'').trim();
+    const dateAdd=expression.match(/^([A-Za-z_][\w]*)\s*\+\s*([A-Za-z_][\w]*)$/);
+    if(dateAdd){
+      const base=fieldValue(dateAdd[1]);
+      const days=Number(fieldValue(dateAdd[2]));
+      const date=new Date(`${String(base).slice(0,10)}T00:00:00Z`);
+      if(Number.isFinite(days)&&!Number.isNaN(date.getTime())){
+        date.setUTCDate(date.getUTCDate()+days);
+        return date.toISOString().slice(0,10);
+      }
+    }
+    const [field,defaultValue]=expression.split('|',2);
+    const resolved=fieldValue(field.trim());
+    return resolved===undefined||resolved===null||String(resolved)===''?(defaultValue??''):String(resolved);
+  };
+  return source.replace(/\{\{([^{}]+)\}\}/g,(_,token)=>resolveToken(token));
+}
+
+function complementaryListColumnHref(rule,row) {
+  if(!rule||typeof rule!=='object')return '';
+  let href=complementaryListTemplateValue(rule.href,row).trim();
+  if(!href)return '';
+  const query=rule.query&&typeof rule.query==='object'&&!Array.isArray(rule.query)?rule.query:null;
+  if(query){
+    const params=new URLSearchParams();
+    Object.entries(query).forEach(([key,value])=>params.set(key,complementaryListTemplateValue(value,row)));
+    href+=(href.includes('?')?'&':'?')+params.toString();
+  }
+  return href;
+}
+
 async function renderComplementaryLists() {
   const tabs=document.getElementById('complementary-lists-tabs');
   const content=document.getElementById('complementary-lists-content');
@@ -2271,51 +2366,96 @@ async function renderComplementaryLists() {
   const enabled=cfg.Enabled===true||String(cfg.Enabled??'').trim().toLowerCase()==='true';
   const path=String(cfg.Path??'').trim();
   if(!enabled||!path){content.innerHTML='<div class="complementary-list-status">No complementary lists configured.</div>';return;}
-  content.innerHTML='<div class="complementary-list-status">Loading complementary lists…</div>';
+  const requestId=++_complementaryListsRequest;
+  let source;
   try {
-    const response=await fetch(new URL(path,document.baseURI).href);
-    if(!response.ok)throw new Error(`HTTP ${response.status}`);
-    const source=await response.json();
+    if(_complementaryListsCache?.path===path) {
+      source=_complementaryListsCache.source;
+    } else {
+      content.innerHTML='<div class="complementary-list-status">Loading complementary lists…</div>';
+      const response=await fetch(new URL(path,document.baseURI).href);
+      if(!response.ok)throw new Error(`HTTP ${response.status}`);
+      source=await response.json();
+      _complementaryListsCache={path,source};
+    }
+    if(requestId!==_complementaryListsRequest)return;
     const tables=Object.entries(source||{}).filter(([,rows])=>Array.isArray(rows));
     content.replaceChildren();
     if(!tables.length){content.innerHTML='<div class="complementary-list-status">No tables found.</div>';return;}
-    const renderTable=(rows)=>{
+    const renderTable=(rows,extraColumns=[])=>{
       content.replaceChildren();
       const normalized=rows.map(row=>row&&typeof row==='object'&&!Array.isArray(row)?row:{Value:row});
-      const columns=[...new Set(normalized.flatMap(row=>Object.keys(row)))];
-      if(!columns.length){content.innerHTML='<div class="complementary-list-status">This table is empty.</div>';return;}
-      const filters=Object.fromEntries(columns.map(column=>[column,'']));
+      const sourceColumns=[...new Set(normalized.flatMap(row=>Object.keys(row)))];
+      const virtualColumns=(Array.isArray(extraColumns)?extraColumns:[]).filter(rule=>rule&&typeof rule==='object'&&rule.href);
+      const columnDefs=[
+        ...virtualColumns.map((rule,index)=>({key:`__extra_${index}`,label:String(rule.label||'Link'),rule})),
+        ...sourceColumns.map(column=>({key:column,label:column}))
+      ];
+      if(!columnDefs.length){content.innerHTML='<div class="complementary-list-status">This table is empty.</div>';return;}
+      const filters=columnDefs.map(()=> '');
       let sortColumn=null,sortDirection=1;
       const table=document.createElement('table');table.className='complementary-list-table';
       const thead=document.createElement('thead');const headRow=document.createElement('tr');
       const cellText=(value)=>value&&typeof value==='object'?JSON.stringify(value):String(value??'');
+      const values=normalized.map(row=>columnDefs.map(column=>{
+        if(column.rule){
+          const href=complementaryListColumnHref(column.rule,row);
+          const text=complementaryListTemplateValue(column.rule.label||'↗',row)||'↗';
+          return {text,href,internal:column.rule.internal===true||href.startsWith('#')};
+        }
+        return {text:cellText(row[column.key]),href:'',internal:false};
+      }));
       const sortButtons=new Map();
+      let renderVersion=0;
+      let renderFrame=0;
+      let filterTimer=0;
       const renderBody=()=>{
-        const visible=normalized.filter(row=>columns.every(column=>cellText(row[column]).toLocaleLowerCase().includes(filters[column].toLocaleLowerCase())));
+        const version=++renderVersion;
+        cancelAnimationFrame(renderFrame);
+        const visible=values.map((row,index)=>({row,index})).filter(({row})=>columnDefs.every((_,columnIndex)=>row[columnIndex].text.toLocaleLowerCase().includes(filters[columnIndex].toLocaleLowerCase())));
         if(sortColumn){
-          visible.sort((a,b)=>cellText(a[sortColumn]).localeCompare(cellText(b[sortColumn]),undefined,{numeric:true,sensitivity:'base'})*sortDirection);
+          visible.sort((a,b)=>a.row[sortColumn].text.localeCompare(b.row[sortColumn].text,undefined,{numeric:true,sensitivity:'base'})*sortDirection);
         }
         tbody.replaceChildren();
-        visible.forEach(row=>{
-          const tr=document.createElement('tr');
-          columns.forEach(column=>{
-            const td=document.createElement('td');td.textContent=cellText(row[column]);tr.appendChild(td);
-          });
-          tbody.appendChild(tr);
-        });
+        let offset=0;
+        const appendChunk=()=>{
+          if(version!==renderVersion)return;
+          const fragment=document.createDocumentFragment();
+          const end=Math.min(offset+250,visible.length);
+          for(;offset<end;offset++){
+            const tr=document.createElement('tr');
+            visible[offset].row.forEach(value=>{
+              const td=document.createElement('td');
+              if(value.href){
+                const link=document.createElement('a');link.className='complementary-list-link';link.href=value.href;link.textContent=value.text;
+                if(!value.internal){link.target='_blank';link.rel='noopener noreferrer';}
+                td.appendChild(link);
+              } else td.textContent=value.text;
+              tr.appendChild(td);
+            });
+            fragment.appendChild(tr);
+          }
+          tbody.appendChild(fragment);
+          if(offset<visible.length)renderFrame=requestAnimationFrame(appendChunk);
+        };
+        appendChunk();
       };
-      columns.forEach(column=>{
+      columnDefs.forEach((column,columnIndex)=>{
         const th=document.createElement('th');
         const sortButton=document.createElement('button');sortButton.type='button';sortButton.className='complementary-list-sort';
         sortButton.addEventListener('click',()=>{
-          if(sortColumn===column)sortDirection*=-1;else{sortColumn=column;sortDirection=1;}
-          sortButtons.forEach((button,name)=>{button.textContent=`${name}${name===sortColumn?(sortDirection===1?' ↑':' ↓'):''}`;});
+          if(sortColumn===columnIndex)sortDirection*=-1;else{sortColumn=columnIndex;sortDirection=1;}
+          sortButtons.forEach((button,index)=>{button.textContent=`${columnDefs[index].label}${index===sortColumn?(sortDirection===1?' ↑':' ↓'):''}`;});
           renderBody();
         });
-        sortButton.textContent=column;sortButtons.set(column,sortButton);th.appendChild(sortButton);
+        sortButton.textContent=column.label;sortButtons.set(columnIndex,sortButton);th.appendChild(sortButton);
         const filter=document.createElement('input');filter.type='search';filter.className='complementary-list-filter';
-        filter.placeholder='Filter…';filter.setAttribute('aria-label',`Filter ${column}`);
-        filter.addEventListener('input',()=>{filters[column]=filter.value;renderBody();});
+        filter.placeholder='Filter…';filter.setAttribute('aria-label',`Filter ${column.label}`);
+        filter.addEventListener('input',()=>{
+          filters[columnIndex]=filter.value;
+          clearTimeout(filterTimer);
+          filterTimer=setTimeout(renderBody,80);
+        });
         th.appendChild(filter);headRow.appendChild(th);
       });
       thead.appendChild(headRow);table.appendChild(thead);
@@ -2323,6 +2463,7 @@ async function renderComplementaryLists() {
       table.appendChild(tbody);content.appendChild(table);
       renderBody();
     };
+    const extraColumns=cfg.ExtraColumns&&typeof cfg.ExtraColumns==='object'&&!Array.isArray(cfg.ExtraColumns)?cfg.ExtraColumns:{};
     tables.forEach(([name,rows],index)=>{
       const tab=document.createElement('button');tab.type='button';tab.className='complementary-list-tab';
       tab.setAttribute('role','tab');tab.textContent=name;tab.title=name;
@@ -2330,7 +2471,7 @@ async function renderComplementaryLists() {
         tabs.querySelectorAll('.complementary-list-tab').forEach((el,i)=>{
           const active=i===index;el.classList.toggle('active',active);el.setAttribute('aria-selected',String(active));
         });
-        renderTable(rows);setHash(`#cl/${encodeURIComponent(name)}`);
+        renderTable(rows,extraColumns[name]);setHash(`#cl/${encodeURIComponent(name)}`);
       });
       tabs.appendChild(tab);
     });
