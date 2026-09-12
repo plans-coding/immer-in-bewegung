@@ -71,10 +71,11 @@ WITH grouped_settings AS (
 	    r.Attribute,
 	    CASE
 	      WHEN r.rest = '' THEN '[]'
-	      WHEN r.Attribute IN ('Movie', 'Theme') THEN (
+	      WHEN r.Attribute IN ('Movie', 'Theme')
+	        OR r.rest LIKE '%:%' THEN (
 	        SELECT json_group_object(
-	          substr(e.value, 1, instr(e.value, ':') - 1),
-	          substr(e.value, instr(e.value, ':') + 1)
+	          trim(substr(e.value, 1, instr(e.value, ':') - 1)),
+	          trim(substr(e.value, instr(e.value, ':') + 1))
 	        )
 	        FROM json_each('["' || replace(r.rest, char(10), '","') || '"]') AS e
 	      )
@@ -91,25 +92,42 @@ WITH grouped_settings AS (
 	    json_patch(
 	      json_object(
 	        'Enabled',
-	          json(CASE
-	            WHEN substr(r.first_line, 1, instr(r.first_line, ',') - 1) = 'Enabled'
-	            THEN 'true' ELSE 'false'
-	          END),
-	
+	          CASE
+	            WHEN trim(substr(r.first_line || ',', 1, instr(r.first_line || ',', ',') - 1)) = 'Enabled'
+	            THEN json('true') ELSE json('false')
+	          END,
+
 	        'Translation',
-	          substr(
-	            substr(r.first_line, instr(r.first_line, ',') + 1),
-	            1,
-	            instr(substr(r.first_line, instr(r.first_line, ',') + 1), ',') - 1
-	          ),
-	
+	          NULLIF(trim(
+	            CASE
+	              WHEN instr(r.first_line, ',') > 0 THEN
+	                CASE
+	                  WHEN instr(substr(r.first_line, instr(r.first_line, ',') + 1), ',') > 0
+	                  THEN substr(
+	                    substr(r.first_line, instr(r.first_line, ',') + 1),
+	                    1,
+	                    instr(substr(r.first_line, instr(r.first_line, ',') + 1), ',') - 1
+	                  )
+	                  ELSE substr(r.first_line, instr(r.first_line, ',') + 1)
+	                END
+	              ELSE ''
+	            END
+	          ), ''),
+
 	        'Path',
-	          substr(
-	            substr(r.first_line, instr(r.first_line, ',') + 1),
-	            instr(substr(r.first_line, instr(r.first_line, ',') + 1), ',') + 1
-	          )
+	          NULLIF(trim(
+	            CASE
+	              WHEN instr(r.first_line, ',') > 0
+	               AND instr(substr(r.first_line, instr(r.first_line, ',') + 1), ',') > 0
+	              THEN substr(
+	                substr(r.first_line, instr(r.first_line, ',') + 1),
+	                instr(substr(r.first_line, instr(r.first_line, ',') + 1), ',') + 1
+	              )
+	              ELSE ''
+	            END
+	          ), '')
 	      ),
-	
+
 	      CASE
 	        WHEN r.Attribute = 'SnapshotUpload'
 	             OR r.rest = ''
