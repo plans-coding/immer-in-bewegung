@@ -1076,6 +1076,7 @@ let selectedId = null;
 let _complementaryListsCache = null;
 let _complementaryListsRequest = 0;
 let _jqPromise = null;
+let _tripDerivedCache = { data:null, all:null, filteredKey:null, filtered:null, labels:null };
 
 // ── i18n ──────────────────────────────────────────────────────────
 let T = {}; // populated from languages/english.json (or any other language file)
@@ -1753,6 +1754,7 @@ async function openFile() {
 
 async function _initApp(parsed, fileName) {
   data = parsed;
+  _tripDerivedCache = { data:null, all:null, filteredKey:null, filtered:null, labels:null };
   currentFileName = fileName;
   _complementaryListsCache = null;
 
@@ -1849,7 +1851,11 @@ function downloadCurrentFile() {
   Object.assign(document.createElement('a'), { href:url, download:fname }).click();
   URL.revokeObjectURL(url);
 }
+function invalidateTripDerivedCache() {
+  _tripDerivedCache = { data:null, all:null, filteredKey:null, filtered:null, labels:null };
+}
 function setMod(v) {
+  if (v) invalidateTripDerivedCache();
   document.getElementById('mod-dot').classList.toggle('on', v);
   if (v) { if (currentTab==='settings') _settingsDirty = true; }
   else { _settingsDirty = false; if (currentTab==='settings' && data) _settingsSnapshot = JSON.parse(JSON.stringify(data.Settings)); }
@@ -1889,10 +1895,19 @@ function domainColorMap() { return data?.Settings?.Definition?.TripDomainColors 
 function parseTripDomains() { return Object.keys(domainColorMap()); }
 function parseArrangerGroups() { return data?.Settings?.Definition?.ArrangerGroups || []; }
 
-function allTrips() {
-  return Object.entries(data.Trips)
+function tripDerivedCache() {
+  if (_tripDerivedCache.data===data && _tripDerivedCache.all) return _tripDerivedCache;
+  const all=Object.entries(data?.Trips||{})
     .map(([id,t]) => ({ InnerId:id, ...t }))
     .sort((a,b) => (b.DepartureDate||'').localeCompare(a.DepartureDate||''));
+  const labels=new Set();
+  all.forEach(trip => String(trip.TripLabels||'').split(',').map(label=>label.trim()).filter(Boolean).forEach(label=>labels.add(label)));
+  _tripDerivedCache={data,all,filteredKey:null,filtered:null,labels:[...labels].sort()};
+  return _tripDerivedCache;
+}
+
+function allTrips() {
+  return tripDerivedCache().all;
 }
 
 // Returns true if the trip is listed in Settings.Other.ExcludeDayPhotos
@@ -1946,9 +1961,12 @@ function computeOverallRoute(mapPins) {
 
 function filteredTrips() {
   const f = activeFilter;
-  return Object.entries(data.Trips)
-    .map(([id,t]) => ({
-      InnerId:id, ...t,
+  const cache=tripDerivedCache();
+  const key=[f.domain.join('\u0001'),f.arranger.join('\u0001'),f.label.join('\u0001')].join('\u0002');
+  if(cache.filteredKey===key&&cache.filtered)return cache.filtered;
+  cache.filtered=cache.all
+    .map(t => ({
+      ...t,
       TripYear: t.DepartureDate ? parseInt(t.DepartureDate.slice(0,4)) : null,
       NumberOfDays: dateDiff(t.DepartureDate, t.ReturnDate)
     }))
@@ -1960,18 +1978,15 @@ function filteredTrips() {
         if (!f.label.some(l => labels.includes(l))) return false;
       }
       return true;
-    })
-    .sort((a,b) => (b.DepartureDate||'').localeCompare(a.DepartureDate||''));
+    });
+  cache.filteredKey=key;
+  return cache.filtered;
 }
 
 function renderFilterBar() {
   const colors = domainColorMap();
   const groups = parseArrangerGroups();
-  const labelSet = new Set();
-  Object.values(data.Trips).forEach(trip => {
-    (trip.TripLabels||'').split(',').map(l=>l.trim()).filter(Boolean).forEach(l=>labelSet.add(l));
-  });
-  const labels = [...labelSet].sort();
+  const labels = tripDerivedCache().labels;
 
   // Build checkbox dropdown for one filter
   function buildDrop(btnId, dropId, options, selected, allLabel) {
