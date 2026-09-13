@@ -17,7 +17,8 @@
       "editor": "Editor",
       "settings": "Settings",
       "report": "Report",
-      "about": "About"
+      "about": "About",
+      "console": "Console"
     },
     "search": {
       "placeholder": "Search trips…",
@@ -38,7 +39,8 @@
       "edit": "Edit",
       "settings": "Settings",
       "report": "Report",
-      "about": "About"
+      "about": "About",
+      "console": "Console"
     }
   },
   "loadScreen": {
@@ -57,6 +59,16 @@
     "allLabels": "All labels",
     "clearFilter": "✕ Clear filter",
     "tripCountUnit": "trips"
+  },
+  "console": {
+    "title": "Console",
+    "subtitle": "Run jq queries against the loaded main JSON file.",
+    "queryPlaceholder": "Enter a jq query, for example: .Trips | keys",
+    "parisPreset": "Count instances of Paris in Events",
+    "run": "Run",
+    "running": "Running…",
+    "failed": "Query failed",
+    "loadError": "Could not load jq. Check your network connection."
   },
   "explore": {
     "title": "Discover",

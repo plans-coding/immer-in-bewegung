@@ -17,7 +17,8 @@
       "editor": "Rediger",
       "settings": "Indstillinger",
       "report": "Rapport",
-      "about": "Om"
+      "about": "Om",
+      "console": "Konsol"
     },
     "search": {
       "placeholder": "Søg rejser…",
@@ -38,7 +39,8 @@
       "edit": "Rediger",
       "settings": "Indstillinger",
       "report": "Rapport",
-      "about": "Om"
+      "about": "Om",
+      "console": "Konsol"
     }
   },
   "loadScreen": {
@@ -57,6 +59,16 @@
     "allLabels": "Alle etiketter",
     "clearFilter": "✕ Ryd filter",
     "tripCountUnit": "rejser"
+  },
+  "console": {
+    "title": "Konsol",
+    "subtitle": "Kør jq-forespørgsler på den indlæste hoved-JSON-fil.",
+    "queryPlaceholder": "Indtast en jq-forespørgsel, f.eks.: .Trips | keys",
+    "parisPreset": "Tæl forekomster af Paris i begivenheder",
+    "run": "Kør",
+    "running": "Kører…",
+    "failed": "Forespørgslen mislykkedes",
+    "loadError": "Kunne ikke indlæse jq. Kontrollér netværksforbindelsen."
   },
   "explore": {
     "title": "Opdag",

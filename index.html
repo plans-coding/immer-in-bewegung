@@ -322,6 +322,21 @@ body{font-family:'Scoutie Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans
 /* Settings */
 #tab-settings{flex-direction:column;overflow-y:auto;padding:28px 24px;background:var(--bg);align-items:center}
 .st-outer{max-width:760px;width:100%}
+/* JSON console */
+#tab-console{flex-direction:column;overflow-y:auto;padding:24px;background:var(--bg);align-items:stretch}
+#console-inner{width:100%;max-width:none;flex:1;min-height:0;display:flex;flex-direction:column}
+.console-sub{color:var(--muted2);font-size:13px;margin-bottom:16px}
+.console-terminal{padding:16px;border:1px solid #27483f;border-radius:8px;background:#0b1412;color:#d8eee8;box-shadow:0 6px 20px rgba(0,0,0,.18);flex:1;min-height:0;display:flex;flex-direction:column}
+.console-query-row{display:flex;gap:10px;align-items:flex-start}
+.console-presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+#console-query{flex:1;min-height:92px;resize:vertical;padding:10px 12px;border:1px solid #31584d;border-radius:5px;background:#101f1b;color:#d8eee8;font:13px/1.5 'SF Mono','Consolas',monospace}
+#console-query:focus{outline:none;border-color:#65d7b6;box-shadow:0 0 0 2px rgba(101,215,182,.2)}
+#console-run{align-self:stretch;padding:9px 16px;border:1px solid #65d7b6;border-radius:5px;background:#17483d;color:#bff5e5;font:600 13px inherit;cursor:pointer}
+#console-run:hover{background:#216052}
+#console-status{min-height:20px;margin-top:8px;color:#8cb8ab;font:12px 'SF Mono','Consolas',monospace}
+#console-output{margin-top:8px;flex:1;min-height:0;max-height:none;overflow:auto;padding:14px;border:1px solid #27483f;border-radius:5px;background:#07100e;color:#bff5e5;font:13px/1.5 'SF Mono','Consolas',monospace;white-space:pre-wrap;overflow-wrap:anywhere}
+#console-output.error{color:#ff8f87}
+@media(max-width:600px){#tab-console{padding:14px}.console-terminal{padding:10px}.console-query-row{gap:6px}}
 /* File banner */
 .st-file-banner{background:var(--accent);color:#fff;border:1px solid var(--accent);border-radius:10px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;box-shadow:var(--shadow);flex-wrap:wrap}
 .st-current-file{margin-bottom:16px}
@@ -544,6 +559,13 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 #complementary-lists-content{flex:1;overflow:auto;padding:18px}
 .complementary-list-table{width:100%;border-collapse:collapse;background:var(--s1);font-size:13px}
 .complementary-list-table th,.complementary-list-table td{padding:8px 10px;border:1px solid var(--border);text-align:left;vertical-align:top}
+.complementary-list-table tbody tr{transition:background .12s}
+.complementary-list-table tbody tr:hover td{background:var(--s3)}
+.complementary-list-table.complementary-list-table-fit{width:fit-content;max-width:100%;min-width:0}
+.complementary-list-table.complementary-list-table-fit td,.complementary-list-table.complementary-list-table-fit .complementary-list-link{white-space:normal;overflow-wrap:anywhere}
+.complementary-list-controls{display:flex;align-items:center;gap:7px;margin-bottom:10px;color:var(--muted2);font-size:12px}
+.complementary-list-controls label{display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none}
+.complementary-list-controls input{accent-color:var(--accent);margin:0}
 .complementary-list-table th{background:var(--s2);color:var(--muted2);font-weight:600;white-space:nowrap}
 .complementary-list-sort{display:flex;align-items:center;gap:5px;width:100%;padding:0;border:0;background:none;color:inherit;font:inherit;font-weight:600;text-align:left;cursor:pointer}
 .complementary-list-sort:hover,.complementary-list-sort:focus-visible{color:var(--accent);outline:none}
@@ -866,6 +888,7 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
         <button class="nav-menu-item" data-tab="report" data-i18n="nav.menu.report" role="menuitem">Report</button>
         <button id="external-documents-nav-item" class="nav-menu-item" data-tab="external-documents" role="menuitem" style="display:none">External documents</button>
         <button id="complementary-lists-nav-item" class="nav-menu-item" data-tab="complementary-lists" role="menuitem" style="display:none">Complementary lists</button>
+        <button class="nav-menu-item" data-tab="console" data-i18n="nav.menu.console" role="menuitem">Console</button>
         <button class="nav-menu-item" data-tab="settings" data-i18n="nav.menu.settings" role="menuitem">Settings</button>
         <button class="nav-menu-item" data-tab="about" data-i18n="nav.menu.about" role="menuitem">About</button>
       </div>
@@ -964,6 +987,23 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
   </div>
 
   <!-- Settings -->
+  <div id="tab-console" class="tab">
+    <div id="console-inner">
+      <div class="console-terminal">
+        <div class="console-query-row">
+          <textarea id="console-query" data-i18n-ph="console.queryPlaceholder" spellcheck="false" aria-label="jq query">.</textarea>
+          <button id="console-run" data-i18n="console.run" type="button">Run</button>
+        </div>
+        <div class="console-presets">
+          <button id="console-paris-preset" class="tv-ext-btn tv-ext-movie" data-i18n="console.parisPreset" type="button">Count instances of Paris in Events</button>
+        </div>
+        <div id="console-status"></div>
+        <pre id="console-output" aria-live="polite"></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings -->
   <div id="tab-settings" class="tab">
     <div class="st-outer"><div id="st-content"></div></div>
   </div>
@@ -1033,6 +1073,7 @@ let fileHandle = null;
 let selectedId = null;
 let _complementaryListsCache = null;
 let _complementaryListsRequest = 0;
+let _jqPromise = null;
 
 // ── i18n ──────────────────────────────────────────────────────────
 let T = {}; // populated from languages/english.json (or any other language file)
@@ -2057,7 +2098,7 @@ function switchTab(tab, {updateHash=true}={}) {
   const logo = document.getElementById('nav-logo');
   if (logo) logo.style.filter = tab==='explore' ? 'drop-shadow(0 0 4px var(--accent))' : '';
   const filterBar = document.getElementById('filter-bar');
-  if (filterBar) filterBar.classList.toggle('on', tab !== 'external-documents' && tab !== 'complementary-lists' && !!data);
+  if (filterBar) filterBar.classList.toggle('on', tab !== 'external-documents' && tab !== 'complementary-lists' && tab !== 'console' && !!data);
   if (tab==='explore') { if(updateHash) setHash('#explore'); renderExplore(); }
   if (tab==='ovbrowse') { const a=document.querySelector('#ovb-subnav .sub-btn.active'); const mode=a?.dataset.mode||'cards'; if(updateHash) setHash(`#overview/${mode}`); renderOvBrowse(mode); }
   if (tab==='map') { if(updateHash) setHash('#map'); initMap(); }
@@ -2070,6 +2111,7 @@ function switchTab(tab, {updateHash=true}={}) {
   if (tab==='video' && updateHash) setHash('#video');
   if (tab==='external-documents') { if(updateHash) setHash('#ed'); renderExternalDocuments(); }
   if (tab==='complementary-lists') { if(updateHash) setHash('#cl'); renderComplementaryLists(); }
+  if (tab==='console') { if(updateHash) setHash('#console'); renderConsole(); }
 }
 
 function stopVideoPlayback() {
@@ -2350,9 +2392,15 @@ function complementaryListColumnHref(rule,row) {
   if(!href)return '';
   const query=rule.query&&typeof rule.query==='object'&&!Array.isArray(rule.query)?rule.query:null;
   if(query){
-    const params=new URLSearchParams();
-    Object.entries(query).forEach(([key,value])=>params.set(key,complementaryListTemplateValue(value,row)));
-    href+=(href.includes('?')?'&':'?')+params.toString();
+    const resolvedQuery={};
+    Object.entries(query).forEach(([key,value])=>{
+      resolvedQuery[key]=complementaryListTemplateValue(value,row);
+    });
+    const pathname=new URL(href,document.baseURI).pathname.replace(/\/$/,'');
+    const queryString=pathname.endsWith('/search')
+      ?`query=${encodeURIComponent(JSON.stringify(resolvedQuery))}`
+      :new URLSearchParams(resolvedQuery).toString();
+    href+=(href.includes('?')?'&':'?')+queryString;
   }
   return href;
 }
@@ -2394,6 +2442,7 @@ async function renderComplementaryLists() {
       if(!columnDefs.length){content.innerHTML='<div class="complementary-list-status">This table is empty.</div>';return;}
       const filters=columnDefs.map(()=> '');
       let sortColumn=null,sortDirection=1;
+      const mapProvider=data.Settings?.Other?.ExternalMapProvider||'https://www.openstreetmap.org/?mlat=';
       const table=document.createElement('table');table.className='complementary-list-table';
       const thead=document.createElement('thead');const headRow=document.createElement('tr');
       const cellText=(value)=>value&&typeof value==='object'?JSON.stringify(value):String(value??'');
@@ -2403,7 +2452,9 @@ async function renderComplementaryLists() {
           const text=complementaryListTemplateValue(column.rule.label||'↗',row)||'↗';
           return {text,href,internal:column.rule.internal===true||href.startsWith('#')};
         }
-        return {text:cellText(row[column.key]),href:'',internal:false};
+        const text=cellText(row[column.key]);
+        const isCoordinates=column.key.toLowerCase()==='coordinates';
+        return {text,href:isCoordinates&&text?mapProvider+encodeURIComponent(text):'',internal:false};
       }));
       const sortButtons=new Map();
       let renderVersion=0;
@@ -2460,7 +2511,14 @@ async function renderComplementaryLists() {
       });
       thead.appendChild(headRow);table.appendChild(thead);
       const tbody=document.createElement('tbody');
-      table.appendChild(tbody);content.appendChild(table);
+      table.appendChild(tbody);
+      const controls=document.createElement('div');controls.className='complementary-list-controls';
+      const widthLabel=document.createElement('label');
+      const widthToggle=document.createElement('input');widthToggle.type='checkbox';widthToggle.checked=true;
+      widthToggle.addEventListener('change',()=>table.classList.toggle('complementary-list-table-fit',!widthToggle.checked));
+      widthLabel.append(widthToggle,document.createTextNode('Use full available table width'));
+      controls.appendChild(widthLabel);
+      content.append(controls,table);
       renderBody();
     };
     const extraColumns=cfg.ExtraColumns&&typeof cfg.ExtraColumns==='object'&&!Array.isArray(cfg.ExtraColumns)?cfg.ExtraColumns:{};
@@ -2483,6 +2541,54 @@ async function renderComplementaryLists() {
   }
 }
 
+function loadJq() {
+  if (_jqPromise) return _jqPromise;
+  if (window.jq) {
+    _jqPromise=Promise.resolve(window.jq).then(jq=>jq?.json?jq:Promise.reject(new Error('jq failed to initialize')));
+    return _jqPromise;
+  }
+  _jqPromise=new Promise((resolve,reject)=>{
+    const script=document.createElement('script');
+    script.src='https://cdn.jsdelivr.net/npm/jq-web@0.6.2/jq.js';
+    script.onload=()=>Promise.resolve(window.jq).then(jq=>jq?.json?resolve(jq):reject(new Error('jq failed to initialize'))).catch(reject);
+    script.onerror=()=>reject(new Error(t('console.loadError','Could not load jq. Check your network connection.')));
+    document.head.appendChild(script);
+  });
+  return _jqPromise;
+}
+
+async function runConsoleQuery() {
+  const query=document.getElementById('console-query');
+  const output=document.getElementById('console-output');
+  const status=document.getElementById('console-status');
+  if(!query||!output||!status||!data)return;
+  output.classList.remove('error');output.textContent='';status.textContent=t('console.running','Running…');
+  try {
+    const jq=await loadJq();
+    const result=await jq.json(data,query.value.trim()||'.');
+    output.textContent=result===undefined?'null':JSON.stringify(result,null,2);
+    status.textContent='';
+  } catch(error) {
+    output.classList.add('error');output.textContent=String(error?.message||error);
+    status.textContent=t('console.failed','Query failed');
+  }
+}
+
+function renderConsole() {
+  const query=document.getElementById('console-query');
+  const run=document.getElementById('console-run');
+  const parisPreset=document.getElementById('console-paris-preset');
+  if(!query||!run||run.dataset.wired)return;
+  run.dataset.wired='1';run.addEventListener('click',runConsoleQuery);
+  parisPreset?.addEventListener('click',()=>{
+    query.value='[.Trips[].Days[].Events | select(type == "string" and contains("Paris"))] | length';
+    runConsoleQuery();
+  });
+  query.addEventListener('keydown',event=>{
+    if((event.ctrlKey||event.metaKey)&&event.key==='Enter'){event.preventDefault();runConsoleQuery();}
+  });
+}
+
 function resolveHash(hash) {
   if (!data) return; // can't navigate without data
   const raw = (hash || '').replace(/^#/, '');
@@ -2490,7 +2596,7 @@ function resolveHash(hash) {
   const [seg1, seg2, seg3] = raw.split('/');
   // #editor opens the Editor tab; #overview (and legacy #ovbrowse) opens the Overview/Browse tab
   const tabAlias = { editor:'overview' };
-  const tabs = ['explore','ovbrowse','map','stats','trip','settings','video','external-documents','ed','complementary-lists','cl','report','about'];
+  const tabs = ['explore','ovbrowse','map','stats','trip','console','settings','video','external-documents','ed','complementary-lists','cl','report','about'];
   if (seg1 === 'video') {
     const videoId=seg2 ? decodeURIComponent(seg2) : '';
     const timeMatch=seg3&&/^(\d{1,3}):(\d{2}):(\d{2})$/.exec(decodeURIComponent(seg3));

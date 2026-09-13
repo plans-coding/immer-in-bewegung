@@ -17,7 +17,8 @@
       "editor": "Redigera",
       "settings": "Inställningar",
       "report": "Rapport",
-      "about": "Om"
+      "about": "Om",
+      "console": "Konsol"
     },
     "search": {
       "placeholder": "Sök resor…",
@@ -39,7 +40,8 @@
       "edit": "Redigera",
       "settings": "Inställningar",
       "report": "Rapport",
-      "about": "Om"
+      "about": "Om",
+      "console": "Konsol"
     }
   },
   "loadScreen": {
@@ -58,6 +60,16 @@
     "allLabels": "Alla etiketter",
     "clearFilter": "✕ Rensa filter",
     "tripCountUnit": "resor"
+  },
+  "console": {
+    "title": "Konsol",
+    "subtitle": "Kör jq-frågor mot den inlästa huvud-JSON-filen.",
+    "queryPlaceholder": "Ange en jq-fråga, till exempel: .Trips | keys",
+    "parisPreset": "Räkna förekomster av Paris i händelser",
+    "run": "Kör",
+    "running": "Kör…",
+    "failed": "Frågan misslyckades",
+    "loadError": "Kunde inte läsa in jq. Kontrollera nätverksanslutningen."
   },
   "explore": {
     "title": "Upptäck",
