@@ -351,23 +351,24 @@ body{font-family:'Scoutie Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans
 #tab-settings{flex-direction:column;overflow-y:auto;padding:28px 24px;background:var(--bg);align-items:center}
 .st-outer{max-width:760px;width:100%}
 /* JSON console */
-#tab-console{flex-direction:column;overflow-y:auto;padding:24px;background:var(--bg);align-items:stretch}
-#console-inner{width:100%;max-width:none;flex:1;min-height:0;display:flex;flex-direction:column}
-.console-sub{color:var(--muted2);font-size:13px;margin-bottom:16px}
-.console-terminal{padding:16px;border:0;border-radius:8px;background:var(--console-bg);color:var(--console-text);flex:1;min-height:0;display:flex;flex-direction:column}
+#tab-console{flex-direction:column;overflow-y:auto;padding:28px 24px;background:var(--bg);align-items:center}
+#console-inner{width:100%;max-width:1100px;flex:1;min-height:0;display:flex;flex-direction:column}
+.console-terminal{padding:18px;border:0;border-radius:10px;background:var(--console-bg);color:var(--console-text);flex:1;min-height:0;display:flex;flex-direction:column}
+.console-section-label{margin-bottom:7px;color:var(--muted2);font-size:11px;font-weight:700;letter-spacing:.7px;text-transform:uppercase}
 .console-query-row{display:flex;gap:10px;align-items:flex-start}
 .console-presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
 #console-query{flex:1;min-height:92px;resize:vertical;padding:10px 12px;border:1px solid var(--console-border);border-radius:5px;background:var(--console-surface);color:var(--console-text);font:13px/1.5 'SF Mono','Consolas',monospace}
 #console-query:focus{outline:none;border-color:var(--console-accent);box-shadow:0 0 0 2px rgba(101,215,182,.2)}
-#console-run{align-self:stretch;padding:9px 16px;border:1px solid var(--console-accent);border-radius:5px;background:var(--accent-g);color:var(--console-text);font:600 13px inherit;cursor:pointer}
-#console-run:hover{background:var(--accent);color:#fff}
+#console-run{align-self:stretch;padding:9px 18px;border:1px solid var(--accent);border-radius:5px;background:var(--accent);color:#fff;font:600 13px inherit;cursor:pointer;transition:background .12s,border-color .12s}
+#console-run:hover{background:var(--accent-d);border-color:var(--accent-d)}
 #console-status{min-height:20px;margin-top:8px;color:var(--muted2);font:12px 'SF Mono','Consolas',monospace}
-.console-output-head{display:flex;justify-content:flex-end;margin-top:8px}
+.console-output-head{display:flex;align-items:center;justify-content:space-between;margin-top:18px}
+.console-output-label{color:var(--muted2);font-size:11px;font-weight:700;letter-spacing:.7px;text-transform:uppercase}
 #console-copy{padding:4px 10px;border:1px solid var(--console-border);border-radius:5px;background:transparent;color:var(--muted2);font:12px inherit;cursor:pointer}
 #console-copy:hover{border-color:var(--console-accent);color:var(--console-accent);background:var(--accent-g)}
 #console-output{margin-top:6px;flex:1;min-height:0;max-height:none;overflow:auto;padding:14px;border:1px solid var(--console-border);border-radius:5px;background:var(--console-bg);color:var(--console-text);font:13px/1.5 'SF Mono','Consolas',monospace;white-space:pre-wrap;overflow-wrap:anywhere;cursor:default;user-select:text}
 #console-output.error{color:#ff8f87}
-@media(max-width:600px){#tab-console{padding:14px}.console-terminal{padding:10px}.console-query-row{gap:6px}}
+@media(max-width:600px){#tab-console{padding:16px 12px}.console-terminal{padding:12px}.console-query-row{gap:6px}}
 /* File banner */
 .st-file-banner{background:var(--accent);color:#fff;border:1px solid var(--accent);border-radius:10px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;box-shadow:var(--shadow);flex-wrap:wrap}
 .st-current-file{margin-bottom:16px}
@@ -776,23 +777,24 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 .tv-country-stop-short{text-decoration-line:underline;text-decoration-style:solid;text-decoration-thickness:1px;text-underline-offset:2px}
 .tv-country-stop-very-short{text-decoration-line:underline;text-decoration-style:dashed;text-decoration-thickness:1px;text-underline-offset:2px}
 /* ── Trip-view timeline ───────────────────────────────────────────── */
-.tv-days{position:relative;display:flex;flex-direction:column;padding-left:52px;margin-left:8px}
+.tv-days{position:relative;display:flex;flex-direction:column;padding-left:44px;margin-left:8px}
 .tv-days::before{content:'';position:absolute;left:15px;top:14px;bottom:14px;width:2px;background:var(--tv-line,var(--border));border-radius:2px}
 .tv-days::after{content:'';position:absolute;left:9px;bottom:14px;width:14px;height:2px;background:var(--tv-line,var(--border));border-radius:2px}
 .tv-day{position:relative;margin-bottom:18px}
 .tv-day:last-child{margin-bottom:0}
 .tv-day::before{display:none}
-.tv-day-card{background:var(--s2);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:none}
+.tv-day-card{background:var(--s2);border:0;border-radius:10px;overflow:visible;box-shadow:none}
 .tv-day:hover .tv-day-card{box-shadow:none}
-.tv-day-hdr{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--border);background:var(--s3);border-radius:8px 8px 0 0}
-.tv-day-hdr.no-body{border-bottom:none;border-radius:8px}
-.tv-day-num{position:absolute;left:-48px;top:6px;width:24px;height:24px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;padding:0;border-radius:50%;background:var(--accent-g);color:var(--accent);border:2px solid var(--tv-line,var(--border));z-index:2}
-.tv-day-date{font-size:13px;font-weight:600;color:var(--text)}
-.tv-day-weekday{font-size:12px;color:var(--muted)}
-.tv-day-body{padding:12px 14px;font-size:13px;line-height:1.65;white-space:pre-wrap}
+.tv-day-hdr{display:flex;align-items:center;gap:4px;padding:9px 14px;background:transparent;border-radius:10px 10px 0 0}
+.tv-day-hdr.no-body{border-bottom:none;border-radius:10px}
+.tv-day-num{position:absolute;left:-40px;top:6px;width:24px;height:24px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;padding:0;border-radius:50%;background:var(--accent-g);color:var(--accent);border:0;z-index:2}
+.tv-day-date{font-size:14px;font-weight:600;color:var(--text);display:inline-flex;align-items:baseline;gap:4px}
+.tv-day-date-year{font-size:11px;font-weight:400;color:var(--muted2)}
+.tv-day-weekday{font-size:14px;font-weight:400;color:var(--text)}
+.tv-day-body{padding:12px 14px;font-size:14px;line-height:1.65;white-space:pre-wrap}
 .tv-ev-link{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(29,101,94,.35)}
 .tv-ev-link:hover{border-bottom-color:var(--accent);opacity:.85}
-.tv-day-foot{padding:8px 14px;border-top:1px solid var(--border);font-size:12px;color:var(--muted2);display:flex;align-items:center;gap:8px;background:var(--s3)}
+.tv-day-foot{padding:8px 14px;font-size:12px;color:var(--muted2);display:flex;align-items:center;gap:8px;background:color-mix(in srgb,var(--tv-line,var(--border)) 10%,var(--s2))}
 .tv-acc-info{display:flex;align-items:center;gap:8px;min-width:0;flex:1}
 .tv-acc-flag{font-size:15px}
 .tv-ext-btns{display:flex;gap:6px;margin-left:auto;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
@@ -809,10 +811,10 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 .tv-ext-photos{border-color:var(--muted2);color:var(--muted2);background:transparent;cursor:pointer}
 .tv-ext-photos:hover{background:var(--muted2);color:#fff;border-color:var(--muted2)}
 @media(max-width:500px){
-  .tv-days{padding-left:38px;margin-left:4px}
+  .tv-days{padding-left:34px;margin-left:4px}
   .tv-days::before{left:11px}
   .tv-days::after{left:5px}
-  .tv-day-num{left:-38px}
+  .tv-day-num{left:-34px}
 }
 /* Photo overlay */
 #photo-overlay{position:fixed;inset:0;z-index:9000;display:none;flex-direction:column;background:#111}
@@ -1049,6 +1051,7 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
   <div id="tab-console" class="tab">
     <div id="console-inner">
       <div class="console-terminal">
+        <div class="console-section-label">JQ Query</div>
         <div class="console-query-row">
           <textarea id="console-query" data-i18n-ph="console.queryPlaceholder" spellcheck="false" aria-label="jq query">.</textarea>
           <button id="console-run" data-i18n="console.run" type="button">Run</button>
@@ -1057,7 +1060,7 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
           <button id="console-paris-preset" class="tv-ext-btn tv-ext-movie" data-i18n="console.parisPreset" type="button">Count instances of Paris in Events</button>
         </div>
         <div id="console-status"></div>
-        <div class="console-output-head"><button id="console-copy" type="button" aria-label="Copy output" title="Copy output">Copy</button></div>
+        <div class="console-output-head"><span class="console-output-label">Output</span><button id="console-copy" type="button" aria-label="Copy output" title="Copy output">Copy</button></div>
         <pre id="console-output" aria-live="polite"></pre>
       </div>
     </div>
@@ -1485,6 +1488,15 @@ function formatSearchDate(dateStr) {
 
 function formatSearchDateRange(start, end) {
   return [start, end].filter(Boolean).map(formatSearchDate).join(' → ');
+}
+
+function formatTripDayDate(dateStr) {
+  const match = String(dateStr || '').slice(0, 10).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return { dayMonth: dateStr || '', year: '' };
+  const date = new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])));
+  const month = new Intl.DateTimeFormat(undefined, { month: 'long', timeZone: 'UTC' })
+    .format(date).toLowerCase();
+  return { dayMonth: `${Number(match[3])} ${month}`, year: match[1] };
 }
 
 function sortSearchResults(trips, days, sort = 'newest') {
@@ -4392,7 +4404,9 @@ function renderTripView(innerId) {
         :`<span>${accParts}</span>`;
       const hasBody=!!ev.Events;
       const hdrClass=`tv-day-hdr${hasBody?'':' no-body'}`;
-      day.innerHTML=`<div class="tv-day-card"><div class="${hdrClass}"><span class="tv-day-num" style="${ns}">${ev.DayNumber}</span><span class="tv-day-weekday">${h(ev.Weekday||'')}</span><span class="tv-day-date">${h(ev.Date||'')}</span></div>${hasBody?`<div class="tv-day-body">${eventsToHtml(ev.Events,extMapProvider)}</div>`:''}<div class="tv-day-foot"><div class="tv-acc-info"><span class="tv-acc-flag">${ev.AccommodationCountryFlag||'🌍'}</span>${accHtml}</div></div></div>`;
+      const dayDate = formatTripDayDate(ev.Date);
+      const dateHtml = `${h(dayDate.dayMonth)}${dayDate.year ? ` <span class="tv-day-date-year">${h(dayDate.year)}</span>` : ''}`;
+      day.innerHTML=`<div class="tv-day-card"><div class="${hdrClass}"><span class="tv-day-num" style="${ns}">${ev.DayNumber}</span><span class="tv-day-weekday">${h(ev.Weekday||'')}</span><span class="tv-day-date">${dateHtml}</span></div>${hasBody?`<div class="tv-day-body">${eventsToHtml(ev.Events,extMapProvider)}</div>`:''}<div class="tv-day-foot"><div class="tv-acc-info"><span class="tv-acc-flag">${ev.AccommodationCountryFlag||'🌍'}</span>${accHtml}</div></div></div>`;
       // Extension + Photos buttons
       const btns=[];
       if(ev.Date){
