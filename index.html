@@ -110,39 +110,62 @@ body{font-family:'Scoutie Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans
 #theme-btn{background:none;border:none;cursor:pointer;padding:4px;line-height:1;color:var(--muted2);display:flex;align-items:center;justify-content:center;transition:color .15s}
 #theme-btn:hover{color:var(--text)}
 #ls-theme-btn{display:flex!important;align-items:center;justify-content:center}
-/* Nav search */
-#nav-search{position:relative;display:flex;align-items:center;gap:5px}
-#nav-search-icon{background:none;border:none;color:var(--muted2);cursor:pointer;padding:5px;line-height:1;display:flex;align-items:center;border-radius:5px;transition:color .12s;flex-shrink:0}
-#nav-search-icon:hover{color:var(--text)}
-#nav-search-inp{width:0;opacity:0;padding:0;border:1px solid transparent;border-radius:6px;background:var(--s2);color:var(--text);font-size:13px;font-family:inherit;outline:none;transition:width .22s cubic-bezier(.4,0,.2,1),opacity .18s,padding .22s,border-color .18s;overflow:hidden;box-sizing:border-box}
-#nav-search.open #nav-search-inp{width:210px;opacity:1;padding:5px 10px;border-color:var(--border)}
-#nav-search-inp:focus{border-color:var(--accent)!important}
-#nav-search-drop{position:fixed;width:360px;background:var(--s1);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-h);max-height:440px;overflow-y:auto;z-index:300;display:none}
-.ns-result{display:flex;align-items:center;gap:9px;padding:9px 12px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .1s}
-.ns-result:last-child{border-bottom:none}
-.ns-result:hover,.ns-result.ns-active{background:var(--s2)}
-.ns-result-id{font-size:11px;font-weight:700;font-family:'SF Mono','Consolas',monospace;padding:2px 7px;border-radius:4px;background:var(--s3);color:var(--muted2);flex-shrink:0;white-space:nowrap;border:1px solid var(--border)}
-.ns-result-dest{font-size:13px;font-weight:500;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ns-result-date{font-size:11px;color:var(--muted2);flex-shrink:0;white-space:nowrap}
-#ns-empty{padding:20px;text-align:center;color:var(--muted2);font-size:13px}
-#ns-hint{padding:10px 14px;font-size:11px;color:var(--muted2);text-align:center;border-bottom:1px solid var(--border)}
-#ns-show-all{position:sticky;bottom:0;text-align:center;padding:10px 12px;font-size:12px;color:var(--accent);cursor:pointer;background:var(--s1);border-top:1px solid var(--border);z-index:1}
-#ns-show-all:hover{text-decoration:underline}
-#ns-full{position:fixed;inset:0;z-index:490;background:var(--bg);display:none;flex-direction:column}
-#ns-full.open{display:flex}
-#ns-full-hdr{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--s1);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:1}
-#ns-full-back{background:none;border:none;color:var(--text);cursor:pointer;font-size:20px;padding:4px 8px;border-radius:5px;line-height:1}
-#ns-full-back:hover{background:var(--s2)}
-#ns-full-title{font-size:15px;font-weight:600;flex:1}
-#ns-full-body{padding:16px;max-width:800px;width:100%;margin:0 auto;box-sizing:border-box;overflow-y:auto;flex:1}
-.ns-full-sec{font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.7px;margin:16px 0 8px}
-.ns-full-sec:first-child{margin-top:0}
-.ns-full-card{background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:8px;cursor:pointer;display:flex;flex-direction:column;gap:4px;transition:background .12s}
-.ns-full-card:hover{background:var(--s2)}
-.ns-full-card-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.ns-full-card-dest{font-size:14px;font-weight:500;flex:1}
-.ns-full-card-date{font-size:12px;color:var(--muted2)}
-.ns-full-card-snippet{font-size:12px;color:var(--muted2);white-space:pre-wrap}
+/* Search page */
+#tab-search{flex-direction:column;overflow-y:auto;overflow-x:hidden;background:var(--bg)}
+#search-inner{max-width:1100px;width:100%;margin:0 auto;padding:24px 20px;box-sizing:border-box;display:flex;flex-direction:column;gap:24px;min-width:0}
+.search-hdr{display:flex;flex-direction:column;gap:16px}
+.search-title-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.search-title-row .search-preset-btn{font-size:13px}
+.search-stats-summary{font-size:13px;color:var(--muted2)}
+.search-bar-wrap{position:relative;display:flex;align-items:center;width:100%}
+.search-bar-icon{position:absolute;left:14px;width:17px;height:17px;color:var(--muted2);pointer-events:none}
+#search-page-input{width:100%;padding:9px 38px 9px 42px;font-size:14px;font-family:inherit;border:1px solid var(--border);border-radius:6px;background:var(--s1);color:var(--text);outline:none;box-shadow:var(--shadow);transition:border-color .12s,box-shadow .12s;box-sizing:border-box}
+#search-page-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-g)}
+#search-page-input::placeholder{color:var(--muted)}
+#search-page-clear{position:absolute;right:10px;background:none;border:none;color:var(--muted2);font-size:16px;line-height:1;cursor:pointer;padding:6px 8px;border-radius:4px;display:none;transition:color .12s}
+#search-page-clear:hover{color:var(--text)}
+.search-filter-info{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;background:rgba(244,211,94,.24);border:1px solid #d2a900;border-radius:8px;font-size:13px;color:var(--text);line-height:1.4;box-sizing:border-box;flex-wrap:wrap}
+.search-filter-info-content{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0;flex:1}
+.search-filter-info-icon{font-size:14px;line-height:1;color:var(--accent);flex-shrink:0}
+.search-filter-info-text{font-size:12.5px;color:var(--text);display:flex;align-items:center;gap:6px;flex-wrap:wrap;overflow-wrap:break-word;word-break:break-word;min-width:0}
+.search-filter-info-tag{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:4px;background:var(--s1);border:1px solid var(--border);font-size:11.5px;font-weight:500;color:var(--text);white-space:normal;overflow-wrap:break-word;word-break:break-word}
+.search-filter-info-count{color:var(--muted2);font-size:11.5px}
+.search-filter-info-clear{background:var(--s1);border:1px solid var(--border);color:var(--muted2);border-radius:6px;padding:3px 9px;font-size:11.5px;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .12s;margin-left:auto;flex-shrink:0}
+.search-filter-info-clear:hover{color:var(--danger);border-color:var(--danger);background:var(--s2)}
+.search-controls-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.search-filter-pills{display:flex;gap:6px;flex-wrap:wrap}
+.search-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--border);border-radius:6px;background:var(--s2);color:var(--muted2);cursor:pointer;font-size:13px;font-weight:500;box-shadow:var(--shadow);transition:all .12s}
+.search-pill:hover{color:var(--text);background:var(--s2);border-color:var(--border-h)}
+.search-pill.active{color:var(--accent);background:var(--accent-g);border-color:var(--accent);font-weight:600}
+.search-pill-count{font-size:11px;padding:1px 6px;border-radius:10px;background:var(--s2);font-family:'SF Mono','Consolas',monospace}
+.search-pill-count:empty{display:none}
+.search-pill.active .search-pill-count{background:rgba(29,101,94,.18);color:var(--accent)}
+.search-sort-wrap{display:flex;align-items:center;gap:6px;margin-left:auto;font-size:12px;color:var(--muted2)}
+.search-sort-btn{width:30px;height:30px;padding:6px;border:1px solid var(--border);border-radius:6px;background:var(--s1);color:var(--muted2);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow);transition:color .12s,border-color .12s,background .12s}
+.search-sort-btn:hover{color:var(--accent);border-color:var(--accent);background:var(--accent-g)}
+.search-sort-btn svg{width:16px;height:16px;display:block}
+.search-preset-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border:1px solid var(--border);border-radius:6px;background:var(--s2);color:var(--muted2);cursor:pointer;font-size:12px;box-shadow:var(--shadow);transition:all .12s;max-width:100%;overflow-wrap:break-word;white-space:normal}
+.search-preset-btn:hover{color:var(--accent);border-color:var(--accent);background:var(--accent-g)}
+.search-sec{font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:1px;margin:18px 0 10px;padding:2px 0;display:flex;align-items:center;gap:8px}
+.search-sec:first-child{margin-top:0}
+.search-sec-count{font-weight:400;color:var(--muted)}
+.search-card{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:8px;cursor:pointer;display:flex;flex-direction:column;gap:6px;box-shadow:none;transition:background .12s,border-color .12s,transform .15s;box-sizing:border-box;max-width:100%;min-width:0;overflow:hidden;word-break:break-word;overflow-wrap:break-word}
+.search-card:hover{background:var(--s2);border-color:var(--border-h);transform:translateY(-2px)}
+.search-card-top{display:flex;align-items:center;gap:8px 10px;flex-wrap:wrap;min-width:0;max-width:100%}
+.search-card-title{font-size:14px;font-weight:600;color:var(--text);flex:1 1 auto;min-width:0;word-break:break-word;overflow-wrap:break-word}
+.search-card-date{font-size:12px;color:var(--muted2);white-space:nowrap;max-width:100%}
+.search-card-dest{font-size:12px;color:var(--muted2);white-space:normal;word-break:break-word;overflow-wrap:break-word;max-width:100%}
+.search-card-snippet{font-size:13px;color:var(--muted2);line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;min-width:0;max-width:100%}
+.search-card-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:2px;font-size:12px;color:var(--muted2);min-width:0;max-width:100%;word-break:break-word;overflow-wrap:break-word}
+.search-card-meta > *{min-width:0;max-width:100%;word-break:break-word;overflow-wrap:break-word}
+.search-card-meta-sep{color:var(--muted);flex:0 0 auto}
+.search-badge{font-size:11px;font-weight:700;font-family:'SF Mono','Consolas',monospace;padding:2px 7px;border-radius:4px;background:var(--s3);color:var(--muted2);flex-shrink:0;white-space:nowrap;border:1px solid var(--border);max-width:100%;overflow:hidden;text-overflow:ellipsis;letter-spacing:.3px}
+.search-highlight{background:#f4d35e;color:#594500;font-weight:600;padding:1px 0;border-radius:2px}
+.search-empty-state{text-align:center;padding:48px 20px;color:var(--muted2);display:flex;flex-direction:column;align-items:center;gap:8px}
+.search-empty-icon{font-size:36px;line-height:1;margin-bottom:4px}
+.search-empty-title{font-size:16px;font-weight:600;color:var(--text)}
+.search-empty-sub{font-size:13px;max-width:440px;line-height:1.5}
+
 .tab-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 12px;height:calc(100% - 8px);border:none;background:transparent;color:var(--muted2);cursor:pointer;font-size:13px;font-weight:500;letter-spacing:1px;border-radius:12px;margin:4px 3px;transition:color .12s,background .12s;white-space:nowrap;flex-shrink:0}
 .tab-icon{width:15px;height:15px;display:none;flex-shrink:0}
 .tab-btn.active{color:var(--accent);background:var(--accent-g);font-weight:600}
@@ -153,8 +176,6 @@ body{font-family:'Scoutie Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans
   #nav-menu{top:auto;bottom:calc(100% + 4px)}
   #nav-actions{position:fixed;left:0;bottom:0;width:0;height:0;padding:0;border:0;overflow:visible;pointer-events:none}
   #nav-actions > *{display:none}
-  #nav-search.open{display:flex;position:fixed;left:12px;right:12px;bottom:calc(52px + env(safe-area-inset-bottom));padding:6px;background:var(--s1);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-h);z-index:201;pointer-events:auto}
-  #nav-search.open #nav-search-inp{width:auto;flex:1;min-width:0}
   #nav-menu{min-width:210px}
   #nav-menu > .nav-menu-item{min-height:44px;padding:12px 14px;font-size:15px}
   .mobile-menu-item{display:flex;align-items:center;gap:9px}
@@ -166,8 +187,15 @@ body{font-family:'Scoutie Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans
   .mobile-tools-row .mobile-menu-item svg{width:20px;height:20px;flex:0 0 20px}
   .mobile-tools-row #theme-btn-mobile{width:20px;height:20px;flex:0 0 20px;padding:0}
   .tab-btn{flex:1 1 0;height:44px;margin:2px 3px;padding:0 10px;min-width:0}
+  #nav-tabs .tab-btn[data-tab="search"]{display:none}
   .tab-icon{display:block;width:20px;height:20px}
   .tab-label{display:none}
+  #search-inner{padding:16px 12px;gap:14px}
+  .search-card{padding:12px 14px}
+  .search-card-top{gap:6px 8px}
+  .search-card-title{min-width:0;flex-basis:100%}
+  .search-card-date{white-space:normal;word-break:break-word}
+  .search-filter-info{padding:8px 10px;font-size:12px}
 }
 @media(min-width:601px){
   /* Keep the full-width content flow, while turning the main nav into a left rail. */
@@ -179,8 +207,6 @@ body{font-family:'Scoutie Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans
   .tab-icon{display:block}
   .tab-label{display:none}
   #nav-actions{order:2;width:100%;height:auto;flex-direction:column;padding:8px 0;gap:8px;border-left:none;border-top:1px solid var(--border)}
-  #nav-search.open{position:fixed;left:54px;bottom:8px;width:min(360px,calc(100vw - 62px));padding:4px;background:var(--s1);border:1px solid var(--border);border-radius:7px;box-shadow:var(--shadow-h);z-index:201}
-  #nav-search.open #nav-search-inp{width:auto;flex:1;min-width:0}
   #nav-menu{top:auto;right:auto;bottom:8px;left:calc(100% + 4px)}
 }
 .tab{display:none;flex:1;overflow:hidden}
@@ -328,7 +354,7 @@ body{font-family:'Scoutie Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans
 #tab-console{flex-direction:column;overflow-y:auto;padding:24px;background:var(--bg);align-items:stretch}
 #console-inner{width:100%;max-width:none;flex:1;min-height:0;display:flex;flex-direction:column}
 .console-sub{color:var(--muted2);font-size:13px;margin-bottom:16px}
-.console-terminal{padding:16px;border:1px solid var(--console-border);border-radius:8px;background:var(--console-bg);color:var(--console-text);box-shadow:0 6px 20px rgba(0,0,0,.18);flex:1;min-height:0;display:flex;flex-direction:column}
+.console-terminal{padding:16px;border:0;border-radius:8px;background:var(--console-bg);color:var(--console-text);flex:1;min-height:0;display:flex;flex-direction:column}
 .console-query-row{display:flex;gap:10px;align-items:flex-start}
 .console-presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
 #console-query{flex:1;min-height:92px;resize:vertical;padding:10px 12px;border:1px solid var(--console-border);border-radius:5px;background:var(--console-surface);color:var(--console-text);font:13px/1.5 'SF Mono','Consolas',monospace}
@@ -336,7 +362,10 @@ body{font-family:'Scoutie Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans
 #console-run{align-self:stretch;padding:9px 16px;border:1px solid var(--console-accent);border-radius:5px;background:var(--accent-g);color:var(--console-text);font:600 13px inherit;cursor:pointer}
 #console-run:hover{background:var(--accent);color:#fff}
 #console-status{min-height:20px;margin-top:8px;color:var(--muted2);font:12px 'SF Mono','Consolas',monospace}
-#console-output{margin-top:8px;flex:1;min-height:0;max-height:none;overflow:auto;padding:14px;border:1px solid var(--console-border);border-radius:5px;background:var(--console-surface);color:var(--console-text);font:13px/1.5 'SF Mono','Consolas',monospace;white-space:pre-wrap;overflow-wrap:anywhere}
+.console-output-head{display:flex;justify-content:flex-end;margin-top:8px}
+#console-copy{padding:4px 10px;border:1px solid var(--console-border);border-radius:5px;background:transparent;color:var(--muted2);font:12px inherit;cursor:pointer}
+#console-copy:hover{border-color:var(--console-accent);color:var(--console-accent);background:var(--accent-g)}
+#console-output{margin-top:6px;flex:1;min-height:0;max-height:none;overflow:auto;padding:14px;border:1px solid var(--console-border);border-radius:5px;background:var(--console-bg);color:var(--console-text);font:13px/1.5 'SF Mono','Consolas',monospace;white-space:pre-wrap;overflow-wrap:anywhere;cursor:default;user-select:text}
 #console-output.error{color:#ff8f87}
 @media(max-width:600px){#tab-console{padding:14px}.console-terminal{padding:10px}.console-query-row{gap:6px}}
 /* File banner */
@@ -403,8 +432,8 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 .cards-search:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-g)}
 .cards-search::placeholder{color:var(--muted)}
 .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
-.ex-card{background:var(--s2);border:1px solid var(--border);border-radius:8px;display:flex;flex-direction:column;cursor:pointer;overflow:hidden;box-shadow:var(--shadow);transition:box-shadow .15s,transform .15s,border-color .15s}
-.ex-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-h);border-color:var(--border-h)}
+.ex-card{background:var(--s2);border:1px solid var(--border);border-radius:8px;display:flex;flex-direction:column;cursor:pointer;overflow:hidden;box-shadow:none;transition:transform .15s,border-color .15s}
+.ex-card:hover{transform:translateY(-2px);border-color:var(--border-h)}
 .ex-cover{height:120px;display:flex;align-items:flex-end;padding:10px 12px;background:var(--s3);position:relative;overflow:hidden;background-size:cover;background-position:center}
 .ex-cover::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55) 0%,transparent 60%)}
 .ex-outer-id{font-size:11px;font-weight:700;font-family:'SF Mono','Consolas',monospace;color:#fff;padding:2px 8px;letter-spacing:.3px;border-radius:4px;position:relative;z-index:1;background:rgba(0,0,0,.45)}
@@ -861,15 +890,9 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
       <button class="tab-btn" data-tab="map" data-i18n-title="nav.tabs.map" aria-label="Map" title="Map"><svg class="tab-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="m1.5 3.5 4.3-2 4.4 2 4.3-2v11l-4.3 2-4.4-2-4.3 2z"/><path d="M5.8 1.5v11M10.2 3.5v11"/></svg><span class="tab-label" data-i18n="nav.tabs.map">Map</span></button>
       <button class="tab-btn" data-tab="stats" data-i18n-title="nav.tabs.statistics" aria-label="Statistics" title="Statistics"><svg class="tab-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="1.5" y="8" width="2.5" height="6.5" rx=".5"/><rect x="6.75" y="4.5" width="2.5" height="10" rx=".5"/><rect x="12" y="1.5" width="2.5" height="13" rx=".5"/></svg><span class="tab-label" data-i18n="nav.tabs.statistics">Statistics</span></button>
       <button class="tab-btn" data-tab="trip" data-i18n-title="nav.tabs.trip" aria-label="Trip" title="Trip"><svg class="tab-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4.5" width="12" height="9" rx="1.2"/><path d="M5.5 4.5V3.2c0-.7.5-1.2 1.2-1.2h2.6c.7 0 1.2.5 1.2 1.2v1.3M2 8.2h12M6.2 8.2v1.3h3.6V8.2"/></svg><span class="tab-label" data-i18n="nav.tabs.trip">Trip</span></button>
+      <button class="tab-btn" data-tab="search" data-i18n-title="nav.tabs.search" aria-label="Search" title="Search"><svg class="tab-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6.5" cy="6.5" r="4.5"/><line x1="10.5" y1="10.5" x2="14" y2="14"/></svg><span class="tab-label" data-i18n="nav.tabs.search">Search</span></button>
     </div>
     <div id="nav-actions">
-      <div id="nav-search">
-        <button id="nav-search-icon" data-i18n-title="nav.search.title" title="Search trips" aria-label="Search trips">
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="6.5" r="4.5"/><line x1="10.5" y1="10.5" x2="14" y2="14"/></svg>
-        </button>
-        <input type="search" id="nav-search-inp" data-i18n-ph="nav.search.placeholder" placeholder="Search trips…" autocomplete="off" spellcheck="false">
-        <div id="nav-search-drop"></div>
-      </div>
       <button id="theme-btn" onclick="toggleTheme()" title="Toggle theme"></button>
     </div>
     <div id="nav-brand">
@@ -972,6 +995,40 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
     </div>
   </div>
 
+  <!-- Search -->
+  <div id="tab-search" class="tab">
+    <div id="search-inner">
+      <div class="search-hdr">
+        <div class="search-title-row">
+          <button id="search-today-preset" class="search-preset-btn" type="button"></button>
+          <span id="search-stats-summary" class="search-stats-summary"></span>
+        </div>
+        <div class="search-bar-wrap">
+          <svg class="search-bar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6.5" cy="6.5" r="4.5"/><line x1="10.5" y1="10.5" x2="14" y2="14"/></svg>
+          <input type="search" id="search-page-input" data-i18n-ph="searchPage.placeholder" placeholder="Search trips, destinations, days, events, accommodations…" autocomplete="off" spellcheck="false">
+          <button id="search-page-clear" type="button" aria-label="Clear search" title="Clear">✕</button>
+        </div>
+        <div id="search-filter-info" class="search-filter-info" style="display:none"></div>
+        <div class="search-controls-row">
+          <div class="search-filter-pills" id="search-filter-pills">
+            <button class="search-pill active" data-filter="all"><span data-i18n="searchPage.all">All</span> <span class="search-pill-count" id="search-count-all"></span></button>
+            <button class="search-pill" data-filter="trips"><span data-i18n="searchPage.trips">Trips</span> <span class="search-pill-count" id="search-count-trips"></span></button>
+            <button class="search-pill" data-filter="days"><span data-i18n="searchPage.days">Days</span> <span class="search-pill-count" id="search-count-days"></span></button>
+          </div>
+          <div class="search-sort-wrap">
+            <button id="search-sort-btn" class="search-sort-btn" type="button" aria-label="Newest first" title="Newest first">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 13V3"/><path d="m2.5 5.5 2.5-2.5 2.5 2.5"/>
+                <path d="M11 3v10"/><path d="m8.5 10.5 2.5 2.5 2.5-2.5"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div id="search-results-list"></div>
+    </div>
+  </div>
+
   <!-- Editor -->
   <div id="tab-overview" class="tab">
     <button id="ov-list-toggle" data-i18n="editor.tripsToggle">☰ Trips</button>
@@ -1000,6 +1057,7 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
           <button id="console-paris-preset" class="tv-ext-btn tv-ext-movie" data-i18n="console.parisPreset" type="button">Count instances of Paris in Events</button>
         </div>
         <div id="console-status"></div>
+        <div class="console-output-head"><button id="console-copy" type="button" aria-label="Copy output" title="Copy output">Copy</button></div>
         <pre id="console-output" aria-live="polite"></pre>
       </div>
     </div>
@@ -1345,10 +1403,6 @@ function wire() {
   const closeNavMenu = () => { navMenu.classList.remove('open'); navLogo.setAttribute('aria-expanded', 'false'); };
   navLogo.addEventListener('click', e => {
     e.stopPropagation();
-    // The frog button also acts as the menu launcher on the desktop rail.
-    // Close the expanded search first so the two views never overlap.
-    const navSearch = document.getElementById('nav-search');
-    if (navSearch?.classList.contains('open')) document.getElementById('nav-search-icon')?.click();
     const isOpen = navMenu.classList.toggle('open');
     navLogo.setAttribute('aria-expanded', String(isOpen));
   });
@@ -1357,7 +1411,7 @@ function wire() {
   document.getElementById('mobile-search-btn').addEventListener('click', e => {
     e.stopPropagation();
     closeNavMenu();
-    document.getElementById('nav-search-icon')?.click();
+    switchTab('search');
   });
   document.getElementById('mobile-theme-btn').addEventListener('click', closeNavMenu);
   // Close on any pointer interaction outside the frog button or its menu.
@@ -1403,342 +1457,558 @@ function wire() {
     const hidden=ovList.classList.toggle('list-hidden');
     ovToggle.textContent=hidden?t('editor.tripsToggleCollapsed','☰ Trips ▸'):t('editor.tripsToggle','☰ Trips ▾');
   });
-  wireNavSearch();
+  initSearchPage();
 }
 
-function wireNavSearch() {
-  const wrap = document.getElementById('nav-search');
-  const icon = document.getElementById('nav-search-icon');
-  const inp  = document.getElementById('nav-search-inp');
-  const drop = document.getElementById('nav-search-drop');
-  let activeIdx = -1;
+// ── Search Page ──────────────────────────────────────────────────
 
-  // ── Full-results overlay ────────────────────────────────────────────
-  const fullEl = document.createElement('div');
-  fullEl.id = 'ns-full';
-  fullEl.innerHTML = `<div id="ns-full-hdr"><button id="ns-full-back" title="${t('nav.search.closeTitle','Close')}">←</button><span id="ns-full-title"></span></div><div id="ns-full-body"></div>`;
-  document.body.appendChild(fullEl);
-  document.getElementById('ns-full-back').addEventListener('click', () => fullEl.classList.remove('open'));
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') fullEl.classList.remove('open'); });
+let searchState = {
+  filter: 'all',
+  sort: 'newest'
+};
 
-  function latestTripDate(trip) {
-    return [trip.DepartureDate, trip.ReturnDate, ...(trip.Days || []).map(day => day.Date)]
-      .filter(Boolean).sort().at(-1) || '';
-  }
-  function formatSearchDate(dateStr) {
-    if (!dateStr) return '';
-    const date = new Date(`${dateStr.slice(0, 10)}T00:00:00`);
-    if (Number.isNaN(date.getTime())) return dateStr;
-    const years = (Date.now() - date.getTime()) / (365.2425 * 24 * 60 * 60 * 1000);
-    const age = Math.abs(years).toFixed(1).replace('.', t('nav.search.decimalSeparator', '.'));
-    const ageLabel = t(years >= 0 ? 'nav.search.yearsAgo' : 'nav.search.yearsFromNow',
-      years >= 0 ? '{years} years ago' : '{years} years from now').replace('{years}', age);
-    return `${dateStr} (${ageLabel})`;
-  }
-  function formatSearchDateRange(start, end) {
-    return [start, end].filter(Boolean).map(formatSearchDate).join(' → ');
-  }
-  function sortSearchResults(trips, days) {
+function latestTripDate(trip) {
+  return [trip.DepartureDate, trip.ReturnDate, ...(trip.Days || []).map(day => day.Date)]
+    .filter(Boolean).sort().at(-1) || '';
+}
+
+function formatSearchDate(dateStr) {
+  if (!dateStr) return '';
+  const date = new Date(`${dateStr.slice(0, 10)}T00:00:00`);
+  if (Number.isNaN(date.getTime())) return dateStr;
+  const years = (Date.now() - date.getTime()) / (365.2425 * 24 * 60 * 60 * 1000);
+  const age = Math.abs(years).toFixed(1).replace('.', t('nav.search.decimalSeparator', '.'));
+  const ageLabel = t(years >= 0 ? 'nav.search.yearsAgo' : 'nav.search.yearsFromNow',
+    years >= 0 ? '{years} years ago' : '{years} years from now').replace('{years}', age);
+  return `${dateStr} (${ageLabel})`;
+}
+
+function formatSearchDateRange(start, end) {
+  return [start, end].filter(Boolean).map(formatSearchDate).join(' → ');
+}
+
+function sortSearchResults(trips, days, sort = 'newest') {
+  if (sort === 'oldest') {
+    trips.sort((a, b) => (a.DepartureDate || '').localeCompare(b.DepartureDate || ''));
+    days.sort((a, b) => (a.day.Date || a.trip.DepartureDate || '').localeCompare(b.day.Date || b.trip.DepartureDate || ''));
+  } else {
     trips.sort((a, b) => latestTripDate(b).localeCompare(latestTripDate(a)));
     days.sort((a, b) => (b.day.Date || latestTripDate(b.trip)).localeCompare(a.day.Date || latestTripDate(a.trip)));
   }
+}
 
-  function showFullResults(q, tripResults, dayResults) {
-    // This also covers callers outside the search dropdown, such as Explore's
-    // calendar-date shortcut.
-    tripResults = [...tripResults]; dayResults = [...dayResults];
-    sortSearchResults(tripResults, dayResults);
-    const body = document.getElementById('ns-full-body');
-    const colors = domainColorMap();
-    const isoMap = buildISOMap();
-    body.innerHTML = '';
+function escapeSearchHTML(str) {
+  return (str || '').replace(/[&<>'"]/g, tag => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  }[tag] || tag));
+}
 
-    function makeBadge(t) {
-      const el = document.createElement('span');
-      el.className = 'ns-result-id';
-      el.textContent = t.OuterId || t.InnerId;
-      const c = t.TripDomain && colors[t.TripDomain];
-      if (c) { el.style.background = c+'28'; el.style.color = c; el.style.borderColor = c+'55'; }
-      return el;
-    }
+function highlightMatches(text, query) {
+  if (!text) return '';
+  const escaped = escapeSearchHTML(text);
+  if (!query || !query.trim()) return escaped;
+  const tokens = query.trim().split(/\s+/).filter(Boolean);
+  if (!tokens.length) return escaped;
 
-    if (tripResults.length) {
-      const sec = document.createElement('div');
-      sec.className = 'ns-full-sec';
-      sec.textContent = `${t('nav.search.sectionTrips','Trips')} (${tripResults.length})`;
-      body.appendChild(sec);
-      tripResults.forEach(t => {
-        const card = document.createElement('div');
-        card.className = 'ns-full-card';
-        const top = document.createElement('div'); top.className = 'ns-full-card-top';
-        const dest = document.createElement('span'); dest.className = 'ns-full-card-dest'; dest.textContent = t.OverallDestination || '—';
-        const date = document.createElement('span'); date.className = 'ns-full-card-date'; date.textContent = formatSearchDateRange(t.DepartureDate, t.ReturnDate);
-        top.appendChild(makeBadge(t)); top.appendChild(dest); top.appendChild(date);
-        card.appendChild(top);
-        if (t.TripDescription) {
-          const snip = document.createElement('div'); snip.className = 'ns-full-card-snippet'; snip.textContent = t.TripDescription;
-          card.appendChild(snip);
-        }
-        card.addEventListener('click', () => { fullEl.classList.remove('open'); openTripView(t.InnerId); });
-        body.appendChild(card);
-      });
-    }
+  const pattern = tokens.map(tok => tok.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+  try {
+    const re = new RegExp(`(${pattern})`, 'gi');
+    return escaped.replace(re, '<mark class="search-highlight">$1</mark>');
+  } catch (e) {
+    return escaped;
+  }
+}
 
-    if (dayResults.length) {
-      const sec = document.createElement('div');
-      sec.className = 'ns-full-sec';
-      sec.textContent = `${t('nav.search.sectionDays','Days')} (${dayResults.length})`;
-      body.appendChild(sec);
-      dayResults.forEach(({ trip: t, day: d }) => {
-        const card = document.createElement('div');
-        card.className = 'ns-full-card';
-        const top = document.createElement('div'); top.className = 'ns-full-card-top';
-        const dest = document.createElement('span'); dest.className = 'ns-full-card-dest'; dest.textContent = formatSearchDate(d.Date) || '—';
-        const date = document.createElement('span'); date.className = 'ns-full-card-date'; date.textContent = t.OverallDestination || '';
-        top.appendChild(makeBadge(t)); top.appendChild(dest); top.appendChild(date);
-        card.appendChild(top);
-        const snipText = eventsToPlain(d.Events || d.AdditionalNotes || '').replace(/\n/g, ' ');
-        if (snipText) {
-          const snip = document.createElement('div'); snip.className = 'ns-full-card-snippet'; snip.textContent = snipText;
-          card.appendChild(snip);
-        }
-        const accParts = [d.Accommodation, d.AccommodationCountry].filter(Boolean).join(' · ');
-        if (accParts) {
-          const flag = d.AccommodationCountry ? isoToFlag((isoMap[d.AccommodationCountry] || {}).iso) : '';
-          const acc = document.createElement('div'); acc.className = 'ns-full-card-snippet'; acc.style.cssText = 'margin-top:2px;opacity:.75';
-          acc.textContent = (flag ? flag + ' ' : '') + accParts;
-          card.appendChild(acc);
-        }
-        card.addEventListener('click', () => { fullEl.classList.remove('open'); openTripView(t.InnerId, {scrollToDate: d.Date}); });
-        body.appendChild(card);
-      });
-    }
-
-    document.getElementById('ns-full-title').textContent = q.trim() ? `"${q.trim()}"` : t('nav.search.allTrips','All trips');
-    body.scrollTop = 0;
-    fullEl.classList.add('open');
+function extractContextSnippet(text, query, maxLen = 160) {
+  if (!text) return '';
+  const plain = eventsToPlain(text).replace(/\s+/g, ' ').trim();
+  if (!plain) return '';
+  if (!query || !query.trim()) {
+    return plain.length > maxLen ? escapeSearchHTML(plain.slice(0, maxLen)) + '…' : escapeSearchHTML(plain);
   }
 
-  // Explorer's date shortcut uses a suffix so it finds this calendar date in
-  // every recorded year, across both trip boundaries and individual days.
-  const dateSearchBtn = document.getElementById('explore-date-search-btn');
-  const today = new Date();
-  const monthDay = `-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-  dateSearchBtn.textContent = monthDay;
-  dateSearchBtn.title = `Show all trips and days on ${monthDay.slice(1)}`;
-  dateSearchBtn.addEventListener('click', () => {
-    if (!data?.Trips) return;
-    const all = Object.entries(data.Trips).map(([id, trip]) => ({ InnerId: id, ...trip }));
-    const tripResults = all.filter(trip =>
-      (trip.DepartureDate || '').endsWith(monthDay) || (trip.ReturnDate || '').endsWith(monthDay));
-    const dayResults = [];
-    all.forEach(trip => (trip.Days || []).forEach(day => {
-      if ((day.Date || '').endsWith(monthDay)) dayResults.push({ trip, day });
-    }));
-    closeSearch();
-    showFullResults(monthDay, tripResults, dayResults);
+  const tokens = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  let firstIdx = -1;
+  const lowerPlain = plain.toLowerCase();
+  for (const tok of tokens) {
+    const idx = lowerPlain.indexOf(tok);
+    if (idx !== -1 && (firstIdx === -1 || idx < firstIdx)) {
+      firstIdx = idx;
+    }
+  }
+
+  if (firstIdx === -1) {
+    const snippet = plain.length > maxLen ? plain.slice(0, maxLen) + '…' : plain;
+    return highlightMatches(snippet, query);
+  }
+
+  const start = Math.max(0, firstIdx - 35);
+  const end = Math.min(plain.length, firstIdx + 95);
+  let snippet = plain.slice(start, end);
+  if (start > 0) snippet = '…' + snippet;
+  if (end < plain.length) snippet = snippet + '…';
+
+  return highlightMatches(snippet, query);
+}
+
+function getSearchResults(query = '', sortBy = 'newest') {
+  if (!data?.Trips) return { tripResults: [], dayResults: [], totalTrips: 0, totalDays: 0 };
+  const allTrips = filteredTrips();
+  let totalDays = 0;
+  allTrips.forEach(t => { totalDays += (t.Days || []).length; });
+
+  const term = (query || '').trim().toLowerCase();
+  if (term.length < 2) {
+    return { tripResults: [], dayResults: [], totalTrips: allTrips.length, totalDays };
+  }
+  const tokens = term.split(/\s+/).filter(Boolean);
+
+  let tripResults = [];
+  let dayResults = [];
+
+  // 1. Search Trips
+  tripResults = allTrips.filter(t => {
+    const target = [
+      t.OuterId || '',
+      t.OverallDestination || '',
+      t.DepartureDate || '',
+      t.ReturnDate || '',
+      t.TripDomain || '',
+      t.ArrangerGroup || '',
+      t.TripDescription || '',
+      t.Comments || '',
+      t.TripPart || '',
+      Array.isArray(t.TripLabels) ? t.TripLabels.join(' ') : (t.TripLabels || '')
+    ].join(' ').toLowerCase();
+
+    return tokens.every(tok => target.includes(tok));
   });
 
-  function positionDrop() {
-    const r = wrap.getBoundingClientRect();
-    const dropW = Math.min(360, window.innerWidth - 16);
-    drop.style.width = dropW + 'px';
-    if (window.matchMedia('(max-width: 600px)').matches) {
-      drop.style.top = 'auto';
-      drop.style.bottom = (window.innerHeight - r.top + 6) + 'px';
-      drop.style.left = 'auto';
-      // Anchor the right edge to the search control on the bottom bar.
-      const naturalRight = window.innerWidth - r.right;
-      const dropLeftEdge = r.right - dropW;
-      drop.style.right = (dropLeftEdge < 8 ? window.innerWidth - dropW - 8 : Math.max(8, naturalRight)) + 'px';
+  // 2. Search Days
+  allTrips.forEach(t => {
+    (t.Days || []).forEach(d => {
+      const target = [
+        d.Date || '',
+        d.Events || '',
+        d.Accommodation || '',
+        d.AccommodationCountry || '',
+        d.AdditionalNotes || '',
+        d.TripPart || '',
+        t.OverallDestination || '',
+        t.OuterId || '',
+        t.TripDomain || ''
+      ].join(' ').toLowerCase();
+
+      if (tokens.every(tok => target.includes(tok))) {
+        dayResults.push({ trip: t, day: d });
+      }
+    });
+  });
+
+  sortSearchResults(tripResults, dayResults, sortBy);
+
+  return { tripResults, dayResults, totalTrips: allTrips.length, totalDays };
+}
+
+function updateSearchFilterInfo() {
+  const infoEl = document.getElementById('search-filter-info');
+  if (!infoEl) return;
+
+  const hasDomain = Array.isArray(activeFilter.domain) && activeFilter.domain.length > 0;
+  const hasArranger = Array.isArray(activeFilter.arranger) && activeFilter.arranger.length > 0;
+  const hasLabel = Array.isArray(activeFilter.label) && activeFilter.label.length > 0;
+  const hasGlobal = hasDomain || hasArranger || hasLabel;
+
+  if (!hasGlobal) {
+    infoEl.style.display = 'none';
+    infoEl.innerHTML = '';
+    return;
+  }
+
+  infoEl.style.display = 'flex';
+  infoEl.innerHTML = '';
+
+  const contentDiv = document.createElement('div');
+  contentDiv.className = 'search-filter-info-content';
+
+  const textDiv = document.createElement('div');
+  textDiv.className = 'search-filter-info-text';
+  textDiv.textContent = t('searchPage.filtersActive', 'Filters active');
+
+  contentDiv.appendChild(textDiv);
+  infoEl.appendChild(contentDiv);
+
+  const clearBtn = document.createElement('button');
+  clearBtn.type = 'button';
+  clearBtn.className = 'search-filter-info-clear';
+  clearBtn.textContent = `✕ ${t('searchPage.clearFilters', 'Clear filters')}`;
+  clearBtn.addEventListener('click', clearSearchFilters);
+  infoEl.appendChild(clearBtn);
+}
+
+function clearSearchFilters() {
+  const hadGlobal = (activeFilter.domain && activeFilter.domain.length) ||
+                    (activeFilter.arranger && activeFilter.arranger.length) ||
+                    (activeFilter.label && activeFilter.label.length);
+  if (hadGlobal) {
+    clearFilter();
+  }
+}
+
+function makeSearchBadge(t, colors) {
+  const el = document.createElement('span');
+  el.className = 'search-badge';
+  el.textContent = t.OuterId || t.InnerId;
+  const c = t.TripDomain && colors[t.TripDomain];
+  if (c) {
+    el.style.background = c + '28';
+    el.style.color = c;
+    el.style.borderColor = c + '55';
+  }
+  return el;
+}
+
+function renderSearch(queryOverride) {
+  if (!data) return;
+  const inp = document.getElementById('search-page-input');
+  if (!inp) return;
+  if (queryOverride !== undefined) {
+    inp.value = queryOverride;
+  }
+  const q = inp.value.trim();
+  const clearBtn = document.getElementById('search-page-clear');
+  if (clearBtn) clearBtn.style.display = q ? 'block' : 'none';
+
+  updateSearchFilterInfo();
+
+  // Update today preset button
+  const todayPreset = document.getElementById('search-today-preset');
+  if (todayPreset) {
+    const today = new Date();
+    const monthDay = `-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    todayPreset.textContent = `📅 ${monthDay.slice(1)}`;
+    todayPreset.dataset.date = monthDay;
+  }
+
+  const { tripResults, dayResults, totalTrips, totalDays } = getSearchResults(q, searchState.sort);
+
+  // Update pill counts
+  const countAll = document.getElementById('search-count-all');
+  const countTrips = document.getElementById('search-count-trips');
+  const countDays = document.getElementById('search-count-days');
+
+  // Update summary label
+  const summaryEl = document.getElementById('search-stats-summary');
+
+  const container = document.getElementById('search-results-list');
+  if (!container) return;
+  container.innerHTML = '';
+
+  // Require at least 2 characters before showing results
+  if (q.length < 2) {
+    const emptyCount = q.length === 0 ? '' : '0';
+    if (countAll) countAll.textContent = emptyCount;
+    if (countTrips) countTrips.textContent = emptyCount;
+    if (countDays) countDays.textContent = emptyCount;
+    if (summaryEl) {
+      summaryEl.textContent = t('searchPage.emptyQueryStats', '{trips} trips · {days} days recorded')
+        .replace('{trips}', totalTrips)
+        .replace('{days}', totalDays);
+    }
+
+    const emptyDiv = document.createElement('div');
+    emptyDiv.className = 'search-empty-state';
+    if (q.length === 0) {
+      emptyDiv.innerHTML = `
+        <div class="search-empty-icon">🔍</div>
+        <div class="search-empty-title">${t('searchPage.emptyTitle', 'Search Trips & Days')}</div>
+        <div class="search-empty-sub">${t('searchPage.emptySub', 'Search across destinations, dates, accommodations, events, and notes.')}</div>
+      `;
     } else {
-      // On the desktop left rail, keep the results directly above the
-      // horizontal search bar.
-      drop.style.bottom = 'auto';
-      drop.style.top = 'auto';
-      drop.style.bottom = (window.innerHeight - r.top + 6) + 'px';
-      drop.style.left = r.left + 'px';
-      drop.style.right = 'auto';
-      return;
+      emptyDiv.innerHTML = `
+        <div class="search-empty-icon">✏️</div>
+        <div class="search-empty-title">${t('searchPage.minCharsTitle', 'Enter at least 2 characters')}</div>
+        <div class="search-empty-sub">${t('searchPage.minCharsSub', 'Please enter at least 2 characters to search.')}</div>
+      `;
     }
+    container.appendChild(emptyDiv);
+    return;
   }
 
-  function openSearch() {
-    wrap.classList.add('open');
-    setTimeout(() => { inp.focus(); positionDrop(); renderSearchResults(''); }, 30);
+  const totalMatches = tripResults.length + dayResults.length;
+  if (countAll) countAll.textContent = totalMatches;
+  if (countTrips) countTrips.textContent = tripResults.length;
+  if (countDays) countDays.textContent = dayResults.length;
+
+  if (summaryEl) {
+    summaryEl.textContent = t('searchPage.statsSummary', '{trips} trips · {days} days found')
+      .replace('{trips}', tripResults.length)
+      .replace('{days}', dayResults.length);
   }
 
-  function closeSearch() {
-    wrap.classList.remove('open');
-    inp.value = '';
-    drop.style.display = 'none';
-    drop.innerHTML = '';
-    activeIdx = -1;
+  const colors = domainColorMap();
+  const isoMap = buildISOMap();
+
+  const showTrips = searchState.filter === 'all' || searchState.filter === 'trips';
+  const showDays = searchState.filter === 'all' || searchState.filter === 'days';
+  const visibleTrips = showTrips ? tripResults.length : 0;
+  const visibleDays = showDays ? dayResults.length : 0;
+
+  // If query yielded zero results:
+  if (visibleTrips === 0 && visibleDays === 0) {
+    const emptyDiv = document.createElement('div');
+    emptyDiv.className = 'search-empty-state';
+    emptyDiv.innerHTML = `
+      <div class="search-empty-icon">🔎</div>
+      <div class="search-empty-title">${t('searchPage.noResults', 'No results found')}</div>
+      <div class="search-empty-sub">${t('searchPage.noResultsSub', 'Try searching for different keywords or check spelling.')}</div>
+    `;
+    const clearQuickBtn = document.createElement('button');
+    clearQuickBtn.className = 'search-preset-btn';
+    clearQuickBtn.style.marginTop = '12px';
+    clearQuickBtn.textContent = `✕ ${t('searchPage.clearSearch', 'Clear search')}`;
+    clearQuickBtn.onclick = () => {
+      inp.value = '';
+      inp.focus();
+      setHash('#search');
+      renderSearch('');
+    };
+    emptyDiv.appendChild(clearQuickBtn);
+    container.appendChild(emptyDiv);
+    return;
   }
 
-  function highlightResult(items) {
-    items.forEach((el, i) => el.classList.toggle('ns-active', i === activeIdx));
-    if (items[activeIdx]) items[activeIdx].scrollIntoView({ block: 'nearest' });
+  // Render Trips Section
+  if (showTrips && tripResults.length > 0) {
+    const sec = document.createElement('div');
+    sec.className = 'search-sec';
+    sec.innerHTML = `<span>${t('searchPage.trips', 'Trips')}</span> <span class="search-sec-count">(${tripResults.length})</span>`;
+    container.appendChild(sec);
+
+    tripResults.forEach(tItem => {
+      const card = document.createElement('div');
+      card.className = 'search-card';
+
+      const top = document.createElement('div');
+      top.className = 'search-card-top';
+
+      const badge = makeSearchBadge(tItem, colors);
+      const title = document.createElement('span');
+      title.className = 'search-card-title';
+      title.innerHTML = highlightMatches(tItem.OverallDestination || '—', q);
+
+      const date = document.createElement('span');
+      date.className = 'search-card-date';
+      date.textContent = formatSearchDateRange(tItem.DepartureDate, tItem.ReturnDate);
+
+      top.appendChild(badge);
+      top.appendChild(title);
+      top.appendChild(date);
+      card.appendChild(top);
+
+      if (tItem.TripDescription) {
+        const snip = document.createElement('div');
+        snip.className = 'search-card-snippet';
+        snip.innerHTML = extractContextSnippet(tItem.TripDescription, q, 180);
+        card.appendChild(snip);
+      }
+
+      const meta = document.createElement('div');
+      meta.className = 'search-card-meta';
+      if (tItem.TripDomain) {
+        const domSpan = document.createElement('span');
+        domSpan.style.opacity = '.85';
+        domSpan.textContent = tItem.TripDomain;
+        meta.appendChild(domSpan);
+      }
+      if (tItem.ArrangerGroup) {
+        if (tItem.TripDomain) {
+          const sep = document.createElement('span');
+          sep.className = 'search-card-meta-sep';
+          sep.textContent = '·';
+          meta.appendChild(sep);
+        }
+        const arrSpan = document.createElement('span');
+        arrSpan.style.opacity = '.85';
+        arrSpan.textContent = tItem.ArrangerGroup;
+        meta.appendChild(arrSpan);
+      }
+      if (tItem.Days && tItem.Days.length) {
+        const daysSpan = document.createElement('span');
+        daysSpan.style.marginLeft = 'auto';
+        daysSpan.style.fontSize = '11px';
+        daysSpan.textContent = t('searchPage.dayCount', '{count} days').replace('{count}', tItem.Days.length);
+        meta.appendChild(daysSpan);
+      }
+      if (meta.childNodes.length > 0) {
+        card.appendChild(meta);
+      }
+
+      card.addEventListener('click', () => openTripView(tItem.InnerId));
+      container.appendChild(card);
+    });
   }
 
-  function renderSearchResults(q) {
-    drop.innerHTML = '';
-    if (!data) { drop.style.display = 'none'; return; }
-    const term = q.trim().toLowerCase();
-    // InnerId is the key — must use entries to preserve it
-    const all = data.Trips ? Object.entries(data.Trips).map(([id, t]) => ({InnerId: id, ...t})) : [];
-    const colors = domainColorMap();
+  // Render Days Section
+  if (showDays && dayResults.length > 0) {
+    const sec = document.createElement('div');
+    sec.className = 'search-sec';
+    sec.innerHTML = `<span>${t('searchPage.days', 'Days')}</span> <span class="search-sec-count">(${dayResults.length})</span>`;
+    container.appendChild(sec);
 
-    // ── Trip matches ─────────────────────────────────────────────────
-    const tripResults = term
-      ? all.filter(t =>
-          (t.OuterId||'').toLowerCase().includes(term) ||
-          (t.OverallDestination||'').toLowerCase().includes(term) ||
-          (t.DepartureDate||'').includes(term) ||
-          (t.ReturnDate||'').includes(term) ||
-          (t.TripDomain||'').toLowerCase().includes(term) ||
-          (t.ArrangerGroup||'').toLowerCase().includes(term)
-        )
-      : all;
+    dayResults.forEach(({ trip: tItem, day: dItem }) => {
+      const card = document.createElement('div');
+      card.className = 'search-card';
 
-    // ── Day matches (only when a search term is active) ──────────────
-    const dayResults = [];
-    if (term) {
-      all.forEach(t => {
-        (t.Days||[]).forEach(d => {
-          if (
-            (d.Date||'').includes(term) ||
-            (d.Events||'').toLowerCase().includes(term) ||
-            (d.Accommodation||'').toLowerCase().includes(term) ||
-            (d.AccommodationCountry||'').toLowerCase().includes(term) ||
-            (d.AdditionalNotes||'').toLowerCase().includes(term)
-          ) {
-            dayResults.push({ trip: t, day: d });
-          }
-        });
-      });
-    }
-    sortSearchResults(tripResults, dayResults);
+      const top = document.createElement('div');
+      top.className = 'search-card-top';
 
-    if (!tripResults.length && !dayResults.length) {
-      drop.innerHTML = `<div id="ns-empty">${t('nav.search.noResults','No results found')}</div>`;
-      drop.style.display = 'block';
-      return;
-    }
+      const badge = makeSearchBadge(tItem, colors);
 
-    if (!term) {
-      const hint = document.createElement('div');
-      hint.id = 'ns-hint';
-      hint.style.borderTop = 'none';
-      hint.textContent = `${all.length} ${t('nav.search.allTrips','All trips').toLowerCase()} — type to search`;
-      drop.appendChild(hint);
-    }
+      const dateEl = document.createElement('span');
+      dateEl.className = 'search-card-title';
+      dateEl.innerHTML = highlightMatches(formatSearchDate(dItem.Date) || '—', q);
 
-    function makeSection(label) {
-      const sec = document.createElement('div');
-      sec.style.cssText = 'font-size:10px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.7px;padding:8px 12px 4px;border-top:1px solid var(--border)';
-      sec.textContent = label;
-      drop.appendChild(sec);
-    }
+      const destEl = document.createElement('span');
+      destEl.className = 'search-card-dest';
+      destEl.innerHTML = highlightMatches(tItem.OverallDestination || '', q);
 
-    function makeIdBadge(t) {
-      const el = document.createElement('span');
-      el.className = 'ns-result-id';
-      el.textContent = t.OuterId || t.InnerId;
-      const c = t.TripDomain && colors[t.TripDomain];
-      if (c) { el.style.background = c+'28'; el.style.color = c; el.style.borderColor = c+'55'; }
-      return el;
-    }
+      top.appendChild(badge);
+      top.appendChild(dateEl);
+      top.appendChild(destEl);
+      card.appendChild(top);
 
-    // Trip rows
-    if (tripResults.length) {
-      if (term) makeSection(`${t('nav.search.sectionTrips','Trips')} · ${tripResults.length}`);
-      tripResults.forEach(t => {
-        const row = document.createElement('div');
-        row.className = 'ns-result';
-        const destEl = document.createElement('span');
-        destEl.className = 'ns-result-dest';
-        destEl.textContent = t.OverallDestination || '—';
-        const dateEl = document.createElement('span');
-        dateEl.className = 'ns-result-date';
-        dateEl.textContent = (t.DepartureDate||'').slice(0,7);
-        row.appendChild(makeIdBadge(t)); row.appendChild(destEl); row.appendChild(dateEl);
-        row.addEventListener('mousedown', e => e.preventDefault());
-        row.addEventListener('click', () => { closeSearch(); openTripView(t.InnerId); });
-        drop.appendChild(row);
-      });
-    }
+      const rawText = dItem.Events || dItem.AdditionalNotes || '';
+      if (rawText) {
+        const snip = document.createElement('div');
+        snip.className = 'search-card-snippet';
+        snip.innerHTML = extractContextSnippet(rawText, q, 200);
+        card.appendChild(snip);
+      }
 
-    // Day rows
-    if (dayResults.length) {
-      makeSection(`${t('nav.search.sectionDays','Days')} · ${dayResults.length}`);
-      dayResults.forEach(({ trip: t, day: d }) => {
-        const row = document.createElement('div');
-        row.className = 'ns-result';
-        const snippet = (d.Events||d.Accommodation||d.AccommodationCountry||d.AdditionalNotes||'—')
-          .replace(/\n/g,' ').slice(0, 60);
-        const descEl = document.createElement('span');
-        descEl.className = 'ns-result-dest';
-        descEl.style.fontSize = '12px';
-        descEl.textContent = snippet;
-        const metaEl = document.createElement('span');
-        metaEl.className = 'ns-result-date';
-        metaEl.textContent = d.Date||'';
-        row.appendChild(makeIdBadge(t)); row.appendChild(descEl); row.appendChild(metaEl);
-        row.addEventListener('mousedown', e => e.preventDefault());
-        row.addEventListener('click', () => { closeSearch(); openTripView(t.InnerId, {scrollToDate: d.Date}); });
-        drop.appendChild(row);
-      });
-    }
+      const accParts = [dItem.Accommodation, dItem.AccommodationCountry].filter(Boolean).join(' · ');
+      if (accParts) {
+        const meta = document.createElement('div');
+        meta.className = 'search-card-meta';
+        const flag = dItem.AccommodationCountry ? isoToFlag((isoMap[dItem.AccommodationCountry] || {}).iso) : '';
+        const accSpan = document.createElement('span');
+        accSpan.innerHTML = (flag ? flag + ' ' : '') + highlightMatches(accParts, q);
+        meta.appendChild(accSpan);
+        card.appendChild(meta);
+      }
 
-    // Keep the full-results command at the end of the result list.
-    if (tripResults.length || dayResults.length) {
-      const showAll = document.createElement('div');
-      showAll.id = 'ns-show-all';
-      showAll.style.borderTop = '1px solid var(--border)';
-      showAll.textContent = t('nav.search.showAll','Show complete results →');
-      showAll.addEventListener('mousedown', e => e.preventDefault());
-      showAll.addEventListener('click', () => { closeSearch(); showFullResults(q, tripResults, dayResults); });
-      drop.appendChild(showAll);
-    }
-
-
-    drop.style.display = 'block';
+      card.addEventListener('click', () => openTripView(tItem.InnerId, { scrollToDate: dItem.Date }));
+      container.appendChild(card);
+    });
   }
+}
 
-  icon.addEventListener('click', () => {
-    if (wrap.classList.contains('open')) closeSearch();
-    else openSearch();
-  });
+function initSearchPage() {
+  const inp = document.getElementById('search-page-input');
+  const clearBtn = document.getElementById('search-page-clear');
+  const sortBtn = document.getElementById('search-sort-btn');
+  const pills = document.getElementById('search-filter-pills');
+  const todayPreset = document.getElementById('search-today-preset');
 
+  if (!inp || inp.dataset.wired) return;
+  inp.dataset.wired = '1';
+
+  let debounceTimer = null;
   inp.addEventListener('input', () => {
-    activeIdx = -1;
-    renderSearchResults(inp.value);
+    const q = inp.value;
+    clearBtn.style.display = q ? 'block' : 'none';
+    renderSearch();
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      const trimmed = q.trim();
+      setHash(trimmed.length >= 2 ? `#search/${encodeURIComponent(trimmed)}` : '#search');
+    }, 250);
   });
 
   inp.addEventListener('keydown', e => {
-    const items = drop.querySelectorAll('.ns-result');
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      activeIdx = Math.min(activeIdx + 1, items.length - 1);
-      highlightResult(items);
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      activeIdx = Math.max(activeIdx - 1, 0);
-      highlightResult(items);
-    } else if (e.key === 'Enter') {
-      if (items[activeIdx]) items[activeIdx].click();
-    } else if (e.key === 'Escape') {
-      closeSearch();
+    if (e.key === 'Escape') {
+      inp.value = '';
+      clearBtn.style.display = 'none';
+      setHash('#search');
+      renderSearch('');
     }
   });
 
-  document.addEventListener('click', e => {
-    if (wrap && !wrap.contains(e.target)) closeSearch();
+  clearBtn.addEventListener('click', () => {
+    inp.value = '';
+    clearBtn.style.display = 'none';
+    inp.focus();
+    setHash('#search');
+    renderSearch('');
   });
 
-  window.addEventListener('resize', () => {
-    if (wrap.classList.contains('open')) positionDrop();
+  const updateSortButton = () => {
+    if (!sortBtn) return;
+    const labelKey = searchState.sort === 'newest' ? 'searchPage.sortNewest' : 'searchPage.sortOldest';
+    const label = t(labelKey, searchState.sort === 'newest' ? 'Newest first' : 'Oldest first');
+    sortBtn.title = label;
+    sortBtn.setAttribute('aria-label', label);
+  };
+
+  if (sortBtn) {
+    updateSortButton();
+    sortBtn.addEventListener('click', () => {
+      searchState.sort = searchState.sort === 'newest' ? 'oldest' : 'newest';
+      updateSortButton();
+      renderSearch();
+    });
+  }
+
+  if (pills) {
+    pills.querySelectorAll('.search-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        pills.querySelectorAll('.search-pill').forEach(b => b.classList.toggle('active', b === btn));
+        searchState.filter = btn.dataset.filter || 'all';
+        renderSearch();
+      });
+    });
+  }
+
+  if (todayPreset) {
+    todayPreset.addEventListener('click', () => {
+      const dateVal = todayPreset.dataset.date || '';
+      inp.value = dateVal;
+      clearBtn.style.display = 'block';
+      setHash(`#search/${encodeURIComponent(dateVal)}`);
+      renderSearch(dateVal);
+      inp.focus();
+    });
+  }
+
+  // Explore date shortcut button
+  const dateSearchBtn = document.getElementById('explore-date-search-btn');
+  if (dateSearchBtn && !dateSearchBtn.dataset.wired) {
+    dateSearchBtn.dataset.wired = '1';
+    const today = new Date();
+    const monthDay = `-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    dateSearchBtn.textContent = monthDay;
+    dateSearchBtn.title = `Show all trips and days on ${monthDay.slice(1)}`;
+    dateSearchBtn.addEventListener('click', () => {
+      switchTab('search');
+      inp.value = monthDay;
+      clearBtn.style.display = 'block';
+      setHash(`#search/${encodeURIComponent(monthDay)}`);
+      renderSearch(monthDay);
+    });
+  }
+
+  // Global shortcut '/' to focus search
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName) && !e.ctrlKey && !e.metaKey) {
+      e.preventDefault();
+      switchTab('search');
+      inp.focus();
+      inp.select();
+    }
   });
 }
 
@@ -2076,13 +2346,20 @@ function onFilterChange() {
   else if (currentTab==='map') { if(mapInstance&&mapInstance.getSource('pins')){renderMapControls();updateMapPins();}else initMap(); }
   else if (currentTab==='stats') { const a=document.querySelector('#stats-subnav .sub-btn.active'); renderStats(a?.dataset.mode||'summary'); }
   else if (currentTab==='about') renderAbout();
+  // The filter bar is shared across pages; keep Search in sync even if the
+  // tab state is changed by navigation timing while a filter is being picked.
+  if (currentTab==='search' || document.getElementById('tab-search')?.classList.contains('active')) renderSearch();
 }
 
 function clearFilter() {
   activeFilter = { domain:[], arranger:[], label:[] };
-  document.getElementById('f-domain').value = '';
-  document.getElementById('f-arranger').value = '';
-  document.getElementById('f-label').value = '';
+  const btnDom = document.getElementById('f-domain');
+  const btnArr = document.getElementById('f-arranger');
+  const btnLbl = document.getElementById('f-label');
+  if (btnDom) btnDom.textContent = t('filterBar.allDomains', 'All domains');
+  if (btnArr) btnArr.textContent = t('filterBar.allGroups', 'All groups');
+  if (btnLbl) btnLbl.textContent = t('filterBar.allLabels', 'All labels');
+  document.querySelectorAll('#fd-domain input, #fd-arranger input, #fd-label input').forEach(cb => { cb.checked = false; });
   onFilterChange();
 }
 
@@ -2129,6 +2406,17 @@ function switchTab(tab, {updateHash=true}={}) {
   if (tab==='external-documents') { if(updateHash) setHash('#ed'); renderExternalDocuments(); }
   if (tab==='complementary-lists') { if(updateHash) setHash('#cl'); renderComplementaryLists(); }
   if (tab==='console') { if(updateHash) setHash('#console'); renderConsole(); }
+  if (tab==='search') {
+    if (updateHash) {
+      const q = document.getElementById('search-page-input')?.value.trim() || '';
+      setHash(q.length >= 2 ? `#search/${encodeURIComponent(q)}` : '#search');
+    }
+    renderSearch();
+    setTimeout(() => {
+      const inp = document.getElementById('search-page-input');
+      if (inp && document.activeElement !== inp) inp.focus();
+    }, 40);
+  }
 }
 
 function stopVideoPlayback() {
@@ -2591,12 +2879,35 @@ async function runConsoleQuery() {
   }
 }
 
+async function copyConsoleOutput() {
+  const output = document.getElementById('console-output');
+  const copyBtn = document.getElementById('console-copy');
+  if (!output || !copyBtn || !output.textContent) return;
+  try {
+    await navigator.clipboard.writeText(output.textContent);
+  } catch {
+    const helper = document.createElement('textarea');
+    helper.value = output.textContent;
+    helper.style.position = 'fixed';
+    helper.style.opacity = '0';
+    document.body.appendChild(helper);
+    helper.select();
+    document.execCommand('copy');
+    helper.remove();
+  }
+  const original = copyBtn.textContent;
+  copyBtn.textContent = 'Copied';
+  setTimeout(() => { copyBtn.textContent = original; }, 1200);
+}
+
 function renderConsole() {
   const query=document.getElementById('console-query');
   const run=document.getElementById('console-run');
   const parisPreset=document.getElementById('console-paris-preset');
+  const copyBtn=document.getElementById('console-copy');
   if(!query||!run||run.dataset.wired)return;
   run.dataset.wired='1';run.addEventListener('click',runConsoleQuery);
+  copyBtn?.addEventListener('click',copyConsoleOutput);
   parisPreset?.addEventListener('click',()=>{
     query.value='[.Trips[].Days[].Events | select(type == "string" and contains("Paris"))] | length';
     runConsoleQuery();
@@ -2613,13 +2924,23 @@ function resolveHash(hash) {
   const [seg1, seg2, seg3] = raw.split('/');
   // #editor opens the Editor tab; #overview (and legacy #ovbrowse) opens the Overview/Browse tab
   const tabAlias = { editor:'overview' };
-  const tabs = ['explore','ovbrowse','map','stats','trip','console','settings','video','external-documents','ed','complementary-lists','cl','report','about'];
+  const tabs = ['explore','ovbrowse','map','stats','trip','search','console','settings','video','external-documents','ed','complementary-lists','cl','report','about'];
   if (seg1 === 'video') {
     const videoId=seg2 ? decodeURIComponent(seg2) : '';
     const timeMatch=seg3&&/^(\d{1,3}):(\d{2}):(\d{2})$/.exec(decodeURIComponent(seg3));
     const startTime=timeMatch&&+timeMatch[2]<60&&+timeMatch[3]<60
       ? (+timeMatch[1]*3600)+(+timeMatch[2]*60)+(+timeMatch[3]) : null;
     openVideo(videoId, {updateHash:false,startTime});
+  } else if (seg1 === 'search') {
+    const query = seg2 ? decodeURIComponent(seg2) : '';
+    switchTab('search', {updateHash: false});
+    const inp = document.getElementById('search-page-input');
+    if (inp) {
+      inp.value = query;
+      const clearBtn = document.getElementById('search-page-clear');
+      if (clearBtn) clearBtn.style.display = query ? 'block' : 'none';
+    }
+    renderSearch(query);
   } else if (seg1 === 'ed') {
     switchTab('external-documents', {updateHash:false});
   } else if (seg1 === 'cl') {

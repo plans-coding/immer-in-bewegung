@@ -18,7 +18,8 @@
       "settings": "Settings",
       "report": "Report",
       "about": "About",
-      "console": "Console"
+      "console": "Console",
+      "search": "Search"
     },
     "search": {
       "placeholder": "Search trips…",
@@ -36,6 +37,7 @@
     "menu": {
       "title": "Open navigation menu",
       "explore": "Explore",
+      "search": "Search",
       "edit": "Edit",
       "settings": "Settings",
       "report": "Report",
@@ -417,6 +419,30 @@
     "popupBlocked": "Pop-up blocked — allow pop-ups and try again",
     "dateExists": "A day with that date already exists",
     "permissionDenied": "Permission denied."
+  },
+  "searchPage": {
+    "title": "Search",
+    "placeholder": "Search trips, destinations, days, events, accommodations…",
+    "all": "All",
+    "trips": "Trips",
+    "days": "Days",
+    "noResults": "No results found",
+    "noResultsSub": "Try searching for different keywords or check spelling.",
+    "emptyTitle": "Search Trips & Days",
+    "emptySub": "Search across destinations, dates, accommodations, events, and notes.",
+    "todayInHistory": "Today in past years: {date}",
+    "sortNewest": "Newest first",
+    "sortOldest": "Oldest first",
+    "dayCount": "{count} days",
+    "clearSearch": "Clear search",
+    "statsSummary": "{trips} trips · {days} days found",
+    "emptyQueryStats": "{trips} trips · {days} days recorded",
+    "minCharsTitle": "Enter at least 2 characters",
+    "minCharsSub": "Please enter at least 2 characters to search.",
+    "filtersApplied": "Filters applied:",
+    "filterType": "Type",
+    "filteredOfTotal": "({filtered} of {total} trips)",
+    "clearFilters": "Clear filters"
   },
   "confirms": {
     "closeFile": "Close the current file and return to the start screen?"

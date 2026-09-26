@@ -18,7 +18,8 @@
       "settings": "Inställningar",
       "report": "Rapport",
       "about": "Om",
-      "console": "Konsol"
+      "console": "Konsol",
+      "search": "Sök"
     },
     "search": {
       "placeholder": "Sök resor…",
@@ -37,6 +38,7 @@
     "menu": {
       "title": "Öppna navigeringsmenyn",
       "explore": "Upptäck",
+      "search": "Sök",
       "edit": "Redigera",
       "settings": "Inställningar",
       "report": "Rapport",
@@ -418,6 +420,30 @@
     "popupBlocked": "Popup blockerad — tillåt popups och försök igen",
     "dateExists": "En dag med det datumet finns redan",
     "permissionDenied": "Åtkomst nekad."
+  },
+  "searchPage": {
+    "title": "Sök",
+    "placeholder": "Sök resor, resmål, dagar, händelser, boenden…",
+    "all": "Alla",
+    "trips": "Resor",
+    "days": "Dagar",
+    "noResults": "Inga resultat hittades",
+    "noResultsSub": "Prova att söka efter andra sökord eller kontrollera stavningen.",
+    "emptyTitle": "Sök resor & dagar",
+    "emptySub": "Sök bland resmål, datum, boenden, händelser och anteckningar.",
+    "todayInHistory": "I dag under tidigare år: {date}",
+    "sortNewest": "Nyast först",
+    "sortOldest": "Äldst först",
+    "dayCount": "{count} dagar",
+    "clearSearch": "Rensa sökning",
+    "statsSummary": "{trips} resor · {days} dagar hittades",
+    "emptyQueryStats": "{trips} resor · {days} dagar sparade",
+    "minCharsTitle": "Skriv minst 2 tecken",
+    "minCharsSub": "Skriv minst 2 tecken för att söka.",
+    "filtersApplied": "Filter aktiva:",
+    "filterType": "Typ",
+    "filteredOfTotal": "({filtered} av {total} resor)",
+    "clearFilters": "Rensa filter"
   },
   "confirms": {
     "closeFile": "Stäng den aktuella filen och återgå till startskärmen?"

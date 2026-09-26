@@ -18,7 +18,8 @@
       "settings": "Indstillinger",
       "report": "Rapport",
       "about": "Om",
-      "console": "Konsol"
+      "console": "Konsol",
+      "search": "Søg"
     },
     "search": {
       "placeholder": "Søg rejser…",
@@ -36,6 +37,7 @@
     "menu": {
       "title": "Åbn navigationsmenu",
       "explore": "Udforsk",
+      "search": "Søg",
       "edit": "Rediger",
       "settings": "Indstillinger",
       "report": "Rapport",
@@ -417,6 +419,30 @@
     "popupBlocked": "Pop-up blokeret — tillad pop-ups og prøv igen",
     "dateExists": "En dag med den dato findes allerede",
     "permissionDenied": "Adgang nægtet."
+  },
+  "searchPage": {
+    "title": "Søg",
+    "placeholder": "Søg i rejser, destinationer, dage, begivenheder, overnatninger…",
+    "all": "Alle",
+    "trips": "Rejser",
+    "days": "Dage",
+    "noResults": "Ingen resultater fundet",
+    "noResultsSub": "Prøv at søge efter andre søgeord eller tjek stavningen.",
+    "emptyTitle": "Søg i rejser & dage",
+    "emptySub": "Søg på tværs af destinationer, datoer, overnatningssteder, begivenheder og noter.",
+    "todayInHistory": "I dag i tidligere år: {date}",
+    "sortNewest": "Nyeste først",
+    "sortOldest": "Ældste først",
+    "dayCount": "{count} dage",
+    "clearSearch": "Ryd søgning",
+    "statsSummary": "{trips} rejser · {days} dage fundet",
+    "emptyQueryStats": "{trips} rejser · {days} dage registreret",
+    "minCharsTitle": "Indtast mindst 2 tegn",
+    "minCharsSub": "Indtast mindst 2 tegn for at søge.",
+    "filtersApplied": "Filtre aktive:",
+    "filterType": "Type",
+    "filteredOfTotal": "({filtered} af {total} rejser)",
+    "clearFilters": "Ryd filtre"
   },
   "confirms": {
     "closeFile": "Luk den aktuelle fil og vend tilbage til startskærmen?"
