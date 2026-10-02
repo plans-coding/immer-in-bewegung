@@ -43,7 +43,11 @@
       "settings": "Inställningar",
       "report": "Rapport",
       "about": "Om",
-      "console": "Konsol"
+      "console": "Konsol",
+      "syncNow": "Synkronisera nu",
+      "syncPending": "Synkronisera nu — {count} väntande",
+      "syncConflict": "Granska synkroniseringskonflikt",
+      "serverBackup": "Säkerhetskopia på servern"
     }
   },
   "loadScreen": {
@@ -419,7 +423,19 @@
     "swRemoveFailed": "Kunde inte ta bort service worker",
     "popupBlocked": "Popup blockerad — tillåt popups och försök igen",
     "dateExists": "En dag med det datumet finns redan",
-    "permissionDenied": "Åtkomst nekad."
+    "permissionDenied": "Åtkomst nekad.",
+    "languageMissing": "Språkfilen hittades inte: {file}",
+    "openFailed": "Kunde inte öppna: {error}",
+    "urlFailed": "Kunde inte läsa in från URL: {error}",
+    "settingsConflict": "Inställningarna ändrades på servern medan du redigerade. Öppna Inställningar igen för att granska.",
+    "savedLocally": "Sparat på den här enheten; synkroniserar med servern.",
+    "downloaded": "Nedladdat som {file}",
+    "destinationRequired": "Övergripande destination måste anges innan du sparar.",
+    "deletedOnServer": "Resan har tagits bort på servern. Avbryt och öppna redigeraren igen.",
+    "duplicateTripId": "Detta rese-ID finns redan. Avbryt och skapa en ny resa.",
+    "tripConflict": "Resan ändrades på servern medan du redigerade. Avbryt och öppna den igen för att granska.",
+    "notSaved": "Inte sparat: {error}",
+    "albumMissing": "Albumet ”{album}” hittades inte i Immich"
   },
   "searchPage": {
     "title": "Sök",
@@ -447,5 +463,68 @@
   },
   "confirms": {
     "closeFile": "Stäng den aktuella filen och återgå till startskärmen?"
+  },
+  "serverBackup": {
+    "creating": "Skapar en säkerhetskopia på servern…",
+    "note": "Detta kopierar den aktuella filen på servern. Ändringar som väntar på synkronisering ingår inte.",
+    "httpError": "Servern svarade med HTTP {status}",
+    "invalidResponse": "Servern returnerade inget filnamn för säkerhetskopian.",
+    "success": "Säkerhetskopian skapades på servern.",
+    "failed": "Kunde inte bekräfta säkerhetskopian på servern.",
+    "timeout": "Tidsgränsen för begäran överskreds. Servern kan ändå ha skapat säkerhetskopian."
+  },
+  "sync": {
+    "close": "Stäng",
+    "retry": "Försök igen",
+    "title": "Synkroniseringsstatus",
+    "running": "Kontrollerar servern och skickar dina ändringar…",
+    "complete": "Synkroniseringen är klar.",
+    "conflict": "Servern har överlappande ändringar. Granskning behövs.",
+    "failed": "Synkroniseringen misslyckades. Dina ändringar är fortfarande sparade på den här enheten.",
+    "waiting": "Ändringar väntar på synkronisering.",
+    "checking": "Kontrollerar synkroniseringsstatus…",
+    "pending": "{count} ändringar väntar på synkronisering",
+    "offline": "Offline — använder den sparade kopian",
+    "reviewTitle": "Granska motstridiga ändringar",
+    "reviewDescription": "Dessa fält ändrades även på servern. Andra väntande ändringar bevaras. Avbryt lämnar alla ändringar väntande.",
+    "missing": "(borttaget eller saknas)",
+    "original": "Ursprungligt",
+    "yours": "Ditt",
+    "server": "Server",
+    "keepLocal": "Behåll mina ändringar",
+    "useServer": "Använd serverns version vid konflikter",
+    "cancel": "Avbryt",
+    "log": {
+      "checking": "Kontrollerar servern…",
+      "incoming": "Ändringar hittades på servern",
+      "sending": "Skickar ändringar till servern…",
+      "confirmed": "Servern har bekräftat ändringarna.",
+      "complete": "Synkroniseringen är klar.",
+      "unchanged": "Inga ändringar behövs. Allt är redan uppdaterat.",
+      "conflicts": "Motstridiga ändringar behöver granskas.",
+      "keepLocal": "Behåller dina ändringar vid konflikter.",
+      "keepServer": "Behåller serverns ändringar vid konflikter.",
+      "retrying": "Servern ändrades under synkroniseringen. Kontrollerar igen…",
+      "failed": "Synkroniseringen kunde inte slutföras.",
+      "added": "Tillagt",
+      "updated": "Uppdaterat",
+      "removed": "Borttaget",
+      "before": "Före",
+      "after": "Efter"
+    }
+  },
+  "errors": {
+    "missingData": "Settings eller Trips saknas",
+    "httpUrl": "Använd en HTTP- eller HTTPS-URL.",
+    "webLocks": "Serverredigering kräver en webbläsare med stöd för Web Locks över HTTPS.",
+    "invalidDocument": "URL:en returnerade inget resedokument. Kontrollera att du är inloggad.",
+    "otherTab": "En annan flik ändrade samma fält. Läs in sidan igen och granska innan du sparar.",
+    "patchUnavailable": "Servern anger inte längre stöd för JSON Patch. Väntande ändringar sparas på den här enheten.",
+    "network": "Kunde inte nå servern. Kontrollera anslutningen och att du är inloggad.",
+    "permission": "Åtkomst nekad. Kontrollera behörigheten till filen eller mappen.",
+    "invalidJson": "Filen innehåller inte giltig JSON.",
+    "invalidUrl": "URL:en är ogiltig.",
+    "http": "Servern svarade med HTTP {status}",
+    "syncUnconfirmed": "Synkroniseringen kunde inte bekräftas (HTTP {status}). Kontrollera inloggningen eller servern."
   }
 }

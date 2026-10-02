@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Immer in Bewegung</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="favicon.svg">
@@ -28,7 +28,6 @@
   --navy:#ffffff; --navy-d:#f9f9f9;
   --blue:#1d655e; --blue-h:#155049; --blue-l:rgba(29,101,94,0.08);
   --white:#212529; --green:#2ecc71;
-  --console-bg:#f7faf9; --console-surface:#ffffff; --console-border:#b9d0c8; --console-text:#213a34; --console-accent:#1d655e;
   color-scheme:light;
 }
 [data-theme="dark"] {
@@ -43,7 +42,6 @@
   --navy:#21262d; --navy-d:#161b22;
   --blue:#1d655e; --blue-h:#155049; --blue-l:rgba(29,101,94,0.10);
   --white:#e6edf3; --green:#3fb950;
-  --console-bg:#0b1412; --console-surface:#07100e; --console-border:#31584d; --console-text:#d8eee8; --console-accent:#65d7b6;
   color-scheme:dark;
 }
 [data-theme="dark"] ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08)}
@@ -104,6 +102,32 @@ body{font-family:'Scoutie Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans
 .mobile-menu-item{display:none}
 #mod-dot{width:6px;height:6px;border-radius:50%;background:#f0a142;display:none;flex-shrink:0}
 #mod-dot.on{display:block}
+#sync-badge{position:absolute;right:9px;top:1px;border:0;border-radius:9px;background:#b96c00;color:white;font-size:10px;min-width:18px;padding:1px 4px;cursor:pointer;z-index:2}
+#sync-badge[hidden]{display:none}
+#sync-now[hidden],#server-backup[hidden]{display:none}
+#server-backup:disabled{opacity:.5;cursor:wait}
+#sync-badge[data-state="error"],#sync-badge[data-state="conflict"]{background:#b93232}
+#sync-review{max-width:640px;width:calc(100% - 40px);max-height:80vh;overflow:auto;border:1px solid var(--border);border-radius:12px;background:var(--bg);color:var(--text);padding:20px}
+#sync-review::backdrop{background:#0009}
+#sync-review pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;max-height:240px;overflow:auto}
+#sync-progress,#server-backup-dialog{position:fixed;top:50%;left:50%;right:auto;bottom:auto;transform:translate(-50%,-50%);margin:0;box-sizing:border-box;max-width:440px;width:calc(100% - 40px);max-height:calc(100vh - 40px);overflow-y:auto;border:1px solid var(--border);border-radius:12px;background:var(--bg);color:var(--text);padding:22px;box-shadow:var(--shadow-h)}
+#sync-progress::backdrop,#server-backup-dialog::backdrop{background:#0009}
+#sync-progress h3,#server-backup-dialog h3{margin:0 0 12px;font-size:17px}
+#sync-progress-text,#server-backup-text{margin:0 0 10px;line-height:1.5}
+#sync-progress-detail,#server-backup-detail{margin:0 0 18px;color:var(--muted2);font-size:12px;line-height:1.45;overflow-wrap:anywhere}
+#sync-progress-items{margin:-8px 0 18px;padding-left:20px;max-height:180px;overflow:auto;font-size:13px;line-height:1.5}
+#sync-progress-items:empty{display:none}
+#sync-progress-items{list-style:none;padding:0;margin:0 0 18px;max-height:320px;border:1px solid var(--border);border-radius:6px;background:var(--s1)}
+#sync-progress-items>li{padding:9px 12px;border-bottom:1px solid var(--border)}
+#sync-progress-items>li:last-child{border-bottom:0}
+.sync-log-time{color:var(--muted2);font-size:11px;margin-right:8px}
+#sync-progress-items details{margin-top:6px}
+#sync-progress-items summary{cursor:pointer;overflow-wrap:anywhere}
+#sync-progress-items pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:180px;overflow:auto;font-size:11px;padding:8px;background:var(--s3);margin-top:6px;border-radius:4px}
+.sync-progress-actions{display:flex;justify-content:flex-end;gap:8px}
+.sync-spinner{display:inline-block;width:14px;height:14px;margin-right:8px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;vertical-align:-2px;animation:sync-spin .8s linear infinite}
+.sync-spinner[hidden]{display:none}
+@keyframes sync-spin{to{transform:rotate(360deg)}}
 #nav-tabs{display:flex;flex:1;overflow-x:auto;height:100%;scrollbar-width:none}
 #nav-tabs::-webkit-scrollbar{display:none}
 #nav-actions{display:flex;align-items:center;gap:8px;padding:0 12px;border-left:1px solid var(--border);height:100%;flex-shrink:0}
@@ -171,8 +195,9 @@ body{font-family:'Scoutie Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans
 .tab-btn.active{color:var(--accent);background:var(--accent-g);font-weight:600}
 .tab-btn:hover:not(.active){color:var(--text)}
 @media(max-width:600px){
-  #app{padding-bottom:calc(48px + env(safe-area-inset-bottom))}
-  #app-nav{position:fixed;left:0;right:0;bottom:0;top:auto;height:48px;padding-bottom:env(safe-area-inset-bottom);border-top:1px solid var(--border);border-bottom:0}
+  /* Include the home-indicator inset in the border-box height, keeping controls above it. */
+  #app{padding-bottom:calc(48px + env(safe-area-inset-bottom, 0px))}
+  #app-nav{position:fixed;left:0;right:0;bottom:0;top:auto;height:calc(48px + env(safe-area-inset-bottom, 0px));padding-bottom:env(safe-area-inset-bottom, 0px);border-top:1px solid var(--border);border-bottom:0}
   #nav-menu{top:auto;bottom:calc(100% + 4px)}
   #nav-actions{position:fixed;left:0;bottom:0;width:0;height:0;padding:0;border:0;overflow:visible;pointer-events:none}
   #nav-actions > *{display:none}
@@ -352,23 +377,38 @@ body{font-family:'Scoutie Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans
 .st-outer{max-width:760px;width:100%}
 /* JSON console */
 #tab-console{flex-direction:column;overflow-y:auto;padding:28px 24px;background:var(--bg);align-items:center}
-#console-inner{width:100%;max-width:1100px;flex:1;min-height:0;display:flex;flex-direction:column}
-.console-terminal{padding:18px;border:0;border-radius:10px;background:var(--console-bg);color:var(--console-text);flex:1;min-height:0;display:flex;flex-direction:column}
-.console-section-label{margin-bottom:7px;color:var(--muted2);font-size:11px;font-weight:700;letter-spacing:.7px;text-transform:uppercase}
-.console-query-row{display:flex;gap:10px;align-items:flex-start}
-.console-presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
-#console-query{flex:1;min-height:92px;resize:vertical;padding:10px 12px;border:1px solid var(--console-border);border-radius:5px;background:var(--console-surface);color:var(--console-text);font:13px/1.5 'SF Mono','Consolas',monospace}
-#console-query:focus{outline:none;border-color:var(--console-accent);box-shadow:0 0 0 2px rgba(101,215,182,.2)}
-#console-run{align-self:stretch;padding:9px 18px;border:1px solid var(--accent);border-radius:5px;background:var(--accent);color:#fff;font:600 13px inherit;cursor:pointer;transition:background .12s,border-color .12s}
-#console-run:hover{background:var(--accent-d);border-color:var(--accent-d)}
-#console-status{min-height:20px;margin-top:8px;color:var(--muted2);font:12px 'SF Mono','Consolas',monospace}
-.console-output-head{display:flex;align-items:center;justify-content:space-between;margin-top:18px}
-.console-output-label{color:var(--muted2);font-size:11px;font-weight:700;letter-spacing:.7px;text-transform:uppercase}
-#console-copy{padding:4px 10px;border:1px solid var(--console-border);border-radius:5px;background:transparent;color:var(--muted2);font:12px inherit;cursor:pointer}
-#console-copy:hover{border-color:var(--console-accent);color:var(--console-accent);background:var(--accent-g)}
-#console-output{margin-top:6px;flex:1;min-height:0;max-height:none;overflow:auto;padding:14px;border:1px solid var(--console-border);border-radius:5px;background:var(--console-bg);color:var(--console-text);font:13px/1.5 'SF Mono','Consolas',monospace;white-space:pre-wrap;overflow-wrap:anywhere;cursor:default;user-select:text}
-#console-output.error{color:#ff8f87}
-@media(max-width:600px){#tab-console{padding:16px 12px}.console-terminal{padding:12px}.console-query-row{gap:6px}}
+#console-inner{width:100%;max-width:1100px;flex:1;min-height:480px;display:flex;flex-direction:column;gap:16px}
+.console-page-head{display:flex;align-items:center;gap:12px}
+.console-page-icon{display:flex;align-items:center;justify-content:center;width:38px;height:38px;flex-shrink:0;border-radius:8px;background:var(--accent-g);color:var(--accent)}
+.console-page-icon svg{width:20px;height:20px}
+.console-page-head h2{font-size:20px;font-weight:700;line-height:1.3}
+.console-terminal{display:flex;flex-direction:column;gap:16px;flex:1;min-height:0}
+.console-card{border:1px solid var(--border);border-radius:10px;background:var(--s2);box-shadow:var(--shadow);overflow:hidden;flex-shrink:0}
+.console-card{border-right:0}
+.console-card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;background:var(--s3);border-bottom:1px solid var(--border);min-height:43px}
+.console-section-label{display:flex;align-items:center;gap:8px;color:var(--accent);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.console-section-label .console-page-icon{width:22px;height:22px;border-radius:5px}
+.console-section-label .console-page-icon svg{width:13px;height:13px}
+.console-section-label::before{display:none}
+.console-shortcut{color:var(--muted2);font-size:11px;white-space:nowrap}
+.console-query-body{padding:16px}
+#console-query{display:block;width:100%;min-height:104px;resize:vertical;padding:12px;border:1px solid var(--border);border-radius:6px;background:var(--s1);color:var(--text);font:13px/1.6 'SF Mono','Consolas',monospace;transition:border-color .12s,box-shadow .12s}
+#console-query:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-g)}
+.console-query-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px}
+.console-presets{display:flex;gap:6px;flex-wrap:wrap;min-width:0}
+.console-preset{padding:6px 10px;font-family:inherit;font-size:12px;text-align:left;line-height:1.4}
+.console-preset:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-g);filter:none}
+#console-run{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex-shrink:0;font-family:inherit;min-height:34px}
+#console-run svg{width:14px;height:14px}
+#console-status{color:var(--muted2);font-size:12px;line-height:1.5}
+#console-status:not(:empty){margin-top:10px}
+.console-output-card{flex:1;min-height:180px;display:flex;flex-direction:column}
+.console-output-card .console-card-head{flex-shrink:0}
+#console-copy{font-family:inherit;padding:5px 10px}
+#console-output{margin:0;flex:1;min-height:0;overflow:auto;padding:16px;background:var(--s1);color:var(--text);font:13px/1.6 'SF Mono','Consolas',monospace;white-space:pre-wrap;overflow-wrap:anywhere;cursor:default;user-select:text}
+#console-output.error{color:var(--danger)}
+#tab-console button:focus-visible,#console-output:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+@media(max-width:600px){#tab-console{padding:16px 12px}.console-query-body{padding:12px}.console-card-head{padding:10px 12px}.console-query-actions{align-items:stretch;flex-direction:column}#console-run{align-self:flex-end}#console-output{padding:12px}.console-shortcut{display:none}}
 /* File banner */
 .st-file-banner{background:var(--accent);color:#fff;border:1px solid var(--accent);border-radius:10px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;box-shadow:var(--shadow);flex-wrap:wrap}
 .st-current-file{margin-bottom:16px}
@@ -898,6 +938,7 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
       <button id="theme-btn" onclick="toggleTheme()" title="Toggle theme"></button>
     </div>
     <div id="nav-brand">
+      <button id="sync-badge" type="button" hidden aria-label="Sync status"></button>
       <button id="nav-logo" type="button" aria-haspopup="menu" aria-expanded="false" data-i18n-title="nav.menu.title" title="Open navigation menu"><img src="favicon.svg" alt="Immer in Bewegung"></button>
       <div id="nav-menu" role="menu">
         <div class="mobile-tools-row">
@@ -917,6 +958,8 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
         <button id="complementary-lists-nav-item" class="nav-menu-item" data-tab="complementary-lists" role="menuitem" style="display:none">Complementary lists</button>
         <button class="nav-menu-item" data-tab="console" data-i18n="nav.menu.console" role="menuitem">Console</button>
         <button class="nav-menu-item" data-tab="settings" data-i18n="nav.menu.settings" role="menuitem">Settings</button>
+        <button id="sync-now" class="nav-menu-item" type="button" role="menuitem" hidden>Sync now</button>
+        <button id="server-backup" data-i18n="nav.menu.serverBackup" class="nav-menu-item" type="button" role="menuitem" hidden>Server backup</button>
         <button class="nav-menu-item" data-tab="about" data-i18n="nav.menu.about" role="menuitem">About</button>
       </div>
       <div id="mod-dot"></div>
@@ -1047,21 +1090,31 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
     </div>
   </div>
 
-  <!-- Settings -->
+  <!-- Console -->
   <div id="tab-console" class="tab">
     <div id="console-inner">
       <div class="console-terminal">
-        <div class="console-section-label">JQ Query</div>
-        <div class="console-query-row">
-          <textarea id="console-query" data-i18n-ph="console.queryPlaceholder" spellcheck="false" aria-label="jq query">.</textarea>
-          <button id="console-run" data-i18n="console.run" type="button">Run</button>
-        </div>
-        <div class="console-presets">
-          <button id="console-paris-preset" class="tv-ext-btn tv-ext-movie" data-i18n="console.parisPreset" type="button">Count instances of Paris in Events</button>
-        </div>
-        <div id="console-status"></div>
-        <div class="console-output-head"><span class="console-output-label">Output</span><button id="console-copy" type="button" aria-label="Copy output" title="Copy output">Copy</button></div>
-        <pre id="console-output" aria-live="polite"></pre>
+        <section class="console-card" aria-labelledby="console-query-label">
+          <div class="console-card-head">
+            <label id="console-query-label" class="console-section-label" for="console-query"><span class="console-page-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m5 6 6 6-6 6M13 18h6"/></svg></span>JQ Query</label>
+            <span class="console-shortcut">Ctrl / ⌘ + Enter</span>
+          </div>
+          <div class="console-query-body">
+            <textarea id="console-query" data-i18n-ph="console.queryPlaceholder" spellcheck="false">.</textarea>
+            <div class="console-query-actions">
+              <div class="console-presets">
+                <button id="console-paris-preset" class="btn btn-g console-preset" data-i18n="console.parisPreset" type="button">Count instances of Paris in Events</button>
+                <button id="console-cities-preset" class="btn btn-g console-preset" data-i18n="console.citiesPreset" type="button">Count instances of multiple cities</button>
+              </div>
+              <button id="console-run" class="btn btn-p" type="button"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 2.5v11L13 8z"/></svg><span data-i18n="console.run">Run</span></button>
+            </div>
+            <div id="console-status" role="status"></div>
+          </div>
+        </section>
+        <section class="console-card console-output-card" aria-labelledby="console-output-label">
+          <div class="console-card-head"><h3 id="console-output-label" class="console-section-label">Output</h3><button id="console-copy" class="copy-btn" type="button" aria-label="Copy output" title="Copy output">Copy</button></div>
+          <pre id="console-output" aria-live="polite" aria-labelledby="console-output-label" tabindex="0"></pre>
+        </section>
       </div>
     </div>
   </div>
@@ -1127,12 +1180,213 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 </div>
 
 <div id="toast"></div>
+<dialog id="sync-progress" aria-labelledby="sync-progress-title">
+  <h3 id="sync-progress-title" data-i18n="sync.title">Sync status</h3>
+  <p aria-live="polite"><span id="sync-progress-spinner" class="sync-spinner" hidden></span><span id="sync-progress-text"></span></p>
+  <p id="sync-progress-detail"></p>
+  <ul id="sync-progress-items" aria-label="Sync log" role="log" aria-live="polite" aria-relevant="additions"></ul>
+  <div class="sync-progress-actions">
+    <button id="sync-progress-retry" data-i18n="sync.retry" class="btn btn-p" type="button" hidden>Try again</button>
+    <button id="sync-progress-close" data-i18n="sync.close" class="btn btn-g" type="button">Close</button>
+  </div>
+</dialog>
+<dialog id="sync-review"></dialog>
+<dialog id="server-backup-dialog" aria-labelledby="server-backup-title">
+  <h3 id="server-backup-title" data-i18n="nav.menu.serverBackup">Server backup</h3>
+  <div role="status">
+    <p id="server-backup-text"></p>
+    <p id="server-backup-detail"></p>
+  </div>
+  <form method="dialog" class="sync-progress-actions"><button class="btn btn-g" type="submit" data-i18n="sync.close">Close</button></form>
+</dialog>
 
+<script src="url-sync.js"></script>
 <script>
 'use strict';
 
 let data = null;
 let fileHandle = null;
+let urlSync = null;
+let _editorDraft = null;
+let _settingsDraft = null;
+let _savingEdit = false;
+let _syncProgressPinned = false;
+function setEditBusy(value) {
+  _savingEdit = value;
+  document.getElementById('ov-detail').inert = value;
+  document.getElementById('st-content').inert = value;
+}
+function canSaveSource() { return !!fileHandle || !!urlSync?.record?.enabled; }
+function editorTrip(id) { return _editorDraft?.id === id ? _editorDraft.trip : data.Trips[id]; }
+
+function updateSyncUI(engine = urlSync) {
+  if (engine !== urlSync) return;
+  const badge = document.getElementById('sync-badge'), button = document.getElementById('sync-now');
+  const enabled = !!engine?.record?.enabled, count = engine?.record?.pending.length || 0;
+  button.hidden = !enabled;
+  document.getElementById('server-backup').hidden = !enabled;
+  button.textContent = engine?.state === 'conflict' ? t('nav.menu.syncConflict', 'Review sync conflict') : (count ? t('nav.menu.syncPending', 'Sync now — {count} pending').replace('{count}', count) : t('nav.menu.syncNow', 'Sync now'));
+  button.disabled = engine?.state === 'syncing';
+  badge.hidden = !enabled || (!count && engine?.state === 'synced');
+  badge.dataset.state = engine?.state || '';
+  badge.textContent = engine?.state === 'syncing' ? '↻' : ['error','conflict'].includes(engine?.state) ? '!' : String(count || '↓');
+  badge.title = engine?.message || (count ? t('sync.pending', '{count} changes waiting to sync').replace('{count}', count) : t('sync.offline', 'Offline — using the saved copy'));
+  badge.setAttribute('aria-label', badge.title);
+  updateSyncProgress(engine);
+  if (engine?.state === 'synced' && data) {
+    data = SyncJSON.copy(engine.record.working);
+    invalidateTripDerivedCache();
+    renderTrips();
+    if (currentTab === 'settings' && !_settingsDirty) { _settingsDraft = null; renderSettings(); }
+  }
+}
+
+function updateSyncProgress(engine = urlSync) {
+  const dialog = document.getElementById('sync-progress');
+  if (!dialog?.open || !_syncProgressPinned || engine !== urlSync) return;
+  const spinner = document.getElementById('sync-progress-spinner');
+  const text = document.getElementById('sync-progress-text');
+  const detail = document.getElementById('sync-progress-detail');
+  const retry = document.getElementById('sync-progress-retry');
+  const items = document.getElementById('sync-progress-items');
+  const count = engine?.record?.pending.length || 0;
+  const busy = engine?.state === 'syncing';
+  spinner.hidden = !busy;
+  text.textContent = busy ? t('sync.running', 'Checking the server and sending your changes…')
+    : engine?.state === 'synced' ? t('sync.complete', 'Sync complete.')
+    : engine?.state === 'conflict' ? t('sync.conflict', 'The server has overlapping changes. Review is needed.')
+    : engine?.state === 'error' ? t('sync.failed', 'Sync failed. Your changes are still saved on this device.')
+    : count ? t('sync.waiting', 'Changes are waiting to sync.') : t('sync.checking', 'Checking sync status…');
+  detail.textContent = [count ? t('sync.pending', '{count} changes waiting to sync').replace('{count}', count) : '', engine?.message || ''].filter(Boolean).join(' ');
+  // Append only new entries so expanded details and screen-reader position survive updates.
+  if (items._activity !== engine?.activity) {
+    items.replaceChildren();
+    items._activity = engine?.activity;
+  }
+  const activity = engine?.activity || [];
+  const follow = items.scrollTop + items.clientHeight >= items.scrollHeight - 24;
+  for (const entry of activity.slice(items.children.length)) {
+    const li = document.createElement('li');
+    const time = document.createElement('span');
+    time.className = 'sync-log-time';
+    time.textContent = new Date(entry.time).toLocaleTimeString();
+    li.appendChild(time);
+    const label = document.createElement('span');
+    label.textContent = t('sync.log.' + entry.kind, entry.kind);
+    li.appendChild(label);
+    if (entry.message) {
+      const error = document.createElement('p');
+      error.textContent = translatedError(entry.message);
+      li.appendChild(error);
+    }
+    for (const change of entry.changes) {
+      const details = document.createElement('details');
+      const summary = document.createElement('summary');
+      const action = !change.has ? 'removed' : !change.had ? 'added' : 'updated';
+      const path = [...change.path];
+      if (path[0] === 'Trips' && path.length > 1) {
+        const trip = engine.record.working.Trips?.[path[1]] || engine.record.base.Trips?.[path[1]];
+        if (trip) path[1] = [trip.OuterId || path[1], trip.OverallDestination].filter(Boolean).join(' · ');
+      }
+      summary.textContent = t('sync.log.' + action, action) + ': ' + (path.join(' › ') || '/');
+      const values = document.createElement('pre');
+      const show = (has, value) => has ? JSON.stringify(value, null, 2) : t('sync.missing', '(deleted or missing)');
+      values.textContent = t('sync.log.before', 'Before') + ': ' + show(change.had, change.before)
+        + '\n\n' + t('sync.log.after', 'After') + ': ' + show(change.has, change.value);
+      if (change.server) values.textContent += '\n\n' + t('sync.server', 'Server') + ': ' + show(change.server.has, change.server.value);
+      details.append(summary, values);
+      li.appendChild(details);
+    }
+    items.appendChild(li);
+  }
+  if (follow) items.scrollTop = items.scrollHeight;
+  retry.hidden = busy || !count || engine?.state === 'conflict';
+}
+
+function showSyncProgress() {
+  const dialog = document.getElementById('sync-progress');
+  _syncProgressPinned = true;
+  if (!dialog.open) dialog.showModal();
+  updateSyncProgress();
+}
+
+async function serverBackup() {
+  const engine = urlSync;
+  const button = document.getElementById('server-backup');
+  if (!engine?.record?.enabled || button.disabled) return;
+  const dialog = document.getElementById('server-backup-dialog');
+  const text = document.getElementById('server-backup-text');
+  const detail = document.getElementById('server-backup-detail');
+  button.disabled = true;
+  text.textContent = t('serverBackup.creating', 'Creating a backup on the server…');
+  detail.textContent = t('serverBackup.note', 'This copies the current server file. Changes waiting to sync are not included.');
+  if (!dialog.open) dialog.showModal();
+  try {
+    const response = await fetch(engine.url, {
+      method:'POST', credentials:'include', cache:'no-store',
+      signal:AbortSignal.timeout(30000),
+      headers:{ 'Content-Type':'application/json', Accept:'application/json' },
+      body:JSON.stringify({ command:'backup' })
+    });
+    if (!response.ok) {
+      const message = (await response.text()).trim();
+      throw new Error(`${t('serverBackup.httpError', 'Server returned HTTP {status}').replace('{status}', response.status)}${message ? ': ' + message.slice(0, 1000) : ''}`);
+    }
+    const result = await response.json();
+    if (typeof result?.backup !== 'string' || !result.backup.trim()) {
+      throw new Error(t('serverBackup.invalidResponse', 'The server did not return a backup filename.'));
+    }
+    text.textContent = t('serverBackup.success', 'Server backup created successfully.');
+    detail.textContent = result.backup;
+  } catch (error) {
+    text.textContent = t('serverBackup.failed', 'Could not confirm the server backup.');
+    detail.textContent = error?.name === 'TimeoutError'
+      ? t('serverBackup.timeout', 'The request timed out. The server may still have created the backup.')
+      : String(error?.message || error);
+  } finally {
+    button.disabled = false;
+    if (!dialog.open) dialog.showModal();
+  }
+}
+
+async function syncNow() {
+  if (!urlSync) return;
+  showSyncProgress();
+  await urlSync.sync();
+  if (urlSync?.state !== 'conflict') {
+    return;
+  }
+  _syncProgressPinned = false;
+  document.getElementById('sync-progress').close();
+  const engine = urlSync, dialog = document.getElementById('sync-review');
+  dialog.replaceChildren();
+  const title = document.createElement('h3'); title.textContent = t('sync.reviewTitle', 'Review conflicting changes'); dialog.appendChild(title);
+  const description = document.createElement('p'); description.textContent = t('sync.reviewDescription', 'These fields changed on the server too. Other pending edits will be preserved. Cancel leaves everything pending.'); dialog.appendChild(description);
+  for (const conflict of engine.conflicts) {
+    const pre = document.createElement('pre');
+    const show = (has, value) => has ? JSON.stringify(value, null, 2) : t('sync.missing', '(deleted or missing)');
+    pre.textContent = `${SyncJSON.pointer(conflict.path)}\n${t('sync.original', 'Original')}: ${show(conflict.had, conflict.before)}\n${t('sync.yours', 'Yours')}: ${show(conflict.has, conflict.value)}\n${t('sync.server', 'Server')}: ${show(conflict.server.has, conflict.server.value)}`;
+    dialog.appendChild(pre);
+  }
+  for (const [label, choice] of [[t('sync.keepLocal', 'Keep my changes'),'local'],[t('sync.useServer', 'Use server for conflicts'),'server'],[t('sync.cancel', 'Cancel'),null]]) {
+    const button = document.createElement('button'); button.className = 'btn btn-g'; button.textContent = label;
+    button.onclick = async () => {
+      dialog.close();
+      if (!choice || urlSync !== engine) return;
+      showSyncProgress();
+      await engine.sync(choice);
+      if (engine.state === 'conflict' && urlSync === engine) await syncNow();
+    };
+    dialog.appendChild(button);
+  }
+  dialog.showModal();
+}
+
+async function retrySyncFromDialog() {
+  if (!urlSync) return;
+  if (urlSync.state === 'conflict') { await syncNow(); return; }
+  await urlSync.sync();
+}
 let selectedId = null;
 let _complementaryListsCache = null;
 let _complementaryListsRequest = 0;
@@ -1170,7 +1424,7 @@ async function loadLang(file='languages/english.json') {
     if (file !== 'languages/english.json') {
       console.warn('loadLang failed for', file, e.message);
       // toast() may not be defined yet during boot; guard with typeof
-      if (typeof toast === 'function') toast(`Language file not found: ${file}`, 'err');
+      if (typeof toast === 'function') toast(t('toasts.languageMissing', 'Language file not found: {file}').replace('{file}', file), 'err');
     }
     return false;
   }
@@ -1186,13 +1440,16 @@ function applyI18n() {
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n, el.textContent); });
   document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = t(el.dataset.i18nPh, el.placeholder); });
   document.querySelectorAll('[data-i18n-title]').forEach(el => { el.title = t(el.dataset.i18nTitle, el.title); });
+  const syncButton = document.getElementById('sync-now');
+  const pending = urlSync?.record?.pending.length || 0;
+  if (syncButton) syncButton.textContent = urlSync?.state === 'conflict' ? t('nav.menu.syncConflict', 'Review sync conflict') : pending ? t('nav.menu.syncPending', 'Sync now — {count} pending').replace('{count}', pending) : t('nav.menu.syncNow', 'Sync now');
 }
 let explorePicks = [];
 let mapInstance = null;
 let activeFilter = { domain: [], arranger: [], label: [] };
 let currentFileName = '';
-const APP_VERSION = 'v4.2';
-const APP_DATE    = '2026-09-04';
+const APP_VERSION = 'v4.3';
+const APP_DATE    = '2026-10-02';
 let mapMode = { type: 'all', value: '' }; // 'all' | 'country' | 'theme'
 let _mapPhotoVisible = false, _mapPhotoLoaded = false, _mapPhotoCountry = ''; // photo layer state
 let currentTab = 'explore';
@@ -1316,6 +1573,11 @@ async function boot() {
   applyTheme(localStorage.getItem('chronik-theme') || 'dark');
   wire();
   applyI18n();
+  // The hosted demo automatically runs the start screen's Load action.
+  if (window.location.origin === 'https://go.bewegung.app') {
+    document.getElementById('url-btn').click();
+    return;
+  }
   const stored = await idbLoad();
   const btn = document.getElementById('resume-btn');
 
@@ -1358,23 +1620,7 @@ async function boot() {
       setLsStatus(`↺ Loading ${fileName}…`);
       const urlInp = document.getElementById('url-input');
       if (urlInp) urlInp.value = lastUrl;
-      let loaded = false;
-      try {
-        const resp = await fetch(lastUrl);
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-        const parsed = await resp.json();
-        if (!parsed.Settings || !parsed.Trips) throw new Error('Invalid');
-        await idbKvSet('url-json-cache', { url: lastUrl, data: parsed, savedAt: Date.now() });
-        await _initApp(parsed, fileName);
-        loaded = true;
-      } catch {}
-      if (!loaded) {
-        const cached = await idbKvGet('url-json-cache');
-        if (cached && cached.data && cached.data.Settings && cached.data.Trips) {
-          setLsStatus(`↺ Loading cached ${fileName}…`);
-          await _initApp(cached.data, fileName);
-        }
-      }
+      await loadFromUrl(lastUrl);
     }
   }
 }
@@ -1401,16 +1647,28 @@ function wire() {
   urlBtn.addEventListener('click', () => loadFromUrl(urlInp.value.trim() || 'bewegung.json'));
   urlInp.addEventListener('keydown', e => { if (e.key === 'Enter') loadFromUrl(urlInp.value.trim() || 'bewegung.json'); });
   document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
+  document.getElementById('sync-now').addEventListener('click', syncNow);
+  document.getElementById('server-backup').addEventListener('click', serverBackup);
+  document.getElementById('sync-badge').addEventListener('click', syncNow);
+  document.getElementById('sync-progress-close').addEventListener('click', () => {
+    _syncProgressPinned = false;
+    document.getElementById('sync-progress').close();
+  });
+  document.getElementById('sync-progress-retry').addEventListener('click', retrySyncFromDialog);
+  document.getElementById('nav-menu').querySelectorAll('.nav-menu-item[data-tab]:not(.mobile-menu-item)').forEach(b => b.addEventListener('click', () => { closeNavMenu(); switchTab(b.dataset.tab); }));
+  window.addEventListener('online', () => urlSync?.sync());
+  window.addEventListener('beforeunload', e => { if (_editorDirty || _settingsDirty || _savingEdit) { e.preventDefault(); e.returnValue = ''; } });
   const navLogo = document.getElementById('nav-logo');
   const navMenu = document.getElementById('nav-menu');
   const closeNavMenu = () => { navMenu.classList.remove('open'); navLogo.setAttribute('aria-expanded', 'false'); };
+  document.getElementById('sync-now').addEventListener('click', closeNavMenu);
+  document.getElementById('server-backup').addEventListener('click', closeNavMenu);
   navLogo.addEventListener('click', e => {
     e.stopPropagation();
     const isOpen = navMenu.classList.toggle('open');
     navLogo.setAttribute('aria-expanded', String(isOpen));
   });
   navLogo.addEventListener('keydown', e => { if (e.key === 'Escape') closeNavMenu(); });
-  navMenu.querySelectorAll('.nav-menu-item:not(.mobile-menu-item)').forEach(b => b.addEventListener('click', () => { closeNavMenu(); switchTab(b.dataset.tab); }));
   document.getElementById('mobile-search-btn').addEventListener('click', e => {
     e.stopPropagation();
     closeNavMenu();
@@ -1431,8 +1689,8 @@ function wire() {
     if ((e.ctrlKey||e.metaKey) && e.key==='s') {
       e.preventDefault();
       if (currentTab==='overview') {
-        if (_editorDirty && selectedId) {
-          saveTrip(selectedId, false); // commits form → resets _editorDirty internally
+        if (_editorDraft) {
+          saveTrip(_editorDraft.id, _editorDraft.isNew); // commits form → resets _editorDirty internally
         } else {
           _editorDirty = false; // clear any stale dirty flag (e.g. after Cancel)
           saveFile();
@@ -2036,6 +2294,7 @@ async function openFile() {
 
 async function _initApp(parsed, fileName) {
   data = parsed;
+  _editorDraft = null; _editorDirty = false; _settingsDraft = null;
   _tripDerivedCache = { data:null, all:null, filteredKey:null, filtered:null, labels:null };
   currentFileName = fileName;
   _complementaryListsCache = null;
@@ -2081,36 +2340,105 @@ async function load(file) {
     const parsed = JSON.parse(await file.text());
     if (!parsed.Settings || !parsed.Trips) throw new Error('Missing Settings or Trips');
     if (fileHandle) idbSave(fileHandle);
+    urlSync?.stop(); urlSync = null; updateSyncUI();
     localStorage.removeItem('chronik-last-url');
     await _initApp(parsed, file.name);
-  } catch(err) { toast('Failed to open: ' + err.message, 'err'); }
+  } catch(err) { toast(t('toasts.openFailed', 'Failed to open: {error}').replace('{error}', translatedError(err)), 'err'); }
 }
 
 async function loadFromUrl(url) {
-  if (!url) return;
+  if (!url || _savingEdit) return;
+  if ((_editorDirty || _settingsDirty) && !confirm('Discard the current unsaved draft and load this URL?')) return;
   const btn = document.getElementById('url-btn');
   if (btn) { btn.disabled = true; btn.textContent = t('tripView.loading','Loading…'); }
+  let engine;
   try {
-    const resp = await fetch(url);
-    if (!resp.ok) throw new Error(`HTTP ${resp.status} ${resp.statusText}`);
-    const parsed = await resp.json();
-    if (!parsed.Settings || !parsed.Trips) throw new Error('Missing Settings or Trips');
-    localStorage.setItem('chronik-last-url', url);
-    await idbKvSet('url-json-cache', { url, data: parsed, savedAt: Date.now() });
-    await idbSave(null); // clear any stored local file handle so reload uses URL cache
+    const source = new URL(url, document.baseURI); source.hash = '';
+    if (!['http:', 'https:'].includes(source.protocol)) throw new Error('Use an HTTP or HTTPS URL.');
+    const makeEngine = target => {
+      const key = 'url-sync:' + target.href;
+      return new URLSync(target.href, {
+        read: async () => {
+          const saved = await idbSyncRead(key);
+          if (saved) return saved;
+          const legacy = await idbKvGet('url-json-cache');
+          if (legacy?.url && new URL(legacy.url, document.baseURI).href === target.href && legacy.data?.Settings && legacy.data?.Trips) {
+            return { url:target.href, enabled:false, etag:null, base:legacy.data, working:legacy.data, pending:[] };
+          }
+          return null;
+        },
+        write: value => idbSyncWrite(key, value),
+        lock: fn => navigator.locks ? navigator.locks.request(key, fn) : fn(),
+        update: updateSyncUI
+      });
+    };
+    engine = makeEngine(source);
+    const parsed = await engine.open();
+    if (!navigator.locks && engine.record.enabled) throw new Error('Server editing needs a browser with Web Locks on HTTPS.');
+    urlSync?.stop(); urlSync = engine;
+    localStorage.setItem('chronik-last-url', source.href);
+    await idbSave(null);
     fileHandle = null;
-    const fileName = url.split('/').filter(Boolean).pop() || url;
-    await _initApp(parsed, fileName);
+    await _initApp(parsed, source.pathname.split('/').filter(Boolean).pop() || source.href);
+    updateSyncUI();
+    if (engine.record.enabled) engine.sync();
   } catch(err) {
-    toast('Failed to load from URL: ' + err.message, 'err');
+    if (engine !== urlSync) engine?.stop();
+    toast(t('toasts.urlFailed', 'Failed to load from URL: {error}').replace('{error}', translatedError(err)), 'err');
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = t('loadScreen.urlButton','Load'); }
   }
 }
 
+// A queued change is safe only once its IndexedDB transaction has committed.
+async function idbSyncRead(key) {
+  const db = await idbOpen();
+  try {
+    return await new Promise((resolve, reject) => {
+      const tx = db.transaction('kv', 'readonly'), request = tx.objectStore('kv').get(key);
+      tx.oncomplete = () => resolve(request.result || null);
+      tx.onerror = tx.onabort = () => reject(tx.error || new Error('Could not read pending changes from local storage.'));
+    });
+  } finally { db.close(); }
+}
+async function idbSyncWrite(key, value) {
+  const db = await idbOpen();
+  try {
+    await new Promise((resolve, reject) => {
+      const tx = db.transaction('kv', 'readwrite');
+      tx.objectStore('kv').put(value, key);
+      tx.oncomplete = resolve;
+      tx.onerror = tx.onabort = () => reject(tx.error || new Error('Local storage failed; changes have not been saved.'));
+    });
+  } finally { db.close(); }
+}
+
 // ── Save ──────────────────────────────────────────────────────────
 
 async function saveFile() {
+  if (_savingEdit) return;
+  document.activeElement?.blur();
+  if (currentTab === 'overview' && _editorDraft) return saveTrip(_editorDraft.id, _editorDraft.isNew);
+  const next = SyncJSON.copy(data);
+  if (_settingsDraft && currentTab === 'settings') {
+    const merged = SyncJSON.rebase(data.Settings, SyncJSON.diff(_settingsSnapshot, _settingsDraft));
+    if (merged.conflicts.length) { toast(t('toasts.settingsConflict', 'Settings changed on the server while you were editing. Reopen Settings to review.'), 'err'); return; }
+    next.Settings = merged.document;
+  }
+  if (urlSync?.record?.enabled) {
+    setEditBusy(true);
+    try {
+      await urlSync.commit(next);
+      data = SyncJSON.copy(urlSync.record.working);
+      _settingsDraft = null;
+      setMod(false);
+      renderSettings();
+      toast(t('toasts.savedLocally', 'Saved on this device; syncing to server.'), 'ok');
+    } catch (error) { toast(translatedError(error), 'err'); }
+    finally { setEditBusy(false); }
+    return;
+  }
+  data = next;
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   if (fileHandle) {
     try {
@@ -2119,12 +2447,12 @@ async function saveFile() {
         const perm = await fileHandle.queryPermission({ mode:'readwrite' });
         if (perm !== 'granted') await fileHandle.requestPermission({ mode:'readwrite' });
       }
-      const wr = await fileHandle.createWritable(); await wr.write(blob); await wr.close(); setMod(false); toast(t('toasts.saved','Saved'),'ok'); return;
+      const wr = await fileHandle.createWritable(); await wr.write(blob); await wr.close(); setMod(false); if (currentTab === 'settings') { _settingsDraft = null; renderSettings(); } toast(t('toasts.saved','Saved'),'ok'); return;
     } catch(e) { console.warn(e); }
   }
   const fname = currentFileName || 'chronik.json';
   downloadCurrentFile();
-  setMod(false); toast('Downloaded as '+fname,'ok');
+  setMod(false); toast(t('toasts.downloaded', 'Downloaded as {file}').replace('{file}', fname),'ok');
 }
 function downloadCurrentFile() {
   const fname = currentFileName || 'chronik.json';
@@ -2137,6 +2465,7 @@ function invalidateTripDerivedCache() {
   _tripDerivedCache = { data:null, all:null, filteredKey:null, filtered:null, labels:null };
 }
 function setMod(v) {
+  if (v && _editorDraft && currentTab === 'overview') _editorDirty = true;
   if (v) invalidateTripDerivedCache();
   document.getElementById('mod-dot').classList.toggle('on', v);
   if (v) { if (currentTab==='settings') _settingsDirty = true; }
@@ -2386,18 +2715,20 @@ function setHash(hash) {
 }
 
 function switchTab(tab, {updateHash=true}={}) {
+  if (_savingEdit) return;
   if (_editorDirty && currentTab==='overview' && tab!=='overview') {
     if (!confirm('You have unsaved changes in the Editor. Discard them?')) return;
     clearDetail(); setMod(false);
   }
   if (_settingsDirty && currentTab==='settings' && tab!=='settings') {
     if (!confirm('Settings have unsaved changes. Discard them?')) return;
-    if (_settingsSnapshot) { data.Settings = JSON.parse(JSON.stringify(_settingsSnapshot)); renderSettings(); }
+    _settingsDraft = null; renderSettings();
     _settingsDirty = false; setMod(false);
   }
   if (currentTab==='video' && tab!=='video') stopVideoPlayback();
-  if (tab==='settings' && data) { _settingsSnapshot = JSON.parse(JSON.stringify(data.Settings)); _settingsDirty = false; }
+  if (tab==='settings' && data && currentTab !== 'settings') { _settingsDraft = null; _settingsSnapshot = SyncJSON.copy(data.Settings); _settingsDirty = false; }
   currentTab = tab;
+  if (tab === 'settings' && !_settingsDraft) renderSettings();
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab===tab));
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.id===`tab-${tab}`));
   // Highlight frog logo when Explore is active
@@ -2916,12 +3247,17 @@ function renderConsole() {
   const query=document.getElementById('console-query');
   const run=document.getElementById('console-run');
   const parisPreset=document.getElementById('console-paris-preset');
+  const citiesPreset=document.getElementById('console-cities-preset');
   const copyBtn=document.getElementById('console-copy');
   if(!query||!run||run.dataset.wired)return;
   run.dataset.wired='1';run.addEventListener('click',runConsoleQuery);
   copyBtn?.addEventListener('click',copyConsoleOutput);
   parisPreset?.addEventListener('click',()=>{
     query.value='[.Trips[].Days[].Events | select(type == "string" and contains("Paris"))] | length';
+    runConsoleQuery();
+  });
+  citiesPreset?.addEventListener('click',()=>{
+    query.value='[.Trips[].Days[].Events] as $e | ["Paris", "Berlin", "Amsterdam"] | map(. as $c | {city:$c,count:[$e[]|select(strings|contains($c))]|length}) | sort_by(-.count) | map("\\(.city): \\(.count)")';
     runConsoleQuery();
   });
   query.addEventListener('keydown',event=>{
@@ -3024,10 +3360,10 @@ function makeCard(t, colors) {
 
 function renderTrips() {
   // Show URL-mode warning when no file handle (loaded from URL)
-  document.getElementById('url-mode-banner')?.classList.toggle('on', !fileHandle);
+  document.getElementById('url-mode-banner')?.classList.toggle('on', !canSaveSource());
   // Hide New Trip button in URL mode (no write access)
   const _newBtn = document.getElementById('new-trip-btn');
-  if (_newBtn) _newBtn.style.display = fileHandle ? '' : 'none';
+  if (_newBtn) _newBtn.style.display = canSaveSource() ? '' : 'none';
   const query = (document.getElementById('trip-search')?.value || '').toLowerCase().trim();
   const all = allTrips(), colors = domainColorMap();
   const trips = query ? all.filter(t =>
@@ -3058,6 +3394,8 @@ function renderTrips() {
 }
 
 function selectTrip(id) {
+  if (_savingEdit || (_editorDirty && !confirm('Discard unsaved trip changes?'))) return;
+  _editorDraft = null; _editorDirty = false;
   selectedId = id;
   document.querySelectorAll('.trip-card').forEach(el => el.classList.toggle('active', el.dataset.id===id));
   const trip = data.Trips[id];
@@ -3069,6 +3407,8 @@ function selectTrip(id) {
   }
 }
 function newTrip() {
+  if (_savingEdit || (_editorDirty && !confirm('Discard unsaved trip changes?'))) return;
+  _editorDraft = null; _editorDirty = false;
   selectedId = null;
   document.querySelectorAll('.trip-card').forEach(el => el.classList.remove('active'));
   renderTripForm({ InnerId: Math.random().toString(16).slice(2,8) }, true);
@@ -3100,8 +3440,8 @@ function getOvSections() {
   ];
 }
 
-// Builds the "paste into SQLite" export script for a single trip (used by both the
-// Download-as-SQL button and the WebDAV snapshot-upload button). Returns null if the trip doesn't exist.
+// Builds the "paste into SQLite" export script for a single trip for the
+// Download-as-SQL button. Returns null if the trip doesn't exist.
 function buildTripSqlExport(innerId) {
   const trip = data.Trips[innerId];
   if (!trip) return null;
@@ -3194,6 +3534,10 @@ DROP TABLE _json;
 const _metaCollapsed = new Set(); // innerIds whose "Trip Information" block the user has collapsed in the Editor
 
 function renderTripForm(tripData, isNew) {
+  if (!_editorDraft || _editorDraft.id !== tripData.InnerId) {
+    const trip = SyncJSON.copy(isNew ? { Days:[] } : data.Trips[tripData.InnerId]);
+    _editorDraft = { id:tripData.InnerId, isNew, trip, base:SyncJSON.copy(trip) };
+  }
   // Replace with a fresh node to shed any accumulated input/change listeners
   const _old = document.getElementById('ov-detail');
   const detail = _old.cloneNode(false); // shallow — no children, no listeners
@@ -3214,7 +3558,7 @@ function renderTripForm(tripData, isNew) {
     if (f.key==='TripDomain') el=makeSelect('TripDomain',domainOptions,val);
     else if (f.key==='ArrangerGroup') el=makeSelect('ArrangerGroup',arrangerOptions,val);
     else if (f.ta) el=`<textarea data-key="${f.key}">${h(val)}</textarea>`;
-    else el=`<input type="${f.type||'text'}" data-key="${f.key}" value="${h(val)}">`;
+    else el=`<input type="${f.type||'text'}" data-key="${f.key}" value="${h(val)}"${f.readOnly?' readonly class="ro"':''}>`;
     if (f.key==='MapPins') {
       return `<div class="fg"><label style="display:flex;align-items:center;gap:6px">${h(f.label)}<button type="button" class="pin-map-open-btn btn btn-g" style="font-size:11px;padding:2px 8px;margin-left:auto">${t('editor.days.mapButton','🗺 Map')}</button></label>${el}${hint}</div>`;
     }
@@ -3235,7 +3579,7 @@ function renderTripForm(tripData, isNew) {
 
   const tripIdBody =
     `<div class="tripid-grid-3" style="margin-bottom:12px">` +
-    fg({key:'OuterId',label:t('editor.fields.outerId','Outer ID')}) +
+    fg({key:'OuterId',label:t('editor.fields.outerId','Outer ID'),readOnly:true}) +
     fg({key:'DepartureDate',label:t('editor.fields.departureDate','Departure Date'),type:'date'}) +
     fg({key:'ReturnDate',label:t('editor.fields.returnDate','Return Date'),type:'date'}) +
     `</div>` +
@@ -3264,8 +3608,8 @@ function renderTripForm(tripData, isNew) {
     <div style="max-width:680px;padding-bottom:22px;">
       <div class="btn-bar">
         <button class="btn btn-g" id="f-cancel">${t('editor.buttons.cancel','Cancel')}</button>
-        ${!isNew?`<button class="btn btn-g btn-icon" id="f-dl" title="${t('tripView.downloadJson','Download as JSON')}">${'<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707zm-.5 1.5 3.707 3.707H9.5a.5.5 0 0 1-.5-.5zM7.5 12.5a.5.5 0 0 1-1 0V9.207l-.646.647a.5.5 0 0 1-.708-.708l1.5-1.5a.5.5 0 0 1 .708 0l1.5 1.5a.5.5 0 0 1-.708.708L7.5 9.207z"/></svg>'}</button><button class="btn btn-g btn-icon" id="f-dl-sql" title="${t('editor.buttons.downloadSql','Download as SQL')}">${'<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><line x1="1.5" y1="6" x2="14.5" y2="6"/><line x1="1.5" y1="9.7" x2="14.5" y2="9.7"/><line x1="6" y1="2.5" x2="6" y2="13.5"/><line x1="10.5" y1="2.5" x2="10.5" y2="13.5"/></svg>'}</button>${(fileHandle && data.Settings?.Extension?.SnapshotUpload?.Path)?`<button class="btn btn-g btn-icon" id="f-dl-sql-snap" title="${t('editor.buttons.uploadSqlSnapshot','Upload SQL to WebDAV')}">${'<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M4.406 1.342A5.53 5.53 0 0 1 8 0c2.69 0 4.923 2 5.166 4.579C14.758 4.804 16 6.137 16 7.773 16 9.569 14.502 11 12.687 11H10a.5.5 0 0 1 0-1h2.688C13.979 10 15 8.988 15 7.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 2.825 10.328 1 8 1a4.53 4.53 0 0 0-2.941 1.1c-.757.652-1.153 1.438-1.153 2.055v.448l-.445.049C2.064 4.805 1 5.952 1 7.318 1 8.785 2.23 10 3.781 10H6a.5.5 0 0 1 0 1H3.781C1.708 11 0 9.366 0 7.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383"/><path d="M7.646 4.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V14.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708z"/></svg>'}</button>`:''}`:''}
-        ${fileHandle?`<button class="btn btn-p ml" id="f-save">${isNew?t('editor.buttons.create','Create Trip'):t('editor.buttons.save','Save Changes')}</button>`:''}
+        ${!isNew?`<button class="btn btn-g btn-icon" id="f-dl" title="${t('tripView.downloadJson','Download as JSON')}">${'<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707zm-.5 1.5 3.707 3.707H9.5a.5.5 0 0 1-.5-.5zM7.5 12.5a.5.5 0 0 1-1 0V9.207l-.646.647a.5.5 0 0 1-.708-.708l1.5-1.5a.5.5 0 0 1 .708 0l1.5 1.5a.5.5 0 0 1-.708.708L7.5 9.207z"/></svg>'}</button><button class="btn btn-g btn-icon" id="f-dl-sql" title="${t('editor.buttons.downloadSql','Download as SQL')}">${'<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><line x1="1.5" y1="6" x2="14.5" y2="6"/><line x1="1.5" y1="9.7" x2="14.5" y2="9.7"/><line x1="6" y1="2.5" x2="6" y2="13.5"/><line x1="10.5" y1="2.5" x2="10.5" y2="13.5"/></svg>'}</button>`:''}
+        ${canSaveSource()?`<button class="btn btn-p ml" id="f-save">${isNew?t('editor.buttons.create','Create Trip'):t('editor.buttons.save','Save Changes')}</button>`:''}
       </div>
       <div class="meta-block${_metaCollapsed.has(tripData.InnerId)?' collapsed':''}">
         <div class="meta-hdr" style="${hdrStyle}"><span style="${domColor?`color:${domText}`:''}"> ${t('editor.tripInfo','Trip Information')}</span><span class="meta-hdr-iid" style="${domColor?`color:${domText}`:''}" title="${t('editor.fields.innerId','Inner ID')}">${h(tripData.InnerId)}</span><span class="card-chev" style="${domColor?`color:${domText};opacity:.7`:''}">▾</span></div>
@@ -3305,32 +3649,6 @@ function renderTripForm(tripData, isNew) {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href = url; a.download = `${tripData.InnerId}.sql`; a.click(); URL.revokeObjectURL(url);
     });
-    const _snapSqlCfg = data.Settings?.Extension?.SnapshotUpload;
-    if (fileHandle && _snapSqlCfg && _snapSqlCfg.Path) {
-      const snapSqlBtn = document.getElementById('f-dl-sql-snap');
-      const snapSqlStatus = document.getElementById('f-dl-sql-snap-status');
-      function _sqlTs(){const d=new Date(),p=n=>String(n).padStart(2,'0');return d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+p(d.getHours())+p(d.getMinutes())+p(d.getSeconds());}
-      snapSqlBtn?.addEventListener('click', async () => {
-        const sqlContent = buildTripSqlExport(tripData.InnerId);
-        if (sqlContent === null) return;
-        snapSqlBtn.disabled = true;
-        if (snapSqlStatus) { snapSqlStatus.textContent = t('editor.buttons.uploading','Uploading…'); snapSqlStatus.style.color = 'var(--muted2)'; }
-        try {
-          const name = `${tripData.InnerId}_${_sqlTs()}.sql`;
-          const snapPath = (_snapSqlCfg.Path || './').replace(/\/?$/, '/');
-          const appBaseUrl = new URL('./', document.baseURI);
-          const uploadUrl = new URL(snapPath + encodeURIComponent(name), appBaseUrl);
-          const r = await fetch(uploadUrl.href, { method: 'PUT', body: sqlContent, headers: { 'Content-Type': 'text/plain' } });
-          if (!r.ok) throw new Error('HTTP ' + r.status);
-          if (snapSqlStatus) { snapSqlStatus.textContent = '✓ ' + name; snapSqlStatus.style.color = 'var(--success)'; }
-          toast(t('toasts.sqlSnapshotUploaded','SQL snapshot uploaded'), 'ok');
-        } catch(e) {
-          if (snapSqlStatus) { snapSqlStatus.textContent = '✗ ' + e.message; snapSqlStatus.style.color = 'var(--danger)'; }
-          toast(t('toasts.sqlSnapshotFailed','SQL snapshot upload failed'), 'err');
-        }
-        snapSqlBtn.disabled = false;
-      });
-    }
   }
   document.getElementById('f-cancel').addEventListener('click', clearDetail);
 
@@ -3346,7 +3664,13 @@ function renderTripForm(tripData, isNew) {
       const dep = detail.querySelector('[data-key="DepartureDate"]')?.value;
       const ret = detail.querySelector('[data-key="ReturnDate"]')?.value;
       if (dep && ret && dep <= ret) {
-        syncDaysToDateRange(tripData.InnerId, dep, ret);
+        if (syncDaysToDateRange(tripData.InnerId, dep, ret) === false) {
+          depInp.value = _editorDraft.trip.DepartureDate || '';
+          retInp.value = _editorDraft.trip.ReturnDate || '';
+        } else {
+          _editorDraft.trip.DepartureDate = dep;
+          _editorDraft.trip.ReturnDate = ret;
+        }
         renderInlineEvents(tripData.InnerId);
       }
     }
@@ -3401,7 +3725,7 @@ function collectForm() {
 }
 
 function syncDaysToDateRange(innerId, dep, ret) {
-  const trip = data.Trips[innerId];
+  const trip = editorTrip(innerId);
   if (!trip || !dep || !ret || dep > ret) return;
   // Build target date list
   const targets = [];
@@ -3430,33 +3754,62 @@ function syncDaysToDateRange(innerId, dep, ret) {
 }
 
 async function saveTrip(innerId, isNew) {
+  if (_savingEdit || !_editorDraft) return;
+  // Flush day inputs as keyboard Save does not necessarily blur the focused field.
+  document.querySelectorAll('#ov-detail .ev-block [data-col]').forEach(input => onEvBlur({ target:input }));
   const formData = collectForm();
-  if (!formData.OverallDestination) { toast('Overall Destination is required before saving.', 'err'); return; }
+  if (!formData.OverallDestination) { toast(t('toasts.destinationRequired', 'Overall Destination is required before saving.'), 'err'); return; }
+  Object.assign(_editorDraft.trip, formData);
+  if (isNew && syncDaysToDateRange(innerId, formData.DepartureDate, formData.ReturnDate) === false) return;
+  const next = SyncJSON.copy(data);
+  if (!isNew && !next.Trips[innerId]) { toast(t('toasts.deletedOnServer', 'This trip was deleted on the server. Cancel and reopen the editor.'), 'err'); return; }
+  if (isNew && next.Trips[innerId]) { toast(t('toasts.duplicateTripId', 'This trip ID already exists. Cancel and create a new trip.'), 'err'); return; }
+  const merged = isNew ? { document:SyncJSON.copy(_editorDraft.trip), conflicts:[] }
+    : SyncJSON.rebase(next.Trips[innerId], SyncJSON.diff(_editorDraft.base, _editorDraft.trip));
+  if (merged.conflicts.length) { toast(t('toasts.tripConflict', 'This trip changed on the server while you were editing. Cancel and reopen it to review.'), 'err'); return; }
+  next.Trips[innerId] = merged.document;
+  setEditBusy(true);
   try {
-    if (isNew) {
-      data.Trips[innerId] = { ...formData, Days:[] };
-      syncDaysToDateRange(innerId, formData.DepartureDate, formData.ReturnDate);
-    } else Object.assign(data.Trips[innerId], formData);
-    _editorDirty = false; setMod(true); selectedId=innerId;
+    if (urlSync?.record?.enabled) {
+      await urlSync.commit(next);
+      data = SyncJSON.copy(urlSync.record.working);
+    } else {
+      if (fileHandle) await writeLocalFile(next);
+      data = next;
+    }
+    _editorDraft = null; _editorDirty = false; setMod(false); selectedId = innerId;
     renderTrips();
     renderTripForm({ InnerId:innerId, ...data.Trips[innerId] }, false);
-    document.querySelectorAll('.trip-card').forEach(el => el.classList.toggle('active', el.dataset.id===innerId));
-    toast(isNew?t('toasts.tripCreated','Trip created'):t('toasts.tripSaved','Trip saved'),'ok');
-    if (fileHandle) await saveFile();
-  } catch(err) { toast('Error: '+err.message,'err'); }
+    toast(urlSync?.record?.enabled ? t('toasts.savedLocally', 'Saved on this device; syncing to server.') : t('toasts.tripSaved','Trip saved'), 'ok');
+  } catch(error) { toast(t('toasts.notSaved', 'Not saved: {error}').replace('{error}', translatedError(error)), 'err'); }
+  finally { setEditBusy(false); }
 }
-function deleteTrip(innerId) {
-  if (!confirm(`Delete trip ${innerId} and all its days?`)) return;
+async function deleteTrip(innerId) {
+  if (_savingEdit || !confirm(`Delete trip ${innerId} and all its days?`)) return;
+  const next = SyncJSON.copy(data); delete next.Trips[innerId];
+  setEditBusy(true);
   try {
-    delete data.Trips[innerId]; setMod(true); selectedId=null; renderTrips(); clearDetail();
+    if (urlSync?.record?.enabled) { await urlSync.commit(next); data = SyncJSON.copy(urlSync.record.working); }
+    else { if (fileHandle) await writeLocalFile(next); data = next; }
+    _editorDraft = null; _editorDirty = false;
+    setMod(!canSaveSource()); selectedId = null; renderTrips();
+    setEditBusy(false); clearDetail();
     _metaCollapsed.delete(innerId);
     [..._evCollapsed].forEach(k => { if (k.startsWith(innerId+'::')) _evCollapsed.delete(k); });
-    toast(t('toasts.tripDeleted','Trip deleted'),'ok');
-  }
-  catch(err) { toast('Error: '+err.message,'err'); }
+    toast(t('toasts.tripDeleted','Trip deleted'), 'ok');
+  } catch(error) { toast(t('toasts.notSaved', 'Not saved: {error}').replace('{error}', translatedError(error)), 'err'); }
+  finally { setEditBusy(false); }
+}
+async function writeLocalFile(document = data) {
+  if (fileHandle.queryPermission && await fileHandle.queryPermission({ mode:'readwrite' }) !== 'granted') await fileHandle.requestPermission({ mode:'readwrite' });
+  const writer = await fileHandle.createWritable();
+  await writer.write(JSON.stringify(document, null, 2)); await writer.close();
 }
 function clearDetail() {
+  if (_savingEdit) return;
+  _editorDraft = null;
   _editorDirty = false; selectedId=null;
+  setMod(false);
   document.querySelectorAll('.trip-card').forEach(el=>el.classList.remove('active'));
   document.getElementById('ov-detail').innerHTML=`<div class="empty"><div class="ei">🗺️</div><h3>${t('editor.emptyTitle','No trip selected')}</h3><p>${t('editor.emptySubtitle','Pick one from the list or create a new trip')}</p></div>`;
   // On small screens the list was collapsed when a trip was selected — restore it
@@ -3480,7 +3833,7 @@ function collectKnownCountries() {
 function renderInlineEvents(innerId) {
   const container = document.getElementById('inline-ev');
   if (!container) return;
-  const trip = data.Trips[innerId];
+  const trip = editorTrip(innerId);
   const days = [...(trip?.Days||[])].sort((a,b)=>(a.Date||'').localeCompare(b.Date||''));
   container.innerHTML='';
   const addBar=document.createElement('div'); addBar.className='ev-add-bar';
@@ -3543,7 +3896,7 @@ function buildEventBlock(ev, innerId, idx, showCopyBtn, prevEv) {
   if (showCopyBtn && prevEv) {
     const pCpBtn=document.createElement('button'); pCpBtn.className='copy-btn'; pCpBtn.textContent=t('editor.days.copyPrev','↑ Copy prev');
     pCpBtn.addEventListener('click',()=>{
-      const trip=data.Trips[innerId]; const day=trip?.Days.find(d=>d.Date===block.dataset.date); if(!day)return;
+      const trip=editorTrip(innerId); const day=trip?.Days.find(d=>d.Date===block.dataset.date); if(!day)return;
       const val=prevEv.TravelParticipants||null;
       const inp=partFg.querySelector('[data-col="TravelParticipants"]'); if(inp) inp.value=val||'';
       day.TravelParticipants=val; setMod(true); toast(t('toasts.accommodationCopied','Copied'),'ok');
@@ -3645,14 +3998,14 @@ function makeEvField(label,col,ev,ta=false) {
 }
 
 function copyAccommodation(block, innerId, prevEv) {
-  const trip=data.Trips[innerId]; const day=trip?.Days.find(d=>d.Date===block.dataset.date); if(!day)return;
+  const trip=editorTrip(innerId); const day=trip?.Days.find(d=>d.Date===block.dataset.date); if(!day)return;
   ACC_FIELDS.forEach(col=>{ const inp=block.querySelector(`[data-col="${col}"]`); if(!inp)return; const val=prevEv[col]||null; inp.value=val||''; day[col]=val; });
   setMod(true); toast(t('toasts.accommodationCopied','Accommodation copied'),'ok');
 }
 
 function onEvBlur(e) {
   const inp=e.target, block=inp.closest('.ev-block'), iid=block.dataset.iid, origDate=block.dataset.date, col=inp.dataset.col, val=inp.value.trim()||null;
-  const trip=data.Trips[iid]; if(!trip)return;
+  const trip=editorTrip(iid); if(!trip)return;
   const day=trip.Days.find(d=>d.Date===origDate); if(!day)return;
   if (col==='Date') {
     if (val===origDate)return;
@@ -3663,7 +4016,7 @@ function onEvBlur(e) {
 }
 
 function addEvent(innerId) {
-  const trip=data.Trips[innerId]; if(!trip)return;
+  const trip=editorTrip(innerId); if(!trip)return;
   const days=[...(trip.Days||[])].sort((a,b)=>(a.Date||'').localeCompare(b.Date||''));
   let newDate;
   if (days.length) { const d=new Date(days[days.length-1].Date); d.setDate(d.getDate()+1); newDate=d.toISOString().slice(0,10); }
@@ -4155,7 +4508,8 @@ function renderTripView(innerId) {
       if(d.AdditionalNotes) md+=`\n${d.AdditionalNotes.trim()}\n`;
       md+='\n';
     });
-    const blob=new Blob([md.trimEnd()+'\n'],{type:'text/markdown'});
+    // Preserve the encoding hint in the file for viewers that ignore the MIME charset.
+    const blob=new Blob(['\uFEFF',md.trimEnd()+'\n'],{type:'text/markdown;charset=utf-8'});
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');a.href=url;a.download=`${trip.OuterId||innerId}.md`;a.click();URL.revokeObjectURL(url);
   });
@@ -4286,8 +4640,8 @@ function renderTripView(innerId) {
           const albums=await resp.json();
           const found=albums.find(a=>a.albumName===albumName);
           if(found) window.open(`${_immichBase}/albums/${found.id}`,'_blank');
-          else toast(`Album "${albumName}" not found in Immich`,'err');
-        }catch(e){toast('Immich: '+e.message,'err');}
+          else toast(t('toasts.albumMissing', 'Album "{album}" not found in Immich').replace('{album}', albumName),'err');
+        }catch(e){toast('Immich: '+translatedError(e),'err');}
       });
       _sumBtns.appendChild(btn);
     });
@@ -5908,7 +6262,10 @@ ${tripSections}
 // ── Close file / go to start ──────────────────────────────────────
 
 function closeFile() {
+  if (_savingEdit) return;
   if(!confirm(t('confirms.closeFile','Close the current file and return to the start screen?'))) return;
+  urlSync?.stop(); urlSync = null; updateSyncUI();
+  _editorDraft = null; _editorDirty = false; _settingsDraft = null; _settingsDirty = false;
   data=null; selectedId=null; explorePicks=[]; activeFilter={domain:[],arranger:[],label:[]};
   document.getElementById('filter-bar').classList.remove('on');
   if(mapInstance){try{mapInstance.remove();}catch(e){}mapInstance=null;}
@@ -6208,11 +6565,13 @@ async function saveImmichThumbnails(setStatus) {
 
 function renderSettings() {
   const content=document.getElementById('st-content'); content.innerHTML='';
-  const settings=data.Settings;
+  content.oninput = () => setMod(true);
+  if (!_settingsDraft) _settingsSnapshot = SyncJSON.copy(data.Settings);
+  const settings = _settingsDraft ||= SyncJSON.copy(data.Settings);
 
   // ── File banner ──────────────────────────────────────────────────
   const fileBlock=document.createElement('div'); fileBlock.className='st-current-file';
-  if(!fileHandle){
+  if(!canSaveSource()){
     const urlWarning=document.createElement('div'); urlWarning.className='st-url-warning-panel';
     urlWarning.textContent=t('settings.urlModeWarning','URL mode — changes can be downloaded but cannot be saved back to the source.');
     content.appendChild(urlWarning);
@@ -6241,41 +6600,11 @@ function renderSettings() {
   fileSaveBtn.addEventListener('click',()=>{ saveFile(); });
   bannerBtns.appendChild(closeBtn);
   bannerBtns.appendChild(downloadBtn);
-  if (fileHandle) bannerBtns.appendChild(fileSaveBtn);
-  // ── Snapshot Upload button (file mode only, if configured) ────────
-  const _snapCfg = settings?.Extension?.SnapshotUpload;
-  if (fileHandle && _snapCfg && _snapCfg.Path) {
-    const snapBtn=document.createElement('button'); snapBtn.className='btn btn-g';
-    snapBtn.style.cssText='font-size:12px;display:flex;align-items:center;gap:6px;white-space:nowrap;';
-    const _snapLabel = _snapCfg.Translation || 'Snapshot';
-    snapBtn.innerHTML='<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M6.502 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/><path d="M14 14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zM4 1a1 1 0 0 0-1 1v10l2.224-2.224a.5.5 0 0 1 .61-.076L8 11l2.157-3.02a.5.5 0 0 1 .76-.063L13 10V4.5h-2A1.5 1.5 0 0 1 9.5 3V1z"/></svg><span>'+h(_snapLabel)+'</span>';
-    const _snapStatus=document.createElement('span');
-    _snapStatus.style.cssText='font-size:11px;font-family:\'SF Mono\',\'Consolas\',monospace;color:var(--muted2);white-space:nowrap;max-width:220px;overflow:hidden;text-overflow:ellipsis;';
-    function _ts(){const d=new Date(),p=n=>String(n).padStart(2,'0');return d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+p(d.getHours())+p(d.getMinutes())+p(d.getSeconds());}
-    snapBtn.addEventListener('click', async () => {
-      snapBtn.disabled=true;
-      _snapStatus.textContent='Uploading…';
-      _snapStatus.style.color='var(--muted2)';
-      try {
-        const file=await fileHandle.getFile();
-        const base=file.name.replace(/\.json$/,'');
-        const name=`${base}_${_ts()}.json`;
-        const snapPath=(_snapCfg.Path||'./').replace(/\/?$/,'/');
-        const appBaseUrl=new URL('./',document.baseURI);
-        const uploadUrl=new URL(snapPath+encodeURIComponent(name),appBaseUrl);
-        const r=await fetch(uploadUrl.href,{method:'PUT',body:file,headers:{'Content-Type':'application/json'}});
-        if(!r.ok) throw new Error('HTTP '+r.status);
-        _snapStatus.textContent='✓ '+name;
-        _snapStatus.style.color='var(--success)';
-      } catch(e) {
-        _snapStatus.textContent='✗ '+e.message;
-        _snapStatus.style.color='var(--danger)';
-      }
-      snapBtn.disabled=false;
-    });
-    bannerBtns.appendChild(snapBtn);
-    bannerBtns.appendChild(_snapStatus);
-  }
+  if (canSaveSource()) bannerBtns.appendChild(fileSaveBtn);
+  const cancelSettings = document.createElement('button'); cancelSettings.className = 'btn btn-g';
+  cancelSettings.textContent = t('editor.buttons.cancel', 'Cancel');
+  cancelSettings.addEventListener('click', () => { _settingsDraft = null; setMod(false); renderSettings(); });
+  bannerBtns.appendChild(cancelSettings);
   const _reloadUrl = localStorage.getItem('chronik-last-url');
   if (_reloadUrl) {
     const reloadBtn=document.createElement('button'); reloadBtn.className='btn btn-p';
@@ -6401,7 +6730,7 @@ function renderSettings() {
     const msg = ok ? (val ? `✓ Loaded ${val}` : '✓ Using built-in English') : `✗ Could not load ${val}`;
     if (freshStatus) { freshStatus.style.color = ok ? 'var(--accent)' : 'var(--danger)'; freshStatus.textContent = msg; }
     // Auto-save to local file so the language preference persists on disk
-    if (fileHandle) await saveFile();
+    if (canSaveSource()) await saveFile();
   });
   langRow.appendChild(langInp); langRow.appendChild(langBtn);
   langBody.appendChild(langDesc); langBody.appendChild(langRow); langBody.appendChild(langStatus);
@@ -6613,6 +6942,28 @@ function renderSettings() {
 // ── Toast ─────────────────────────────────────────────────────────
 
 let toastTimer;
+function translatedError(error) {
+  const message = String(error?.message || error);
+  const known = {
+    "Missing Settings or Trips": 'errors.missingData',
+    "Use an HTTP or HTTPS URL.": 'errors.httpUrl',
+    "Server editing needs a browser with Web Locks on HTTPS.": 'errors.webLocks',
+    "The URL did not return a trip document. Check your sign-in.": 'errors.invalidDocument',
+    "Another tab changed the same fields. Reload and review before saving.": 'errors.otherTab',
+    "The server no longer advertises JSON Patch support. Pending changes are kept on this device.": 'errors.patchUnavailable',
+  };
+  if (known[message]) return t(known[message], message);
+  if (error?.name === 'SyntaxError') return t('errors.invalidJson', 'The file does not contain valid JSON.');
+  if (['NotAllowedError', 'SecurityError'].includes(error?.name)) return t('errors.permission', 'Permission denied. Check access to the file or folder.');
+  if (/invalid url/i.test(message)) return t('errors.invalidUrl', 'The URL is invalid.');
+  if (/^(Failed to fetch|NetworkError when attempting to fetch resource\.?|Load failed)$/.test(message)) return t('errors.network', 'Could not reach the server. Check your connection and sign-in.');
+  const http = message.match(/^Server returned HTTP (\d+)$/);
+  if (http) return t('errors.http', 'Server returned HTTP {status}').replace('{status}', http[1]);
+  const sync = message.match(/^Sync was not confirmed \(HTTP (\d+)\)\. Check your sign-in or server\.$/);
+  if (sync) return t('errors.syncUnconfirmed', 'Sync was not confirmed (HTTP {status}). Check your sign-in or server.').replace('{status}', sync[1]);
+  return message;
+}
+
 function toast(msg,type=''){const el=document.getElementById('toast');el.textContent=msg;el.className='on'+(type?' '+type:'');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.className='',3000);}
 
 // ── Start ─────────────────────────────────────────────────────────

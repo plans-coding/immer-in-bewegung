@@ -42,7 +42,11 @@
       "settings": "Settings",
       "report": "Report",
       "about": "About",
-      "console": "Console"
+      "console": "Console",
+      "syncNow": "Sync now",
+      "syncPending": "Sync now — {count} pending",
+      "syncConflict": "Review sync conflict",
+      "serverBackup": "Server backup"
     }
   },
   "loadScreen": {
@@ -67,6 +71,7 @@
     "subtitle": "Run jq queries against the loaded main JSON file.",
     "queryPlaceholder": "Enter a jq query, for example: .Trips | keys",
     "parisPreset": "Count instances of Paris in Events",
+    "citiesPreset": "Count instances of multiple cities",
     "run": "Run",
     "running": "Running…",
     "failed": "Query failed",
@@ -418,7 +423,19 @@
     "swRemoveFailed": "Could not remove service worker",
     "popupBlocked": "Pop-up blocked — allow pop-ups and try again",
     "dateExists": "A day with that date already exists",
-    "permissionDenied": "Permission denied."
+    "permissionDenied": "Permission denied.",
+    "languageMissing": "Language file not found: {file}",
+    "openFailed": "Failed to open: {error}",
+    "urlFailed": "Failed to load from URL: {error}",
+    "settingsConflict": "Settings changed on the server while you were editing. Reopen Settings to review.",
+    "savedLocally": "Saved on this device; syncing to server.",
+    "downloaded": "Downloaded as {file}",
+    "destinationRequired": "Overall Destination is required before saving.",
+    "deletedOnServer": "This trip was deleted on the server. Cancel and reopen the editor.",
+    "duplicateTripId": "This trip ID already exists. Cancel and create a new trip.",
+    "tripConflict": "This trip changed on the server while you were editing. Cancel and reopen it to review.",
+    "notSaved": "Not saved: {error}",
+    "albumMissing": "Album \"{album}\" not found in Immich"
   },
   "searchPage": {
     "title": "Search",
@@ -446,5 +463,68 @@
   },
   "confirms": {
     "closeFile": "Close the current file and return to the start screen?"
+  },
+  "serverBackup": {
+    "creating": "Creating a backup on the server…",
+    "note": "This copies the current server file. Changes waiting to sync are not included.",
+    "httpError": "Server returned HTTP {status}",
+    "invalidResponse": "The server did not return a backup filename.",
+    "success": "Server backup created successfully.",
+    "failed": "Could not confirm the server backup.",
+    "timeout": "The request timed out. The server may still have created the backup."
+  },
+  "sync": {
+    "close": "Close",
+    "retry": "Try again",
+    "title": "Sync status",
+    "running": "Checking the server and sending your changes…",
+    "complete": "Sync complete.",
+    "conflict": "The server has overlapping changes. Review is needed.",
+    "failed": "Sync failed. Your changes are still saved on this device.",
+    "waiting": "Changes are waiting to sync.",
+    "checking": "Checking sync status…",
+    "pending": "{count} changes waiting to sync",
+    "offline": "Offline — using the saved copy",
+    "reviewTitle": "Review conflicting changes",
+    "reviewDescription": "These fields changed on the server too. Other pending edits will be preserved. Cancel leaves everything pending.",
+    "missing": "(deleted or missing)",
+    "original": "Original",
+    "yours": "Yours",
+    "server": "Server",
+    "keepLocal": "Keep my changes",
+    "useServer": "Use server for conflicts",
+    "cancel": "Cancel",
+    "log": {
+      "checking": "Checking the server…",
+      "incoming": "Changes found on the server",
+      "sending": "Sending changes to the server…",
+      "confirmed": "Server confirmed the changes.",
+      "complete": "Sync complete.",
+      "unchanged": "No changes needed. Already up to date.",
+      "conflicts": "Conflicting changes need review.",
+      "keepLocal": "Keeping your changes for conflicts.",
+      "keepServer": "Keeping server changes for conflicts.",
+      "retrying": "Server changed during sync. Checking again…",
+      "failed": "Sync could not be completed.",
+      "added": "Added",
+      "updated": "Updated",
+      "removed": "Removed",
+      "before": "Before",
+      "after": "After"
+    }
+  },
+  "errors": {
+    "missingData": "Missing Settings or Trips",
+    "httpUrl": "Use an HTTP or HTTPS URL.",
+    "webLocks": "Server editing needs a browser with Web Locks on HTTPS.",
+    "invalidDocument": "The URL did not return a trip document. Check your sign-in.",
+    "otherTab": "Another tab changed the same fields. Reload and review before saving.",
+    "patchUnavailable": "The server no longer advertises JSON Patch support. Pending changes are kept on this device.",
+    "network": "Could not reach the server. Check your connection and sign-in.",
+    "permission": "Permission denied. Check access to the file or folder.",
+    "invalidJson": "The file does not contain valid JSON.",
+    "invalidUrl": "The URL is invalid.",
+    "http": "Server returned HTTP {status}",
+    "syncUnconfirmed": "Sync was not confirmed (HTTP {status}). Check your sign-in or server."
   }
 }

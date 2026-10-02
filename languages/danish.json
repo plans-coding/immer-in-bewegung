@@ -42,7 +42,11 @@
       "settings": "Indstillinger",
       "report": "Rapport",
       "about": "Om",
-      "console": "Konsol"
+      "console": "Konsol",
+      "syncNow": "Synkroniser nu",
+      "syncPending": "Synkroniser nu — {count} afventer",
+      "syncConflict": "Gennemgå synkroniseringskonflikt",
+      "serverBackup": "Sikkerhedskopi på serveren"
     }
   },
   "loadScreen": {
@@ -418,7 +422,19 @@
     "swRemoveFailed": "Kunne ikke fjerne service worker",
     "popupBlocked": "Pop-up blokeret — tillad pop-ups og prøv igen",
     "dateExists": "En dag med den dato findes allerede",
-    "permissionDenied": "Adgang nægtet."
+    "permissionDenied": "Adgang nægtet.",
+    "languageMissing": "Sprogfilen blev ikke fundet: {file}",
+    "openFailed": "Kunne ikke åbne: {error}",
+    "urlFailed": "Kunne ikke indlæse fra URL: {error}",
+    "settingsConflict": "Indstillingerne blev ændret på serveren, mens du redigerede. Åbn Indstillinger igen for at gennemgå dem.",
+    "savedLocally": "Gemt på denne enhed; synkroniserer med serveren.",
+    "downloaded": "Downloadet som {file}",
+    "destinationRequired": "Overordnet destination skal angives, før du gemmer.",
+    "deletedOnServer": "Rejsen blev slettet på serveren. Annuller og åbn editoren igen.",
+    "duplicateTripId": "Dette rejse-ID findes allerede. Annuller og opret en ny rejse.",
+    "tripConflict": "Rejsen blev ændret på serveren, mens du redigerede. Annuller og åbn den igen for at gennemgå den.",
+    "notSaved": "Ikke gemt: {error}",
+    "albumMissing": "Albummet ”{album}” blev ikke fundet i Immich"
   },
   "searchPage": {
     "title": "Søg",
@@ -446,5 +462,68 @@
   },
   "confirms": {
     "closeFile": "Luk den aktuelle fil og vend tilbage til startskærmen?"
+  },
+  "serverBackup": {
+    "creating": "Opretter en sikkerhedskopi på serveren…",
+    "note": "Dette kopierer den aktuelle fil på serveren. Ændringer, der afventer synkronisering, er ikke inkluderet.",
+    "httpError": "Serveren svarede med HTTP {status}",
+    "invalidResponse": "Serveren returnerede ikke et filnavn til sikkerhedskopien.",
+    "success": "Sikkerhedskopien blev oprettet på serveren.",
+    "failed": "Kunne ikke bekræfte sikkerhedskopien på serveren.",
+    "timeout": "Anmodningen fik timeout. Serveren kan stadig have oprettet sikkerhedskopien."
+  },
+  "sync": {
+    "close": "Luk",
+    "retry": "Prøv igen",
+    "title": "Synkroniseringsstatus",
+    "running": "Kontrollerer serveren og sender dine ændringer…",
+    "complete": "Synkronisering fuldført.",
+    "conflict": "Serveren har overlappende ændringer. Gennemgang er nødvendig.",
+    "failed": "Synkronisering mislykkedes. Dine ændringer er stadig gemt på denne enhed.",
+    "waiting": "Ændringer afventer synkronisering.",
+    "checking": "Kontrollerer synkroniseringsstatus…",
+    "pending": "{count} ændringer afventer synkronisering",
+    "offline": "Offline — bruger den gemte kopi",
+    "reviewTitle": "Gennemgå modstridende ændringer",
+    "reviewDescription": "Disse felter blev også ændret på serveren. Andre ventende ændringer bevares. Annuller lader alle ændringer afvente.",
+    "missing": "(slettet eller mangler)",
+    "original": "Oprindeligt",
+    "yours": "Dit",
+    "server": "Server",
+    "keepLocal": "Behold mine ændringer",
+    "useServer": "Brug serverens version ved konflikter",
+    "cancel": "Annuller",
+    "log": {
+      "checking": "Kontrollerer serveren…",
+      "incoming": "Ændringer fundet på serveren",
+      "sending": "Sender ændringer til serveren…",
+      "confirmed": "Serveren har bekræftet ændringerne.",
+      "complete": "Synkronisering fuldført.",
+      "unchanged": "Ingen ændringer nødvendige. Alt er allerede opdateret.",
+      "conflicts": "Modstridende ændringer skal gennemgås.",
+      "keepLocal": "Beholder dine ændringer ved konflikter.",
+      "keepServer": "Beholder serverens ændringer ved konflikter.",
+      "retrying": "Serveren blev ændret under synkronisering. Kontrollerer igen…",
+      "failed": "Synkroniseringen kunne ikke fuldføres.",
+      "added": "Tilføjet",
+      "updated": "Opdateret",
+      "removed": "Fjernet",
+      "before": "Før",
+      "after": "Efter"
+    }
+  },
+  "errors": {
+    "missingData": "Settings eller Trips mangler",
+    "httpUrl": "Brug en HTTP- eller HTTPS-URL.",
+    "webLocks": "Serverredigering kræver en browser med understøttelse af Web Locks over HTTPS.",
+    "invalidDocument": "URL’en returnerede ikke et rejsedokument. Kontrollér, at du er logget ind.",
+    "otherTab": "En anden fane ændrede de samme felter. Genindlæs og gennemgå, før du gemmer.",
+    "patchUnavailable": "Serveren angiver ikke længere understøttelse af JSON Patch. Ventende ændringer gemmes på denne enhed.",
+    "network": "Kunne ikke nå serveren. Kontrollér forbindelsen, og at du er logget ind.",
+    "permission": "Adgang nægtet. Kontrollér adgangen til filen eller mappen.",
+    "invalidJson": "Filen indeholder ikke gyldig JSON.",
+    "invalidUrl": "URL’en er ugyldig.",
+    "http": "Serveren svarede med HTTP {status}",
+    "syncUnconfirmed": "Synkroniseringen kunne ikke bekræftes (HTTP {status}). Kontrollér login eller serveren."
   }
 }

@@ -1,11 +1,13 @@
-const CACHE = 'chronik-v5';
+const CACHE = 'chronik-v9';
 
 // Resolve absolute URLs relative to the SW's own location so the SW works
 // correctly no matter what path the app is served from.
 const BASE = new URL('./', self.location.href).href;
 const SHELL = [
   BASE,
-  BASE + 'bewegung.html',
+  BASE + 'index.html',
+  BASE + 'url-sync.js',
+  BASE + 'languages/english.json',
   BASE + 'favicon.svg',
   BASE + 'icon.svg',
   BASE + 'manifest.json',
@@ -34,9 +36,22 @@ self.addEventListener('activate', e => {
 //   • Same-origin requests  → cache-first; populate cache on miss
 //   • Cross-origin (CDN)    → network-first; fall back to cache
 self.addEventListener('fetch', e => {
-  if (e.request.method !== 'GET') return;
+  if (e.request.method !== 'GET' || e.request.cache === 'no-store') return;
 
   const url = new URL(e.request.url);
+
+  // Refresh navigation while online, and retain the complete shell for offline
+  // restarts. Data reads explicitly use no-store and never enter this cache.
+  if (e.request.mode === 'navigate' || url.href.startsWith(BASE + 'languages/')) {
+    e.respondWith(fetch(e.request).then(response => {
+      if (response.ok) {
+        const copy = response.clone();
+        caches.open(CACHE).then(cache => cache.put(e.request, copy));
+      }
+      return response;
+    }).catch(async () => await caches.match(e.request) || await caches.match(BASE + 'index.html')));
+    return;
+  }
 
   // Skip user data JSON files (they change; let the browser handle them)
   if (
@@ -75,7 +90,7 @@ self.addEventListener('fetch', e => {
         }).catch(() => {
           // Navigation fallback: serve the app shell
           if (e.request.mode === 'navigate') {
-            return caches.match(BASE + 'bewegung.html');
+            return caches.match(BASE + 'index.html');
           }
         });
       })
