@@ -970,6 +970,11 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 #file-close:hover{background:#c0392b;border-color:#c0392b;color:#fff}
 #file-body{flex:1;overflow:auto;display:flex;align-items:center;justify-content:center;padding:16px;background:#111}
 #file-img{max-width:100%;max-height:100%;object-fit:contain;border-radius:4px;box-shadow:0 4px 32px rgba(0,0,0,.6)}
+@media(max-width:600px){
+  #photo-overlay,#file-overlay{flex-direction:column-reverse}
+  #photo-bar,#file-bar{border-bottom:0;border-top:1px solid #333;padding-bottom:calc(7px + env(safe-area-inset-bottom,0px))}
+  #photo-frame,#file-body{min-height:0}
+}
 
 /* Empty */
 .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;color:var(--muted);text-align:center}
@@ -4589,6 +4594,58 @@ function buildImmichUrl(base, date, trip) {
   }))}#search-chips`;
 }
 
+async function navigatePhotoFrame(frame, href) {
+  const request=(frame._photoRequest||0)+1;
+  frame._photoRequest=request;
+  const fade=()=>{
+    if(frame._photoRequest!==request||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+    frame.getAnimations().forEach(animation=>animation.cancel());
+    frame.animate([{opacity:.55},{opacity:1}],{duration:180,easing:'ease-out'});
+  };
+  // Direct router access is available only when Immich shares this page's origin.
+  // CORS headers do not grant access to a cross-origin iframe's document.
+  let handled=false;
+  let target;
+  try{
+    const win=frame.contentWindow;
+    const current=new URL(win.location.href);
+    target=new URL(href,location.href);
+    target.hash=''; // Repeated search links must not become scroll-only navigation.
+    if(!frame._photoLoading&&current.origin===target.origin&&current.pathname===target.pathname&&/\/search\/?$/.test(current.pathname)){
+      const doc=win.document;
+      const link=doc.createElement('a');
+      link.href=target.href;
+      link.hidden=true;
+      link.setAttribute('data-sveltekit-noscroll','');
+      link.setAttribute('data-sveltekit-keepfocus','');
+      link.setAttribute('data-sveltekit-reload','false');
+      (doc.querySelector('main')||doc.body).appendChild(link);
+      const click=new win.MouseEvent('click',{bubbles:true,cancelable:true,button:0});
+      const preventReload=event=>{
+        if(event!==click)return;
+        handled=event.defaultPrevented;
+        event.preventDefault();
+      };
+      win.addEventListener('click',preventReload);
+      try{link.dispatchEvent(click);}
+      finally{win.removeEventListener('click',preventReload);link.remove();}
+    }
+  }catch{ /* Separate Immich origins keep normal iframe navigation. */ }
+  if(handled){
+    // Once the router accepts a search, don't replace a slow search with a reload.
+    const deadline=Date.now()+4000;
+    while(frame._photoRequest===request&&Date.now()<deadline){
+      try{if(frame.contentWindow.location.href===target.href){fade();return;}}
+      catch{return;}
+      await new Promise(resolve=>setTimeout(resolve,40));
+    }
+    return;
+  }
+  frame._photoLoading=true;
+  frame.onload=()=>{frame._photoLoading=false;fade();};
+  frame.src=href;
+}
+
 function openPhotoOverlay(innerId, selectedDate) {
   const trip=data.Trips[innerId]; if(!trip)return;
   const photoCfg=data.Settings?.Photos||{};
@@ -4633,7 +4690,7 @@ function openPhotoOverlay(innerId, selectedDate) {
   function loadDate(date) {
     const url=buildImmichUrl(immichBase,date,trip);
     sel.value=date;
-    document.getElementById('photo-frame').src=url;
+    navigatePhotoFrame(document.getElementById('photo-frame'),url);
     document.getElementById('photo-immich-link').href=url.replace(/#.*/,''); // no fragment for direct link
     document.getElementById('photo-prev').disabled=dates.indexOf(date)===0;
     document.getElementById('photo-next').disabled=dates.indexOf(date)===dates.length-1;
