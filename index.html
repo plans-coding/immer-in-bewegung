@@ -482,6 +482,11 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 #st-content .st-card{background:var(--s1);border-color:var(--border);border-radius:12px;margin-top:12px;box-shadow:none}
 #st-content .st-group-hdr{padding:14px 16px;background:var(--s3);font-size:13px;font-weight:600;text-transform:none;letter-spacing:.2px;color:var(--text)}
 #st-content .st-group-hdr::before{display:none}
+#st-content details.st-card>summary{cursor:pointer;list-style:none}
+#st-content details.st-card>summary::-webkit-details-marker{display:none}
+#st-content details.st-card>summary::after{content:'▸';margin-left:auto;color:var(--muted2)}
+#st-content details.st-card[open]>summary::after{content:'▾'}
+#st-content details.st-card:not([open])>summary{border-bottom:0}
 #st-content .st-sub-hdr{padding:10px 16px 6px;background:var(--s3);font-size:11px;text-transform:none;letter-spacing:.3px}
 #st-content .st-sub-hdr.collapsible{padding:11px 16px}
 #st-content .st-row{padding:11px 16px;gap:16px}
@@ -805,6 +810,9 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 @media(max-width:700px){.tv-summary-body{flex-direction:column}.tv-summary-map{width:auto;margin:0 12px 12px;min-height:220px}}
 @media(max-width:600px){
   #explore-inner{padding:14px 10px}
+  /* The app shell already reserves the bottom menu height. */
+  #tab-ovbrowse,#tab-explore{scrollbar-width:none}
+  #tab-ovbrowse::-webkit-scrollbar,#tab-explore::-webkit-scrollbar{display:none}
   .explore-hdr{margin-bottom:14px}
   #ovb-content{padding:12px 10px}
   #ovb-subnav{padding:0 10px}
@@ -6852,9 +6860,9 @@ function renderSettings() {
     rowEl.appendChild(sel);
     (currentSubContainer||currentCard||content).appendChild(rowEl);
   }
-  function makeHdr(text){
-    const card=document.createElement('div'); card.className='st-card';
-    const hdr=document.createElement('div'); hdr.className='st-group-hdr'; hdr.textContent=text;
+  function makeHdr(text, collapsible=true){
+    const card=document.createElement(collapsible?'details':'div'); card.className='st-card';
+    const hdr=document.createElement(collapsible?'summary':'div'); hdr.className='st-group-hdr'; hdr.textContent=text;
     card.appendChild(hdr); content.appendChild(card); currentCard=card; currentSubContainer=null; return card;
   }
   function makeSubHdr(text, collapsible=false){
@@ -6885,7 +6893,7 @@ function renderSettings() {
   Object.entries(settings.Base||{}).forEach(([k,v])=>{if(_skipKeys.has(k))return;addRow(val=>settings.Base[k]=val,k,v);});
   makeHdr(t('settings.sections.definition','Definition'));
   Object.entries(settings.Definition||{}).forEach(([k,v])=>addRow(val=>settings.Definition[k]=val,k,v));
-  const extensionCard=makeHdr(t('settings.sections.extension','Extension'));
+  const extensionCard=makeHdr(t('settings.sections.extension','Extension'),false);
   Object.entries(settings.Extension||{}).forEach(([extName,extVal])=>{
     makeSubHdr(extName,true);
     if(extName==='ExternalDocuments'){
@@ -6902,8 +6910,8 @@ function renderSettings() {
   makeHdr(t('settings.sections.other','Other'));
   Object.entries(settings.Other||{}).forEach(([k,v])=>{if(_skipKeys.has(k))return;addRow(val=>settings.Other[k]=val,k,v);});
   // ── Language card ────────────────────────────────────────────────
-  const langCard=document.createElement('div'); langCard.className='st-card';
-  const langHdr=document.createElement('div'); langHdr.className='st-group-hdr'; langHdr.textContent=t('settings.sections.language','Language');
+  const langCard=document.createElement('details'); langCard.className='st-card';
+  const langHdr=document.createElement('summary'); langHdr.className='st-group-hdr'; langHdr.textContent=t('settings.sections.language','Language');
   const langBody=document.createElement('div'); langBody.style.cssText='padding:14px 18px;display:flex;flex-direction:column;gap:10px';
   const langDesc=document.createElement('div'); langDesc.style.cssText='font-size:12px;color:var(--muted2);line-height:1.5';
   langDesc.textContent=t('settings.sections.languageDesc','Path to a language JSON file relative to the app (e.g. languages/swedish.json). Leave empty for built-in English.');
@@ -7010,8 +7018,8 @@ function renderSettings() {
   immichCard.appendChild(tools);
 
   // ── Offline / Service Worker card ────────────────────────────────
-  const swCard=document.createElement('div'); swCard.className='st-card';
-  const swHdr=document.createElement('div'); swHdr.className='st-group-hdr'; swHdr.textContent=t('settings.offline.title','Offline');
+  const swCard=document.createElement('details'); swCard.className='st-card';
+  const swHdr=document.createElement('summary'); swHdr.className='st-group-hdr'; swHdr.textContent=t('settings.offline.title','Offline');
   const swBody=document.createElement('div'); swBody.style.cssText='padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap';
   const swDesc=document.createElement('div'); swDesc.style.cssText='font-size:13px;color:var(--muted2);line-height:1.6';
   const swStatus=document.createElement('span'); swStatus.style.cssText='display:inline-block;margin-top:4px;font-size:12px;font-family:"SF Mono","Consolas",monospace';
