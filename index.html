@@ -95,17 +95,21 @@ body{font-family:'Scoutie Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans
 #nav-brand{display:flex;align-items:center;gap:8px;padding:0 12px;border-left:1px solid var(--border);height:100%;flex-shrink:0;position:relative}
 #nav-logo{width:28px;height:28px;padding:0;border:0;background:none;color:inherit;cursor:pointer;display:block;flex-shrink:0;opacity:.9;transition:opacity .15s,transform .15s}
 #nav-logo img{width:100%;height:100%;display:block}
-#nav-logo:hover{opacity:1;transform:scale(1.1)}
+#nav-logo,#nav-logo img{-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+#nav-logo:hover{opacity:1}
+#nav-logo[aria-expanded="true"]{opacity:1;transform:scale(1.1)}
 #nav-menu{position:absolute;top:calc(100% + 4px);right:8px;min-width:150px;padding:5px;background:var(--s1);border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-h);display:none}
+#nav-menu{user-select:none;-webkit-user-select:none}
 #nav-menu.open{display:block;z-index:200}
 .nav-menu-item{display:block;width:100%;padding:8px 11px;border:0;border-radius:5px;background:transparent;color:var(--text);font:inherit;font-size:13px;text-align:left;cursor:pointer;white-space:nowrap}
 .nav-menu-item:hover,.nav-menu-item:focus-visible{background:var(--accent-g);outline:none}
 .mobile-menu-item{display:none}
+#nav-menu-expand{display:none}
 #mod-dot{width:6px;height:6px;border-radius:50%;background:#f0a142;display:none;flex-shrink:0}
 #mod-dot.on{display:block}
 #sync-badge{position:absolute;right:9px;top:1px;border:0;border-radius:9px;background:#b96c00;color:white;font-size:10px;min-width:18px;padding:1px 4px;cursor:pointer;z-index:2}
 #sync-badge[hidden]{display:none}
-#sync-now[hidden],#server-backup[hidden]{display:none}
+.sync-button[hidden],#server-backup[hidden]{display:none}
 #server-backup:disabled{opacity:.5;cursor:wait}
 #sync-badge[data-state="error"],#sync-badge[data-state="conflict"]{background:#b93232}
 #sync-review{max-width:640px;width:calc(100% - 40px);max-height:80vh;overflow:auto;border:1px solid var(--border);border-radius:12px;background:var(--bg);color:var(--text);padding:20px}
@@ -132,9 +136,11 @@ body{font-family:'Scoutie Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans
 @keyframes sync-spin{to{transform:rotate(360deg)}}
 #nav-tabs{display:flex;flex:1;overflow-x:auto;height:100%;scrollbar-width:none}
 #nav-tabs::-webkit-scrollbar{display:none}
-#nav-actions{display:flex;align-items:center;gap:8px;padding:0 12px;border-left:1px solid var(--border);height:100%;flex-shrink:0}
-#theme-btn{background:none;border:none;cursor:pointer;padding:4px;line-height:1;color:var(--muted2);display:flex;align-items:center;justify-content:center;transition:color .15s}
-#theme-btn:hover{color:var(--text)}
+#nav-actions{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:0;padding:0 12px;border-left:1px solid var(--border);height:100%;flex-shrink:0}
+#sync-now,#theme-btn{background:none;border:none;cursor:pointer;padding:4px;line-height:1;color:var(--muted2);display:flex;align-items:center;justify-content:center;transition:color .15s}
+#sync-now:hover,#theme-btn:hover{color:var(--text)}
+#sync-now:disabled,#mobile-sync-now:disabled{opacity:.5;cursor:wait}
+#sync-now svg{width:15px;height:15px;display:block}
 #ls-theme-btn{display:flex!important;align-items:center;justify-content:center}
 /* Search page */
 #tab-search{flex-direction:column;overflow-y:auto;overflow-x:hidden;background:var(--bg)}
@@ -200,10 +206,29 @@ body{font-family:'Scoutie Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans
   /* Include the home-indicator inset in the border-box height, keeping controls above it. */
   #app{padding-bottom:calc(48px + env(safe-area-inset-bottom, 0px))}
   #app-nav{position:fixed;left:0;right:0;bottom:0;top:auto;height:calc(48px + env(safe-area-inset-bottom, 0px));padding-bottom:env(safe-area-inset-bottom, 0px);border-top:1px solid var(--border);border-bottom:0}
-  #nav-menu{top:auto;bottom:calc(100% + 4px)}
+  #app-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));grid-template-rows:47px}
+  #nav-tabs{display:contents}
+  #nav-tabs .tab-btn{grid-row:1}
+  #nav-tabs .tab-btn[data-tab="ovbrowse"]{grid-column:1}
+  #nav-tabs .tab-btn[data-tab="map"]{grid-column:2}
+  #nav-tabs .tab-btn[data-tab="stats"]{grid-column:4}
+  #nav-tabs .tab-btn[data-tab="trip"]{grid-column:5}
+  #nav-brand{grid-column:3;grid-row:1;justify-content:center;height:47px;padding:0;border:0;min-width:0}
+  #nav-logo{position:relative;z-index:201;top:-8px;width:58px;height:58px;padding:8px;border:0;border-radius:50%;background:var(--s1);box-shadow:none;opacity:1}
+  #nav-logo::before{content:"";position:absolute;inset:0;border:1px solid var(--border);border-radius:50%;clip-path:inset(0 0 calc(100% - 13px) 0);pointer-events:none}
+  #nav-menu{top:auto;bottom:calc(100% + 1px);left:50%;right:auto;transform:translateX(-50%);border-radius:8px 8px 0 0;clip-path:inset(-20px -20px 0 -20px);padding-bottom:18px;max-width:calc(100vw - 20px);max-height:calc(100dvh - 100px);overflow-y:auto}
   #nav-actions{position:fixed;left:0;bottom:0;width:0;height:0;padding:0;border:0;overflow:visible;pointer-events:none}
   #nav-actions > *{display:none}
   #nav-menu{min-width:210px}
+  #nav-menu.open{display:flex;flex-direction:column}
+  #nav-menu .mobile-tools-row{order:-4}
+  #nav-menu > [data-tab="explore"]{order:-3}
+  #nav-menu > [data-tab="overview"]{order:-2}
+  #nav-menu > #server-backup{order:-1}
+  #nav-menu:not(.expanded) > .nav-menu-extra{display:none!important}
+  #nav-menu > #nav-menu-expand{display:flex;align-items:center;justify-content:center;order:1;color:var(--muted2)}
+  #nav-menu-expand svg{width:18px;height:18px;transition:transform .15s}
+  #nav-menu.expanded #nav-menu-expand svg{transform:rotate(180deg)}
   #nav-menu > .nav-menu-item{min-height:44px;padding:12px 14px;font-size:15px}
   .mobile-menu-item{display:flex;align-items:center;gap:9px}
   .mobile-menu-item svg{width:16px;height:16px;flex:0 0 16px;color:var(--muted2)}
@@ -225,6 +250,7 @@ body{font-family:'Scoutie Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans
   .search-filter-info{padding:8px 10px;font-size:12px}
 }
 @media(min-width:601px){
+  #app-nav{z-index:1200}
   /* Keep the full-width content flow, while turning the main nav into a left rail. */
   #app{padding-left:48px}
   #app-nav{position:fixed;top:0;left:0;bottom:0;width:48px;height:auto;flex-direction:column;border-bottom:none;border-right:1px solid var(--border)}
@@ -266,6 +292,16 @@ body{font-family:'Scoutie Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans
 .sub-btn{padding:0 14px;height:40px;border:none;background:transparent;color:var(--muted2);cursor:pointer;font-size:13px;font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .12s,border-color .12s;white-space:nowrap}
 .sub-btn.active{color:var(--accent);border-bottom:3px solid var(--accent);font-weight:600;position:relative;z-index:1}
 .sub-btn:hover:not(.active){color:var(--text)}
+
+/* Overview uses connected segments; Statistics keeps the shared tab style. */
+#ovb-subnav{gap:0;padding:0 24px;margin-top:16px;border-bottom:none;background:var(--bg)}
+#ovb-subnav .sub-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:36px;padding:0 14px;margin:0;border:1px solid var(--border-h);border-left:none;background:var(--s1);color:var(--muted2);font-weight:500;transition:background .12s,color .12s}
+#ovb-subnav .sub-btn:first-child{border-left:1px solid var(--border-h);border-radius:18px 0 0 18px}
+#ovb-subnav .sub-btn:last-child{border-radius:0 18px 18px 0}
+#ovb-subnav .sub-btn.active::before{content:"✓";font-size:14px;line-height:1}
+#ovb-subnav .sub-btn.active{background:var(--accent-g);color:var(--accent);font-weight:600}
+#ovb-subnav .sub-btn:hover:not(.active){background:var(--accent-g);color:var(--accent)}
+#ovb-subnav .sub-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;position:relative;z-index:2}
 
 /* Editor (Overview tab) */
 #tab-overview{flex-direction:row}
@@ -489,15 +525,15 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 .ex-footer{padding:8px 14px;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;border-top:1px solid var(--border)}
 
 /* Overview Browse */
-#tab-ovbrowse{flex-direction:column;overflow:hidden}
-#ovb-content{flex:1;overflow-y:auto;padding:20px 24px;background:var(--bg)}
+#tab-ovbrowse{flex-direction:column;overflow-y:auto}
+#ovb-content{flex:0 0 auto;overflow-x:auto;padding:20px 24px;background:var(--bg)}
 #ovb-content details{margin-bottom:8px}
-#ovb-content details summary{cursor:pointer;list-style:none;display:flex;align-items:center;padding:9px 14px;background:var(--s2);color:var(--text);border-radius:6px 6px 0 0;font-size:13px;font-weight:600;user-select:none;border:1px solid var(--border);box-shadow:var(--shadow);transition:background .12s}
+#ovb-content details summary{cursor:pointer;list-style:none;display:flex;align-items:center;border-radius:6px 6px 0 0;user-select:none;border:none;box-shadow:var(--shadow);transition:background .12s}
 #ovb-content details:not([open]) summary{border-radius:6px}
 #ovb-content details summary::-webkit-details-marker{display:none}
 #ovb-content details summary::after{content:'▾';margin-left:auto;color:var(--muted);transition:transform .2s}
 #ovb-content details:not([open]) summary::after{transform:rotate(-90deg)}
-.ov-details-content{background:var(--s2);border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px;overflow:hidden}
+.ov-details-content{background:var(--s2);border:none;border-radius:0 0 6px 6px;overflow:hidden}
 .ov-row{display:flex;align-items:flex-start;gap:16px;padding:9px 14px;border-bottom:1px solid var(--border)}
 .ov-row:last-child{border-bottom:none}
 .ov-row-left{width:80px;flex-shrink:0;font-size:13px;font-weight:600;color:var(--text);padding-top:3px}
@@ -505,7 +541,8 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 .trip-button{display:inline-block;padding:4px 10px;font-size:12px;font-weight:500;border-radius:5px;cursor:pointer;background:var(--bg);color:var(--muted2);border:1px solid var(--border);font-family:inherit;white-space:nowrap;transition:all .12s}
 .trip-button:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-g)}
 #ovb-plain-table{width:100%;border-collapse:collapse;font-size:13px;background:var(--s2);border-radius:8px;overflow:hidden;box-shadow:var(--shadow)}
-#ovb-plain-table th{padding:10px 14px;text-align:left;background:var(--s3);color:var(--muted2);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;border-bottom:1px solid var(--border)}
+#ovb-content details summary,#ovb-plain-table th{padding:10px 14px;text-align:left;background:var(--s3);color:var(--muted2);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px}
+#ovb-plain-table th{border-bottom:1px solid var(--border)}
 #ovb-plain-table td{padding:9px 14px;border-bottom:1px solid var(--border)}
 #ovb-plain-table td:nth-child(1),#ovb-plain-table td:nth-child(3),#ovb-plain-table td:nth-child(4),#ovb-plain-table .trip-button{white-space:nowrap;word-break:normal;overflow-wrap:normal}
 #ovb-plain-table tr:last-child td{border-bottom:none}
@@ -513,7 +550,7 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 #ovb-cards-wrap{width:100%}
 
 /* Days icon grid */
-.day-icon-grid{display:flex;flex-wrap:wrap;gap:4px;padding:12px 14px;background:var(--s2);border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px}
+.day-icon-grid{display:flex;flex-wrap:wrap;gap:4px;padding:12px 14px;background:var(--s2);border:none;border-radius:0 0 6px 6px}
 .day-icon{width:62px;height:60px;background:var(--s1);border:1px solid var(--border);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;padding:4px 2px;transition:transform .1s,box-shadow .12s,border-color .12s;overflow:hidden;flex-shrink:0}
 .day-icon:hover{transform:translateY(-2px);box-shadow:var(--shadow-h);border-color:var(--border-h)}
 .day-icon-flag{font-size:20px;line-height:1;margin-bottom:2px}
@@ -770,6 +807,8 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
   #explore-inner{padding:14px 10px}
   .explore-hdr{margin-bottom:14px}
   #ovb-content{padding:12px 10px}
+  #ovb-subnav{padding:0 10px}
+  #ovb-subnav .sub-btn{flex:1 1 auto;padding:0 6px;gap:4px}
   #trip-scroll{overflow-x:hidden}
   #trip-view-inner{display:flex;flex-direction:column;padding:14px 10px 8px}
   #tab-settings{padding:16px 10px;overflow-y:auto}
@@ -973,6 +1012,7 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
       <button class="tab-btn" data-tab="search" data-i18n-title="nav.tabs.search" aria-label="Search" title="Search"><svg class="tab-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6.5" cy="6.5" r="4.5"/><line x1="10.5" y1="10.5" x2="14" y2="14"/></svg><span class="tab-label" data-i18n="nav.tabs.search">Search</span></button>
     </div>
     <div id="nav-actions">
+      <button id="sync-now" class="sync-button" type="button" title="Synchronize now" aria-label="Synchronize now" hidden><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 6C3.8 1 11.4 1 13.5 6M13.5 10C12.2 15 4.6 15 2.5 10"/><path d="M13.5 2.5V6H10M2.5 13.5V10H6"/></svg></button>
       <button id="theme-btn" onclick="toggleTheme()" title="Toggle theme"></button>
     </div>
     <div id="nav-brand">
@@ -984,6 +1024,9 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6.5" cy="6.5" r="4.5"/><line x1="10.5" y1="10.5" x2="14" y2="14"/></svg>
             <span data-i18n="nav.search.title">Search trips</span>
           </button>
+          <button id="mobile-sync-now" class="nav-menu-item mobile-menu-item sync-button" type="button" role="menuitem" title="Synchronize now" aria-label="Synchronize now" hidden>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 6C3.8 1 11.4 1 13.5 6M13.5 10C12.2 15 4.6 15 2.5 10"/><path d="M13.5 2.5V6H10M2.5 13.5V10H6"/></svg>
+          </button>
           <button id="mobile-theme-btn" class="nav-menu-item mobile-menu-item" type="button" role="menuitem" data-i18n-title="nav.theme" title="Toggle theme" onclick="toggleTheme()">
             <span id="theme-btn-mobile" aria-hidden="true"></span>
             <span data-i18n="nav.theme">Toggle theme</span>
@@ -991,14 +1034,16 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
         </div>
         <button class="nav-menu-item" data-tab="explore" data-i18n="nav.menu.explore" role="menuitem">Explore</button>
         <button class="nav-menu-item" data-tab="overview" data-i18n="nav.menu.edit" role="menuitem">Edit</button>
-        <button class="nav-menu-item" data-tab="report" data-i18n="nav.menu.report" role="menuitem">Report</button>
-        <button id="external-documents-nav-item" class="nav-menu-item" data-tab="external-documents" role="menuitem" style="display:none">External documents</button>
-        <button id="complementary-lists-nav-item" class="nav-menu-item" data-tab="complementary-lists" role="menuitem" style="display:none">Complementary lists</button>
-        <button class="nav-menu-item" data-tab="console" data-i18n="nav.menu.console" role="menuitem">Console</button>
-        <button class="nav-menu-item" data-tab="settings" data-i18n="nav.menu.settings" role="menuitem">Settings</button>
-        <button id="sync-now" class="nav-menu-item" type="button" role="menuitem" hidden>Sync now</button>
+        <button class="nav-menu-item nav-menu-extra" data-tab="report" data-i18n="nav.menu.report" role="menuitem">Report</button>
+        <button id="external-documents-nav-item" class="nav-menu-item nav-menu-extra" data-tab="external-documents" role="menuitem" style="display:none">External documents</button>
+        <button id="complementary-lists-nav-item" class="nav-menu-item nav-menu-extra" data-tab="complementary-lists" role="menuitem" style="display:none">Complementary lists</button>
+        <button class="nav-menu-item nav-menu-extra" data-tab="console" data-i18n="nav.menu.console" role="menuitem">Console</button>
+        <button class="nav-menu-item nav-menu-extra" data-tab="settings" data-i18n="nav.menu.settings" role="menuitem">Settings</button>
         <button id="server-backup" data-i18n="nav.menu.serverBackup" class="nav-menu-item" type="button" role="menuitem" hidden>Server backup</button>
-        <button class="nav-menu-item" data-tab="about" data-i18n="nav.menu.about" role="menuitem">About</button>
+        <button class="nav-menu-item nav-menu-extra" data-tab="about" data-i18n="nav.menu.about" role="menuitem">About</button>
+        <button id="nav-menu-expand" class="nav-menu-item" type="button" role="menuitem" aria-expanded="false" aria-label="Show more menu items" title="Show more menu items">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 6 5 5 5-5"/></svg>
+        </button>
       </div>
       <div id="mod-dot"></div>
     </div>
@@ -1031,12 +1076,12 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 
   <!-- Overview Browse -->
   <div id="tab-ovbrowse" class="tab">
-    <div class="sub-nav" id="ovb-subnav">
-      <button class="sub-btn active" data-mode="cards" data-i18n="overview.tabs.cards">Cards</button>
-      <button class="sub-btn" data-mode="year" data-i18n="overview.tabs.year">Year</button>
-      <button class="sub-btn" data-mode="country" data-i18n="overview.tabs.country">Country</button>
-      <button class="sub-btn" data-mode="plain" data-i18n="overview.tabs.plain">Plain</button>
-      <button class="sub-btn" data-mode="days" data-i18n="overview.tabs.days">Days</button>
+    <div class="sub-nav" id="ovb-subnav" role="group" aria-label="Overview view">
+      <button class="sub-btn active" aria-pressed="true" data-mode="cards" data-i18n="overview.tabs.cards">Cards</button>
+      <button class="sub-btn" aria-pressed="false" data-mode="year" data-i18n="overview.tabs.year">Year</button>
+      <button class="sub-btn" aria-pressed="false" data-mode="country" data-i18n="overview.tabs.country">Country</button>
+      <button class="sub-btn" aria-pressed="false" data-mode="plain" data-i18n="overview.tabs.plain">Plain</button>
+      <button class="sub-btn" aria-pressed="false" data-mode="days" data-i18n="overview.tabs.days">Days</button>
     </div>
     <div id="ovb-content"></div>
   </div>
@@ -1267,14 +1312,23 @@ function setEditBusy(value) {
 function canSaveSource() { return !!fileHandle || !!urlSync?.record?.enabled; }
 function editorTrip(id) { return _editorDraft?.id === id ? _editorDraft.trip : data.Trips[id]; }
 
+function updateSyncButtons(engine = urlSync) {
+  const count = engine?.record?.pending.length || 0;
+  const label = engine?.state === 'conflict' ? t('nav.menu.syncConflict', 'Review sync conflict') : count ? t('nav.menu.syncPending', 'Sync now — {count} pending').replace('{count}', count) : t('nav.menu.syncNow', 'Sync now');
+  document.querySelectorAll('.sync-button').forEach(button => {
+    button.hidden = !engine?.record?.enabled;
+    button.disabled = engine?.state === 'syncing';
+    button.title = label;
+    button.setAttribute('aria-label', label);
+  });
+}
+
 function updateSyncUI(engine = urlSync) {
   if (engine !== urlSync) return;
-  const badge = document.getElementById('sync-badge'), button = document.getElementById('sync-now');
+  const badge = document.getElementById('sync-badge');
   const enabled = !!engine?.record?.enabled, count = engine?.record?.pending.length || 0;
-  button.hidden = !enabled;
   document.getElementById('server-backup').hidden = !enabled;
-  button.textContent = engine?.state === 'conflict' ? t('nav.menu.syncConflict', 'Review sync conflict') : (count ? t('nav.menu.syncPending', 'Sync now — {count} pending').replace('{count}', count) : t('nav.menu.syncNow', 'Sync now'));
-  button.disabled = engine?.state === 'syncing';
+  updateSyncButtons(engine);
   badge.hidden = !enabled || (!count && engine?.state === 'synced');
   badge.dataset.state = engine?.state || '';
   badge.textContent = engine?.state === 'syncing' ? '↻' : ['error','conflict'].includes(engine?.state) ? '!' : String(count || '↓');
@@ -1483,14 +1537,22 @@ function t(key, fallback) {
   return T[key] ?? fallback;
 }
 
+function updateNavMenuExpansion(expanded = document.getElementById('nav-menu').classList.contains('expanded')) {
+  document.getElementById('nav-menu').classList.toggle('expanded', expanded);
+  const button = document.getElementById('nav-menu-expand');
+  const label = expanded ? t('nav.menu.showLess', 'Show fewer menu items') : t('nav.menu.showMore', 'Show more menu items');
+  button.setAttribute('aria-expanded', String(expanded));
+  button.setAttribute('aria-label', label);
+  button.title = label;
+}
+
 // Apply data-i18n / data-i18n-ph / data-i18n-title attributes to DOM elements
 function applyI18n() {
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n, el.textContent); });
   document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = t(el.dataset.i18nPh, el.placeholder); });
   document.querySelectorAll('[data-i18n-title]').forEach(el => { el.title = t(el.dataset.i18nTitle, el.title); });
-  const syncButton = document.getElementById('sync-now');
-  const pending = urlSync?.record?.pending.length || 0;
-  if (syncButton) syncButton.textContent = urlSync?.state === 'conflict' ? t('nav.menu.syncConflict', 'Review sync conflict') : pending ? t('nav.menu.syncPending', 'Sync now — {count} pending').replace('{count}', pending) : t('nav.menu.syncNow', 'Sync now');
+  updateSyncButtons();
+  updateNavMenuExpansion();
 }
 let explorePicks = [];
 let mapInstance = null;
@@ -1695,7 +1757,7 @@ function wire() {
   urlBtn.addEventListener('click', () => loadFromUrl(urlInp.value.trim() || 'bewegung.json'));
   urlInp.addEventListener('keydown', e => { if (e.key === 'Enter') loadFromUrl(urlInp.value.trim() || 'bewegung.json'); });
   document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
-  document.getElementById('sync-now').addEventListener('click', syncNow);
+  document.querySelectorAll('.sync-button').forEach(button => button.addEventListener('click', syncNow));
   document.getElementById('server-backup').addEventListener('click', serverBackup);
   document.getElementById('sync-badge').addEventListener('click', syncNow);
   document.getElementById('sync-progress-close').addEventListener('click', () => {
@@ -1708,8 +1770,9 @@ function wire() {
   window.addEventListener('beforeunload', e => { if (_editorDirty || _settingsDirty || _savingEdit) { e.preventDefault(); e.returnValue = ''; } });
   const navLogo = document.getElementById('nav-logo');
   const navMenu = document.getElementById('nav-menu');
-  const closeNavMenu = () => { navMenu.classList.remove('open'); navLogo.setAttribute('aria-expanded', 'false'); };
-  document.getElementById('sync-now').addEventListener('click', closeNavMenu);
+  const closeNavMenu = () => { navMenu.classList.remove('open'); navLogo.setAttribute('aria-expanded', 'false'); updateNavMenuExpansion(false); };
+  document.getElementById('nav-menu-expand').addEventListener('click', () => updateNavMenuExpansion(!navMenu.classList.contains('expanded')));
+  document.querySelectorAll('.sync-button').forEach(button => button.addEventListener('click', closeNavMenu));
   document.getElementById('server-backup').addEventListener('click', closeNavMenu);
   navLogo.addEventListener('click', e => {
     e.stopPropagation();
@@ -1718,6 +1781,7 @@ function wire() {
     const tripNavToggle=document.getElementById('tq-toggle');
     tripNavToggle.classList.remove('open');
     tripNavToggle.textContent='›';
+    updateNavMenuExpansion(false);
     const isOpen = navMenu.classList.toggle('open');
     navLogo.setAttribute('aria-expanded', String(isOpen));
   });
@@ -2698,7 +2762,9 @@ function filteredTrips() {
 }
 
 function closeMobileFilters() {
-  document.getElementById('filter-bar').classList.remove('mobile-open');
+  const filterBar=document.getElementById('filter-bar');
+  filterBar.scrollTo({left:0,top:0,behavior:'instant'});
+  filterBar.classList.remove('mobile-open');
   const button=document.getElementById('trip-filter-toggle');
   button.classList.remove('open');
   button.setAttribute('aria-expanded','false');
@@ -4951,7 +5017,7 @@ function tripBtn(t, colors) {
 }
 
 function renderOvBrowse(mode) {
-  document.querySelectorAll('#ovb-subnav .sub-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));
+  document.querySelectorAll('#ovb-subnav .sub-btn').forEach(b=>{const active=b.dataset.mode===mode;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});
   const content=document.getElementById('ovb-content'); content.innerHTML='';
   const colors=domainColorMap();
 

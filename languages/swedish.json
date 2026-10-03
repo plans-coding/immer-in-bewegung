@@ -47,7 +47,9 @@
       "syncNow": "Synkronisera nu",
       "syncPending": "Synkronisera nu — {count} väntande",
       "syncConflict": "Granska synkroniseringskonflikt",
-      "serverBackup": "Säkerhetskopia på servern"
+      "serverBackup": "Säkerhetskopia på servern",
+      "showMore": "Visa fler menyalternativ",
+      "showLess": "Visa färre menyalternativ"
     }
   },
   "loadScreen": {

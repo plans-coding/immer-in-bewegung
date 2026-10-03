@@ -46,7 +46,9 @@
       "syncNow": "Synkroniser nu",
       "syncPending": "Synkroniser nu — {count} afventer",
       "syncConflict": "Gennemgå synkroniseringskonflikt",
-      "serverBackup": "Sikkerhedskopi på serveren"
+      "serverBackup": "Sikkerhedskopi på serveren",
+      "showMore": "Vis flere menupunkter",
+      "showLess": "Vis færre menupunkter"
     }
   },
   "loadScreen": {

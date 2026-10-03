@@ -46,7 +46,9 @@
       "syncNow": "Sync now",
       "syncPending": "Sync now — {count} pending",
       "syncConflict": "Review sync conflict",
-      "serverBackup": "Server backup"
+      "serverBackup": "Server backup",
+      "showMore": "Show more menu items",
+      "showLess": "Show fewer menu items"
     }
   },
   "loadScreen": {
