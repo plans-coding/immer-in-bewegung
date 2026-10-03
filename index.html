@@ -551,7 +551,7 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 
 /* Days icon grid */
 .day-icon-grid{display:flex;flex-wrap:wrap;gap:4px;padding:12px 14px;background:var(--s2);border:none;border-radius:0 0 6px 6px}
-.day-icon{width:62px;height:60px;background:var(--s1);border:1px solid var(--border);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;padding:4px 2px;transition:transform .1s,box-shadow .12s,border-color .12s;overflow:hidden;flex-shrink:0}
+.day-icon{width:62px;min-width:62px;max-width:78px;flex:1 0 62px;height:60px;background:var(--s1);border:1px solid var(--border);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;padding:4px 2px;transition:transform .1s,box-shadow .12s,border-color .12s;overflow:hidden;flex-shrink:0}
 .day-icon:hover{transform:translateY(-2px);box-shadow:var(--shadow-h);border-color:var(--border-h)}
 .day-icon-flag{font-size:20px;line-height:1;margin-bottom:2px}
 .day-icon-date{font-size:9px;color:var(--muted2);font-weight:700;text-align:center;letter-spacing:.2px;line-height:1.3}
