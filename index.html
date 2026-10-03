@@ -810,6 +810,7 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 @media(max-width:700px){.tv-summary-body{flex-direction:column}.tv-summary-map{width:auto;margin:0 12px 12px;min-height:220px}}
 @media(max-width:600px){
   #explore-inner{padding:14px 10px}
+  #app.mouse-idle #trip-filter-toggle,#app.mouse-idle #tq-toggle,#app.mouse-idle .trip-nav-prev,#app.mouse-idle .trip-nav-next{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .18s ease,visibility 0s .18s}
   /* The app shell already reserves the bottom menu height. */
   #tab-ovbrowse,#tab-explore{scrollbar-width:none}
   #tab-ovbrowse::-webkit-scrollbar,#tab-explore::-webkit-scrollbar{display:none}
@@ -1744,6 +1745,44 @@ async function boot() {
 }
 
 let _wired = false;
+function initTripMouseIdleControls() {
+  const app=document.getElementById('app');
+  const tripPanel=document.getElementById('tab-trip');
+  const narrow=window.matchMedia('(max-width:600px)');
+  const mouse=window.matchMedia('(any-hover:hover) and (any-pointer:fine)');
+  const protectedControls='#tq-toggle,#tq-drawer,#trip-filter-toggle,#filter-bar,.trip-nav-prev,.trip-nav-next';
+  let timer, usingMouse=mouse.matches, keyboardInteraction=false;
+  function refresh() {
+    clearTimeout(timer);
+    app.classList.remove('mouse-idle');
+    if(!narrow.matches||!usingMouse) return;
+    timer=setTimeout(()=>{
+      if(document.getElementById('tq-drawer').classList.contains('open')||document.getElementById('filter-bar').classList.contains('mobile-open')||(keyboardInteraction&&document.activeElement?.closest(protectedControls))) return;
+      app.classList.add('mouse-idle');
+    },1000);
+  }
+  function pointerActivity(event) {
+    keyboardInteraction=false;
+    if(event.pointerType==='mouse') {
+      usingMouse=true;
+      tripPanel.classList.remove('touch-scrolling');
+    } else if(event.pointerType==='touch'||event.pointerType==='pen') usingMouse=false;
+    refresh();
+  }
+  document.addEventListener('pointermove',pointerActivity,{passive:true});
+  document.addEventListener('pointerdown',pointerActivity,{passive:true});
+  document.addEventListener('keydown',()=>{keyboardInteraction=true;refresh();});
+  document.addEventListener('focusin',refresh);
+  document.addEventListener('focusout',refresh);
+  document.addEventListener('visibilitychange',refresh);
+  narrow.addEventListener('change',refresh);
+  mouse.addEventListener('change',()=>{usingMouse=mouse.matches;refresh();});
+  const observer=new MutationObserver(refresh);
+  ['tq-drawer','filter-bar','tab-trip'].forEach(id=>observer.observe(document.getElementById(id),{attributes:true,attributeFilter:['class']}));
+  observer.observe(document.getElementById('trip-view-inner'),{childList:true});
+  refresh();
+}
+
 function wire() {
   if (_wired) return; _wired = true;
   const dz = document.getElementById('drop-zone');
@@ -1884,6 +1923,7 @@ function wire() {
   const endTripTouch=()=>{tripTouchActive=false;finishTripMomentum();};
   tripPanel.addEventListener('touchend',endTripTouch,{passive:true});
   tripPanel.addEventListener('touchcancel',endTripTouch,{passive:true});
+  initTripMouseIdleControls();
   // Close drawer on Escape
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&tqDrw.classList.contains('open')){tqDrw.classList.remove('open');tqBtn.classList.remove('open');tqBtn.textContent='›';}});
   // Editor trip-list toggle (small screens)
@@ -1927,8 +1967,9 @@ function formatTripDayDate(dateStr) {
   const match = String(dateStr || '').slice(0, 10).match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (!match) return { dayMonth: dateStr || '', year: '' };
   const date = new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])));
-  const month = new Intl.DateTimeFormat(undefined, { month: 'long', timeZone: 'UTC' })
-    .format(date).toLowerCase();
+  const englishMonths=['january','february','march','april','may','june','july','august','september','october','november','december'];
+  const months=t('months',englishMonths);
+  const month=(Array.isArray(months)&&months[date.getUTCMonth()])||englishMonths[date.getUTCMonth()];
   return { dayMonth: `${Number(match[3])} ${month}`, year: match[1] };
 }
 
@@ -4989,7 +5030,7 @@ function renderTripView(innerId) {
         // Photos (Immich overlay)
         if(showPhotos){
           const date=ev.Date;
-          btns.push({label:t('tripView.photos','Photos'),photos:true,fn:()=>openPhotoOverlay(innerId,date)});
+          btns.push({label:t('tripView.photos','Photos'),photos:true,href:buildImmichUrl(immichBase,date,trip),fn:()=>openPhotoOverlay(innerId,date)});
         }
       }
       if(btns.length){
@@ -5000,7 +5041,7 @@ function renderTripView(innerId) {
           el.className=b.photos?'tv-ext-btn tv-ext-photos':'tv-ext-btn';
           el.textContent=b.label;
           if(b.fn){
-            el.href='#'; el.addEventListener('click',e=>{e.preventDefault();b.fn();});
+            el.href=b.href||'#'; el.addEventListener('click',e=>{e.preventDefault();b.fn();});
           } else {
             el.href=b.href; el.target='_blank'; el.rel='noopener';
           }
