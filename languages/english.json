@@ -55,6 +55,7 @@
     "urlDivider": "or load from URL",
     "urlPlaceholder": "https://example.com/bewegung.json (default: ./bewegung.json)",
     "urlButton": "Load",
+    "demoInfo": "To load demo data, leave the URL field empty and press Load. No file is needed.",
     "subtitle": "Open source travel documentation",
     "resume": "Resume"
   },
@@ -121,6 +122,7 @@
     "hideTopBar": "Hide top bar",
     "fullscreen": "Fullscreen",
     "exitFullscreen": "Exit fullscreen",
+    "download": "Download trip",
     "downloadJson": "Download as JSON",
     "downloadMd": "Download as Markdown",
     "photos": "Photos",
