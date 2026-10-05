@@ -28,8 +28,9 @@
   --navy:#ffffff; --navy-d:#f9f9f9;
   --blue:#1d655e; --blue-h:#155049; --blue-l:rgba(29,101,94,0.08);
   --white:#212529; --green:#2ecc71;
-  color-scheme:light;
+  color-scheme:light dark;
 }
+[data-theme="light"] { color-scheme:light; }
 [data-theme="dark"] {
   --bg:#0d1f1c; --s1:#111f1c; --s2:#162b27; --s3:#1c3530;
   --ev-hdr:#1c2128;
@@ -207,6 +208,7 @@ body{font-family:'Scoutie Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans
   #app{padding-bottom:calc(48px + env(safe-area-inset-bottom, 0px))}
   #app-nav{position:fixed;left:0;right:0;bottom:0;top:auto;height:calc(48px + env(safe-area-inset-bottom, 0px));padding-bottom:env(safe-area-inset-bottom, 0px);border-top:1px solid var(--border);border-bottom:0}
   #app-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));grid-template-rows:47px}
+  #app-nav button{-webkit-tap-highlight-color:transparent}
   #nav-tabs{display:contents}
   #nav-tabs .tab-btn{grid-row:1}
   #nav-tabs .tab-btn[data-tab="ovbrowse"]{grid-column:1}
@@ -530,6 +532,9 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 .ex-footer{padding:8px 14px;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;border-top:1px solid var(--border)}
 
 /* Overview Browse */
+.ovb-controls{display:flex;align-items:center;gap:8px;margin-bottom:20px}
+.ovb-controls .cards-search{flex:1;min-width:0;width:auto;margin-bottom:0;box-sizing:border-box}
+.ovb-controls .search-sort-btn{flex-shrink:0}
 #tab-ovbrowse{flex-direction:column;overflow-y:auto}
 #ovb-content{flex:0 0 auto;overflow-x:auto;padding:20px 24px;background:var(--bg)}
 #ovb-content details{margin-bottom:8px}
@@ -566,6 +571,13 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 /* Map */
 #tab-map{flex-direction:column;overflow:hidden;position:relative}
 #map-container{flex:1;z-index:0}
+[data-theme="dark"] #map-container .maplibregl-ctrl-attrib {
+  background: var(--s2);
+  color: var(--text);
+}
+[data-theme="dark"] #map-container .maplibregl-ctrl-attrib a { color: var(--text); }
+[data-theme="dark"] #map-container .maplibregl-ctrl-attrib a:hover { color: var(--accent); }
+[data-theme="dark"] #map-container .maplibregl-ctrl-attrib-button { filter: invert(1); }
 [data-theme="dark"] #map-container .maplibregl-canvas,
 [data-theme="dark"] .tv-summary-map .maplibregl-canvas {
   filter: invert(1) hue-rotate(180deg);
@@ -638,7 +650,7 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 #map-mode-badge{width:100%;text-align:center;pointer-events:none;display:none}
 #map-mode-badge.on{display:block}
 #map-mode-badge span{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;padding:2px 12px;border-radius:20px;letter-spacing:.4px}
-.map-legend{position:absolute;bottom:30px;right:10px;background:var(--s2);padding:10px 14px;border-radius:8px;font-size:12px;box-shadow:var(--shadow);border:1px solid var(--border);color:var(--text);z-index:10;pointer-events:none}
+.map-legend{position:absolute;bottom:38px;right:10px;background:var(--s2);padding:10px 14px;border-radius:8px;font-size:12px;box-shadow:var(--shadow);border:1px solid var(--border);color:var(--text);z-index:10;pointer-events:none}
 .map-legend-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted2);margin-bottom:8px}
 .map-legend-item{display:flex;align-items:center;gap:7px;margin-bottom:5px;font-size:12px;color:var(--text)}
 .map-legend-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;border:1.5px solid rgba(255,255,255,.3)}
@@ -1593,17 +1605,24 @@ const _ICON_DOWNLOAD = `<svg width="15" height="15" viewBox="0 0 16 16" fill="no
 const _ICON_RELOAD = `<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 5.5A6 6 0 1 0 14 9"/><path d="M13.5 2.5v3h-3"/></svg>`;
 const _ICON_EJECT  = `<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 13a.5.5 0 0 1 0 1h-11a.5.5 0 0 1 0-1zm-8.803-5.43L8 2.227l3.303 5.342A.5.5 0 0 1 10.874 8H5.125a.5.5 0 0 1-.428-.43zM8 .787a.5.5 0 0 0-.428.243L3.569 7.37A1.5 1.5 0 0 0 4.874 9.5h6.252a1.5 1.5 0 0 0 1.305-2.13L9.428 1.03A.5.5 0 0 0 8 .787"/></svg>`;
 const _ICON_SUN  = `<svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6m0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/></svg>`;
+const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+function preferredTheme() {
+  const saved = localStorage.getItem('chronik-theme');
+  return saved === 'light' || saved === 'dark' ? saved : (systemTheme.matches ? 'dark' : 'light');
+}
+systemTheme.addEventListener('change', () => applyTheme(preferredTheme()));
 function applyTheme(theme) {
   document.documentElement.dataset.theme = theme;
   const icon = theme === 'light' ? _ICON_MOON : _ICON_SUN;
   document.querySelectorAll('#theme-btn,#ls-theme-btn,#theme-btn-mobile').forEach(b => b.innerHTML = icon);
-  localStorage.setItem('chronik-theme', theme);
   // Keep the browser/Android top bar in sync with the nav background
   const metaTheme = document.querySelector('meta[name="theme-color"]');
   if (metaTheme) metaTheme.content = theme === 'dark' ? '#0d1f1c' : '#f5f5f5';
 }
 function toggleTheme() {
-  applyTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
+  const theme = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+  localStorage.setItem('chronik-theme', theme);
+  applyTheme(theme);
 }
 
 // ── IndexedDB ─────────────────────────────────────────────────────
@@ -1694,7 +1713,7 @@ function setLsStatus(msg) {
 
 async function boot() {
   await loadLang();
-  applyTheme(localStorage.getItem('chronik-theme') || 'dark');
+  applyTheme(preferredTheme());
   wire();
   applyI18n();
   // Keep the hosted demo on the start screen with instructions for loading demo data.
@@ -2975,9 +2994,6 @@ function switchTab(tab, {updateHash=true}={}) {
   if (tab === 'settings' && !_settingsDraft) renderSettings();
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab===tab));
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.id===`tab-${tab}`));
-  // Highlight frog logo when Explore is active
-  const logo = document.getElementById('nav-logo');
-  if (logo) logo.style.filter = tab==='explore' ? 'drop-shadow(0 0 4px var(--accent))' : '';
   const filterBar = document.getElementById('filter-bar');
   if (filterBar) filterBar.classList.toggle('on', tab !== 'external-documents' && tab !== 'complementary-lists' && tab !== 'console' && !!data);
   if (tab==='explore') { if(updateHash) setHash('#explore'); renderExplore(); }
@@ -5122,30 +5138,56 @@ function tripBtn(t, colors) {
   btn.addEventListener('click',()=>openTripView(t.InnerId)); return btn;
 }
 
+const overviewViewState = {};
+
 function renderOvBrowse(mode) {
   document.querySelectorAll('#ovb-subnav .sub-btn').forEach(b=>{const active=b.dataset.mode===mode;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});
-  const content=document.getElementById('ovb-content'); content.innerHTML='';
+  const host=document.getElementById('ovb-content'); host.innerHTML='';
+  const state=overviewViewState[mode] ||= {query:'',ascending:false};
+  const controls=document.createElement('div'); controls.className='ovb-controls';
+  const search=document.createElement('input'); search.type='search'; search.className='cards-search';
+  search.placeholder=t('overview.searchPlaceholder','Search trips…'); search.setAttribute('aria-label',search.placeholder);
+  search.value=state.query;
+  const sort=document.createElement('button'); sort.type='button'; sort.className='search-sort-btn';
+  sort.innerHTML=document.getElementById('search-sort-btn').innerHTML;
+  controls.append(search,sort); host.appendChild(controls);
+  const content=document.createElement('div'); host.appendChild(content);
   const colors=domainColorMap();
+  function renderResults() {
+  content.innerHTML='';
+  const q=state.query.toLowerCase().trim();
+  const matches=value=>String(value||'').toLowerCase().includes(q);
+  const tripsForView=filteredTrips().filter(trip=>!q||[
+    trip.OuterId,trip.InnerId,trip.OverallDestination,trip.TripDescription,trip.TripDomain,trip.TripLabels,
+    trip.TripYear,trip.DepartureDate,trip.ReturnDate,trip.ArrangerGroup,
+    ...(trip.Days||[]).flatMap(day=>[day.Date,day.Accommodation,day.AccommodationCountry,day.CountriesDuringDay])
+  ].some(matches)).slice().sort((a,b)=>(state.ascending?1:-1)*(a.DepartureDate||'').localeCompare(b.DepartureDate||''));
+  const label=mode==='country'
+    ? (state.ascending?'A–Z':'Z–A')
+    : t(state.ascending?'searchPage.sortOldest':'searchPage.sortNewest',state.ascending?'Oldest first':'Newest first');
+  sort.title=label; sort.setAttribute('aria-label',label);
+  sort.setAttribute('aria-pressed',String(state.ascending));
 
   if (mode==='year') {
-    const trips=filteredTrips().map(t=>({...t,TripDecade:Math.floor((t.TripYear||0)/10)*10})).sort((a,b)=>a.TripYear!==b.TripYear?b.TripYear-a.TripYear:(a.DepartureDate||'').localeCompare(b.DepartureDate||''));
+    const trips=tripsForView.map(t=>({...t,TripDecade:Math.floor((t.TripYear||0)/10)*10})).sort((a,b)=>a.TripYear!==b.TripYear?(state.ascending?1:-1)*(a.TripYear-b.TripYear):(state.ascending?1:-1)*(a.DepartureDate||'').localeCompare(b.DepartureDate||''));
     const decades=new Map();
     trips.forEach(t=>{if(!decades.has(t.TripDecade))decades.set(t.TripDecade,new Map());const ym=decades.get(t.TripDecade);if(!ym.has(t.TripYear))ym.set(t.TripYear,[]);ym.get(t.TripYear).push(t);});
     decades.forEach((years,decade)=>{const det=document.createElement('details');det.open=true;const sum=document.createElement('summary');sum.textContent=t('overview.decadeSuffix','{decade}s').replace('{decade}',decade);det.appendChild(sum);const inner=document.createElement('div');inner.className='ov-details-content';years.forEach((tripsY,year)=>{const row=document.createElement('div');row.className='ov-row';const left=document.createElement('div');left.className='ov-row-left';left.textContent=year;const right=document.createElement('div');right.className='ov-row-right';tripsY.forEach(t=>right.appendChild(tripBtn(t,colors)));row.appendChild(left);row.appendChild(right);inner.appendChild(row);});det.appendChild(inner);content.appendChild(det);});
 
   } else if (mode==='country') {
     const isoMap=buildISOMap(); const result=[];
-    filteredTrips().forEach(trip=>{
+    tripsForView.forEach(trip=>{
       const crossings=computeBorderCrossingsArray(trip.Days||[]),seen=new Set();
       crossings.forEach(orig=>{if(!orig||orig.startsWith('+')||orig.startsWith('**'))return;const c=orig.replace(/^\*+/,'').trim();if(!c||seen.has(c))return;seen.add(c);const info=isoMap[c]||{};result.push({Continent:info.continent||null,Country:c,OuterId:trip.OuterId,InnerId:trip.InnerId,TripDomain:trip.TripDomain,OverallDestination:trip.OverallDestination});});
     });
     result.sort((a,b)=>{const ae=a.Continent==='Europa'?0:1,be=b.Continent==='Europa'?0:1;if(ae!==be)return ae-be;return(a.Continent||'').localeCompare(b.Continent||'')||(a.Country||'').localeCompare(b.Country||'')||(a.OuterId||'').localeCompare(b.OuterId||'');});
+    if(!state.ascending)result.reverse();
     const continents=new Map();
     result.forEach(r=>{const cont=r.Continent||'(Other)',ctry=r.Country||'(Unknown)';if(!continents.has(cont))continents.set(cont,new Map());const cm=continents.get(cont);if(!cm.has(ctry))cm.set(ctry,[]);cm.get(ctry).push(r);});
     continents.forEach((countries,continent)=>{const det=document.createElement('details');det.open=true;const sum=document.createElement('summary');sum.textContent=continent;det.appendChild(sum);const inner=document.createElement('div');inner.className='ov-details-content';countries.forEach((trips,country)=>{const row=document.createElement('div');row.className='ov-row';const left=document.createElement('div');left.className='ov-row-left';left.textContent=country;const right=document.createElement('div');right.className='ov-row-right';trips.forEach(t=>right.appendChild(tripBtn(t,colors)));row.appendChild(left);row.appendChild(right);inner.appendChild(row);});det.appendChild(inner);content.appendChild(det);});
 
   } else if (mode==='plain') {
-    const trips=filteredTrips();
+    const trips=tripsForView;
     const table=document.createElement('table');table.id='ovb-plain-table';
     table.innerHTML=`<thead><tr><th>${t('plainTable.id','ID')}</th><th>${t('plainTable.destination','Destination')}</th><th>${t('plainTable.departure','Departure')}</th><th>${t('plainTable.return','Return')}</th><th>${t('plainTable.days','Days')}</th><th>${t('plainTable.group','Group')}</th></tr></thead>`;
     const tbody=document.createElement('tbody');
@@ -5153,26 +5195,20 @@ function renderOvBrowse(mode) {
     table.appendChild(tbody);content.appendChild(table);
 
   } else if (mode==='cards') {
-    // Full card grid with search — copy of old Explore
     const wrap=document.createElement('div'); wrap.id='ovb-cards-wrap';
-    const search=document.createElement('input'); search.type='search'; search.placeholder=t('overview.searchPlaceholder','Search trips…'); search.className='cards-search';
     const grid=document.createElement('div'); grid.className='cards-grid';
-    wrap.appendChild(search); wrap.appendChild(grid); content.appendChild(wrap);
-
-    function renderCardsGrid(filter) {
-      const q=(filter||'').toLowerCase();
-      const trips=filteredTrips();
-      const filtered=q?trips.filter(t=>(t.OuterId||'').toLowerCase().includes(q)||(t.OverallDestination||'').toLowerCase().includes(q)||(t.TripDescription||'').toLowerCase().includes(q)||(t.TripDomain||'').toLowerCase().includes(q)||(t.TripLabels||'').toLowerCase().includes(q)):trips;
-      grid.innerHTML='';
-      if(!filtered.length){grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="ei">🔍</div><h3>${t('overview.noTrips','No trips found')}</h3></div>`;return;}
-      filtered.forEach(t=>grid.appendChild(makeCard(t,colors)));
-    }
-    renderCardsGrid('');
-    search.addEventListener('input',()=>renderCardsGrid(search.value));
+    wrap.appendChild(grid); content.appendChild(wrap);
+    tripsForView.forEach(trip=>grid.appendChild(makeCard(trip,colors)));
 
   } else if (mode==='days') {
-    renderOvBrowseDays(content);
+    renderOvBrowseDays(content,tripsForView,state.ascending,q);
   }
+
+  if(!content.textContent.trim()&&!content.querySelector('.trip-card'))content.innerHTML=`<div class="empty"><div class="ei">🔍</div><h3>${t('overview.noTrips','No trips found')}</h3></div>`;
+  }
+  renderResults();
+  search.addEventListener('input',()=>{state.query=search.value;renderResults();});
+  sort.addEventListener('click',()=>{state.ascending=!state.ascending;renderResults();});
 
   if (!document.getElementById('ovb-subnav').dataset.wired) {
     document.getElementById('ovb-subnav').dataset.wired='1';
@@ -5182,16 +5218,18 @@ function renderOvBrowse(mode) {
 
 // ── Overview Browse: Days view ────────────────────────────────────
 
-function renderOvBrowseDays(content) {
+function renderOvBrowseDays(content,trips=filteredTrips(),ascending=false,query='') {
   const isoMap = buildISOMap();
   const colors = domainColorMap();
 
   // Collect every day across all filtered trips
   const allDays = [];
-  filteredTrips().forEach(trip => {
+  trips.forEach(trip => {
     const color = (trip.TripDomain && colors[trip.TripDomain]) || null;
     (trip.Days || []).forEach(day => {
       if (!day.Date) return;
+      if(query&&!Object.values(day).some(value=>String(value||'').toLowerCase().includes(query))
+        &&![trip.OuterId,trip.InnerId,trip.OverallDestination,trip.TripDescription,trip.TripDomain,trip.TripLabels,trip.TripYear].some(value=>String(value||'').toLowerCase().includes(query)))return;
       // Prefer AccommodationCountry, fall back to first CountriesDuringDay entry
       const countryRaw = day.AccommodationCountry
         || (day.CountriesDuringDay || '').split(',')[0]?.replace(/^\*+/,'').trim()
@@ -5227,7 +5265,7 @@ function renderOvBrowseDays(content) {
   });
 
   // Render newest year first
-  const years = [...byYear.keys()].sort((a, b) => b - a);
+  const years = [...byYear.keys()].sort((a, b) => ascending ? a - b : b - a);
   years.forEach(year => {
     const days = byYear.get(year);
     const det = document.createElement('details');
@@ -6591,8 +6629,6 @@ function closeFile() {
   currentTab = 'explore';
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.id==='tab-explore'));
-  const logo=document.getElementById('nav-logo');
-  if(logo) logo.style.filter='drop-shadow(0 0 4px var(--accent))';
   fileHandle = null;
   setLsStatus('');
   // Restore resume button without auto-loading (user explicitly closed)
