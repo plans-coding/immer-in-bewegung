@@ -822,6 +822,8 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 @media(max-width:700px){.tv-summary-body{flex-direction:column}.tv-summary-map{width:auto;margin:0 12px 12px;min-height:220px}}
 @media(max-width:600px){
   #explore-inner{padding:14px 10px}
+  #app:has(#tab-trip.active.touch-scrolling){padding-bottom:0}
+  #app:has(#tab-trip.active.touch-scrolling) #app-nav{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .18s ease,visibility 0s .18s}
   #app.mouse-idle #trip-filter-toggle,#app.mouse-idle #tq-toggle,#app.mouse-idle .trip-nav-prev,#app.mouse-idle .trip-nav-next{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .18s ease,visibility 0s .18s}
   /* The app shell already reserves the bottom menu height. */
   #tab-ovbrowse,#tab-explore{scrollbar-width:none}
@@ -973,7 +975,7 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 #file-overlay{position:fixed;inset:0;z-index:9001;display:none;flex-direction:column;background:#111}
 #file-overlay.open{display:flex}
 #file-bar{display:flex;align-items:center;gap:8px;padding:7px 12px;background:#1c1c1c;border-bottom:1px solid #333;flex-shrink:0;min-height:48px;overflow-x:auto;scrollbar-width:thin}
-#file-date-sel{flex:0 1 320px;padding:5px 10px;border-radius:6px;border:1px solid #444;background:#2a2a2a;color:#eee;font-size:13px;cursor:pointer}
+#file-date-sel{flex:0 1 320px;min-width:0;max-width:320px;padding:5px 10px;border-radius:6px;border:1px solid #444;background:#2a2a2a;color:#eee;font-size:13px;cursor:pointer}
 #file-open-link{background:#2a2a2a;border:1px solid #444;color:#ddd;padding:5px 12px;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;white-space:nowrap;display:flex;align-items:center;gap:5px;transition:background .12s;flex-shrink:0}
 #file-open-link:hover{background:#3a3a3a;color:#fff}
 #file-spacer{flex:1}
@@ -4662,11 +4664,11 @@ async function navigatePhotoFrame(frame, href) {
   frame.src=href;
 }
 
-function openPhotoOverlay(innerId, selectedDate) {
+function openPhotoOverlay(innerId, selectedDate, descriptions=null) {
   const trip=data.Trips[innerId]; if(!trip)return;
   const photoCfg=data.Settings?.Photos||{};
   const immichBase=immichBaseUrl(photoCfg.ImmichUrl);
-  const dates=[...(trip.Days||[])].sort((a,b)=>(a.Date||'').localeCompare(b.Date||'')).map(d=>d.Date).filter(Boolean);
+  const dates=descriptions||[...(trip.Days||[])].sort((a,b)=>(a.Date||'').localeCompare(b.Date||'')).map(d=>d.Date).filter(Boolean);
   if(!dates.length)return;
 
   // Create overlay lazily
@@ -4691,20 +4693,30 @@ function openPhotoOverlay(innerId, selectedDate) {
       </div>
       <iframe id="photo-frame" referrerpolicy="no-referrer"></iframe>`;
     document.body.appendChild(overlay);
-    document.getElementById('photo-close').addEventListener('click',()=>overlay.classList.remove('open'));
-    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&overlay.classList.contains('open'))overlay.classList.remove('open');});
+    const close=()=>{overlay.classList.remove('open');overlay._onClose?.();};
+    document.getElementById('photo-close').addEventListener('click',close);
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&overlay.classList.contains('open'))close();});
   }
 
-  // Populate date list
+  // Populate dates or description searches
   const sel=document.getElementById('photo-date-sel');
   sel.innerHTML=dates.map(d=>`<option value="${h(d)}">${h(d)}</option>`).join('');
+
+  // Return to the latest viewed day when closing a date-based photo search.
+  overlay._onClose=()=>{
+    if(descriptions||currentTab!=='trip'||document.getElementById('trip-nav')?.dataset.tripId!==innerId)return;
+    const day=[...document.querySelectorAll('#trip-scroll .tv-day[data-date]')].find(el=>el.dataset.date===sel.value);
+    day?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});
+  };
 
   // Label
   document.getElementById('photo-trip-lbl').textContent=`${trip.OuterId||innerId} · ${trip.OverallDestination||''}`.trim();
 
   // Load a date into the iframe and update controls
   function loadDate(date) {
-    const url=buildImmichUrl(immichBase,date,trip);
+    const url=descriptions
+      ? `${immichBase}/search?query=${encodeURIComponent(JSON.stringify({description:`(${date})`}))}#search-chips`
+      : buildImmichUrl(immichBase,date,trip);
     sel.value=date;
     navigatePhotoFrame(document.getElementById('photo-frame'),url);
     document.getElementById('photo-immich-link').href=url.replace(/#.*/,''); // no fragment for direct link
@@ -4951,9 +4963,10 @@ function renderTripView(innerId) {
       if(!before.endsWith('!desc')) _albumSet.add(m[1].trim());
     }
     _descSet.forEach(desc=>{
-      const url=`${_immichBase}/search?query=%7B"description"%3A"(${desc})"%7D`;
+      const url=`${_immichBase}/search?query=${encodeURIComponent(JSON.stringify({description:`(${desc})`}))}`;
       const a=document.createElement('a');a.className='tv-ext-btn';a.target='_blank';a.rel='noopener';
       a.href=url;a.title=`Search Immich: description = (${desc})`;
+      a.addEventListener('click',e=>{e.preventDefault();openPhotoOverlay(innerId,desc,[..._descSet]);});
       const icon=document.createElement('img');icon.src='immich.svg';icon.alt='';icon.setAttribute('aria-hidden','true');icon.style.cssText='width:13px;height:13px;object-fit:contain';
       a.appendChild(icon);a.appendChild(document.createTextNode(' '+desc));
       if(domColor){a.style.background=domColor;a.style.borderColor=domColor;a.style.color=domText;}
