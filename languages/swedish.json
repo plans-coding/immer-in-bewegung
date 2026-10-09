@@ -117,6 +117,7 @@
     "emptySubtitle": "Klicka på en resa i Utforska eller Översikt"
   },
   "tripView": {
+    "tripPhotos": "Visa resans foton i Immich",
     "loading": "Laddar…",
     "notFound": "Resan hittades inte",
     "edit": "Redigera",
@@ -129,6 +130,7 @@
     "downloadMd": "Ladda ner som Markdown",
     "photos": "Foton",
     "fields": {
+      "additionalDocumentation": "Ytterligare dokumentation",
       "departure": "Avresa",
       "return": "Hemkomst",
       "days": "Dagar",
@@ -143,6 +145,10 @@
     "toConnector": "till"
   },
   "editor": {
+    "daynotesLabel": "Resans daganteckningar",
+    "withDaynotes": "Resa med daganteckningar",
+    "withoutDaynotes": "Resa utan daganteckningar",
+    "removeDaynotesConfirm": "Ta bort alla dagar och deras daganteckningar från resan? Ändringen träder i kraft när du sparar.",
     "tripsToggle": "☰ Resor ▾",
     "tripsToggleCollapsed": "☰ Resor ▸",
     "newTrip": "＋ Ny resa",
@@ -395,6 +401,7 @@
       "title": "Exportera",
       "filteredBtn": "⬇ Hämta filtrerad JSON",
       "embedBtn": "⬇ Hämta med inbäddade omslagsfoton",
+      "cleanEmbedBtn": "⬇ Hämta inbäddade omslag utan integrationsinställningar",
       "inSelection": "i aktuellt urval",
       "tripSingular": "resa",
       "tripPlural": "resor",

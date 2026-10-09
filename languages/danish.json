@@ -116,6 +116,7 @@
     "emptySubtitle": "Klik på en rejse i Opdag eller Oversigt"
   },
   "tripView": {
+    "tripPhotos": "Se rejsens billeder i Immich",
     "loading": "Indlæser…",
     "notFound": "Rejse ikke fundet",
     "edit": "Rediger",
@@ -128,6 +129,7 @@
     "downloadMd": "Download som Markdown",
     "photos": "Fotos",
     "fields": {
+      "additionalDocumentation": "Yderligere dokumentation",
       "departure": "Afrejse",
       "return": "Hjemkomst",
       "days": "Dage",
@@ -142,6 +144,10 @@
     "toConnector": "til"
   },
   "editor": {
+    "daynotesLabel": "Rejsens dagsnoter",
+    "withDaynotes": "Rejse med dagsnoter",
+    "withoutDaynotes": "Rejse uden dagsnoter",
+    "removeDaynotesConfirm": "Fjern alle dage og deres dagsnoter fra denne rejse? Ændringen træder i kraft, når du gemmer.",
     "tripsToggle": "☰ Rejser ▾",
     "tripsToggleCollapsed": "☰ Rejser ▸",
     "newTrip": "＋ Ny rejse",
@@ -394,6 +400,7 @@
       "title": "Eksport",
       "filteredBtn": "⬇ Download filtreret JSON",
       "embedBtn": "⬇ Download med indlejrede forsidebilleder",
+      "cleanEmbedBtn": "⬇ Download indlejrede forsider uden integrationsindstillinger",
       "inSelection": "i aktuelt udvalg",
       "tripSingular": "rejse",
       "tripPlural": "rejser",

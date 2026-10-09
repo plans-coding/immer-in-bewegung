@@ -118,6 +118,7 @@
     "emptySubtitle": "Click a trip in Explore or Overview"
   },
   "tripView": {
+    "tripPhotos": "View trip photos in Immich",
     "loading": "Loading…",
     "notFound": "Trip not found",
     "edit": "Edit",
@@ -130,6 +131,7 @@
     "downloadMd": "Download as Markdown",
     "photos": "Photos",
     "fields": {
+      "additionalDocumentation": "Additional documentation",
       "departure": "Departure",
       "return": "Return",
       "days": "Days",
@@ -144,6 +146,10 @@
     "toConnector": "to"
   },
   "editor": {
+    "daynotesLabel": "Trip daynotes",
+    "withDaynotes": "Trip with daynotes",
+    "withoutDaynotes": "Trip without daynotes",
+    "removeDaynotesConfirm": "Remove all days and their daynotes from this trip? This takes effect when you save.",
     "tripsToggle": "☰ Trips ▾",
     "tripsToggleCollapsed": "☰ Trips ▸",
     "newTrip": "＋ New Trip",
@@ -396,6 +402,7 @@
       "title": "Export",
       "filteredBtn": "⬇ Download filtered JSON",
       "embedBtn": "⬇ Download with embedded cover photos",
+      "cleanEmbedBtn": "⬇ Download embedded covers without integration settings",
       "inSelection": "in current selection",
       "tripSingular": "trip",
       "tripPlural": "trips",
