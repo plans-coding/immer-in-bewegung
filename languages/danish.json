@@ -1,4 +1,7 @@
 {
+  "warnings": {
+    "missingDestination": "Advarsel: Rejsen {trip} mangler OverallDestination i arbejdsdokumentets JSON. Tilføj destinationen i rejseeditoren eller JSON-filen."
+  },
   "months": ["januar", "februar", "marts", "april", "maj", "juni", "juli", "august", "september", "oktober", "november", "december"],
   "weekdays": [
     "Søndag",
@@ -129,7 +132,8 @@
     "downloadMd": "Download som Markdown",
     "photos": "Fotos",
     "fields": {
-      "additionalDocumentation": "Yderligere dokumentation",
+      "documentationNote": "Dokumentationsnote",
+      "date": "Dato",
       "departure": "Afrejse",
       "return": "Hjemkomst",
       "days": "Dage",
@@ -291,7 +295,8 @@
     }
   },
   "map": {
-    "allTrips": "Overordnet rute for alle rejser",
+    "allTrips": "Overnatningssteder for alle rejser",
+    "overallRouteAllTrips": "Overordnet rute for alle rejser",
     "showingPrefix": "Viser:",
     "themePrefix": "Tema:",
     "legendTitle": "Rejsedomæne",

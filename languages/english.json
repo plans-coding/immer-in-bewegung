@@ -1,4 +1,7 @@
 {
+  "warnings": {
+    "missingDestination": "Warning: Trip {trip} is missing OverallDestination in the working JSON document. Add its destination in the trip editor or JSON file."
+  },
   "months": ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"],
   "weekdays": [
     "Sunday",
@@ -131,7 +134,8 @@
     "downloadMd": "Download as Markdown",
     "photos": "Photos",
     "fields": {
-      "additionalDocumentation": "Additional documentation",
+      "documentationNote": "Documentation Note",
+      "date": "Date",
       "departure": "Departure",
       "return": "Return",
       "days": "Days",
@@ -293,7 +297,8 @@
     }
   },
   "map": {
-    "allTrips": "Overall route for all trips",
+    "allTrips": "Accommodations for all trips",
+    "overallRouteAllTrips": "Overall route for all trips",
     "showingPrefix": "Showing:",
     "themePrefix": "Theme:",
     "legendTitle": "Trip Domain",

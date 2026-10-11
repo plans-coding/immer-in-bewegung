@@ -1010,6 +1010,14 @@ textarea.st-val{resize:vertical;min-height:80px;overflow:auto}
 #toast.on{opacity:1;transform:translateY(0)}
 #toast.ok{background:var(--success)}
 #toast.err{background:var(--danger)}
+dialog.cover-picker{position:fixed;inset:0;width:100%;height:100%;height:100dvh;max-width:none;max-height:none;margin:0;box-sizing:border-box;padding:20px;border:0;border-radius:0;background:var(--s1);color:var(--text);overflow:auto}
+dialog.cover-picker::backdrop{background:rgba(0,0,0,.75)}
+.cover-picker-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:12px}
+.cover-picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:16px}
+.cover-picker-photo{padding:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--s2);color:inherit;cursor:pointer;text-align:left}
+.cover-picker-photo:hover,.cover-picker-photo:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.cover-picker-photo img{display:block;width:100%;height:140px;object-fit:cover}
+.cover-picker-photo span{display:block;padding:8px;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -3617,28 +3625,32 @@ function renderExplore() {
   explorePicks.forEach(t => container.appendChild(makeCard(t, colors)));
 }
 
-function makeCard(t, colors) {
-  const color = t.TripDomain && colors[t.TripDomain];
-  const days = t.NumberOfDays>0 ? `${t.NumberOfDays} ${t.NumberOfDays===1?(T['overview.daysSingular']||'day'):(T['overview.daysPlural']||'days')}` : '';
-  const footer = [t.TripYear, days].filter(Boolean).join(' · ');
+function missingDestinationWarning(trip) {
+  return t('warnings.missingDestination', 'Warning: Trip {trip} is missing OverallDestination in the working JSON document. Add its destination in the trip editor or JSON file.').replace('{trip}', trip.OuterId || trip.InnerId || '—');
+}
+
+function makeCard(trip, colors) {
+  const color = trip.TripDomain && colors[trip.TripDomain];
+  const days = trip.NumberOfDays>0 ? `${trip.NumberOfDays} ${trip.NumberOfDays===1?(T['overview.daysSingular']||'day'):(T['overview.daysPlural']||'days')}` : '';
+  const footer = [trip.TripYear, days].filter(Boolean).join(' · ');
   // Cover image: IDB thumbnail → CoverPhoto field (parse !genre[path] if needed)
-  const idbVal = coverPhotosCache && t.CoverPhoto && t.OuterId && coverPhotosCache[t.OuterId];
+  const idbVal = coverPhotosCache && trip.CoverPhoto && trip.OuterId && coverPhotosCache[trip.OuterId];
   const idbUrl = idbVal && (idbVal.startsWith('http') || idbVal.startsWith('/')) ? idbVal : null;
-  const {url: cpUrl, genre: isGenre} = parseCoverPhoto(t.CoverPhoto);
+  const {url: cpUrl, genre: isGenre} = parseCoverPhoto(trip.CoverPhoto);
   const coverUrl = idbUrl || cpUrl || null;
   const card = document.createElement('div');
   card.className = 'ex-card';
   card.innerHTML = `
     <div class="ex-cover" style="background-color:${color||'var(--navy)'}${coverUrl?`;background-image:url('${h(coverUrl)}'),none`:''}">
       ${isGenre&&coverUrl?`<span class="genre-badge">genre</span>`:''}
-      <span class="ex-outer-id">${h(t.OuterId||t.InnerId)}</span>
+      <span class="ex-outer-id">${h(trip.OuterId||trip.InnerId)}</span>
     </div>
     <div class="ex-body">
-      <div class="ex-title">${h(t.OverallDestination||t('explore.noDestination','(no destination)'))}</div>
-      ${t.TripDescription?`<div class="ex-desc">${h(t.TripDescription)}</div>`:''}
+      <div class="ex-title">${h(trip.OverallDestination||missingDestinationWarning(trip))}</div>
+      ${trip.TripDescription?`<div class="ex-desc">${h(trip.TripDescription)}</div>`:''}
     </div>
     <div class="ex-footer" style="${color?`background:color-mix(in srgb, ${color} 18%, var(--s1));color:${color}`:''}">${h(footer)}</div>`;
-  card.addEventListener('click', () => openTripView(t.InnerId));
+  card.addEventListener('click', () => openTripView(trip.InnerId));
   return card;
 }
 
@@ -3672,7 +3684,7 @@ function renderTrips() {
     const color = trip.TripDomain && colors[trip.TripDomain];
     el.innerHTML = `
       <div class="tc-id-row">${trip.OuterId?`<span class="tc-outer-id"${color?` style="background:${h(color)};color:${contrastColor(color)}"`:''} >${h(trip.OuterId)}</span>`:''}<span class="tc-iid">${h(trip.InnerId)}</span></div>
-      <div class="tc-dest">${h(trip.OverallDestination||t('overview.noDestination','(no destination)'))}</div>
+      <div class="tc-dest">${h(trip.OverallDestination||missingDestinationWarning(trip))}</div>
       <div class="tc-date">${h(trip.DepartureDate||'?')} → ${h(trip.ReturnDate||'?')}</div>`;
     el.addEventListener('click', () => selectTrip(trip.InnerId));
     list.appendChild(el);
@@ -3845,6 +3857,7 @@ function renderTripForm(tripData, isNew) {
     else if (f.key==='ArrangerGroup') el=makeSelect('ArrangerGroup',arrangerOptions,val);
     else if (f.ta) el=`<textarea data-key="${f.key}">${h(val)}</textarea>`;
     else el=`<input type="${f.type||'text'}" data-key="${f.key}" value="${h(val)}"${f.readOnly?' readonly class="ro"':''}>`;
+    if (f.key==='CoverPhoto') el += `<button type="button" class="btn btn-g" id="f-pick-cover" style="margin-top:8px;align-self:flex-start">${t('editor.buttons.pickCover','Choose from trip photos')}</button>`;
     if (f.key==='MapPins') {
       return `<div class="fg"><label style="display:flex;align-items:center;gap:6px">${h(f.label)}<button type="button" class="pin-map-open-btn btn btn-g" style="font-size:11px;padding:2px 8px;margin-left:auto">${t('editor.days.mapButton','🗺 Map')}</button></label>${el}${hint}</div>`;
     }
@@ -3944,6 +3957,7 @@ function renderTripForm(tripData, isNew) {
     });
   }
   document.getElementById('f-cancel').addEventListener('click', clearDetail);
+  detail.querySelector('#f-pick-cover').addEventListener('click', () => openCoverPhotoPicker(detail));
 
   // Mark form dirty on any field change → show mod-dot
   function markFieldDirty(event) {
@@ -4347,6 +4361,108 @@ function addEvent(innerId) {
   setMod(true); renderInlineEvents(innerId); toast(t('toasts.dayAdded','Day added'),'ok');
 }
 
+// Select an original Immich path using the current (possibly unsaved) form interval.
+function openCoverPhotoPicker(detail) {
+  const value = key => detail.querySelector(`[data-key="${key}"]`)?.value || '';
+  const dep = value('DepartureDate'), ret = value('ReturnDate');
+  const start = value('PhotoStarttime') || '00:00', end = value('PhotoEndtime') || '23:59';
+  const base = immichBaseUrl(data.Settings?.Photos?.ImmichUrl);
+  const dialog = document.createElement('dialog');
+  dialog.className = 'cover-picker';
+  dialog.setAttribute('aria-labelledby', 'cover-picker-title');
+  dialog.innerHTML = `<div class="cover-picker-bar"><strong id="cover-picker-title">${h(t('editor.buttons.pickCover','Choose from trip photos'))}</strong><button type="button" class="btn btn-g" data-close>${h(t('editor.buttons.closePicker','Close'))}</button></div>
+    <div class="hint" data-interval></div><p role="status" data-status></p><div class="cover-picker-grid"></div>
+    <button type="button" class="btn btn-g" data-more hidden>${h(t('editor.buttons.morePhotos','Load more photos'))}</button>`;
+  document.body.appendChild(dialog);
+  const status = dialog.querySelector('[data-status]'), grid = dialog.querySelector('.cover-picker-grid');
+  const more = dialog.querySelector('[data-more]');
+  const controller = new AbortController(), urls = new Set(), seen = new Set();
+  let page = 1, count = 0;
+  const observer = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      observer.unobserve(entry.target);
+      loadThumbnail(entry.target);
+    }
+  }, { root: dialog, rootMargin: '200px' });
+  async function loadThumbnail(img) {
+    try {
+      const response = await immichFetch(`${base}/api/assets/${encodeURIComponent(img.dataset.asset)}/thumbnail`, { signal: controller.signal });
+      if (!response.ok) throw new Error(String(response.status));
+      const blob = await response.blob();
+      if (controller.signal.aborted) return;
+      const url = URL.createObjectURL(blob);
+      urls.add(url); img.src = url;
+    } catch (error) {
+      if (!controller.signal.aborted) img.alt = t('editor.coverPicker.previewUnavailable','Preview unavailable — select using the filename');
+    }
+  }
+  dialog.addEventListener('close', () => {
+    controller.abort(); observer.disconnect();
+    urls.forEach(url => URL.revokeObjectURL(url));
+    dialog.remove();
+    detail.querySelector('#f-pick-cover')?.focus();
+  }, { once:true });
+  dialog.querySelector('[data-close]').onclick = () => dialog.close();
+  dialog.showModal();
+  if (!base) {
+    status.textContent = t('editor.coverPicker.configure','Configure the Immich URL in Settings → Photos first.');
+    return;
+  }
+  if (!dep || !ret || `${dep}T${start}` > `${ret}T${end}`) {
+    status.textContent = t('editor.coverPicker.invalidInterval','Enter a valid departure and return date and photo time interval first.');
+    return;
+  }
+  dialog.querySelector('[data-interval]').textContent = `${dep} ${start} – ${ret} ${end}`;
+  const seconds = (time, fallback) => time.length === 5 ? `${time}:${fallback}` : time;
+  async function loadPage() {
+    more.disabled = true;
+    status.textContent = t('editor.coverPicker.loading','Loading photos…');
+    try {
+      const response = await immichFetch(`${base}/api/search/metadata`, {
+        method:'POST', signal:controller.signal,
+        body:JSON.stringify({ takenAfter:`${dep}T${seconds(start,'00')}.000Z`, takenBefore:`${ret}T${seconds(end,'59')}.000Z`, type:'IMAGE', size:100, page })
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const result = await response.json();
+      if (controller.signal.aborted) return;
+      const items = result.assets?.items;
+      if (!Array.isArray(items)) throw new Error(t('editor.coverPicker.invalidResponse','Invalid photo search response'));
+      for (const asset of items) {
+        if (!asset.id || !asset.originalPath || seen.has(asset.id) || (asset.type && asset.type !== 'IMAGE')) continue;
+        seen.add(asset.id); count++;
+        const button = document.createElement('button');
+        button.type = 'button'; button.className = 'cover-picker-photo';
+        button.title = asset.originalPath;
+        button.setAttribute('aria-label', asset.originalPath);
+        const img = document.createElement('img');
+        img.alt = asset.originalFileName || asset.originalPath.split('/').pop();
+        img.dataset.asset = asset.id;
+        const label = document.createElement('span'); label.textContent = img.alt;
+        button.append(img, label); grid.appendChild(button); observer.observe(img);
+        button.onclick = () => {
+          const field = detail.querySelector('[data-key="CoverPhoto"]');
+          if (detail.isConnected && field) {
+            field.value = asset.originalPath;
+            field.dispatchEvent(new Event('input', { bubbles:true }));
+            field.dispatchEvent(new Event('change', { bubbles:true }));
+          }
+          dialog.close();
+        };
+      }
+      more.hidden = !result.assets.nextPage;
+      page++;
+      status.textContent = count ? t('editor.coverPicker.select','Select a photo to use its original path as the cover.') : t('editor.coverPicker.empty','No photos found in this interval.');
+    } catch (error) {
+      if (controller.signal.aborted) return;
+      status.textContent = `${t('editor.coverPicker.failed','Could not load photos. Check the Immich connection and API key in Settings.')} ${error.message}`;
+      more.hidden = false;
+    } finally { more.disabled = false; }
+  }
+  more.onclick = loadPage;
+  loadPage();
+}
+
 // ── Trip View ─────────────────────────────────────────────────────
 
 let _tripMapInst = null;
@@ -4723,11 +4839,11 @@ async function navigatePhotoFrame(frame, href) {
   frame.src=href;
 }
 
-function openPhotoOverlay(innerId, selectedDate, descriptions=null) {
+function openPhotoOverlay(innerId, selectedDate, descriptions=null, tripSearch=null) {
   const trip=data.Trips[innerId]; if(!trip)return;
   const photoCfg=data.Settings?.Photos||{};
   const immichBase=immichBaseUrl(photoCfg.ImmichUrl);
-  const dates=descriptions||[...(trip.Days||[])].sort((a,b)=>(a.Date||'').localeCompare(b.Date||'')).map(d=>d.Date).filter(Boolean);
+  const dates=tripSearch ? [tripSearch.label] : descriptions||[...(trip.Days||[])].sort((a,b)=>(a.Date||'').localeCompare(b.Date||'')).map(d=>d.Date).filter(Boolean);
   if(!dates.length)return;
 
   // Create overlay lazily
@@ -4763,7 +4879,7 @@ function openPhotoOverlay(innerId, selectedDate, descriptions=null) {
 
   // Return to the latest viewed day when closing a date-based photo search.
   overlay._onClose=()=>{
-    if(descriptions||currentTab!=='trip'||document.getElementById('trip-nav')?.dataset.tripId!==innerId)return;
+    if(tripSearch||descriptions||currentTab!=='trip'||document.getElementById('trip-nav')?.dataset.tripId!==innerId)return;
     const day=[...document.querySelectorAll('#trip-scroll .tv-day[data-date]')].find(el=>el.dataset.date===sel.value);
     day?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});
   };
@@ -4773,7 +4889,7 @@ function openPhotoOverlay(innerId, selectedDate, descriptions=null) {
 
   // Load a date into the iframe and update controls
   function loadDate(date) {
-    const url=descriptions
+    const url=tripSearch ? tripSearch.url : descriptions
       ? `${immichBase}/search?query=${encodeURIComponent(JSON.stringify({description:`(${date})`}))}#search-chips`
       : buildImmichUrl(immichBase,date,trip);
     sel.value=date;
@@ -4967,7 +5083,7 @@ function renderTripView(innerId) {
     sumHdr.addEventListener('mouseenter',()=>sumHdr.style.filter='brightness(0.92)');
     sumHdr.addEventListener('mouseleave',()=>sumHdr.style.filter='');
   }
-  sumHdr.innerHTML=`<div class="tv-summary-hdr-text"><h2 style="${domColor?`color:${domText}`:''}"><span style="opacity:.75">${h(trip.OuterId||'')}</span>${trip.OuterId&&trip.OverallDestination?`<span style="font-weight:300;opacity:.5;padding:0 .45em;font-size:.82em">${T['tripView.toConnector']||'to'}</span>`:''}${h(trip.OverallDestination||'')}</h2>${trip.TripDescription?`<p style="color:${domColor?domText:'inherit'};opacity:${domColor?'0.8':'1'};margin-top:5px">${h(trip.TripDescription)}</p>`:''}</div><span class="tv-sum-chev" style="font-size:18px;user-select:none;flex-shrink:0;${domColor?`color:${domText};opacity:0.7`:'color:var(--muted)'}">▾</span>`;
+  sumHdr.innerHTML=`<div class="tv-summary-hdr-text"><h2 style="${domColor?`color:${domText}`:''}"><span style="opacity:.75">${h(trip.OuterId||'')}</span>${trip.OuterId&&trip.OverallDestination?`<span style="font-weight:300;opacity:.5;padding:0 .45em;font-size:.82em">${T['tripView.toConnector']||'to'}</span>`:''}${h(trip.OverallDestination||missingDestinationWarning(trip))}</h2>${trip.TripDescription?`<p style="color:${domColor?domText:'inherit'};opacity:${domColor?'0.8':'1'};margin-top:5px">${h(trip.TripDescription)}</p>`:''}</div><span class="tv-sum-chev" style="font-size:18px;user-select:none;flex-shrink:0;${domColor?`color:${domText};opacity:0.7`:'color:var(--muted)'}">▾</span>`;
   const sumBody=document.createElement('div');sumBody.className='tv-summary-body';
   sumBody.style.background=domColor
     ?`linear-gradient(to bottom, ${domColor} 0%, ${domColor}18 90px, ${domColor}18 100%)`
@@ -4975,7 +5091,12 @@ function renderTripView(innerId) {
   // Left: info grids
   const sumInfo=document.createElement('div');sumInfo.className='tv-summary-info';
   const g1=document.createElement('div');g1.className='tv-details-grid tv-summary-dates';
-  [[trip.DepartureDate,t('tripView.fields.departure','Departure')],[trip.ReturnDate,t('tripView.fields.return','Return')],[numDays!=null?numDays:'—',t('tripView.fields.days','Days')]].forEach(([v,l])=>g1.innerHTML+=`<div class="tv-field"><label style="${labelClr}">${l}</label><div class="tv-field-val" style="background:${fieldBg}">${h(String(v??'—'))}</div></div>`);
+  const sameDay = !!trip.DepartureDate && trip.DepartureDate === trip.ReturnDate;
+  const dateFields = sameDay
+    ? [[trip.DepartureDate,t('tripView.fields.date','Date')]]
+    : [[trip.DepartureDate,t('tripView.fields.departure','Departure')],[trip.ReturnDate,t('tripView.fields.return','Return')],[numDays!=null?numDays:'—',t('tripView.fields.days','Days')]];
+  if (sameDay) g1.style.gridTemplateColumns='minmax(0,1fr)';
+  dateFields.forEach(([v,l])=>g1.innerHTML+=`<div class="tv-field"><label style="${labelClr}">${l}</label><div class="tv-field-val" style="background:${fieldBg}">${h(String(v??'—'))}</div></div>`);
   sumInfo.appendChild(g1);
   const g2=document.createElement('div');g2.className='tv-details-grid tv-summary-meta';
   if (!hasDaynotes) g2.style.gridTemplateColumns='repeat(2,minmax(0,1fr))';
@@ -5004,7 +5125,7 @@ function renderTripView(innerId) {
 
   if (!hasDaynotes) {
     const documentation=document.createElement('div');documentation.className='tv-details-grid wide';
-    documentation.innerHTML=`<div class="tv-field"><label style="${labelClr}">${t('tripView.fields.additionalDocumentation','Additional documentation')}</label><div class="tv-field-val" style="background:${fieldBg};white-space:pre-wrap">${h(trip.DocumentationNote||'—')}</div></div>`;
+    documentation.innerHTML=`<div class="tv-field"><label style="${labelClr}">${t('tripView.fields.documentationNote','Documentation Note')}</label><div class="tv-field-val" style="background:${fieldBg};white-space:pre-wrap">${h(trip.DocumentationNote||'—')}</div></div>`;
     sumInfo.appendChild(documentation);
     const immichBase=immichBaseUrl(data.Settings?.Photos?.ImmichUrl);
     if (immichBase && trip.DepartureDate && trip.ReturnDate) {
@@ -5017,6 +5138,13 @@ function renderTripView(innerId) {
         takenBefore:`${trip.ReturnDate}T${endTime}:59.000Z`
       }))}#search-chips`;
       photos.textContent=t('tripView.tripPhotos','View trip photos in Immich');
+      photos.addEventListener('click',event=>{
+        event.preventDefault();
+        openPhotoOverlay(innerId,null,null,{
+          label:`${trip.DepartureDate} ${startTime} – ${trip.ReturnDate} ${endTime}`,
+          url:photos.href
+        });
+      });
       if(domColor){photos.style.background=domColor;photos.style.borderColor=domColor;photos.style.color=domText;}
       photoLinks.appendChild(photos);sumInfo.appendChild(photoLinks);
     }
@@ -5905,17 +6033,17 @@ async function initMap() {
     renderMapControls();
     loadMapPins();
     // cursor changes
-    ['pins-main','pins-alt','route-nodes','route-lines'].forEach(id=>{
+    ['pins-main','pins-alt','pins-labels','route-nodes','route-lines'].forEach(id=>{
       mapInstance.on('mouseenter', id, ()=>mapInstance.getCanvas().style.cursor='pointer');
       mapInstance.on('mouseleave', id, ()=>mapInstance.getCanvas().style.cursor='');
     });
     // click popups
     const popup = new maplibregl.Popup({ closeButton:true, maxWidth:'280px' });
-    ['pins-main','pins-alt','route-nodes','route-lines'].forEach(layerId=>{
+    ['pins-main','pins-alt','pins-labels','route-nodes','route-lines'].forEach(layerId=>{
       mapInstance.on('click', layerId, e=>{
         const p=e.features[0].properties;
         const dateStr=p.date?`<div style="color:var(--muted2);font-size:11px;margin-bottom:4px">${h(p.date)}</div>`:'';
-        const nameStr=p.name?`<div style="color:var(--muted);font-size:12px;margin-bottom:6px">${h(p.name)}</div>`:'';
+        const nameStr=p.name?`<div style="color:var(--text);font-size:13px;font-weight:600;margin-bottom:6px">${h(p.name)}</div>`:'';
         const linkId=`map-popup-link-${Date.now()}`;
         popup.setLngLat(e.lngLat)
           .setHTML(`<div style="font-size:13px;padding:4px 2px;min-width:180px">
@@ -5965,6 +6093,25 @@ function buildMapFeatures() {
           properties:{innerId:trip.InnerId,color,isNode:true,isAlt:false,
             name:day.Accommodation||'',outerId:trip.OuterId||trip.InnerId,
             destination:trip.OverallDestination||'',date:day.Date||''}});
+      });
+    });
+
+  } else if (mapMode.type==='route') {
+    // Show MapPins using each trip's domain color.
+    trips.forEach(trip=>{
+      const color=(trip.TripDomain&&colors[trip.TripDomain])||'#888888';
+      (trip.MapPins||'').split('\n').forEach(raw=>{
+        raw=raw.trim();
+        const primary=raw.match(/\[([^\]]*)\]\s*\(\s*([0-9.\-]+)\s*,\s*([0-9.\-]+)\s*\)/);
+        const legacy=primary?null:raw.match(/^@?([0-9.\-]+)\s*,\s*([0-9.\-]+)/);
+        if(!primary&&!legacy)return;
+        const lat=parseFloat(primary?primary[2]:legacy[1]);
+        const lon=parseFloat(primary?primary[3]:legacy[2]);
+        if(!Number.isFinite(lat)||!Number.isFinite(lon))return;
+        const name=primary?primary[1].trim():(raw.match(/\[([^\]]*)\]/)?.[1]||'').trim();
+        features.push({type:'Feature',geometry:{type:'Point',coordinates:[lon,lat]},
+          properties:{innerId:trip.InnerId,color,isNode:false,isAlt:false,isMapPin:true,name,
+            outerId:trip.OuterId||trip.InnerId,destination:trip.OverallDestination||'',date:''}});
       });
     });
 
@@ -6048,15 +6195,17 @@ function renderMapControls() {
 
   const prevCountry=mapMode.type==='country'?mapMode.value:'';
   const validCountry=countries.includes(prevCountry)?prevCountry:'';
-  countrySel.innerHTML=`<option value="">${t('map.allTrips','Overall route for all trips')}</option>`+
+  countrySel.innerHTML=`<option value="">${t('map.allTrips','Accommodations for all trips')}</option>`+
+    `<option value="__overall_route__"${mapMode.type==='route'?' selected':''}>${t('map.overallRouteAllTrips','Overall route for all trips')}</option>`+
     countries.map(c=>`<option value="${h(c)}"${c===validCountry?' selected':''}>${h(c)}</option>`).join('');
   if(!validCountry&&mapMode.type==='country'){mapMode={type:'all',value:''};}
   if(!countrySel.dataset.wired){
     countrySel.dataset.wired='1';
     countrySel.addEventListener('change',()=>{
       const v=countrySel.value;
-      if(v){mapMode={type:'country',value:v};}
-      else if(mapMode.type==='country'){mapMode={type:'all',value:''};}
+      if(v==='__overall_route__'){mapMode={type:'route',value:''};}
+      else if(v){mapMode={type:'country',value:v};}
+      else {mapMode={type:'all',value:''};}
       // reset theme sel if switching to country
       const ts=document.getElementById('map-theme-sel');
       if(ts)ts.value='';
@@ -6138,7 +6287,7 @@ function updateMapControls() {
   const themeSel=document.getElementById('map-theme-sel');
   const badge=document.getElementById('map-mode-badge');
   const photoBtn=document.getElementById('map-photo-btn');
-  countrySel?.classList.toggle('active', mapMode.type==='country');
+  countrySel?.classList.toggle('active', mapMode.type==='country'||mapMode.type==='route');
   themeSel?.classList.toggle('active', mapMode.type==='theme');
   // Hide photo button when not in country mode, also hide photo layer
   if(mapMode.type!=='country'){
@@ -6192,7 +6341,14 @@ function loadMapPins() {
   mapInstance.addLayer({ id:'pins-main', type:'circle', source:'pins',
     filter:['all',['==',['geometry-type'],'Point'],['!=',['get','isNode'],true],['==',['get','isAlt'],false]],
     paint:{'circle-radius':6,'circle-color':['get','color'],
-      'circle-stroke-width':1.5,'circle-stroke-color':'rgba(255,255,255,0.6)','circle-opacity':0.85}});
+      'circle-stroke-width':1.5,'circle-stroke-color':['case',['==',['get','isMapPin'],true],'#ffffff','rgba(255,255,255,0.6)'],'circle-opacity':0.85}});
+
+  // Show pin labels only when zoomed in to the local area.
+  mapInstance.addLayer({ id:'pins-labels', type:'symbol', source:'pins', minzoom:10,
+    filter:['all',['==',['geometry-type'],'Point'],['==',['get','isMapPin'],true]],
+    layout:{'text-field':['get','name'],'text-font':['Open Sans Bold'],
+      'text-size':12,'text-anchor':'top','text-offset':[0,0.8]},
+    paint:{'text-color':['get','color'],'text-halo-color':'rgba(0,0,0,0.85)','text-halo-width':2}});
 
   fitMapToBounds(features);
 

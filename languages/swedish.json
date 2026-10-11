@@ -1,4 +1,7 @@
 {
+  "warnings": {
+    "missingDestination": "Varning: Resan {trip} saknar OverallDestination i arbetsdokumentets JSON. Ange destinationen i resans redigerare eller JSON-filen."
+  },
   "months": ["januari", "februari", "mars", "april", "maj", "juni", "juli", "augusti", "september", "oktober", "november", "december"],
   "weekdays": [
     "Söndag",
@@ -130,7 +133,8 @@
     "downloadMd": "Ladda ner som Markdown",
     "photos": "Foton",
     "fields": {
-      "additionalDocumentation": "Ytterligare dokumentation",
+      "documentationNote": "Dokumentationsanteckning",
+      "date": "Datum",
       "departure": "Avresa",
       "return": "Hemkomst",
       "days": "Dagar",
@@ -292,7 +296,8 @@
     }
   },
   "map": {
-    "allTrips": "Övergripande rutt för alla resor",
+    "allTrips": "Boenden för alla resor",
+    "overallRouteAllTrips": "Övergripande rutt för alla resor",
     "showingPrefix": "Visar:",
     "themePrefix": "Tema:",
     "legendTitle": "Resedomän",
