@@ -1,4 +1,10 @@
 {
+  "fileSwitcher": {
+    "showPath": "Show full URL",
+    "title": "Choose JSON file",
+    "empty": "Add JSON URLs on the start screen to switch files here.",
+    "current": "Current"
+},
   "warnings": {
     "missingDestination": "Warning: Trip {trip} is missing OverallDestination in the working JSON document. Add its destination in the trip editor or JSON file."
   },
@@ -56,6 +62,8 @@
     }
   },
   "loadScreen": {
+    "addJsonUrl": "+ Add another JSON URL",
+    "additionalJsonUrl": "Additional JSON URL",
     "dropPrimary": "Drop JSON file here",
     "dropHint": "or click to browse (.json)",
     "urlDivider": "or load from URL",

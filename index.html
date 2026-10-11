@@ -84,12 +84,16 @@ body{font-family:'Scoutie Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans
 .ls-divider{display:flex;align-items:center;gap:12px;color:rgba(255,255,255,.35);font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin:4px 0}
 .ls-divider::before,.ls-divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.18)}
 .url-row{display:flex;gap:8px}
-#url-input{flex:1;padding:10px 14px;border:1.5px solid rgba(255,255,255,.25);border-radius:8px;font-size:13px;background:rgba(255,255,255,.1);color:#fff;outline:none;transition:border-color .15s,box-shadow .15s;min-width:0}
-#url-input:focus{border-color:rgba(255,255,255,.6);box-shadow:0 0 0 3px rgba(255,255,255,.1)}
-#url-input::placeholder{color:rgba(255,255,255,.35)}
-#url-btn{padding:10px 18px;border:1.5px solid rgba(255,255,255,.35);border-radius:8px;background:rgba(255,255,255,.15);color:#fff;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .15s,opacity .15s;flex-shrink:0}
-#url-btn:hover{background:rgba(255,255,255,.26)}
-#url-btn:disabled{opacity:.45;cursor:default}
+#additional-json-urls .url-row{margin-top:8px}
+#add-json-url{margin-top:10px}
+.st-file-select{max-width:100%;padding:8px;border-radius:6px;background:var(--s1);color:var(--text);border:1px solid var(--border)}
+.st-file-info{min-width:0}
+.json-url-input{flex:1;padding:10px 14px;border:1.5px solid rgba(255,255,255,.25);border-radius:8px;font-size:13px;background:rgba(255,255,255,.1);color:#fff;outline:none;transition:border-color .15s,box-shadow .15s;min-width:0}
+.json-url-input:focus{border-color:rgba(255,255,255,.6);box-shadow:0 0 0 3px rgba(255,255,255,.1)}
+.json-url-input::placeholder{color:rgba(255,255,255,.35)}
+#url-btn,.json-url-load,#add-json-url{padding:10px 18px;border:1.5px solid rgba(255,255,255,.35);border-radius:8px;background:rgba(255,255,255,.15);color:#fff;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .15s,opacity .15s;flex-shrink:0}
+#url-btn:hover,.json-url-load:hover,#add-json-url:hover{background:rgba(255,255,255,.26)}
+#url-btn:disabled,.json-url-load:disabled{opacity:.45;cursor:default}
 #ls-demo-info{max-width:420px;padding:0 16px;font-size:13px;line-height:1.5;color:rgba(255,255,255,.7);text-align:center}
 #resume-btn{padding:10px 28px;border:1.5px solid rgba(255,255,255,.4);border-radius:8px;background:rgba(255,255,255,.14);color:#fff;font-size:13px;font-weight:700;letter-spacing:.4px;cursor:pointer;transition:background .15s;text-transform:uppercase}
 #resume-btn:hover{background:rgba(255,255,255,.25)}
@@ -101,8 +105,13 @@ body{font-family:'Scoutie Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans
 #app-nav{display:flex;align-items:center;background:var(--s1);border-bottom:1px solid var(--border);flex-shrink:0;box-shadow:var(--shadow);height:48px;position:relative;z-index:100;overflow:visible}
 #nav-brand{display:flex;align-items:center;gap:8px;padding:0 12px;border-left:1px solid var(--border);height:100%;flex-shrink:0;position:relative}
 #nav-logo{width:28px;height:28px;padding:0;border:0;background:none;color:inherit;cursor:pointer;display:block;flex-shrink:0;opacity:.9;transition:opacity .15s,transform .15s}
-#nav-logo img{width:100%;height:100%;display:block}
+#nav-logo img{-webkit-touch-callout:none;width:100%;height:100%;display:block}
 #nav-logo,#nav-logo img{-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+#json-file-list{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.json-file-choice{width:100%;text-align:left;white-space:normal;overflow-wrap:anywhere;display:flex;flex-direction:column;gap:4px}
+.json-file-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}
+.json-file-info{width:34px;height:34px;padding:0;border-radius:50%;font-family:serif;font-style:italic}
+.json-file-path{grid-column:1/-1;font-size:12px;color:var(--muted);overflow-wrap:anywhere;padding:0 4px 4px}
 #nav-logo:hover{opacity:1}
 #nav-logo[aria-expanded="true"]{opacity:1;transform:scale(1.1)}
 #nav-menu{position:absolute;top:calc(100% + 4px);right:8px;min-width:150px;padding:5px;background:var(--s1);border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-h);display:none}
@@ -122,9 +131,9 @@ body{font-family:'Scoutie Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans
 #sync-review{max-width:640px;width:calc(100% - 40px);max-height:80vh;overflow:auto;border:1px solid var(--border);border-radius:12px;background:var(--bg);color:var(--text);padding:20px}
 #sync-review::backdrop{background:#0009}
 #sync-review pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;max-height:240px;overflow:auto}
-#sync-progress,#server-backup-dialog,#trip-download-dialog{position:fixed;top:50%;left:50%;right:auto;bottom:auto;transform:translate(-50%,-50%);margin:0;box-sizing:border-box;max-width:440px;width:calc(100% - 40px);max-height:calc(100vh - 40px);overflow-y:auto;border:1px solid var(--border);border-radius:12px;background:var(--bg);color:var(--text);padding:22px;box-shadow:var(--shadow-h)}
-#sync-progress::backdrop,#server-backup-dialog::backdrop,#trip-download-dialog::backdrop{background:#0009}
-#sync-progress h3,#server-backup-dialog h3,#trip-download-dialog h3{margin:0 0 12px;font-size:17px}
+#json-file-dialog,#sync-progress,#server-backup-dialog,#trip-download-dialog{position:fixed;top:50%;left:50%;right:auto;bottom:auto;transform:translate(-50%,-50%);margin:0;box-sizing:border-box;max-width:440px;width:calc(100% - 40px);max-height:calc(100vh - 40px);overflow-y:auto;border:1px solid var(--border);border-radius:12px;background:var(--bg);color:var(--text);padding:22px;box-shadow:var(--shadow-h)}
+#json-file-dialog::backdrop,#sync-progress::backdrop,#server-backup-dialog::backdrop,#trip-download-dialog::backdrop{background:#0009}
+#json-file-dialog h3,#sync-progress h3,#server-backup-dialog h3,#trip-download-dialog h3{margin:0 0 12px;font-size:17px}
 #trip-download-dialog .sync-progress-actions{flex-wrap:wrap;margin-top:12px}
 #sync-progress-text,#server-backup-text{margin:0 0 10px;line-height:1.5}
 #sync-progress-detail,#server-backup-detail{margin:0 0 18px;color:var(--muted2);font-size:12px;line-height:1.45;overflow-wrap:anywhere}
@@ -1038,9 +1047,11 @@ dialog.cover-picker::backdrop{background:rgba(0,0,0,.75)}
   <div id="url-load-area">
     <div class="ls-divider"><span data-i18n="loadScreen.urlDivider">or load from URL</span></div>
     <div class="url-row">
-      <input type="url" id="url-input" data-i18n-ph="loadScreen.urlPlaceholder" placeholder="https://example.com/bewegung.json (default: ./bewegung.json)" autocomplete="url" spellcheck="false">
+      <input type="url" id="url-input" class="json-url-input" data-i18n-ph="loadScreen.urlPlaceholder" placeholder="https://example.com/bewegung.json (default: ./bewegung.json)" autocomplete="url" spellcheck="false">
       <button id="url-btn" data-i18n="loadScreen.urlButton">Load</button>
     </div>
+    <div id="additional-json-urls"></div>
+    <button id="add-json-url" type="button" data-i18n="loadScreen.addJsonUrl">+ Add another JSON URL</button>
   </div>
   <p id="ls-demo-info" data-i18n="loadScreen.demoInfo" hidden>To load demo data, leave the URL field empty and press Load. No file is needed.</p>
   <button id="ls-theme-btn" type="button" onclick="toggleTheme()" style="position:absolute;top:16px;right:18px;background:none;border:none;cursor:pointer;color:rgba(255,255,255,.55);padding:4px;" title="Toggle theme"></button>
@@ -1062,7 +1073,7 @@ dialog.cover-picker::backdrop{background:rgba(0,0,0,.75)}
     </div>
     <div id="nav-brand">
       <button id="sync-badge" type="button" hidden aria-label="Sync status"></button>
-      <button id="nav-logo" type="button" aria-haspopup="menu" aria-expanded="false" data-i18n-title="nav.menu.title" title="Open navigation menu"><img src="favicon.svg" alt="Immer in Bewegung"></button>
+      <button id="nav-logo" type="button" aria-haspopup="menu" aria-expanded="false" data-i18n-title="nav.menu.title" title="Open navigation menu"><img src="favicon.svg" alt="Immer in Bewegung" draggable="false"></button>
       <div id="nav-menu" role="menu">
         <div class="mobile-tools-row">
           <button id="mobile-search-btn" class="nav-menu-item mobile-menu-item" type="button" role="menuitem" data-i18n-title="nav.search.title" title="Search trips">
@@ -1321,6 +1332,11 @@ dialog.cover-picker::backdrop{background:rgba(0,0,0,.75)}
   </div>
 </dialog>
 <dialog id="sync-review"></dialog>
+<dialog id="json-file-dialog" aria-labelledby="json-file-title">
+  <h3 id="json-file-title" data-i18n="fileSwitcher.title">Choose JSON file</h3>
+  <div id="json-file-list"></div>
+  <form method="dialog" class="sync-progress-actions"><button class="btn btn-g" type="submit" data-i18n="sync.close">Close</button></form>
+</dialog>
 <dialog id="trip-download-dialog" aria-labelledby="trip-download-title">
   <h3 id="trip-download-title" data-i18n="tripView.download">Download trip</h3>
   <div class="sync-progress-actions">
@@ -1859,6 +1875,9 @@ function wire() {
   const urlBtn = document.getElementById('url-btn');
   const lastUrl = localStorage.getItem('chronik-last-url');
   if (lastUrl) urlInp.value = lastUrl;
+  renderSavedJsonUrls();
+  urlInp.addEventListener('change', rememberJsonUrlInputs);
+  document.getElementById('add-json-url').addEventListener('click', () => addJsonUrlRow());
   urlBtn.addEventListener('click', () => loadFromUrl(urlInp.value.trim() || 'bewegung.json'));
   urlInp.addEventListener('keydown', e => { if (e.key === 'Enter') loadFromUrl(urlInp.value.trim() || 'bewegung.json'); });
   document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
@@ -1879,8 +1898,28 @@ function wire() {
   document.getElementById('nav-menu-expand').addEventListener('click', () => updateNavMenuExpansion(!navMenu.classList.contains('expanded')));
   document.querySelectorAll('.sync-button').forEach(button => button.addEventListener('click', closeNavMenu));
   document.getElementById('server-backup').addEventListener('click', closeNavMenu);
+  let frogHoldTimer = null, frogHeld = false, frogPointer = null;
+  const cancelFrogHold = () => { clearTimeout(frogHoldTimer); frogHoldTimer = null; frogPointer = null; };
+  navLogo.addEventListener('pointerdown', e => {
+    if (!e.isPrimary || e.button !== 0) return;
+    cancelFrogHold(); frogHeld = false;
+    frogPointer = { id:e.pointerId, x:e.clientX, y:e.clientY };
+    frogHoldTimer = setTimeout(() => {
+      frogHeld = true; cancelFrogHold(); closeNavMenu(); closeMobileFilters(); openJsonFileDialog();
+    }, 600);
+  });
+  document.addEventListener('pointermove', e => {
+    if (frogPointer?.id === e.pointerId && Math.hypot(e.clientX-frogPointer.x, e.clientY-frogPointer.y) > 10) cancelFrogHold();
+  }, {passive:true});
+  document.addEventListener('pointerup', cancelFrogHold);
+  document.addEventListener('pointercancel', cancelFrogHold);
+  window.addEventListener('blur', cancelFrogHold);
+  navLogo.addEventListener('contextmenu', e => e.preventDefault());
+  navLogo.addEventListener('dragstart', e => e.preventDefault());
   navLogo.addEventListener('click', e => {
     e.stopPropagation();
+    if (frogHeld && e.detail !== 0) { frogHeld = false; e.preventDefault(); return; }
+    frogHeld = false;
     closeMobileFilters();
     document.getElementById('tq-drawer').classList.remove('open');
     const tripNavToggle=document.getElementById('tq-toggle');
@@ -2568,6 +2607,7 @@ async function openFile() {
 
 async function _initApp(parsed, fileName) {
   data = parsed;
+  selectedId = null;
   _editorDraft = null; _editorDirty = false; _settingsDraft = null;
   _tripDerivedCache = { data:null, all:null, filteredKey:null, filtered:null, labels:null };
   currentFileName = fileName;
@@ -2620,9 +2660,115 @@ async function load(file) {
   } catch(err) { toast(t('toasts.openFailed', 'Failed to open: {error}').replace('{error}', translatedError(err)), 'err'); }
 }
 
+function openJsonFileDialog() {
+  if (_savingEdit || _loadingJsonUrl) return;
+  const dialog = document.getElementById('json-file-dialog');
+  const list = document.getElementById('json-file-list'); list.replaceChildren();
+  const urls = sortedJsonUrls();
+  const activeUrl = urlSync?.url || '';
+  if (!urls.length) {
+    const empty = document.createElement('p');
+    empty.textContent = t('fileSwitcher.empty', 'Add JSON URLs on the start screen to switch files here.'); list.appendChild(empty);
+  }
+  urls.forEach((url, index) => {
+    const row = document.createElement('div'); row.className = 'json-file-row';
+    const button = document.createElement('button'); button.type = 'button'; button.className = 'btn btn-g json-file-choice';
+    const name = document.createElement('span');
+    name.textContent = new URL(url, document.baseURI).pathname.split('/').filter(Boolean).pop() || url;
+    button.appendChild(name);
+    const address = document.createElement('div'); address.className = 'json-file-path';
+    address.id = 'json-file-path-' + index; address.textContent = url; address.hidden = true;
+    const info = document.createElement('button'); info.type = 'button'; info.className = 'btn btn-g json-file-info'; info.textContent = 'i';
+    info.title = t('fileSwitcher.showPath', 'Show full URL');
+    info.setAttribute('aria-label', info.title + ': ' + name.textContent);
+    info.setAttribute('aria-controls', address.id); info.setAttribute('aria-expanded', 'false');
+    info.addEventListener('click', () => {
+      address.hidden = !address.hidden;
+      info.setAttribute('aria-expanded', String(!address.hidden));
+    });
+    if (url === activeUrl) {
+      button.disabled = true; button.setAttribute('aria-current', 'true');
+      name.textContent += ' · ' + t('fileSwitcher.current', 'Current');
+    }
+    button.addEventListener('click', async () => {
+      const buttons = [...list.querySelectorAll('.json-file-choice')]; buttons.forEach(b => b.disabled = true);
+      try {
+        await loadFromUrl(url);
+        if (urlSync?.url === url) dialog.close();
+      } finally {
+        buttons.forEach(b => b.disabled = b.getAttribute('aria-current') === 'true');
+      }
+    });
+    row.append(button, info, address); list.appendChild(row);
+  });
+  if (!dialog.open) dialog.showModal();
+}
+
+function savedJsonUrls() {
+  let urls = [];
+  try { urls = JSON.parse(localStorage.getItem('chronik-json-urls') || '[]'); } catch {}
+  if (!Array.isArray(urls)) urls = [];
+  const last = localStorage.getItem('chronik-last-url');
+  return [...new Set([...urls, ...(last ? [last] : [])].filter(url => typeof url === 'string' && url))];
+}
+function sortedJsonUrls() {
+  const filename = url => new URL(url, document.baseURI).pathname.split('/').filter(Boolean).pop() || url;
+  return savedJsonUrls().sort((a, b) => filename(a).localeCompare(filename(b), undefined, {sensitivity:'base', numeric:true}) || a.localeCompare(b));
+}
+function updateJsonUrlLoadButtons() {
+  const rows = [...document.querySelectorAll('#url-load-area .url-row')];
+  const shared = rows.length > 2;
+  const button = document.getElementById('url-btn');
+  (shared ? rows[rows.length-1] : rows[0]).appendChild(button);
+  document.querySelectorAll('.json-url-load').forEach(button => button.hidden = shared);
+}
+
+function rememberJsonUrlInputs(extraUrl) {
+  const urls = savedJsonUrls();
+  const values = [...document.querySelectorAll('.json-url-input')].map(input => input.value.trim());
+  if (typeof extraUrl === 'string') values.push(extraUrl);
+  for (const value of values.filter(Boolean)) {
+    try {
+      const url = new URL(value, document.baseURI); url.hash = '';
+      if (['http:', 'https:'].includes(url.protocol) && !urls.includes(url.href)) urls.push(url.href);
+    } catch {}
+  }
+  localStorage.setItem('chronik-json-urls', JSON.stringify(urls));
+}
+function addJsonUrlRow(value = '', focus = true) {
+  const row = document.createElement('div'); row.className = 'url-row';
+  const input = document.createElement('input'); input.type = 'url'; input.className = 'json-url-input';
+  input.placeholder = 'https://example.com/trips.json'; input.value = value; input.autocomplete = 'url'; input.spellcheck = false;
+  input.setAttribute('aria-label', t('loadScreen.additionalJsonUrl', 'Additional JSON URL'));
+  const button = document.createElement('button'); button.type = 'button'; button.className = 'json-url-load';
+  button.textContent = t('loadScreen.urlButton', 'Load');
+  const loadUrl = async () => {
+    if (!input.value.trim()) { input.focus(); return; }
+    button.disabled = true;
+    try { await loadFromUrl(input.value.trim()); } finally { button.disabled = false; }
+  };
+  input.addEventListener('change', rememberJsonUrlInputs);
+  input.addEventListener('keydown', event => { if (event.key === 'Enter') loadUrl(); });
+  button.addEventListener('click', loadUrl);
+  row.append(input, button); document.getElementById('additional-json-urls').appendChild(row);
+  updateJsonUrlLoadButtons();
+  if (focus) input.focus();
+}
+function renderSavedJsonUrls() {
+  const input = document.getElementById('url-input');
+  const urls = savedJsonUrls();
+  input.value = localStorage.getItem('chronik-last-url') || urls[0] || input.value;
+  document.querySelector('#url-load-area .url-row').appendChild(document.getElementById('url-btn'));
+  document.getElementById('additional-json-urls').innerHTML = '';
+  urls.filter(url => url !== input.value).forEach(url => addJsonUrlRow(url, false));
+  updateJsonUrlLoadButtons();
+}
+let _loadingJsonUrl = false;
+
 async function loadFromUrl(url) {
-  if (!url || _savingEdit) return;
+  if (!url || _savingEdit || _loadingJsonUrl) return;
   if ((_editorDirty || _settingsDirty) && !confirm('Discard the current unsaved draft and load this URL?')) return;
+  _loadingJsonUrl = true;
   const btn = document.getElementById('url-btn');
   if (btn) { btn.disabled = true; btn.textContent = t('tripView.loading','Loading…'); }
   let engine;
@@ -2650,6 +2796,7 @@ async function loadFromUrl(url) {
     const parsed = await engine.open();
     if (!navigator.locks && engine.record.enabled) throw new Error('Server editing needs a browser with Web Locks on HTTPS.');
     urlSync?.stop(); urlSync = engine;
+    rememberJsonUrlInputs(source.href);
     localStorage.setItem('chronik-last-url', source.href);
     await idbSave(null);
     fileHandle = null;
@@ -2660,6 +2807,7 @@ async function loadFromUrl(url) {
     if (engine !== urlSync) engine?.stop();
     toast(t('toasts.urlFailed', 'Failed to load from URL: {error}').replace('{error}', translatedError(err)), 'err');
   } finally {
+    _loadingJsonUrl = false;
     if (btn) { btn.disabled = false; btn.textContent = t('loadScreen.urlButton','Load'); }
   }
 }
@@ -6891,6 +7039,7 @@ function closeFile() {
 }
 
 async function restoreLoadScreen() {
+  renderSavedJsonUrls();
   const btn = document.getElementById('resume-btn');
   if (btn) btn.style.display = 'none';
   const stored = await idbLoad();
@@ -7184,6 +7333,26 @@ function renderSettings() {
   const banner=document.createElement('div'); banner.className='st-file-banner';
   const fileInfo=document.createElement('div'); fileInfo.className='st-file-info';
   fileInfo.innerHTML=`<div class="st-file-lbl">${t('settings.currentFile','Current file')}</div><div class="st-file-name">${h(currentFileName||'—')}</div>`;
+  const jsonUrls = sortedJsonUrls();
+  if (jsonUrls.length > 1) {
+    const select = document.createElement('select'); select.className = 'st-file-select'; select.id = 'current-json-url';
+    select.setAttribute('aria-label', t('settings.currentFile', 'Current file'));
+    const activeUrl = urlSync?.url || localStorage.getItem('chronik-last-url') || '';
+    if (!activeUrl) {
+      const option = new Option(currentFileName || '—', ''); option.disabled = true; select.add(option);
+    }
+    jsonUrls.forEach(url => select.add(new Option(url, url)));
+    select.value = activeUrl;
+    select.addEventListener('input', event => event.stopPropagation());
+    select.addEventListener('change', async () => {
+      select.disabled = true;
+      try { await loadFromUrl(select.value); } finally {
+        select.value = urlSync?.url || localStorage.getItem('chronik-last-url') || '';
+        select.disabled = false;
+      }
+    });
+    fileInfo.querySelector('.st-file-name').replaceWith(select);
+  }
   const bannerBtns=document.createElement('div'); bannerBtns.style.cssText='display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end';
   const compactFileBtns=document.createElement('div'); compactFileBtns.style.cssText='display:flex;gap:8px;align-items:center;flex-wrap:nowrap';
   // Order: Start screen · Download/Save · Reload from URL (if applicable)

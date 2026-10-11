@@ -1,4 +1,10 @@
 {
+  "fileSwitcher": {
+    "showPath": "Visa fullständig URL",
+    "title": "Välj JSON-fil",
+    "empty": "Lägg till JSON-URL:er på startsidan för att byta fil här.",
+    "current": "Aktuell"
+},
   "warnings": {
     "missingDestination": "Varning: Resan {trip} saknar OverallDestination i arbetsdokumentets JSON. Ange destinationen i resans redigerare eller JSON-filen."
   },
@@ -57,6 +63,8 @@
     }
   },
   "loadScreen": {
+    "addJsonUrl": "+ Lägg till ytterligare en JSON-URL",
+    "additionalJsonUrl": "Ytterligare JSON-URL",
     "dropPrimary": "Släpp JSON-fil här",
     "dropHint": "eller klicka för att bläddra (.json)",
     "urlDivider": "eller ladda från URL",

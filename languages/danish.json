@@ -1,4 +1,10 @@
 {
+  "fileSwitcher": {
+    "showPath": "Vis fuld URL",
+    "title": "Vælg JSON-fil",
+    "empty": "Tilføj JSON-URL’er på startsiden for at skifte fil her.",
+    "current": "Aktuel"
+},
   "warnings": {
     "missingDestination": "Advarsel: Rejsen {trip} mangler OverallDestination i arbejdsdokumentets JSON. Tilføj destinationen i rejseeditoren eller JSON-filen."
   },
@@ -56,6 +62,8 @@
     }
   },
   "loadScreen": {
+    "addJsonUrl": "+ Tilføj endnu en JSON-URL",
+    "additionalJsonUrl": "Yderligere JSON-URL",
     "dropPrimary": "Slip JSON-fil her",
     "dropHint": "eller klik for at browse (.json)",
     "urlDivider": "eller indlæs fra URL",
